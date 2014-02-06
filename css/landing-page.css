@@ -97,10 +97,12 @@ body, h1, h2, h3, h4, h5, h6 {
 }
 
 .banner {
-	padding: 100px 0;
+	padding: 20px 0;
 	color: #f8f8f8;
 	background: url(../img/banner-bg.jpg) no-repeat center center;
 	background-size: cover;
+	bottom:0px;
+
 }
 
 .banner h2 {
@@ -150,4 +152,14 @@ footer {
 
 p.copyright {
 	margin: 15px 0 0;
+}
+
+.img-circular{
+ width: 116px;
+ height: 116px;
+ background-size: cover;
+ display: block;
+ border-radius: 100px;
+ -webkit-border-radius: 100px;
+ -moz-border-radius: 100px;
 }
