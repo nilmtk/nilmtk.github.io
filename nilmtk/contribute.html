@@ -123,48 +123,35 @@
 <div class="section" id="contributing-documentation">
 <h2>Contributing documentation<a class="headerlink" href="#contributing-documentation" title="Permalink to this headline">¶</a></h2>
 <p>Firstly, we clone the main <cite>nilmtk</cite> repository:</p>
-<div class="highlight-python"><pre>cd ~
+<div class="highlight-python"><pre>cd ~/git
 git clone https://github.com/nilmtk/nilmtk/</pre>
 </div>
-<p>Next, we create a folder named <cite>nilmtkdocs</cite>:</p>
-<div class="highlight-python"><pre>cd ~
-mkdir nilmtkdocs</pre>
-</div>
-<p>Inside <cite>nilmtkdocs</cite>, we create a <cite>html</cite> folder, within which we clone the <cite>nilmtk</cite> repository:</p>
-<div class="highlight-python"><pre>cd nilmtkdocs
-git clone https://github.com/nilmtk/nilmtk/ html</pre>
-</div>
-<p>Setting up remote for <cite>gh-pages</cite> branch inside <cite>html</cite> folder:</p>
-<div class="highlight-python"><pre>cd html
-git checkout -b gh-pages remotes/origin/gh-pages</pre>
+<p>In the same location clone the <cite>nilmtksite</cite> repository:</p>
+<div class="highlight-python"><pre>cd ~/git
+git clone https://github.com/nilmtk/nilmtk.github.io</pre>
 </div>
 <p>Now, move back to the main repository:</p>
 <div class="highlight-python"><pre>cd ~/nilmtk</pre>
 </div>
-<p>As usual make changes to .rst files in <cite>~/nilmtk/docs/source</cite> to contribute to documentation.</p>
+<p>As usual make changes to .rst files in <cite>~/git/nilmtk/docs/source</cite> to contribute to documentation.</p>
 <p>Build your documentation:</p>
-<div class="highlight-python"><pre>cd ~/nilmtk/docs
-make html</pre>
+<div class="highlight-python"><pre>make html</pre>
 </div>
-<p>Now, built documentation should lie in <cite>~/nilmtkdocs</cite> directory. You may use your browser to check if everything got built properly.</p>
+<p>If everything is configured properly you will see your changes in <cite>nilmtk.github.io</cite> repo under the <cite>nilmtk</cite> folder.</p>
 <p>Commit your changes and push. These changes are reflected in the master
 branch of <cite>nilmtk</cite> a these are changes to the source.</p>
 <div class="highlight-python"><pre>git commit -m "your message"
 git push</pre>
 </div>
-<p>Next, move to the <cite>nilmtkdocs/html</cite> folder:</p>
-<div class="highlight-python"><pre>cd ~/nilmtkdocs/html</pre>
+<p>Next, move to the <cite>nilmtk.github.io</cite> repo:</p>
+<div class="highlight-python"><pre>cd ~/git/nilmtk.github.io/nilmtk</pre>
 </div>
-<p>Check branch:</p>
-<div class="highlight-python"><pre>git branch</pre>
+<p>Commit your changes:</p>
+<div class="highlight-python"><pre>git add .
+git commit -m "rebuilt docs"
+git push</pre>
 </div>
-<p>It should be <cite>gh-pages</cite>. Now, this <cite>gh-pages</cite> branch should contain your newly built docs. Push these to <cite>gh-pages</cite> branch and see them appear magically on the
-official documentation site:</p>
-<div class="highlight-python"><pre>git commit -a -m "rebuilt docs"
-git push origin gh-pages</pre>
-</div>
-<p>Thats all! Please allow a time upto 10 minutes for your new docs to appear on the official documentation site.
-Thanks to the wonderful tutorial <a class="reference external" href="https://github.com/daler/sphinxdoc-test">here</a>.</p>
+<p>Thats all! Please allow a time upto 10 minutes for your new docs to appear on the official documentation site.</p>
 </div>
 </div>
 
