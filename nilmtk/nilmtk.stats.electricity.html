@@ -1,0 +1,1122 @@
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>nilmtk.stats.electricity package &mdash; nilmtk 0.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-3.0.0/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-3.0.0/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="_static/js/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-3.0.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="nilmtk 0.0.1 documentation" href="index.html" />
+    <link rel="up" title="nilmtk.stats package" href="nilmtk.stats.html" />
+    <link rel="next" title="nilmtk.tests package" href="nilmtk.tests.html" />
+    <link rel="prev" title="nilmtk.stats package" href="nilmtk.stats.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="index.html">nilmtk</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.0.1</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            <li class="divider-vertical"></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a href="index.html"
+     class="dropdown-toggle"
+     data-toggle="dropdown">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+    ><ul>
+<li class="toctree-l1"><a class="reference internal" href="nilmtk.html">nilmtk API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="userguide.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contribute.html">Contributing</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"><ul>
+<li><a class="reference internal" href="#">nilmtk.stats.electricity package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-nilmtk.stats.electricity.building">nilmtk.stats.electricity.building module</a></li>
+<li><a class="reference internal" href="#module-nilmtk.stats.electricity.single">nilmtk.stats.electricity.single module</a></li>
+<li><a class="reference internal" href="#module-nilmtk.stats.electricity">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+  <li><a href="nilmtk.stats.html"
+         title="Previous Chapter: nilmtk.stats package">&laquo; nilmtk.stats pac...</a></li>
+  <li><a href="nilmtk.tests.html"
+         title="Next Chapter: nilmtk.tests package">nilmtk.tests pac... &raquo;</a></li>
+            
+            
+            
+            
+              <li>
+<div id="sourcelink">
+  <a href="_sources/nilmtk.stats.electricity.txt"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      
+  <div class="section" id="nilmtk-stats-electricity-package">
+<h1>nilmtk.stats.electricity package<a class="headerlink" href="#nilmtk-stats-electricity-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-nilmtk.stats.electricity.building">
+<span id="nilmtk-stats-electricity-building-module"></span><h2>nilmtk.stats.electricity.building module<a class="headerlink" href="#module-nilmtk.stats.electricity.building" title="Permalink to this headline">¶</a></h2>
+<p>Statistics for applying to an entire building</p>
+<dl class="function">
+<dt id="nilmtk.stats.electricity.building.average_energy">
+<tt class="descclassname">nilmtk.stats.electricity.building.</tt><tt class="descname">average_energy</tt><big>(</big><em>electricity</em>, <em>max_dropout_rate=0.4</em><big>)</big><a class="reference internal" href="_modules/nilmtk/stats/electricity/building.html#average_energy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.stats.electricity.building.average_energy" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns :</th><td class="field-body"><p class="first"><strong>float</strong> :</p>
+<blockquote>
+<div><p>Average energy usage for this building in kWh per day.</p>
+</div></blockquote>
+<p class="last"><strong>.. warning:: NOT IMPLEMENTED YET</strong> :</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="nilmtk.stats.electricity.building.average_energy_per_appliance">
+<tt class="descclassname">nilmtk.stats.electricity.building.</tt><tt class="descname">average_energy_per_appliance</tt><big>(</big><em>electricity</em>, <em>max_dropout_rate=0.4</em><big>)</big><a class="reference internal" href="_modules/nilmtk/stats/electricity/building.html#average_energy_per_appliance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.stats.electricity.building.average_energy_per_appliance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reports the average energy consumed by each appliance.</p>
+<p>For each appliance, we ignore any days which have a dropout rate
+above <cite>max_dropout_rate</cite>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>electricity:</strong> :</p>
+<blockquote>
+<div><p>nilmtk.sensors.electricity.Electricity</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><p class="first"><strong>av_energy:</strong> :</p>
+<blockquote>
+<div><p>pd.Series
+Each element of the index is an ApplianceName
+Values are average energy in kWh per day</p>
+</div></blockquote>
+<p class="last"><strong>.. warning:: NOT IMPLEMENTED YET</strong> :</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="nilmtk.stats.electricity.building.energy_per_dataframe">
+<tt class="descclassname">nilmtk.stats.electricity.building.</tt><tt class="descname">energy_per_dataframe</tt><big>(</big><em>electricity</em>, <em>sample_period_multiplier=20</em>, <em>unit='kwh'</em><big>)</big><a class="reference internal" href="_modules/nilmtk/stats/electricity/building.html#energy_per_dataframe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.stats.electricity.building.energy_per_dataframe" title="Permalink to this definition">¶</a></dt>
+<dd><p>pre-processes electricity and then gets total energy per channel, 
+after masking out all gaps in mains.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns :</th><td class="field-body"><p class="first"><strong>mains_total_energy, totals_per_appliance</strong> :</p>
+<p><strong>total_mains_energy</strong> : float</p>
+<p><strong>totals_per_appliance</strong> : pd.Series</p>
+<blockquote class="last">
+<div><p>each key is an ApplianceName
+each value is total energy</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="nilmtk.stats.electricity.building.find_appliances_contribution">
+<tt class="descclassname">nilmtk.stats.electricity.building.</tt><tt class="descname">find_appliances_contribution</tt><big>(</big><em>electricity</em>, <em>how=&lt;function mean at 0x2536320&gt;</em><big>)</big><a class="reference internal" href="_modules/nilmtk/stats/electricity/building.html#find_appliances_contribution"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.stats.electricity.building.find_appliances_contribution" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reports dataframe of form (appliance : contribution) type</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><strong>electricity</strong> : nilmtk.sensors.Elictricity</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><strong>series_contribution: pandas.DataFrame</strong> :</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="nilmtk.stats.electricity.building.find_common_measurements">
+<tt class="descclassname">nilmtk.stats.electricity.building.</tt><tt class="descname">find_common_measurements</tt><big>(</big><em>electricity</em><big>)</big><a class="reference internal" href="_modules/nilmtk/stats/electricity/building.html#find_common_measurements"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.stats.electricity.building.find_common_measurements" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds common measurement contained in all electricity streams</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><strong>electricity</strong> : nilmtk.sensors.electricity</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><strong>list of common measurements</strong> :</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="nilmtk.stats.electricity.building.get_dropout_rates">
+<tt class="descclassname">nilmtk.stats.electricity.building.</tt><tt class="descname">get_dropout_rates</tt><big>(</big><em>electricity</em>, <em>ignore_gaps=False</em><big>)</big><a class="reference internal" href="_modules/nilmtk/stats/electricity/building.html#get_dropout_rates"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.stats.electricity.building.get_dropout_rates" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>electricity</strong> : Electricity object</p>
+<p><strong>ignore_gaps</strong> : boolean</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><p class="first last"><strong>list of dropout rates, one per dataframe</strong> :</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="nilmtk.stats.electricity.building.get_total_energy_per_dict">
+<tt class="descclassname">nilmtk.stats.electricity.building.</tt><tt class="descname">get_total_energy_per_dict</tt><big>(</big><em>electricity</em>, <em>dict_='mains'</em>, <em>unit='kwh'</em><big>)</big><a class="reference internal" href="_modules/nilmtk/stats/electricity/building.html#get_total_energy_per_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.stats.electricity.building.get_total_energy_per_dict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="nilmtk.stats.electricity.building.plot_missing_samples_using_bitmap">
+<tt class="descclassname">nilmtk.stats.electricity.building.</tt><tt class="descname">plot_missing_samples_using_bitmap</tt><big>(</big><em>electricity</em>, <em>ax=None</em>, <em>fig=None</em>, <em>fig_width=800</em>, <em>add_colorbar=True</em>, <em>cmap=&lt;matplotlib.colors.LinearSegmentedColormap object at 0x3fffcd0&gt;</em>, <em>gain=1</em>, <em>horiz_bars=True</em><big>)</big><a class="reference internal" href="_modules/nilmtk/stats/electricity/building.html#plot_missing_samples_using_bitmap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.stats.electricity.building.plot_missing_samples_using_bitmap" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>fig_width</strong> : int, default=800</p>
+<blockquote class="last">
+<div><p>The width of the plotted figure, in pixels</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="nilmtk.stats.electricity.building.plot_missing_samples_using_rectangles">
+<tt class="descclassname">nilmtk.stats.electricity.building.</tt><tt class="descname">plot_missing_samples_using_rectangles</tt><big>(</big><em>electricity</em>, <em>ax=None</em>, <em>fig=None</em>, <em>color='k'</em><big>)</big><a class="reference internal" href="_modules/nilmtk/stats/electricity/building.html#plot_missing_samples_using_rectangles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.stats.electricity.building.plot_missing_samples_using_rectangles" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="nilmtk.stats.electricity.building.proportion_of_energy_submetered">
+<tt class="descclassname">nilmtk.stats.electricity.building.</tt><tt class="descname">proportion_of_energy_submetered</tt><big>(</big><em>electricity</em>, <em>sample_period_multiplier=20</em><big>)</big><a class="reference internal" href="_modules/nilmtk/stats/electricity/building.html#proportion_of_energy_submetered"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.stats.electricity.building.proportion_of_energy_submetered" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reports the proportion of energy in a building that is submetered.</p>
+<p>Assumes that missing appliance data means that the appliance is off.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>electricity</strong> : nilmtk.sensors.electricity.Electricity</p>
+<p><strong>sample_period_multiplier</strong> : float, optional</p>
+<blockquote>
+<div><p>Defines a &#8216;gap&#8217;.  Any gap &gt; sample_period x sample_period_multiplier
+is counted as a gap.  Default = 4.</p>
+</div></blockquote>
+<p><strong>require_common_measurements</strong> : boolean, optional, default=True</p>
+<blockquote>
+<div><p>If True then raise a NoCommonMeasurementsError exception if 
+there is not at least one shared
+Measurement (e.g. (&#8216;power&#8217;, &#8216;active&#8217;)) across all channels.
+If False then continue even if measurements do not match.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><p class="first"><strong>float</strong> :</p>
+<blockquote class="last">
+<div><blockquote>
+<div><p>0 = no energy submetered
+1 = all energy submetered</p>
+</div></blockquote>
+<p>&gt;1 = more energy submetered than is recorded on the mains channels!</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="nilmtk.stats.electricity.building.proportion_of_time_where_more_energy_submetered">
+<tt class="descclassname">nilmtk.stats.electricity.building.</tt><tt class="descname">proportion_of_time_where_more_energy_submetered</tt><big>(</big><em>building</em>, <em>min_proportion_submetered=0.7</em>, <em>require_common_indicies=True</em><big>)</big><a class="reference internal" href="_modules/nilmtk/stats/electricity/building.html#proportion_of_time_where_more_energy_submetered"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.stats.electricity.building.proportion_of_time_where_more_energy_submetered" title="Permalink to this definition">¶</a></dt>
+<dd><p>Report the proportion of time slices where the sum of all the appliances
+submetered is greater than the mains * <cite>min_proportion_submetered</cite></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>building</strong> : Building</p>
+<p><strong>min_proportion_submetered</strong> : float [0,1], optional</p>
+<blockquote>
+<div><p>default = 0.7</p>
+</div></blockquote>
+<p><strong>require_common_indicies</strong> : boolean, optional</p>
+<blockquote>
+<div><p>default = True.  Decides what to use for the &#8216;total duration&#8217; when 
+calculating the proportion of time.  If False then use the total
+duration between the first and last samples. If True then only
+use the non-NaN timeslices after finding the intersection of the
+appliance and mains indicies.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><p class="first last"><strong>float [0,1] proportion of time</strong> :</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="nilmtk.stats.electricity.building.proportion_per_appliance">
+<tt class="descclassname">nilmtk.stats.electricity.building.</tt><tt class="descname">proportion_per_appliance</tt><big>(</big><em>electricity</em>, <em>merge=False</em><big>)</big><a class="reference internal" href="_modules/nilmtk/stats/electricity/building.html#proportion_per_appliance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.stats.electricity.building.proportion_per_appliance" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>merge</strong> : boolean, optional</p>
+<blockquote>
+<div><p>If True then merge multiple instances of the same appliance name
+and merge all appliances with &#8216;light&#8217; in their name.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><p class="first"><strong>Series, sorted by value</strong> :</p>
+<blockquote class="last">
+<div><p>Keys are ApplianceNames.names if <cite>merge</cite> else ApplianceNames.names
+Values are proportion of total energy expressed as a float
+between 0 and 1.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="nilmtk.stats.electricity.building.top_k_appliances">
+<tt class="descclassname">nilmtk.stats.electricity.building.</tt><tt class="descname">top_k_appliances</tt><big>(</big><em>electricity</em>, <em>k=3</em>, <em>how=&lt;function mean at 0x2536320&gt;</em>, <em>order='desc'</em><big>)</big><a class="reference internal" href="_modules/nilmtk/stats/electricity/building.html#top_k_appliances"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.stats.electricity.building.top_k_appliances" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reports the top k appliances by &#8216;how&#8217; attribute</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>electricity:</strong> :</p>
+<blockquote>
+<div><p>nilmtk.sensors.electricity.Electricity</p>
+</div></blockquote>
+<p><strong>k:</strong> :</p>
+<blockquote>
+<div><p>Number of results to be returned, int
+Default value:</p>
+<blockquote>
+<div><p>3</p>
+</div></blockquote>
+</div></blockquote>
+<p><strong>how:</strong> :</p>
+<blockquote>
+<div><p>Function by which to order top k appliances
+Default:</p>
+<blockquote>
+<div><p>numpy.mean</p>
+</div></blockquote>
+</div></blockquote>
+<p><strong>order:</strong> :</p>
+<blockquote>
+<div><p>Order whether top k from highest(desc) or from lowest(asc)</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><p class="first"><strong>top_k:</strong> :</p>
+<blockquote>
+<div><p>pd.Series
+appliance:</p>
+<blockquote>
+<div><p>contribution</p>
+</div></blockquote>
+</div></blockquote>
+<p><strong># TODO: Allow arbitrary functions</strong> :</p>
+<p class="last"><strong># TODO: Handle case when number of appliances is less than default k=3</strong> :</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-nilmtk.stats.electricity.single">
+<span id="nilmtk-stats-electricity-single-module"></span><h2>nilmtk.stats.electricity.single module<a class="headerlink" href="#module-nilmtk.stats.electricity.single" title="Permalink to this headline">¶</a></h2>
+<p>Statistics applicable to a single appliance / circuit / mains split.</p>
+<p>In general, these functions each take a DataFrame representing a single
+appliance / circuit / mains split.</p>
+<dl class="function">
+<dt id="nilmtk.stats.electricity.single.activity_distribution">
+<tt class="descclassname">nilmtk.stats.electricity.single.</tt><tt class="descname">activity_distribution</tt><big>(</big><em>series</em>, <em>on_power_threshold=5</em>, <em>bin_size='T'</em>, <em>timespan='D'</em><big>)</big><a class="reference internal" href="_modules/nilmtk/stats/electricity/single.html#activity_distribution"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.stats.electricity.single.activity_distribution" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a distribution describing when this appliance was turned
+on over repeating timespans.  For example, if you want to see
+which times of day this appliance was used, on average, then use 
+bin_size=&#8217;T&#8217; (minutely) or bin_size=&#8217;H&#8217; (hourly) and
+timespan=&#8217;D&#8217; (daily).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>series</strong> : pandas.Series</p>
+<p><strong>on_power_threshold</strong> : float, optional, default=5</p>
+<blockquote>
+<div><p>Threshold which defines the difference between &#8216;on&#8217; and &#8216;off&#8217;. Watts.</p>
+</div></blockquote>
+<p><strong>bin_size, timespan</strong> : str</p>
+<blockquote>
+<div><p>offset alias (e.g. &#8216;T&#8217; or &#8216;D&#8217;)
+For valid offset aliases, see:
+<a class="reference external" href="http://pandas.pydata.org/pandas-docs/dev/timeseries.html#offset-aliases">http://pandas.pydata.org/pandas-docs/dev/timeseries.html#offset-aliases</a></p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><p class="first"><strong>pandas.Series</strong> :</p>
+<blockquote class="last">
+<div><p>One row for each bin in a timespan.
+The values count the number of times this appliance has been on at
+that particular time of the timespan.
+Times are handled in local time.
+The index uses specific dates. For example, if <cite>timespan=&#8217;D&#8217;</cite> then
+the index might be from &#8216;2012/1/1 00:00&#8217; to &#8216;2012/1/1 59:59&#8217;. In this
+example, ignore the &#8216;2012/1/1&#8217;.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="nilmtk.stats.electricity.single.dropout_rate_per_period">
+<tt class="descclassname">nilmtk.stats.electricity.single.</tt><tt class="descname">dropout_rate_per_period</tt><big>(</big><em>data</em>, <em>rule</em>, <em>window_start=None</em>, <em>window_end=None</em><big>)</big><a class="reference internal" href="_modules/nilmtk/stats/electricity/single.html#dropout_rate_per_period"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.stats.electricity.single.dropout_rate_per_period" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>data</strong> : pandas.DataFrame or Series or DatetimeIndex</p>
+<p><strong>rule</strong> : pandas Offset string (or what ever the <cite>rule</cite> parameter in</p>
+<blockquote>
+<div><p>pd.Series.resample accepts)</p>
+</div></blockquote>
+<p><strong>window_start, window_end</strong> : pd.Timestamp</p>
+<blockquote>
+<div><p>The start and end of the window of interest.  If this window
+is larger than the duration of <cite>data</cite> then gaps will be
+appended to the front / back as necessary.  If this window
+is shorter than the duration of <cite>data</cite> data will be cropped.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><p class="first"><strong>pd.Series</strong> :</p>
+<blockquote class="last">
+<div><p>Index is a regular DatetimeIndex with freq=rule and
+timezone=data.index.tzinfo
+Values are the number of dropped in that time period.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="nilmtk.stats.electricity.single.durations">
+<tt class="descclassname">nilmtk.stats.electricity.single.</tt><tt class="descname">durations</tt><big>(</big><em>on_series</em>, <em>on_or_off</em>, <em>ignore_n_off_samples=None</em>, <em>sample_period=None</em><big>)</big><a class="reference internal" href="_modules/nilmtk/stats/electricity/single.html#durations"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.stats.electricity.single.durations" title="Permalink to this definition">¶</a></dt>
+<dd><p>The length of every on or off duration (in seconds).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>on_series</strong> : pd.Series</p>
+<blockquote>
+<div><p>Series of booleans indicating if the appliance is on or off.
+Produced, for example, by <cite>on()</cite>.</p>
+</div></blockquote>
+<p><strong>on_or_off</strong> : {&#8216;on&#8217;, &#8216;off&#8217;}</p>
+<p><strong>ignore_n_off_samples</strong> : int, optional</p>
+<blockquote>
+<div><p>Ignore this number of off samples.  For example, if the input
+is [0, 100, 0, 100, 100, 0, 0] then the single zero with 100
+either side could be ignored if ignore_n_off_samples = 1,
+hence only one on-event and one off-event would be reported.</p>
+</div></blockquote>
+<p><strong>sample_period</strong> : int, optional</p>
+<blockquote>
+<div><p>Only used if <cite>ignore_n_off_samples</cite> is not None. Sample period
+in seconds.  If not provided the the function will get the
+sample period of the data.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><p class="first"><strong>pd.Series</strong> :</p>
+<blockquote class="last">
+<div><p>Index is the datetime at which the event starts.
+Values are the length of every on or off duration (in seconds).</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition-see-also admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#nilmtk.stats.electricity.single.on_off_events" title="nilmtk.stats.electricity.single.on_off_events"><tt class="xref py py-obj docutils literal"><span class="pre">on_off_events</span></tt></a>, <a class="reference internal" href="#nilmtk.stats.electricity.single.on" title="nilmtk.stats.electricity.single.on"><tt class="xref py py-obj docutils literal"><span class="pre">on</span></tt></a>, <tt class="xref py py-obj docutils literal"><span class="pre">sample_period</span></tt></p>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="nilmtk.stats.electricity.single.energy">
+<tt class="descclassname">nilmtk.stats.electricity.single.</tt><tt class="descname">energy</tt><big>(</big><em>series</em>, <em>unit='kwh'</em><big>)</big><a class="reference internal" href="_modules/nilmtk/stats/electricity/single.html#energy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.stats.electricity.single.energy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a float representing the quantity of energy this 
+channel consumed.</p>
+<p>If input data has gaps then pre-process data with <cite>insert_zeros</cite>
+before sending it to this function.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>series</strong> : pd.Series or pd.DataFrame</p>
+<p><strong>unit</strong> : {&#8216;kwh&#8217;, &#8216;joules&#8217;}</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><p class="first last"><strong>_energy</strong> : float</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition-see-also admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#nilmtk.stats.electricity.single.hours_on" title="nilmtk.stats.electricity.single.hours_on"><tt class="xref py py-obj docutils literal"><span class="pre">hours_on</span></tt></a></p>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="nilmtk.stats.electricity.single.get_dropout_rate">
+<tt class="descclassname">nilmtk.stats.electricity.single.</tt><tt class="descname">get_dropout_rate</tt><big>(</big><em>data</em>, <em>sample_period=None</em><big>)</big><a class="reference internal" href="_modules/nilmtk/stats/electricity/single.html#get_dropout_rate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.stats.electricity.single.get_dropout_rate" title="Permalink to this definition">¶</a></dt>
+<dd><p>The proportion of samples that have been lost.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>data</strong> : pandas.DataFrame or Series or DatetimeIndex</p>
+<p><strong>sample_period</strong> : int or float, optional</p>
+<blockquote>
+<div><p>Sample period in seconds.  If not provided then will
+calculate it.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><p class="first"><strong>rate</strong> : float [0,1]</p>
+<blockquote>
+<div><p>The proportion of samples that have been lost; where 
+1 means that all samples have been lost and 
+0 means that no samples have been lost.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises :</th><td class="field-body"><p class="first last"><strong>TooFewSamplesError</strong> :</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="nilmtk.stats.electricity.single.get_dropout_rate_ignore_gaps">
+<tt class="descclassname">nilmtk.stats.electricity.single.</tt><tt class="descname">get_dropout_rate_ignore_gaps</tt><big>(</big><em>data</em>, <em>sample_period=None</em>, <em>sample_period_multiplier=20</em><big>)</big><a class="reference internal" href="_modules/nilmtk/stats/electricity/single.html#get_dropout_rate_ignore_gaps"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.stats.electricity.single.get_dropout_rate_ignore_gaps" title="Permalink to this definition">¶</a></dt>
+<dd><p>The proportion of samples that have been lost, but first
+remove any large gaps.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>data</strong> : pandas.DataFrame or Series or DatetimeIndex</p>
+<p><strong>sample_period</strong> : int or float, optional</p>
+<blockquote>
+<div><p>Sample period in seconds.  If not provided then will
+calculate it.</p>
+</div></blockquote>
+<p><strong>max_sample_period</strong> : int or float, optional</p>
+<blockquote>
+<div><p>Seconds. Threshold which defines a &#8216;gap&#8217;
+If not provided then will use sample_period * 4</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><p class="first"><strong>rate</strong> : float [0,1]</p>
+<blockquote class="last">
+<div><p>The proportion of samples that have been lost; where 
+1 means that all samples have been lost and 
+0 means that no samples have been lost.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="nilmtk.stats.electricity.single.get_gap_starts_and_gap_ends">
+<tt class="descclassname">nilmtk.stats.electricity.single.</tt><tt class="descname">get_gap_starts_and_gap_ends</tt><big>(</big><em>data</em>, <em>max_sample_period</em>, <em>window_start=None</em>, <em>window_end=None</em><big>)</big><a class="reference internal" href="_modules/nilmtk/stats/electricity/single.html#get_gap_starts_and_gap_ends"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.stats.electricity.single.get_gap_starts_and_gap_ends" title="Permalink to this definition">¶</a></dt>
+<dd><p>data : pandas.DataFrame or Series or DatetimeIndex</p>
+<dl class="docutils">
+<dt>max_sample_period <span class="classifier-delimiter">:</span> <span class="classifier">int or float</span></dt>
+<dd>Maximum allowed sample period in seconds.  This defines what
+counts as a &#8216;gap&#8217;.</dd>
+<dt>window_start, window_end <span class="classifier-delimiter">:</span> <span class="classifier">pd.Timestamp</span></dt>
+<dd>The start and end of the window of interest.  If this window
+is larger than the duration of <cite>data</cite> then gaps will be
+appended to the front / back as necessary.  If this window
+is shorter than the duration of <cite>data</cite> data will be cropped.</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns :</th><td class="field-body"><strong>gap_starts, gap_ends: DatetimeIndex</strong> :</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="nilmtk.stats.electricity.single.get_good_section_starts_and_ends">
+<tt class="descclassname">nilmtk.stats.electricity.single.</tt><tt class="descname">get_good_section_starts_and_ends</tt><big>(</big><em>data</em>, <em>max_sample_period</em><big>)</big><a class="reference internal" href="_modules/nilmtk/stats/electricity/single.html#get_good_section_starts_and_ends"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.stats.electricity.single.get_good_section_starts_and_ends" title="Permalink to this definition">¶</a></dt>
+<dd><p>data : pandas.DataFrame or Series or DatetimeIndex</p>
+<dl class="docutils">
+<dt>max_sample_period <span class="classifier-delimiter">:</span> <span class="classifier">int or float</span></dt>
+<dd>Maximum allowed sample period in seconds.  This defines what
+counts as a &#8216;gap&#8217;.</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns :</th><td class="field-body"><strong>starts, ends: DatetimeIndex</strong> :</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="nilmtk.stats.electricity.single.get_sample_period">
+<tt class="descclassname">nilmtk.stats.electricity.single.</tt><tt class="descname">get_sample_period</tt><big>(</big><em>data</em><big>)</big><a class="reference internal" href="_modules/nilmtk/stats/electricity/single.html#get_sample_period"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.stats.electricity.single.get_sample_period" title="Permalink to this definition">¶</a></dt>
+<dd><p>Estimate the sample period in seconds.</p>
+<p>Find the sample period by finding the stats.mode of the 
+time deltas.  Only use the first 100 samples (for speed).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>data</strong> : pandas.DataFrame or Series or DatetimeIndex</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><p class="first"><strong>period_secs</strong> : float</p>
+<blockquote>
+<div><p>Sample period_secs in seconds.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises :</th><td class="field-body"><p class="first last"><strong>TooFewSamplesError</strong> :</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="nilmtk.stats.electricity.single.get_uptime">
+<tt class="descclassname">nilmtk.stats.electricity.single.</tt><tt class="descname">get_uptime</tt><big>(</big><em>data</em>, <em>max_sample_period=None</em><big>)</big><a class="reference internal" href="_modules/nilmtk/stats/electricity/single.html#get_uptime"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.stats.electricity.single.get_uptime" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns :</th><td class="field-body"><strong>float</strong> : total duration of good data segments, in days</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="nilmtk.stats.electricity.single.has_nans">
+<tt class="descclassname">nilmtk.stats.electricity.single.</tt><tt class="descname">has_nans</tt><big>(</big><em>data</em><big>)</big><a class="reference internal" href="_modules/nilmtk/stats/electricity/single.html#has_nans"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.stats.electricity.single.has_nans" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><strong>data</strong> : pandas.DataFrame or Series</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><strong>bool</strong> :</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="nilmtk.stats.electricity.single.hours_on">
+<tt class="descclassname">nilmtk.stats.electricity.single.</tt><tt class="descname">hours_on</tt><big>(</big><em>series</em>, <em>on_power_threshold=5</em><big>)</big><a class="reference internal" href="_modules/nilmtk/stats/electricity/single.html#hours_on"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.stats.electricity.single.hours_on" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a float representing the number of hours this channel
+has been above threshold.</p>
+<p>If input data has gaps then pre-process data with <cite>insert_zeros</cite>
+before sending it to this function.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>series</strong> : pandas.Series</p>
+<p><strong>on_power_threshold</strong> : float or int, optional, default = 5</p>
+<blockquote>
+<div><p>Threshold which defines the distinction between &#8220;on&#8221; and &#8220;off&#8221;.  Watts.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><p class="first last"><strong>hours_above_threshold</strong> : float</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition-see-also admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><tt class="xref py py-obj docutils literal"><span class="pre">kwh</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">joules</span></tt></p>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="nilmtk.stats.electricity.single.on">
+<tt class="descclassname">nilmtk.stats.electricity.single.</tt><tt class="descname">on</tt><big>(</big><em>series</em>, <em>on_power_threshold=5</em><big>)</big><a class="reference internal" href="_modules/nilmtk/stats/electricity/single.html#on"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.stats.electricity.single.on" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns pd.Series with Boolean values indicating whether the
+appliance is on (True) or off (False).</p>
+<p>If input data has gaps then pre-process data with <cite>insert_zeros</cite>
+before sending it to this function.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>series</strong> : pandas.Series</p>
+<p><strong>on_power_threshold</strong> : float, optional, default=5</p>
+<blockquote>
+<div><p>Threshold which defines the difference between &#8216;on&#8217; and &#8216;off&#8217;. Watts.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><p class="first"><strong>when_on</strong> : pandas.Series</p>
+<blockquote class="last">
+<div><p>index is the same as for input <cite>series</cite>
+values are booleans</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="nilmtk.stats.electricity.single.on_off_events">
+<tt class="descclassname">nilmtk.stats.electricity.single.</tt><tt class="descname">on_off_events</tt><big>(</big><em>on_series</em>, <em>ignore_n_off_samples=None</em><big>)</big><a class="reference internal" href="_modules/nilmtk/stats/electricity/single.html#on_off_events"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.stats.electricity.single.on_off_events" title="Permalink to this definition">¶</a></dt>
+<dd><p>Detects on/off switch events.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>on_series</strong> : pd.Series</p>
+<blockquote>
+<div><p>Series of booleans indicating if the appliance is on or off.
+Produced, for example, by <cite>on()</cite>.</p>
+</div></blockquote>
+<p><strong>ignore_n_off_samples</strong> : int, optional</p>
+<blockquote>
+<div><p>Ignore this number of off samples.  For example, if the input
+is [0, 100, 0, 100, 100, 0, 0] then the single zero with 100
+either side could be ignored if ignore_n_off_samples = 1,
+hence only one on-event and one off-event would be reported.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><p class="first"><strong>events</strong> : pd.Series</p>
+<blockquote class="last">
+<div><p>Index is the same as the input <cite>on_series</cite>.
+Values are np.int8:</p>
+<blockquote>
+<div><p>1 == turn-on event</p>
+</div></blockquote>
+<p>-1 == turn-off event</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition-see-also admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#nilmtk.stats.electricity.single.on" title="nilmtk.stats.electricity.single.on"><tt class="xref py py-obj docutils literal"><span class="pre">on</span></tt></a>, <a class="reference internal" href="#nilmtk.stats.electricity.single.durations" title="nilmtk.stats.electricity.single.durations"><tt class="xref py py-obj docutils literal"><span class="pre">durations</span></tt></a></p>
+</div>
+<p class="rubric">Examples</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">series</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">on_off_events</span><span class="p">(</span><span class="n">series</span><span class="p">)</span>
+<span class="go">2:  1</span>
+<span class="go">5: -1</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="nilmtk.stats.electricity.single.periods_with_sufficient_samples">
+<tt class="descclassname">nilmtk.stats.electricity.single.</tt><tt class="descname">periods_with_sufficient_samples</tt><big>(</big><em>datetime_index</em>, <em>freq</em>, <em>max_dropout_rate=0.4</em>, <em>use_local_time=True</em><big>)</big><a class="reference internal" href="_modules/nilmtk/stats/electricity/single.html#periods_with_sufficient_samples"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.stats.electricity.single.periods_with_sufficient_samples" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find periods where the dropout rate is less than max_dropout_rate.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns :</th><td class="field-body"><strong>set of Periods</strong> :</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="nilmtk.stats.electricity.single.plot_missing_samples">
+<tt class="descclassname">nilmtk.stats.electricity.single.</tt><tt class="descname">plot_missing_samples</tt><big>(</big><em>data</em>, <em>ax=None</em>, <em>fig=None</em>, <em>max_sample_period=None</em>, <em>window_start=None</em>, <em>window_end=None</em>, <em>bottom=0.1</em>, <em>height=0.8</em>, <em>color='k'</em><big>)</big><a class="reference internal" href="_modules/nilmtk/stats/electricity/single.html#plot_missing_samples"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.stats.electricity.single.plot_missing_samples" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots missing samples as Rectanges on <cite>ax</cite>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>data</strong> : pandas.DataFrame or Series or DatetimeIndex</p>
+<p><strong>max_sample_period</strong> : int or float, optional</p>
+<blockquote>
+<div><p>Maximum allowed sample period in seconds.  This defines what
+counts as a &#8216;gap&#8217;.  If not provided then will use sample
+period * 4.  Note that by using a <cite>max_sample_period</cite> equal to
+<cite>sample_period * 4</cite> (and not, say times 1.5) then this
+function will not report <em>every</em> missing sample.</p>
+</div></blockquote>
+<p><strong>window_start, window_end</strong> : pd.Timestamp</p>
+<blockquote class="last">
+<div><p>The start and end of the window of interest.  If this window
+is larger than the duration of <cite>data</cite> then gaps will be
+appended to the front / back as necessary.  If this window
+is shorter than the duration of <cite>data</cite> data will be cropped.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="nilmtk.stats.electricity.single.start_end_datetime">
+<tt class="descclassname">nilmtk.stats.electricity.single.</tt><tt class="descname">start_end_datetime</tt><big>(</big><em>data</em><big>)</big><a class="reference internal" href="_modules/nilmtk/stats/electricity/single.html#start_end_datetime"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.stats.electricity.single.start_end_datetime" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the first and the last time for which data is recorded</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>data</strong> : pandas.DataFrame or Series or DatetimeIndex</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><p class="first"><strong>start_end_datetimes</strong> : List</p>
+<blockquote class="last">
+<div><p>Contains two elements- start and end timestamps</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="nilmtk.stats.electricity.single.timestamps_of_missing_samples">
+<tt class="descclassname">nilmtk.stats.electricity.single.</tt><tt class="descname">timestamps_of_missing_samples</tt><big>(</big><em>data</em>, <em>max_sample_period=None</em>, <em>window_start=None</em>, <em>window_end=None</em><big>)</big><a class="reference internal" href="_modules/nilmtk/stats/electricity/single.html#timestamps_of_missing_samples"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.stats.electricity.single.timestamps_of_missing_samples" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>data</strong> : pandas.DataFrame or Series or DatetimeIndex</p>
+<p><strong>max_sample_period</strong> : int or float, optional</p>
+<blockquote>
+<div><p>Maximum allowed sample period in seconds.  This defines what
+counts as a &#8216;gap&#8217;.  If not provided then will use sample
+period * 1.5</p>
+</div></blockquote>
+<p><strong>window_start, window_end</strong> : pd.Timestamp</p>
+<blockquote>
+<div><p>The start and end of the window of interest.  If this window
+is larger than the duration of <cite>data</cite> then gaps will be
+appended to the front / back as necessary.  If this window
+is shorter than the duration of <cite>data</cite> data will be cropped.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><p class="first"><strong>missing_samples</strong> : pd.DatetimeIndex</p>
+<blockquote class="last">
+<div><p>Every missing sample in <cite>data</cite> is represented by a timestamp
+in <cite>missing_samples</cite>.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="nilmtk.stats.electricity.single.usage_per_period">
+<tt class="descclassname">nilmtk.stats.electricity.single.</tt><tt class="descname">usage_per_period</tt><big>(</big><em>series</em>, <em>freq</em>, <em>on_power_threshold=5</em>, <em>max_dropout_rate=0.4</em>, <em>verbose=False</em>, <em>energy_unit='kwh'</em><big>)</big><a class="reference internal" href="_modules/nilmtk/stats/electricity/single.html#usage_per_period"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.stats.electricity.single.usage_per_period" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the usage (hours on and kwh) per time period.</p>
+<p>If input data has gaps then pre-process data with <cite>insert_zeros</cite>
+before sending it to this function.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>series</strong> : pd.Series</p>
+<p><strong>freq</strong> : str</p>
+<blockquote>
+<div><p>see _indicies_of_periods() for acceptable values.</p>
+</div></blockquote>
+<p><strong>on_power_threshold</strong> : float or int, optional, default = 5</p>
+<blockquote>
+<div><p>Threshold which defines the distinction between &#8220;on&#8221; and &#8220;off&#8221;.  Watts.</p>
+</div></blockquote>
+<p><strong>max_dropout_rate</strong> : float (0,1), optional, default = 0.4</p>
+<blockquote>
+<div><p>Remove any row which has a worse (larger) dropout rate.</p>
+</div></blockquote>
+<p><strong>verbose</strong> : boolean, optional, default = False</p>
+<blockquote>
+<div><p>if True then print more information</p>
+</div></blockquote>
+<p><strong>energy_unit</strong> : {&#8216;kwh&#8217;, &#8216;joules&#8217;}, optional</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><p class="first"><strong>usage</strong> : pd.DataFrame</p>
+<blockquote class="last">
+<div><p>One row per period (as defined by <cite>freq</cite>).  
+Index is PeriodIndex (UTC).
+Columns:</p>
+<blockquote>
+<div><p>hours_on
+&lt;<cite>energy_unit</cite>&gt;</p>
+</div></blockquote>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<p>Say we have loaded fridge data from house_1 in REDD into <cite>fridge</cite> and we
+want to see how it was used each day:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">usage_per_period</span><span class="p">(</span><span class="n">fridge</span><span class="p">,</span> <span class="s">&#39;D&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<blockquote>
+<div>hours_on       kwh</div></blockquote>
+<p>2011-04-18        NaN       NaN
+2011-04-19  23.999444  1.104083
+2011-04-20  23.998889  1.293223
+2011-04-21  23.998889  1.138540
+...
+2011-05-22  23.832500  2.042271
+2011-05-23  23.931111  1.394619
+2011-05-24        NaN       NaN</p>
+<p>Hmmm... why does the fridge appear to be on for 24 hours per day?
+Inspecting the fridge.plot(), we find that the fridge rarely ever
+gets below this function&#8217;s default on_power_threshold of 5 Watts,
+so let&#8217;s specify a larger threshold:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">usage_per_period</span><span class="p">(</span><span class="n">fridge</span><span class="p">,</span> <span class="s">&#39;D&#39;</span><span class="p">,</span> <span class="n">on_power_threshold</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+</pre></div>
+</div>
+<blockquote>
+<div>hours_on       kwh</div></blockquote>
+<p>2011-04-18       NaN       NaN
+2011-04-19  5.036111  1.104083
+2011-04-20  5.756667  1.293223
+2011-04-21  4.931667  1.138540
+2011-04-22  4.926111  1.076958
+2011-04-23  6.099167  1.357812
+2011-04-24  6.373056  1.361579
+2011-04-25  6.496667  1.441966
+2011-04-26  6.381389  1.404637
+2011-04-27  5.558611  1.196464
+2011-04-28  6.668611  1.478141
+2011-04-29  6.493056  1.446713
+2011-04-30  5.885278  1.263918
+2011-05-01  5.983611  1.351419
+2011-05-02  5.398333  1.167111
+2011-05-03       NaN       NaN
+2011-05-04       NaN       NaN
+2011-05-05       NaN       NaN
+2011-05-06       NaN       NaN
+2011-05-07  5.112222  1.120848
+2011-05-08  6.349722  1.413897
+2011-05-09  7.270833  1.573199
+2011-05-10  5.997778  1.249120
+2011-05-11  5.685556  1.264841
+2011-05-12  7.153333  1.478244
+2011-05-13  5.949444  1.306350
+2011-05-14  6.446944  1.415302
+2011-05-15  5.958333  1.275853
+2011-05-16  6.801944  1.501816
+2011-05-17  5.836389  1.342787
+2011-05-18  5.254444  1.164683
+2011-05-19  6.234444  1.397851
+2011-05-20  5.814444  1.265143
+2011-05-21  6.738333  1.498687
+2011-05-22  9.308056  2.042271
+2011-05-23  6.127778  1.394619
+2011-05-24       NaN       NaN</p>
+<p>That looks sensible!  Now, let&#8217;s find out why the cause of the NaNs by 
+setting verbose=True:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">usage_per_period</span><span class="p">(</span><span class="n">fridge</span><span class="p">,</span> <span class="s">&#39;D&#39;</span><span class="p">,</span> <span class="n">on_power_threshold</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="docutils">
+<dt>Insufficient samples for 2011-04-18; n samples = 13652; dropout_rate = 52.60%</dt>
+<dd><dl class="first last docutils">
+<dt>start = 2011-04-18 09:22:13-04:00</dt>
+<dd>end = 2011-04-18 23:59:57-04:00</dd>
+</dl>
+</dd>
+<dt>Insufficient samples for 2011-05-03; n samples = 16502; dropout_rate = 42.70%</dt>
+<dd><dl class="first last docutils">
+<dt>start = 2011-05-03 00:00:03-04:00</dt>
+<dd>end = 2011-05-03 17:33:17-04:00</dd>
+</dl>
+</dd>
+</dl>
+<p>No data available for    2011-05-04
+No data available for    2011-05-05
+Insufficient samples for 2011-05-06; n samples = 12465; dropout_rate = 56.72%</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>start = 2011-05-06 10:51:50-04:00</dt>
+<dd>end = 2011-05-06 23:59:58-04:00</dd>
+</dl>
+</div></blockquote>
+<dl class="docutils">
+<dt>Insufficient samples for 2011-05-24; n samples = 13518; dropout_rate = 53.06%</dt>
+<dd><dl class="first last docutils">
+<dt>start = 2011-05-24 00:00:02-04:00</dt>
+<dd>end = 2011-05-24 15:56:34-04:00</dd>
+</dl>
+</dd>
+<dt>Out[209]: </dt>
+<dd>hours_on       kwh</dd>
+</dl>
+<p>2011-04-18       NaN       NaN
+2011-04-19  5.036111  1.104083
+2011-04-20  5.756667  1.293223
+...</p>
+<p>Ah, OK, there are insufficient samples for the periods with NaNs.  We could
+set max_dropout_rate to a number closer to 1, but that would give us data
+for days where there isn&#8217;t much data for that day.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-nilmtk.stats.electricity">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-nilmtk.stats.electricity" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2014, nilmtk authors.<br/>
+      Last updated on Mar 26, 2014.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

@@ -1,0 +1,576 @@
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>nilmtk.dataset.dataset &mdash; nilmtk 0.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/bootstrap-3.0.0/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/bootstrap-3.0.0/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../../../_static/js/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="../../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../../_static/bootstrap-3.0.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../../_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="nilmtk 0.0.1 documentation" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../index.html">nilmtk</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.0.1</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            <li class="divider-vertical"></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a href="../../../index.html"
+     class="dropdown-toggle"
+     data-toggle="dropdown">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+    ><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../nilmtk.html">nilmtk API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../userguide.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute.html">Contributing</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"></ul>
+</li>
+              
+            
+            
+              
+            
+            
+            
+            
+              <li></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      
+  <h1>Source code for nilmtk.dataset.dataset</h1><div class="highlight"><pre>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">division</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">matplotlib.dates</span> <span class="kn">import</span> <span class="n">SEC_PER_DAY</span>
+<span class="kn">from</span> <span class="nn">nilmtk.building</span> <span class="kn">import</span> <span class="n">Building</span>
+<span class="kn">from</span> <span class="nn">nilmtk.sensors.electricity</span> <span class="kn">import</span> <span class="n">MainsName</span>
+<span class="kn">from</span> <span class="nn">nilmtk.sensors.electricity</span> <span class="kn">import</span> <span class="n">ApplianceName</span>
+<span class="kn">from</span> <span class="nn">nilmtk.sensors.electricity</span> <span class="kn">import</span> <span class="n">Measurement</span>
+<span class="kn">from</span> <span class="nn">nilmtk.sensors.electricity</span> <span class="kn">import</span> <span class="n">DualSupply</span>
+<span class="kn">from</span> <span class="nn">nilmtk.sensors.electricity</span> <span class="kn">import</span> <span class="n">get_two_dataframes_of_dualsupply</span>
+<span class="kn">from</span> <span class="nn">nilmtk.utils</span> <span class="kn">import</span> <span class="n">summary_stats_string</span>
+<span class="kn">from</span> <span class="nn">nilmtk.stats.electricity.building</span> <span class="kn">import</span> <span class="n">proportion_of_energy_submetered</span>
+<span class="kn">from</span> <span class="nn">nilmtk.stats.electricity.building</span> <span class="kn">import</span> <span class="n">get_dropout_rates</span>
+<span class="kn">from</span> <span class="nn">nilmtk.stats.electricity.single</span> <span class="kn">import</span> <span class="n">get_uptime</span>
+<span class="kn">from</span> <span class="nn">nilmtk.stats.electricity.building</span> <span class="kn">import</span> <span class="n">proportion_of_time_where_more_energy_submetered</span>
+
+<span class="sd">&quot;&quot;&quot;Base class for all datasets.&quot;&quot;&quot;</span>
+
+
+<div class="viewcode-block" id="create_time_query"><a class="viewcode-back" href="../../../nilmtk.dataset.html#nilmtk.dataset.dataset.create_time_query">[docs]</a><span class="k">def</span> <span class="nf">create_time_query</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">start</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="ow">and</span> <span class="n">end</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">lower_bound</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Term</span><span class="p">(</span>
+            <span class="s">&#39;index&#39;</span><span class="p">,</span> <span class="s">&#39;&gt;&#39;</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="p">(</span><span class="n">start</span><span class="p">))</span>
+        <span class="n">upper_bound</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Term</span><span class="p">(</span>
+            <span class="s">&#39;index&#39;</span><span class="p">,</span> <span class="s">&#39;&lt;&#39;</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="p">(</span><span class="n">end</span><span class="p">))</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="p">[</span><span class="n">lower_bound</span><span class="p">,</span> <span class="n">upper_bound</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="n">start</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">upper_bound</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Term</span><span class="p">(</span>
+            <span class="s">&#39;index&#39;</span><span class="p">,</span> <span class="s">&#39;&lt;&#39;</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="p">(</span><span class="n">end</span><span class="p">))</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="p">[</span><span class="n">upper_bound</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">lower_bound</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Term</span><span class="p">(</span>
+            <span class="s">&#39;index&#39;</span><span class="p">,</span> <span class="s">&#39;&gt;&#39;</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="p">(</span><span class="n">start</span><span class="p">))</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="p">[</span><span class="n">lower_bound</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">query</span>
+
+</div>
+<div class="viewcode-block" id="DataSet"><a class="viewcode-back" href="../../../nilmtk.dataset.html#nilmtk.dataset.dataset.DataSet">[docs]</a><span class="k">class</span> <span class="nc">DataSet</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;Base class for all datasets.  This class can be used</span>
+<span class="sd">    for loading nilmtk&#39;s REDD+ data format.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    buildings : dict</span>
+<span class="sd">        Each key is a string representing the name of the building and is</span>
+<span class="sd">        preserved from the original dataset.  Each value is a</span>
+<span class="sd">        nilmtk.building.Building object.</span>
+
+<span class="sd">    metadata : dict</span>
+<span class="sd">        Metadata regarding this DataSet.  Keys include:</span>
+
+<span class="sd">        name : string</span>
+<span class="sd">            Abbreviated name for the dataset, e.g. &quot;REDD&quot;</span>
+
+<span class="sd">        full_name : string</span>
+<span class="sd">            Full name of the dataset, eg. &quot;Reference Energy Disaggregation Data Set&quot;</span>
+
+<span class="sd">        urls : list of strings, optional</span>
+<span class="sd">            The URL(s) for more information about this dataset</span>
+
+<span class="sd">        citations : list of strings, optional</span>
+<span class="sd">            Academic citation(s) for this dataset</span>
+
+<span class="sd">        nominal_voltage : float, optional</span>
+
+<span class="sd">        timezone : string</span>
+
+<span class="sd">        geographic_coordinates : pair (lat, long), optional</span>
+<span class="sd">            The geo location of the research institution.  Used as a fall back</span>
+<span class="sd">            if geo location isn&#39;t available for any individual building.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">buildings</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span> <span class="o">=</span> <span class="p">{}</span>
+
+<div class="viewcode-block" id="DataSet.load"><a class="viewcode-back" href="../../../nilmtk.dataset.html#nilmtk.dataset.dataset.DataSet.load">[docs]</a>    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root_directory</span><span class="p">,</span> <span class="n">buildings_to_load</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Load dataset into memory</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ---------</span>
+<span class="sd">        root_direction : string</span>
+<span class="sd">        buildings_to_load : list of strings, optional</span>
+<span class="sd">            Use the native dataset names. e.g. &#39;house_1&#39; for REDD.</span>
+<span class="sd">            If none then load all buildings in the dataset.</span>
+<span class="sd">        **args : optional</span>
+<span class="sd">            named arguments to pass to load_building</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">building_names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_building_names</span><span class="p">(</span><span class="n">root_directory</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">buildings_to_load</span><span class="p">:</span>
+            <span class="n">building_names</span> <span class="o">=</span> <span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">building_names</span><span class="p">)</span>
+                              <span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">buildings_to_load</span><span class="p">)))</span>
+        <span class="k">for</span> <span class="n">building</span> <span class="ow">in</span> <span class="n">building_names</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">load_building</span><span class="p">(</span><span class="n">root_directory</span><span class="p">,</span> <span class="n">building</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="DataSet.load_hdf5"><a class="viewcode-back" href="../../../nilmtk.dataset.html#nilmtk.dataset.dataset.DataSet.load_hdf5">[docs]</a>    <span class="k">def</span> <span class="nf">load_hdf5</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">directory</span><span class="p">,</span> <span class="n">building_nums</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">time_map</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Imports dataset from HDF5 store into NILMTK object</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        directory : str</span>
+<span class="sd">            Directory where the HDF5 store is located</span>
+
+<span class="sd">        buildling_nums : list of ints, optional</span>
+<span class="sd">            Building numbers to load</span>
+
+<span class="sd">        time_map : dict, optional </span>
+<span class="sd">            building number: (start, end) time to query</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c"># Load metadata if exists</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="s">&#39;metadata.json&#39;</span><span class="p">)):</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="s">&#39;metadata.json&#39;</span><span class="p">),</span> <span class="s">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">metadata_fp</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">metadata_fp</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+        <span class="n">store</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">HDFStore</span><span class="p">(</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="s">&#39;dataset.h5&#39;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">buildings</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="c"># Finding all keys stored in the HDF5 store</span>
+        <span class="n">keys</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+
+        <span class="c"># Finding the buildings</span>
+        <span class="n">building_numbers</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">([</span><span class="n">key</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&quot;/&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">]))</span>
+
+        <span class="c"># Only use building nums the users asked for</span>
+        <span class="k">if</span> <span class="n">building_nums</span><span class="p">:</span>
+            <span class="n">building_nums</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">building_nums</span><span class="p">]</span>
+            <span class="n">building_numbers</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
+                <span class="nb">set</span><span class="p">(</span><span class="n">building_numbers</span><span class="p">)</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">building_nums</span><span class="p">)))</span>
+
+        <span class="c"># Loading the structured information for each building</span>
+        <span class="k">for</span> <span class="n">building_number</span> <span class="ow">in</span> <span class="n">building_numbers</span><span class="p">:</span>
+
+            <span class="c"># Create a new building and add it to buildings</span>
+            <span class="n">b</span> <span class="o">=</span> <span class="n">Building</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">buildings</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">building_number</span><span class="p">)]</span> <span class="o">=</span> <span class="n">b</span>
+
+            <span class="c"># Find the keys which start with this particular building</span>
+            <span class="n">keys_building</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">key</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys</span> <span class="k">if</span> <span class="n">key</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&quot;/&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">building_number</span><span class="p">]</span>
+
+            <span class="c"># Loading utilites</span>
+            <span class="n">keys_utilities</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">key</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys_building</span> <span class="k">if</span> <span class="s">&quot;utility&quot;</span> <span class="ow">in</span> <span class="n">key</span><span class="p">]</span>
+
+            <span class="c"># Load electric if len(keys_utilities)&gt;0</span>
+
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">keys_utilities</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="c"># Load electric</span>
+                <span class="n">keys_electric</span> <span class="o">=</span> <span class="p">[</span>
+                    <span class="n">key</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys_utilities</span> <span class="k">if</span> <span class="s">&quot;electric&quot;</span> <span class="ow">in</span> <span class="n">key</span><span class="p">]</span>
+
+                <span class="c"># Loading mains</span>
+                <span class="n">keys_mains</span> <span class="o">=</span> <span class="p">[</span>
+                    <span class="n">key</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys_electric</span> <span class="k">if</span> <span class="s">&quot;mains&quot;</span> <span class="ow">in</span> <span class="n">key</span><span class="p">]</span>
+
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">keys_mains</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">b</span><span class="o">.</span><span class="n">utility</span><span class="o">.</span><span class="n">electric</span><span class="o">.</span><span class="n">mains</span> <span class="o">=</span> <span class="p">{}</span>
+                    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys_mains</span><span class="p">:</span>
+                        <span class="n">mains_split</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">key</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&quot;/&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span>
+                        <span class="n">mains_meter</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">key</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&quot;/&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+                        <span class="n">mains_name</span> <span class="o">=</span> <span class="n">MainsName</span><span class="p">(</span><span class="n">mains_split</span><span class="p">,</span> <span class="n">mains_meter</span><span class="p">)</span>
+
+                        <span class="k">if</span> <span class="n">time_map</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                            <span class="n">b</span><span class="o">.</span><span class="n">utility</span><span class="o">.</span><span class="n">electric</span><span class="o">.</span><span class="n">mains</span><span class="p">[</span>
+                                <span class="n">mains_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">store</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">building_number</span><span class="p">)</span> <span class="ow">in</span> <span class="n">time_map</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+
+                                <span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="o">=</span> <span class="n">time_map</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">building_number</span><span class="p">)]</span>
+                                <span class="n">query</span> <span class="o">=</span> <span class="n">create_time_query</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">)</span>
+
+                            <span class="k">else</span><span class="p">:</span>
+                                <span class="n">query</span> <span class="o">=</span> <span class="p">[]</span>
+
+                            <span class="n">b</span><span class="o">.</span><span class="n">utility</span><span class="o">.</span><span class="n">electric</span><span class="o">.</span><span class="n">mains</span><span class="p">[</span>
+                                <span class="n">mains_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">query</span><span class="p">)</span>
+
+                <span class="c"># Loading appliances</span>
+                <span class="n">keys_appliances</span> <span class="o">=</span> <span class="p">[</span>
+                    <span class="n">key</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys_electric</span> <span class="k">if</span> <span class="s">&quot;appliances&quot;</span> <span class="ow">in</span> <span class="n">key</span><span class="p">]</span>
+
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">keys_appliances</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">b</span><span class="o">.</span><span class="n">utility</span><span class="o">.</span><span class="n">electric</span><span class="o">.</span><span class="n">appliances</span> <span class="o">=</span> <span class="p">{}</span>
+                    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys_appliances</span><span class="p">:</span>
+                        <span class="n">appliance_name</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&quot;/&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+                        <span class="n">appliance_instance</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">key</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&quot;/&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+                        <span class="n">appliance_name</span> <span class="o">=</span> <span class="n">ApplianceName</span><span class="p">(</span>
+                            <span class="n">appliance_name</span><span class="p">,</span> <span class="n">appliance_instance</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">time_map</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                            <span class="n">b</span><span class="o">.</span><span class="n">utility</span><span class="o">.</span><span class="n">electric</span><span class="o">.</span><span class="n">appliances</span><span class="p">[</span>
+                                <span class="n">appliance_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">store</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">building_number</span><span class="p">)</span> <span class="ow">in</span> <span class="n">time_map</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                                <span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="o">=</span> <span class="n">time_map</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">building_number</span><span class="p">)]</span>
+                                <span class="n">query</span> <span class="o">=</span> <span class="n">create_time_query</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">)</span>
+                            <span class="k">else</span><span class="p">:</span>
+                                <span class="n">query</span> <span class="o">=</span> <span class="p">[]</span>
+
+                            <span class="n">b</span><span class="o">.</span><span class="n">utility</span><span class="o">.</span><span class="n">electric</span><span class="o">.</span><span class="n">appliances</span><span class="p">[</span>
+                                <span class="n">appliance_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">query</span><span class="p">)</span>
+
+        <span class="c"># Closing the store</span>
+        <span class="n">store</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="DataSet.export_csv"><a class="viewcode-back" href="../../../nilmtk.dataset.html#nilmtk.dataset.dataset.DataSet.export_csv">[docs]</a>    <span class="k">def</span> <span class="nf">export_csv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">directory</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Exports dataset in nilmtk standard on-disk CSV format.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        directory : Complete path where to export the data</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c"># Mapping from {Appliance/Mains/Circuit}Name to CSV name</span>
+        <span class="n">namedtuple_map</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;mains&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s">&quot;</span><span class="si">%d</span><span class="s">_</span><span class="si">%d</span><span class="s">.csv&quot;</span> <span class="o">%</span>
+                          <span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">split</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">meter</span><span class="p">),</span>
+                          <span class="s">&#39;appliances&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s">_</span><span class="si">%d</span><span class="s">.csv&quot;</span> <span class="o">%</span>
+                          <span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">instance</span><span class="p">),</span>
+                          <span class="s">&#39;circuits&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s">_</span><span class="si">%d</span><span class="s">_</span><span class="si">%d</span><span class="s">.csv&quot;</span>
+                          <span class="o">%</span> <span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">split</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">meter</span><span class="p">)</span>
+                          <span class="p">}</span>
+        <span class="c"># Mapping from {appliance/mains/circuit} to directory structure</span>
+        <span class="n">folder_path_map</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;mains&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s">&quot;building_</span><span class="si">%d</span><span class="s">/utility/electric/mains/&quot;</span>
+                           <span class="o">%</span> <span class="p">(</span><span class="n">building_number</span><span class="p">),</span>
+                           <span class="s">&#39;appliances&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s">&quot;building_</span><span class="si">%d</span><span class="s">/utility/electric/appliances/&quot;</span>
+                           <span class="o">%</span> <span class="p">(</span><span class="n">building_number</span><span class="p">),</span>
+                           <span class="s">&#39;circuits&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s">&quot;building_</span><span class="si">%d</span><span class="s">/utility/electric/circuits/&quot;</span>
+                           <span class="o">%</span> <span class="p">(</span><span class="n">building_number</span><span class="p">)</span>
+                           <span class="p">}</span>
+        <span class="c"># Mapping from {Measurement/DualSupply} to CSV column header</span>
+        <span class="n">column_mapping</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;dual&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s">_</span><span class="si">%s</span><span class="s">_</span><span class="si">%d</span><span class="s">&quot;</span> <span class="o">%</span>
+                          <span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">measurement</span><span class="o">.</span><span class="n">physical_quantity</span><span class="p">,</span>
+                           <span class="n">x</span><span class="o">.</span><span class="n">measurement</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">supply</span><span class="p">),</span>
+                          <span class="s">&#39;single&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s">_</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span>
+                          <span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">physical_quantity</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">type</span><span class="p">)</span>
+                          <span class="p">}</span>
+
+        <span class="c"># Write metadata</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">directory</span><span class="p">):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="s">&#39;metadata.json&#39;</span><span class="p">),</span> <span class="s">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">metadata_fp</span><span class="p">:</span>
+            <span class="n">metadata_fp</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">))</span>
+
+        <span class="k">def</span> <span class="nf">create_path_df</span><span class="p">(</span><span class="n">building_number</span><span class="p">,</span> <span class="n">df_name</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">df_type</span><span class="p">,</span> <span class="n">column</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;Creates corresponding path in the nilmtk folder hierarchy for df,</span>
+<span class="sd">             if the path does not exist. Also, saves the dataset in epoch unix</span>
+<span class="sd">             timestamped CSVs. CSV name correpsond to namedtuple_map</span>
+
+<span class="sd">            Parameters</span>
+<span class="sd">            ----------</span>
+<span class="sd">            building_number : nilmtk.Building number, int</span>
+<span class="sd">            df_name : nilmtk.sensor.electricity.{appliance/mains/circuits}Name</span>
+<span class="sd">            df : pandas.DataFrame consisting of DatetimeIndex and nilmtk.sensors.</span>
+<span class="sd">            utility.electric.Measurement as columns</span>
+<span class="sd">            df_type : string, one of [&#39;mains&#39;, &#39;appliances&#39;,&#39;circuits&#39;]</span>
+<span class="sd">            column: string, one of [&#39;dual&#39;, &#39;single&#39;]</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+
+            <span class="n">dir_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="n">directory</span><span class="p">,</span> <span class="n">folder_path_map</span><span class="p">[</span><span class="n">df_type</span><span class="p">](</span><span class="n">building_number</span><span class="p">))</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">dir_path</span><span class="p">):</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">dir_path</span><span class="p">)</span>
+            <span class="n">temp</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="n">temp</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span> <span class="o">/</span> <span class="mf">1e9</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+            <span class="n">temp</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">column_mapping</span><span class="p">[</span><span class="n">column</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+            <span class="n">temp</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dir_path</span><span class="p">,</span> <span class="n">namedtuple_map</span><span class="p">[</span><span class="n">df_type</span>
+                                                              <span class="p">](</span><span class="n">df_name</span><span class="p">)),</span>
+                        <span class="n">float_format</span><span class="o">=</span><span class="s">&#39;</span><span class="si">%.2f</span><span class="s">&#39;</span><span class="p">,</span>
+                        <span class="n">index_label</span><span class="o">=</span><span class="s">&quot;timestamp&quot;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">building_number</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">buildings</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">&quot;Writing data for building </span><span class="si">%d</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">building_number</span><span class="p">))</span>
+            <span class="n">building</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">buildings</span><span class="p">[</span><span class="n">building_number</span><span class="p">]</span>
+            <span class="n">utility</span> <span class="o">=</span> <span class="n">building</span><span class="o">.</span><span class="n">utility</span>
+            <span class="n">electric</span> <span class="o">=</span> <span class="n">utility</span><span class="o">.</span><span class="n">electric</span>
+            <span class="n">mains</span> <span class="o">=</span> <span class="n">electric</span><span class="o">.</span><span class="n">mains</span>
+            <span class="n">appliances</span> <span class="o">=</span> <span class="n">electric</span><span class="o">.</span><span class="n">appliances</span>
+            <span class="n">circuits</span> <span class="o">=</span> <span class="n">electric</span><span class="o">.</span><span class="n">circuits</span>
+            <span class="k">for</span> <span class="n">main_name</span><span class="p">,</span> <span class="n">main_df</span> <span class="ow">in</span> <span class="n">mains</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+                <span class="n">create_path_df</span><span class="p">(</span><span class="n">building_number</span><span class="p">,</span> <span class="n">main_name</span><span class="p">,</span>
+                               <span class="n">main_df</span><span class="p">,</span> <span class="s">&#39;mains&#39;</span><span class="p">,</span> <span class="s">&#39;single&#39;</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">appliance_name</span><span class="p">,</span> <span class="n">appliance_df</span> <span class="ow">in</span> <span class="n">appliances</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">appliance_df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">DualSupply</span><span class="p">):</span>
+                    <span class="n">create_path_df</span><span class="p">(</span>
+                        <span class="n">building_number</span><span class="p">,</span> <span class="n">appliance_name</span><span class="p">,</span> <span class="n">appliance_df</span><span class="p">,</span>
+                        <span class="s">&#39;appliances&#39;</span><span class="p">,</span> <span class="s">&#39;dual&#39;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">create_path_df</span><span class="p">(</span>
+                        <span class="n">building_number</span><span class="p">,</span> <span class="n">appliance_name</span><span class="p">,</span> <span class="n">appliance_df</span><span class="p">,</span>
+                        <span class="s">&#39;appliances&#39;</span><span class="p">,</span> <span class="s">&#39;single&#39;</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">circuit_name</span><span class="p">,</span> <span class="n">circuit_df</span> <span class="ow">in</span> <span class="n">circuits</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+                <span class="n">create_path_df</span><span class="p">(</span><span class="n">building_number</span><span class="p">,</span> <span class="n">circuit_name</span><span class="p">,</span> <span class="n">circuit_df</span><span class="p">,</span>
+                               <span class="s">&#39;circuit&#39;</span><span class="p">,</span> <span class="s">&#39;single&#39;</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="DataSet.export"><a class="viewcode-back" href="../../../nilmtk.dataset.html#nilmtk.dataset.dataset.DataSet.export">[docs]</a>    <span class="k">def</span> <span class="nf">export</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">directory</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="s">&#39;HDF5&#39;</span><span class="p">,</span> <span class="n">compact</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Export dataset to disk as HDF5.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        directory : str</span>
+<span class="sd">            Output directory</span>
+
+<span class="sd">        format : str, optional</span>
+<span class="sd">            `REDD+` or `HDF5`</span>
+
+<span class="sd">        compact : boolean, optional</span>
+<span class="sd">            Defaults to false.  If True then only save change points.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">directory</span><span class="p">):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span>
+
+        <span class="c"># Store metadata</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="s">&#39;metadata.json&#39;</span><span class="p">),</span> <span class="s">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">metadata_fp</span><span class="p">:</span>
+            <span class="n">metadata_fp</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">))</span>
+
+        <span class="c"># Delete older dataset.h5 file if it exists</span>
+        <span class="n">path_h5</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="s">&#39;dataset.h5&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">path_h5</span><span class="p">):</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">&quot;Removing older HDF5 file&quot;</span><span class="p">)</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">path_h5</span><span class="p">)</span>
+
+        <span class="n">store</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">HDFStore</span><span class="p">(</span><span class="n">path_h5</span><span class="p">,</span> <span class="n">complevel</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span> <span class="n">complib</span><span class="o">=</span><span class="s">&#39;zlib&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">building_number</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">buildings</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">&quot;Writing data for </span><span class="si">%d</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">building_number</span><span class="p">))</span>
+            <span class="n">building</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">buildings</span><span class="p">[</span><span class="n">building_number</span><span class="p">]</span>
+            <span class="n">utility</span> <span class="o">=</span> <span class="n">building</span><span class="o">.</span><span class="n">utility</span>
+            <span class="n">electric</span> <span class="o">=</span> <span class="n">utility</span><span class="o">.</span><span class="n">electric</span>
+            <span class="n">mains</span> <span class="o">=</span> <span class="n">electric</span><span class="o">.</span><span class="n">mains</span>
+            <span class="k">for</span> <span class="n">main</span> <span class="ow">in</span> <span class="n">mains</span><span class="p">:</span>
+
+                <span class="n">store</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="s">&#39;/</span><span class="si">%d</span><span class="s">/utility/electric/mains/</span><span class="si">%d</span><span class="s">/</span><span class="si">%d</span><span class="s">/&#39;</span> <span class="o">%</span>
+                          <span class="p">(</span><span class="n">building_number</span><span class="p">,</span> <span class="n">main</span><span class="o">.</span><span class="n">split</span><span class="p">,</span> <span class="n">main</span><span class="o">.</span><span class="n">meter</span><span class="p">),</span>
+                          <span class="n">mains</span><span class="p">[</span><span class="n">main</span><span class="p">],</span> <span class="n">table</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+            <span class="n">appliances</span> <span class="o">=</span> <span class="n">electric</span><span class="o">.</span><span class="n">appliances</span>
+            <span class="k">for</span> <span class="n">appliance</span> <span class="ow">in</span> <span class="n">appliances</span><span class="p">:</span>
+                <span class="n">store</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="s">&#39;</span><span class="si">%d</span><span class="s">/utility/electric/appliances/</span><span class="si">%s</span><span class="s">/</span><span class="si">%d</span><span class="s">/&#39;</span> <span class="o">%</span>
+                          <span class="p">(</span><span class="n">building_number</span><span class="p">,</span> <span class="n">appliance</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                           <span class="n">appliance</span><span class="o">.</span><span class="n">instance</span><span class="p">),</span>
+                          <span class="n">appliances</span><span class="p">[</span><span class="n">appliance</span><span class="p">],</span> <span class="n">table</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="n">store</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="c"># This will be overridden by each subclass</span></div>
+<div class="viewcode-block" id="DataSet.load_building_names"><a class="viewcode-back" href="../../../nilmtk.dataset.html#nilmtk.dataset.dataset.DataSet.load_building_names">[docs]</a>    <span class="k">def</span> <span class="nf">load_building_names</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root_directory</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;return list of building names&quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+    <span class="c"># This will be overridden by each subclass</span></div>
+<div class="viewcode-block" id="DataSet.load_building"><a class="viewcode-back" href="../../../nilmtk.dataset.html#nilmtk.dataset.dataset.DataSet.load_building">[docs]</a>    <span class="k">def</span> <span class="nf">load_building</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root_directory</span><span class="p">,</span> <span class="n">building_name</span><span class="p">):</span>
+        <span class="c"># convert units</span>
+        <span class="c"># convert to standard appliance names</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+</div>
+<div class="viewcode-block" id="DataSet.to_json_temp"><a class="viewcode-back" href="../../../nilmtk.dataset.html#nilmtk.dataset.dataset.DataSet.to_json_temp">[docs]</a>    <span class="k">def</span> <span class="nf">to_json_temp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="k">lambda</span> <span class="n">o</span><span class="p">:</span> <span class="n">o</span><span class="o">.</span><span class="n">__dict__</span><span class="p">,</span>
+                          <span class="n">sort_keys</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="DataSet.to_json"><a class="viewcode-back" href="../../../nilmtk.dataset.html#nilmtk.dataset.dataset.DataSet.to_json">[docs]</a>    <span class="k">def</span> <span class="nf">to_json</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Returns the JSON representation of the dataset&#39;&#39;&#39;</span>
+        <span class="n">representation</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">)</span>
+        <span class="n">representation</span><span class="p">[</span><span class="s">&quot;buildings&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="c"># Accessing list of buildings</span>
+        <span class="k">for</span> <span class="n">building_name</span><span class="p">,</span> <span class="n">building</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">buildings</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+            <span class="n">representation</span><span class="p">[</span><span class="s">&quot;buildings&quot;</span><span class="p">][</span><span class="n">building_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">building</span><span class="o">.</span><span class="n">to_json</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">representation</span><span class="p">)</span>
+
+    <span class="c">#------------------------------------------------------</span>
+    <span class="c"># DESCRIPTIONS OF THE DATASET</span>
+</div>
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="s">&#39;nilmtk.dataset.DataSet.  &#39;</span>
+        <span class="n">s</span> <span class="o">+=</span> <span class="s">&#39;name=&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;name&#39;</span><span class="p">,</span> <span class="s">&#39;NOT DEFINED&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span>
+        <span class="k">return</span> <span class="n">s</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__str__</span><span class="p">()</span>
+
+<div class="viewcode-block" id="DataSet.descriptive_stats"><a class="viewcode-back" href="../../../nilmtk.dataset.html#nilmtk.dataset.dataset.DataSet.descriptive_stats">[docs]</a>    <span class="k">def</span> <span class="nf">descriptive_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c"># Collect lists of stats per building</span>
+        <span class="n">stats</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s">&#39;n_appliances&#39;</span><span class="p">:</span> <span class="p">[],</span>
+            <span class="s">&#39;energy_submetered&#39;</span><span class="p">:</span> <span class="p">[],</span>
+            <span class="s">&#39;proportion_up&#39;</span><span class="p">:</span> <span class="p">[],</span>
+<span class="c">#            &#39;dropout_rate&#39;: [],</span>
+            <span class="s">&#39;dropout_rate_ignoring_gaps&#39;</span><span class="p">:</span> <span class="p">[],</span>
+            <span class="s">&#39;uptime&#39;</span><span class="p">:</span> <span class="p">[],</span>
+<span class="c">#            &#39;prop_timeslices&#39;: []</span>
+            <span class="p">}</span>
+
+        <span class="k">for</span> <span class="n">building_num</span><span class="p">,</span> <span class="n">building</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">buildings</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">&#39;Calculating stats for building&#39;</span><span class="p">,</span> <span class="n">building_num</span><span class="p">)</span>
+            <span class="n">electric</span> <span class="o">=</span> <span class="n">building</span><span class="o">.</span><span class="n">utility</span><span class="o">.</span><span class="n">electric</span>
+            <span class="n">stats</span><span class="p">[</span><span class="s">&#39;n_appliances&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">electric</span><span class="o">.</span><span class="n">appliances</span><span class="p">))</span>
+            <span class="n">stats</span><span class="p">[</span><span class="s">&#39;energy_submetered&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">proportion_of_energy_submetered</span><span class="p">(</span><span class="n">electric</span><span class="p">))</span>
+<span class="c">#            stats[&#39;dropout_rate&#39;].extend(get_dropout_rates(electric))</span>
+            <span class="n">stats</span><span class="p">[</span><span class="s">&#39;dropout_rate_ignoring_gaps&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
+                <span class="n">get_dropout_rates</span><span class="p">(</span><span class="n">electric</span><span class="p">,</span> <span class="n">ignore_gaps</span><span class="o">=</span><span class="bp">True</span><span class="p">))</span>
+            <span class="n">uptime</span> <span class="o">=</span> <span class="n">get_uptime</span><span class="p">(</span><span class="n">electric</span><span class="o">.</span><span class="n">mains</span><span class="o">.</span><span class="n">values</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">stats</span><span class="p">[</span><span class="s">&#39;uptime&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">uptime</span><span class="p">)</span>
+            <span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="o">=</span> <span class="n">electric</span><span class="o">.</span><span class="n">get_start_and_end_dates</span><span class="p">()</span>
+            <span class="n">stats</span><span class="p">[</span><span class="s">&#39;proportion_up&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">uptime</span> <span class="o">/</span> <span class="p">((</span><span class="n">end</span><span class="o">-</span><span class="n">start</span><span class="p">)</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span> 
+                                                    <span class="o">/</span> <span class="n">SEC_PER_DAY</span><span class="p">))</span>
+<span class="c">#            stats[&#39;prop_timeslices&#39;].append(</span>
+<span class="c">#                proportion_of_time_where_more_energy_submetered(building))</span>
+
+        <span class="k">return</span> <span class="n">stats</span>
+</div>
+<div class="viewcode-block" id="DataSet.describe"><a class="viewcode-back" href="../../../nilmtk.dataset.html#nilmtk.dataset.dataset.DataSet.describe">[docs]</a>    <span class="k">def</span> <span class="nf">describe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fh</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">):</span>
+        <span class="c"># Prepare string representation of stats</span>
+        <span class="n">stats</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">descriptive_stats</span><span class="p">()</span>
+
+        <span class="n">s</span> <span class="o">=</span> <span class="s">&#39;&#39;</span>
+        <span class="n">s</span> <span class="o">+=</span> <span class="s">&#39;METADATA:</span><span class="se">\n</span><span class="s">&#39;</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+            <span class="n">s</span> <span class="o">+=</span> <span class="s">&#39;  {} = {}</span><span class="se">\n</span><span class="s">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="n">s</span> <span class="o">+=</span> <span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span>
+        <span class="n">s</span> <span class="o">+=</span> <span class="s">&#39;NUMBER OF BUILDINGS: {:d}</span><span class="se">\n\n</span><span class="s">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">buildings</span><span class="p">))</span>
+        <span class="n">s</span> <span class="o">+=</span> <span class="s">&#39;NUMBER OF APPLIANCES PER BUILDING:</span><span class="se">\n</span><span class="s">&#39;</span>
+        <span class="n">s</span> <span class="o">+=</span> <span class="n">summary_stats_string</span><span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="s">&#39;n_appliances&#39;</span><span class="p">])</span>
+        <span class="n">s</span> <span class="o">+=</span> <span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span>
+        <span class="n">s</span> <span class="o">+=</span> <span class="s">&#39;PROPORTION OF ENERGY SUBMETERED PER BUILDLING:</span><span class="se">\n</span><span class="s">&#39;</span>
+        <span class="n">s</span> <span class="o">+=</span> <span class="n">summary_stats_string</span><span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="s">&#39;energy_submetered&#39;</span><span class="p">])</span>
+        <span class="n">s</span> <span class="o">+=</span> <span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span>
+        <span class="n">s</span> <span class="o">+=</span> <span class="s">&#39;DROPOUT RATE PER CHANNEL, INCLUDING LARGE GAPS:</span><span class="se">\n</span><span class="s">&#39;</span>
+        <span class="n">s</span> <span class="o">+=</span> <span class="n">summary_stats_string</span><span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="s">&#39;dropout_rate&#39;</span><span class="p">])</span>
+        <span class="n">s</span> <span class="o">+=</span> <span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span>
+        <span class="n">s</span> <span class="o">+=</span> <span class="s">&#39;DROPOUT RATE PER CHANNEL, IGNORING LARGE GAPS:</span><span class="se">\n</span><span class="s">&#39;</span>
+        <span class="n">s</span> <span class="o">+=</span> <span class="n">summary_stats_string</span><span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="s">&#39;dropout_rate_ignoring_gaps&#39;</span><span class="p">])</span>
+        <span class="n">s</span> <span class="o">+=</span> <span class="s">&#39;MAINS UPTIME PER BUILDING (DAYS):</span><span class="se">\n</span><span class="s">&#39;</span>
+        <span class="n">s</span> <span class="o">+=</span> <span class="n">summary_stats_string</span><span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="s">&#39;uptime&#39;</span><span class="p">])</span>
+        <span class="n">s</span> <span class="o">+=</span> <span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span>
+        <span class="n">s</span> <span class="o">+=</span> <span class="s">&#39;PROPORTION OF TIME SLICES WHERE &gt; 70</span><span class="si">% E</span><span class="s">NERGY IS SUBMETERED:</span><span class="se">\n</span><span class="s">&#39;</span>
+        <span class="n">s</span> <span class="o">+=</span> <span class="n">summary_stats_string</span><span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="s">&#39;prop_timeslices&#39;</span><span class="p">])</span>
+        <span class="n">s</span> <span class="o">+=</span> <span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span>
+
+        <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">s</span><span class="p">)</span></div></div>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2014, nilmtk authors.<br/>
+      Last updated on Mar 26, 2014.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

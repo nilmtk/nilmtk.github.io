@@ -1,0 +1,554 @@
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>nilmtk.metrics &mdash; nilmtk 0.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/bootstrap-3.0.0/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/bootstrap-3.0.0/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../../_static/js/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-3.0.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="nilmtk 0.0.1 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../index.html">nilmtk</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.0.1</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            <li class="divider-vertical"></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a href="../../index.html"
+     class="dropdown-toggle"
+     data-toggle="dropdown">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+    ><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../nilmtk.html">nilmtk API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../userguide.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute.html">Contributing</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"></ul>
+</li>
+              
+            
+            
+              
+            
+            
+            
+            
+              <li></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      
+  <h1>Source code for nilmtk.metrics</h1><div class="highlight"><pre>
+<span class="sd">&#39;&#39;&#39;Metrics to compare disaggregation performance of various algorithms</span>
+
+<span class="sd">Notation</span>
+<span class="sd">-----------</span>
+
+<span class="sd">Below is the notation used to mathematically define each metric. </span>
+
+<span class="sd">:math:`T` - number of time slices.</span>
+
+<span class="sd">:math:`t` - a time slice.</span>
+
+<span class="sd">:math:`N` - number of appliances.</span>
+
+<span class="sd">:math:`n` - an appliance.</span>
+
+<span class="sd">:math:`y^{(n)}_t` -  ground truth power of appliance :math:`n` in time slice :math:`t`.</span>
+
+<span class="sd">:math:`\\hat{y}^{(n)}_t` -  estimated power of appliance :math:`n` in time slice :math:`t`.</span>
+
+<span class="sd">:math:`x^{(n)}_t` - ground truth state of appliance :math:`n` in time slice :math:`t`.</span>
+
+<span class="sd">:math:`\\hat{x}^{(n)}_t` - estimated state of appliance :math:`n` in time slice :math:`t`.</span>
+
+<span class="sd">Functions</span>
+<span class="sd">-----------</span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">f1_score</span>
+
+
+<div class="viewcode-block" id="error_energy"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.metrics.error_energy">[docs]</a><span class="k">def</span> <span class="nf">error_energy</span><span class="p">(</span><span class="n">predicted_power</span><span class="p">,</span> <span class="n">df_appliances_ground_truth</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Compute error in assigned energy</span>
+
+<span class="sd">    # TODO: Give a vanilla example</span>
+<span class="sd">    </span>
+<span class="sd">    .. math::</span>
+<span class="sd">        error^{(n)} = </span>
+<span class="sd">        \\left | \\sum_t y^{(n)}_t - \\sum_t \\hat{y}^{(n)}_t \\right |</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    predicted_power: Pandas DataFrame of type {appliance :</span>
+<span class="sd">         [array of predictd power]}</span>
+
+<span class="sd">    df_appliances_ground_truth: Pandas DataFrame of type {appliance :</span>
+<span class="sd">        [array of ground truth power]}</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    error: dict of type {appliance : error in assigned energy}</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">error</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">for</span> <span class="n">appliance</span> <span class="ow">in</span> <span class="n">predicted_power</span><span class="p">:</span>
+        <span class="n">ground_truth_energy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>
+            <span class="n">df_appliances_ground_truth</span><span class="p">[</span><span class="n">appliance</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+        <span class="n">predicted_energy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">predicted_power</span><span class="p">[</span><span class="n">appliance</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+        <span class="n">error</span><span class="p">[</span><span class="n">appliance</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">predicted_energy</span> <span class="o">-</span> <span class="n">ground_truth_energy</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">error</span>
+
+</div>
+<div class="viewcode-block" id="fraction_energy_assigned_correctly"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.metrics.fraction_energy_assigned_correctly">[docs]</a><span class="k">def</span> <span class="nf">fraction_energy_assigned_correctly</span><span class="p">(</span><span class="n">predicted_power</span><span class="p">,</span> <span class="n">df_appliances_ground_truth</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Compute fraction of energy assigned correctly</span>
+
+<span class="sd">    # TODO: Give a vanilla example</span>
+<span class="sd">    </span>
+<span class="sd">    .. math::</span>
+<span class="sd">        fraction = </span>
+<span class="sd">        \\sum_n min \\left ( </span>
+<span class="sd">        \\frac{\\sum_n y}{\\sum_{n,t} y}, </span>
+<span class="sd">        \\frac{\\sum_n \\hat{y}}{\\sum_{n,t} \\hat{y}} </span>
+<span class="sd">        \\right )</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    predicted_power: Pandas DataFrame of type {appliance :</span>
+<span class="sd">         [array of predictd power]}</span>
+
+<span class="sd">    df_appliances_ground_truth: Pandas DataFrame of type {appliance :</span>
+<span class="sd">        [array of ground truth power]}</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    re: float representing Fraction of Energy Correctly Assigned</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">fraction</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+    <span class="n">total_energy_predicted</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">predicted_power</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">appliance</span> <span class="ow">in</span> <span class="n">predicted_power</span><span class="p">:</span>
+
+        <span class="n">appliance_energy_predicted</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">predicted_power</span><span class="p">[</span><span class="n">appliance</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+
+        <span class="n">appliance_energy_ground_truth</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>
+            <span class="n">df_appliances_ground_truth</span><span class="p">[</span><span class="n">appliance</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+        <span class="n">total_energy_ground_truth</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">df_appliances_ground_truth</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+
+        <span class="n">fraction</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="n">fraction</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span>
+                <span class="p">[</span><span class="n">appliance_energy_predicted</span> <span class="o">/</span> <span class="n">total_energy_predicted</span><span class="p">,</span>
+                 <span class="n">appliance_energy_ground_truth</span> <span class="o">/</span>
+                 <span class="n">total_energy_ground_truth</span>
+                 <span class="p">]))</span>
+
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">fraction</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="mean_normalized_error_power"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.metrics.mean_normalized_error_power">[docs]</a><span class="k">def</span> <span class="nf">mean_normalized_error_power</span><span class="p">(</span><span class="n">predicted_power</span><span class="p">,</span> <span class="n">df_appliances_ground_truth</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Compute mean normalized error in assigned power</span>
+
+<span class="sd">    # TODO: Give a vanilla example</span>
+<span class="sd">        </span>
+<span class="sd">    .. math::</span>
+<span class="sd">        error^{(n)} = </span>
+<span class="sd">        \\frac</span>
+<span class="sd">        { \\sum_t {\\left | y_t^{(n)} - \\hat{y}_t^{(n)} \\right |} }</span>
+<span class="sd">        { \\sum_t y_t^{(n)} }</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    predicted_power: Pandas DataFrame of type {appliance :</span>
+<span class="sd">         [array of predicted power]}</span>
+
+<span class="sd">    df_appliances_ground_truth: Pandas DataFrame of type {appliance :</span>
+<span class="sd">        [array of ground truth power]}</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    mne: dict of type {appliance : MNE error}</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">mne</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">numerator</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">denominator</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">for</span> <span class="n">appliance</span> <span class="ow">in</span> <span class="n">predicted_power</span><span class="p">:</span>
+        <span class="n">numerator</span><span class="p">[</span><span class="n">appliance</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">predicted_power</span><span class="p">[</span><span class="n">appliance</span><span class="p">]</span> <span class="o">-</span>
+                                             <span class="n">df_appliances_ground_truth</span><span class="p">[</span><span class="n">appliance</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">))</span>
+        <span class="n">denominator</span><span class="p">[</span><span class="n">appliance</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>
+            <span class="n">df_appliances_ground_truth</span><span class="p">[</span><span class="n">appliance</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+        <span class="n">mne</span><span class="p">[</span><span class="n">appliance</span><span class="p">]</span> <span class="o">=</span> <span class="n">numerator</span><span class="p">[</span><span class="n">appliance</span><span class="p">]</span> <span class="o">*</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">denominator</span><span class="p">[</span><span class="n">appliance</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">mne</span>
+
+</div>
+<div class="viewcode-block" id="rms_error_power"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.metrics.rms_error_power">[docs]</a><span class="k">def</span> <span class="nf">rms_error_power</span><span class="p">(</span><span class="n">predicted_power</span><span class="p">,</span> <span class="n">df_appliances_ground_truth</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Compute RMS error in assigned power</span>
+<span class="sd">    </span>
+<span class="sd">    # TODO: Give a vanilla example</span>
+<span class="sd">    </span>
+<span class="sd">    .. math::</span>
+<span class="sd">            error^{(n)} = \\sqrt{ \\frac{1}{T} \\sum_t{ \\left ( y_t - \\hat{y}_t \\right )^2 } }</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    predicted_power: Pandas DataFrame of type {appliance :</span>
+<span class="sd">         [array of predicted power]}</span>
+
+<span class="sd">    df_appliances_ground_truth: Pandas DataFrame of type {appliance :</span>
+<span class="sd">        [array of ground truth power]}</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    re: dict of type {appliance : RMS error in predicted power}</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">re</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">for</span> <span class="n">appliance</span> <span class="ow">in</span> <span class="n">predicted_power</span><span class="p">:</span>
+        <span class="n">re</span><span class="p">[</span><span class="n">appliance</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">predicted_power</span><span class="p">[</span><span class="n">appliance</span><span class="p">]</span> <span class="o">-</span>
+                               <span class="n">df_appliances_ground_truth</span><span class="p">[</span><span class="n">appliance</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">re</span>
+
+</div>
+<div class="viewcode-block" id="powers_to_states"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.metrics.powers_to_states">[docs]</a><span class="k">def</span> <span class="nf">powers_to_states</span><span class="p">(</span><span class="n">powers</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Converts power demands into binary states</span>
+<span class="sd">    </span>
+<span class="sd">    # TODO: Give a vanilla example</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    powers: Pandas DataFrame of type {appliance :</span>
+<span class="sd">         [array of power]}</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    states: Pandas DataFrame of type {appliance :</span>
+<span class="sd">         [array of states]}</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">on_power_threshold</span> <span class="o">=</span> <span class="mi">50</span>
+
+    <span class="n">states</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">power</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
+    <span class="n">states</span><span class="p">[</span><span class="n">power</span> <span class="o">&gt;</span> <span class="n">on_power_threshold</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+
+    <span class="k">return</span> <span class="n">states</span>
+
+</div>
+<div class="viewcode-block" id="confusion_matrices"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.metrics.confusion_matrices">[docs]</a><span class="k">def</span> <span class="nf">confusion_matrices</span><span class="p">(</span><span class="n">predicted_states</span><span class="p">,</span> <span class="n">ground_truth_states</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Compute confusion matrix between appliance states for each appliance</span>
+
+<span class="sd">    # TODO: Give a vanilla example</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    predicted_state: Pandas DataFrame of type {appliance :</span>
+<span class="sd">         [array of predicted states]}</span>
+
+<span class="sd">    ground_truth_state: Pandas DataFrame of type {appliance :</span>
+<span class="sd">        [array of ground truth states]}</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dict of type {appliance : confusion matrix}</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">re</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">for</span> <span class="n">appliance</span> <span class="ow">in</span> <span class="n">predicted_states</span><span class="p">:</span>
+        <span class="n">matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">ground_truth_states</span><span class="p">[</span><span class="n">appliance</span><span class="p">])</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+                           <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">ground_truth_states</span><span class="p">[</span><span class="n">appliance</span><span class="p">])</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">time</span> <span class="ow">in</span> <span class="n">predicted_states</span><span class="p">[</span><span class="n">appliance</span><span class="p">]:</span>
+            <span class="n">matrix</span><span class="p">[</span><span class="n">predicted_states</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">time</span><span class="p">,</span> <span class="n">appliance</span><span class="p">],</span>
+                   <span class="n">ground_truth_states</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">time</span><span class="p">,</span> <span class="n">appliance</span><span class="p">]]</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">re</span><span class="p">[</span><span class="n">appliance</span><span class="p">]</span> <span class="o">=</span> <span class="n">matrix</span>
+
+    <span class="k">return</span> <span class="n">re</span>
+
+</div>
+<div class="viewcode-block" id="tp_fp_fn_tn"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.metrics.tp_fp_fn_tn">[docs]</a><span class="k">def</span> <span class="nf">tp_fp_fn_tn</span><span class="p">(</span><span class="n">predicted_states</span><span class="p">,</span> <span class="n">ground_truth_states</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Compute counts of True Positives, False Positives, False Negatives, True Negatives</span>
+
+<span class="sd">    # TODO: Give a vanilla example</span>
+<span class="sd">    </span>
+<span class="sd">    .. math::</span>
+<span class="sd">        TP^{(n)} = </span>
+<span class="sd">        \\sum_{t}</span>
+<span class="sd">        and \\left ( x^{(n)}_t = on, \\hat{x}^{(n)}_t = on \\right )</span>
+<span class="sd">        </span>
+<span class="sd">        FP^{(n)} = </span>
+<span class="sd">        \\sum_{t}</span>
+<span class="sd">        and \\left ( x^{(n)}_t = off, \\hat{x}^{(n)}_t = on \\right )</span>
+<span class="sd">        </span>
+<span class="sd">        FN^{(n)} = </span>
+<span class="sd">        \\sum_{t}</span>
+<span class="sd">        and \\left ( x^{(n)}_t = on, \\hat{x}^{(n)}_t = off \\right )</span>
+<span class="sd">        </span>
+<span class="sd">        TN^{(n)} = </span>
+<span class="sd">        \\sum_{t}</span>
+<span class="sd">        and \\left ( x^{(n)}_t = off, \\hat{x}^{(n)}_t = off \\right )</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    predicted_state: Pandas DataFrame of type {appliance :</span>
+<span class="sd">         [array of predicted states]}</span>
+
+<span class="sd">    ground_truth_state: Pandas DataFrame of type {appliance :</span>
+<span class="sd">        [array of ground truth states]}</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    numpy array where columns represent appliances and rows represent: [TP, FP, FN, TN]</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="c"># assumes state 0 = off, all other states = on</span>
+    <span class="n">predicted_states_on</span> <span class="o">=</span> <span class="n">predicted_states</span> <span class="o">&gt;</span> <span class="mi">0</span>
+    <span class="n">ground_truth_states_on</span> <span class="o">=</span> <span class="n">ground_truth_states</span> <span class="o">&gt;</span> <span class="mi">0</span>
+
+    <span class="n">tp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">predicted_states_on</span><span class="o">.</span><span class="n">values</span> <span class="o">==</span> <span class="bp">True</span><span class="p">,</span>
+                <span class="n">ground_truth_states_on</span><span class="o">.</span><span class="n">values</span> <span class="o">==</span> <span class="bp">True</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">fp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">predicted_states_on</span><span class="o">.</span><span class="n">values</span> <span class="o">==</span> <span class="bp">True</span><span class="p">,</span>
+                <span class="n">ground_truth_states_on</span><span class="o">.</span><span class="n">values</span> <span class="o">==</span> <span class="bp">False</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">fn</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">predicted_states_on</span><span class="o">.</span><span class="n">values</span> <span class="o">==</span> <span class="bp">False</span><span class="p">,</span>
+                <span class="n">ground_truth_states_on</span><span class="o">.</span><span class="n">values</span> <span class="o">==</span> <span class="bp">True</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">tn</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">predicted_states_on</span><span class="o">.</span><span class="n">values</span> <span class="o">==</span> <span class="bp">False</span><span class="p">,</span>
+                <span class="n">ground_truth_states_on</span><span class="o">.</span><span class="n">values</span> <span class="o">==</span> <span class="bp">False</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">tp</span><span class="p">,</span> <span class="n">fp</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="n">tn</span><span class="p">])</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="tpr_fpr"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.metrics.tpr_fpr">[docs]</a><span class="k">def</span> <span class="nf">tpr_fpr</span><span class="p">(</span><span class="n">predicted_states</span><span class="p">,</span> <span class="n">ground_truth_states</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Compute True Positive Rate and False Negative Rate</span>
+
+<span class="sd">    # TODO: Give a vanilla example</span>
+<span class="sd">    </span>
+<span class="sd">    .. math::</span>
+<span class="sd">        TPR^{(n)} = \\frac{TP}{\\left ( TP + FN \\right )}</span>
+<span class="sd">        </span>
+<span class="sd">        FPR^{(n)} = \\frac{FP}{\\left ( FP + TN \\right )}</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    predicted_state: Pandas DataFrame of type {appliance :</span>
+<span class="sd">         [array of predicted states]}</span>
+
+<span class="sd">    ground_truth_state: Pandas DataFrame of type {appliance :</span>
+<span class="sd">        [array of ground truth states]}</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    numpy array where columns represent appliances and rows represent: [TPR, FPR]</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">tfpn</span> <span class="o">=</span> <span class="n">tp_fp_fn_tn</span><span class="p">(</span><span class="n">predicted_states</span><span class="p">,</span> <span class="n">ground_truth_states</span><span class="p">)</span>
+
+    <span class="n">tpr</span> <span class="o">=</span> <span class="n">tfpn</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">/</span> <span class="p">(</span><span class="n">tfpn</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">+</span> <span class="n">tfpn</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="p">:])</span>
+    <span class="n">fpr</span> <span class="o">=</span> <span class="n">tfpn</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">/</span> <span class="p">(</span><span class="n">tfpn</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">+</span> <span class="n">tfpn</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="p">:])</span>
+
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">tpr</span><span class="p">,</span> <span class="n">fpr</span><span class="p">])</span>
+
+</div>
+<div class="viewcode-block" id="precision_recall"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.metrics.precision_recall">[docs]</a><span class="k">def</span> <span class="nf">precision_recall</span><span class="p">(</span><span class="n">predicted_states</span><span class="p">,</span> <span class="n">ground_truth_states</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Compute Precision and Recall</span>
+
+<span class="sd">    # TODO: Give a vanilla example</span>
+<span class="sd">    </span>
+<span class="sd">    .. math::</span>
+<span class="sd">        Precision^{(n)} = \\frac{TP}{\\left ( TP + FP \\right )}</span>
+<span class="sd">        </span>
+<span class="sd">        Recall^{(n)} = \\frac{TP}{\\left ( TP + FN \\right )}</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    predicted_state: Pandas DataFrame of type {appliance :</span>
+<span class="sd">         [array of predicted states]}</span>
+
+<span class="sd">    ground_truth_state: Pandas DataFrame of type {appliance :</span>
+<span class="sd">        [array of ground truth states]}</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    numpy array where columns represent appliances and rows represent: [Precision, Recall]</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">tfpn</span> <span class="o">=</span> <span class="n">tp_fp_fn_tn</span><span class="p">(</span><span class="n">predicted_states</span><span class="p">,</span> <span class="n">ground_truth_states</span><span class="p">)</span>
+
+    <span class="n">prec</span> <span class="o">=</span> <span class="n">tfpn</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">/</span> <span class="p">(</span><span class="n">tfpn</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">+</span> <span class="n">tfpn</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="p">:])</span>
+    <span class="n">rec</span> <span class="o">=</span> <span class="n">tfpn</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">/</span> <span class="p">(</span><span class="n">tfpn</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">+</span> <span class="n">tfpn</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="p">:])</span>
+
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">prec</span><span class="p">,</span> <span class="n">rec</span><span class="p">])</span>
+
+</div>
+<div class="viewcode-block" id="f_score"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.metrics.f_score">[docs]</a><span class="k">def</span> <span class="nf">f_score</span><span class="p">(</span><span class="n">predicted_power</span><span class="p">,</span> <span class="n">ground_truth_power</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Compute F1 score</span>
+
+<span class="sd">    # TODO: Give a vanilla example</span>
+<span class="sd">    </span>
+<span class="sd">    .. math::</span>
+<span class="sd">        F_score^{(n)} = \\frac</span>
+<span class="sd">            {2 * Precision * Recall}</span>
+<span class="sd">            {Precision + Recall}</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    predicted_state: Pandas DataFrame of type {appliance :</span>
+<span class="sd">         [array of predicted states]}</span>
+
+<span class="sd">    ground_truth_state: Pandas DataFrame of type {appliance :</span>
+<span class="sd">        [array of ground truth states]}</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    numpy array where columns represent appliances and rows represent F score</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">threshold</span> <span class="o">=</span> <span class="mi">30</span>
+    <span class="n">predicted_states</span> <span class="o">=</span> <span class="p">(</span><span class="n">predicted_power</span> <span class="o">&gt;</span> <span class="n">threshold</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+    <span class="n">ground_truth_states</span> <span class="o">=</span> <span class="p">(</span><span class="n">ground_truth_power</span> <span class="o">&gt;</span> <span class="n">threshold</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+    <span class="n">f_score_out</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">appliance</span> <span class="ow">in</span> <span class="n">predicted_states</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="n">f_score_out</span><span class="p">[</span><span class="n">appliance</span><span class="p">]</span> <span class="o">=</span> <span class="n">f1_score</span><span class="p">(</span>
+            <span class="n">ground_truth_states</span><span class="p">[[</span><span class="n">appliance</span><span class="p">]],</span> <span class="n">predicted_states</span><span class="p">[[</span><span class="n">appliance</span><span class="p">]])</span>
+    <span class="k">return</span> <span class="n">f_score_out</span>
+
+    <span class="c">#prec_rec = precision_recall(predicted_states, ground_truth_states)</span>
+    <span class="c"># return (2 * prec_rec[0, :] * prec_rec[1,:]) / (prec_rec[0,:] +</span>
+    <span class="c"># prec_rec[1,:])</span>
+    <span class="c"># return f1_score(ground_truth_states, predicted_states)</span>
+
+</div>
+<div class="viewcode-block" id="hamming_loss"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.metrics.hamming_loss">[docs]</a><span class="k">def</span> <span class="nf">hamming_loss</span><span class="p">(</span><span class="n">predicted_state</span><span class="p">,</span> <span class="n">ground_truth_state</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Compute Hamming loss</span>
+
+<span class="sd">    # TODO: Give a vanilla example</span>
+<span class="sd">    </span>
+<span class="sd">    .. math::</span>
+<span class="sd">        HammingLoss = </span>
+<span class="sd">        \\frac{1}{T} \\sum_{t}</span>
+<span class="sd">        \\frac{1}{N} \\sum_{n}</span>
+<span class="sd">        xor \\left ( x^{(n)}_t, \\hat{x}^{(n)}_t \\right )</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    predicted_state: Pandas DataFrame of type {appliance :</span>
+<span class="sd">         [array of predicted states]}</span>
+
+<span class="sd">    ground_truth_state: Pandas DataFrame of type {appliance :</span>
+<span class="sd">        [array of ground truth states]}</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    float of hamming_loss</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">num_appliances</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">ground_truth_state</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">xors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">predicted_state</span><span class="o">.</span><span class="n">values</span> <span class="o">!=</span> <span class="n">ground_truth_state</span><span class="o">.</span><span class="n">values</span><span class="p">),</span>
+                  <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">num_appliances</span>
+
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">xors</span><span class="p">)</span></div>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2014, nilmtk authors.<br/>
+      Last updated on Mar 26, 2014.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

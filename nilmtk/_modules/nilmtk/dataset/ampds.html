@@ -1,0 +1,299 @@
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>nilmtk.dataset.ampds &mdash; nilmtk 0.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/bootstrap-3.0.0/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/bootstrap-3.0.0/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../../../_static/js/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="../../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../../_static/bootstrap-3.0.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../../_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="nilmtk 0.0.1 documentation" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../index.html">nilmtk</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.0.1</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            <li class="divider-vertical"></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a href="../../../index.html"
+     class="dropdown-toggle"
+     data-toggle="dropdown">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+    ><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../nilmtk.html">nilmtk API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../userguide.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute.html">Contributing</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"></ul>
+</li>
+              
+            
+            
+              
+            
+            
+            
+            
+              <li></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      
+  <h1>Source code for nilmtk.dataset.ampds</h1><div class="highlight"><pre>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">division</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+
+<span class="kn">from</span> <span class="nn">nilmtk.dataset</span> <span class="kn">import</span> <span class="n">DataSet</span>
+<span class="kn">from</span> <span class="nn">nilmtk.building</span> <span class="kn">import</span> <span class="n">Building</span>
+<span class="kn">from</span> <span class="nn">nilmtk.sensors.electricity</span> <span class="kn">import</span> <span class="n">Measurement</span>
+<span class="kn">from</span> <span class="nn">nilmtk.sensors.electricity</span> <span class="kn">import</span> <span class="n">ApplianceName</span>
+<span class="kn">from</span> <span class="nn">nilmtk.sensors.electricity</span> <span class="kn">import</span> <span class="n">MainsName</span>
+
+<span class="c"># Column name mapping</span>
+<span class="n">column_name_mapping</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">&#39;V&#39;</span><span class="p">:</span> <span class="n">Measurement</span><span class="p">(</span><span class="s">&#39;voltage&#39;</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">),</span>
+    <span class="s">&#39;I&#39;</span><span class="p">:</span> <span class="n">Measurement</span><span class="p">(</span><span class="s">&#39;current&#39;</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">),</span>
+    <span class="s">&#39;f&#39;</span><span class="p">:</span> <span class="n">Measurement</span><span class="p">(</span><span class="s">&#39;frequency&#39;</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">),</span>
+    <span class="s">&#39;DPF&#39;</span><span class="p">:</span> <span class="n">Measurement</span><span class="p">(</span><span class="s">&#39;pf&#39;</span><span class="p">,</span> <span class="s">&#39;d&#39;</span><span class="p">),</span>
+    <span class="s">&#39;APF&#39;</span><span class="p">:</span> <span class="n">Measurement</span><span class="p">(</span><span class="s">&#39;pf&#39;</span><span class="p">,</span> <span class="s">&#39;a&#39;</span><span class="p">),</span>
+    <span class="s">&#39;P&#39;</span><span class="p">:</span> <span class="n">Measurement</span><span class="p">(</span><span class="s">&#39;power&#39;</span><span class="p">,</span> <span class="s">&#39;active&#39;</span><span class="p">),</span>
+    <span class="s">&#39;Pt&#39;</span><span class="p">:</span> <span class="n">Measurement</span><span class="p">(</span><span class="s">&#39;energy&#39;</span><span class="p">,</span> <span class="s">&#39;active&#39;</span><span class="p">),</span>
+    <span class="s">&#39;Q&#39;</span><span class="p">:</span> <span class="n">Measurement</span><span class="p">(</span><span class="s">&#39;power&#39;</span><span class="p">,</span> <span class="s">&#39;reactive&#39;</span><span class="p">),</span>
+    <span class="s">&#39;Qt&#39;</span><span class="p">:</span> <span class="n">Measurement</span><span class="p">(</span><span class="s">&#39;energy&#39;</span><span class="p">,</span> <span class="s">&#39;reactive&#39;</span><span class="p">),</span>
+    <span class="s">&#39;S&#39;</span><span class="p">:</span> <span class="n">Measurement</span><span class="p">(</span><span class="s">&#39;power&#39;</span><span class="p">,</span> <span class="s">&#39;apparent&#39;</span><span class="p">),</span>
+    <span class="s">&#39;St&#39;</span><span class="p">:</span> <span class="n">Measurement</span><span class="p">(</span><span class="s">&#39;energy&#39;</span><span class="p">,</span> <span class="s">&#39;apparent&#39;</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c"># Appliance name mapping</span>
+<span class="n">appliance_name_mapping</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">&#39;B1E&#39;</span><span class="p">:</span> <span class="n">ApplianceName</span><span class="p">(</span><span class="s">&#39;bedroom misc&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="s">&#39;B2E&#39;</span><span class="p">:</span> <span class="n">ApplianceName</span><span class="p">(</span><span class="s">&#39;bedroom misc&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+    <span class="s">&#39;BME&#39;</span><span class="p">:</span> <span class="n">ApplianceName</span><span class="p">(</span><span class="s">&#39;plugs&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="s">&#39;CDE&#39;</span><span class="p">:</span> <span class="n">ApplianceName</span><span class="p">(</span><span class="s">&#39;dryer washer&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="s">&#39;CWE&#39;</span><span class="p">:</span> <span class="n">ApplianceName</span><span class="p">(</span><span class="s">&#39;dryer washer&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+    <span class="s">&#39;DNE&#39;</span><span class="p">:</span> <span class="n">ApplianceName</span><span class="p">(</span><span class="s">&#39;plugs&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+    <span class="s">&#39;DWE&#39;</span><span class="p">:</span> <span class="n">ApplianceName</span><span class="p">(</span><span class="s">&#39;dishwasher&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="s">&#39;EBE&#39;</span><span class="p">:</span> <span class="n">ApplianceName</span><span class="p">(</span><span class="s">&#39;workbench&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="s">&#39;EQE&#39;</span><span class="p">:</span> <span class="n">ApplianceName</span><span class="p">(</span><span class="s">&#39;security&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="s">&#39;FGE&#39;</span><span class="p">:</span> <span class="n">ApplianceName</span><span class="p">(</span><span class="s">&#39;fridge&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="s">&#39;FRE&#39;</span><span class="p">:</span> <span class="n">ApplianceName</span><span class="p">(</span><span class="s">&#39;space heater&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="s">&#39;GRE&#39;</span><span class="p">:</span> <span class="n">ApplianceName</span><span class="p">(</span><span class="s">&#39;misc&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+    <span class="s">&#39;HPE&#39;</span><span class="p">:</span> <span class="n">ApplianceName</span><span class="p">(</span><span class="s">&#39;air conditioner&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="s">&#39;HTE&#39;</span><span class="p">:</span> <span class="n">ApplianceName</span><span class="p">(</span><span class="s">&#39;water heater&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="s">&#39;OFE&#39;</span><span class="p">:</span> <span class="n">ApplianceName</span><span class="p">(</span><span class="s">&#39;misc&#39;</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>
+    <span class="s">&#39;OUE&#39;</span><span class="p">:</span> <span class="n">ApplianceName</span><span class="p">(</span><span class="s">&#39;plugs&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+    <span class="s">&#39;TVE&#39;</span><span class="p">:</span> <span class="n">ApplianceName</span><span class="p">(</span><span class="s">&#39;entertainment&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="s">&#39;UTE&#39;</span><span class="p">:</span> <span class="n">ApplianceName</span><span class="p">(</span><span class="s">&#39;plugs&#39;</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>
+    <span class="s">&#39;WOE&#39;</span><span class="p">:</span> <span class="n">ApplianceName</span><span class="p">(</span><span class="s">&#39;oven&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="s">&#39;UNE&#39;</span><span class="p">:</span> <span class="n">ApplianceName</span><span class="p">(</span><span class="s">&#39;unmetered&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="p">}</span>
+
+
+<div class="viewcode-block" id="AMPDS"><a class="viewcode-back" href="../../../nilmtk.dataset.html#nilmtk.dataset.ampds.AMPDS">[docs]</a><span class="k">class</span> <span class="nc">AMPDS</span><span class="p">(</span><span class="n">DataSet</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;Load data from AMPDS.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">AMPDS</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s">&#39;name&#39;</span><span class="p">:</span> <span class="s">&#39;AMPds&#39;</span><span class="p">,</span>
+            <span class="s">&#39;full_name&#39;</span><span class="p">:</span> <span class="s">&#39;The Almanac of Minutely Power Dataset&#39;</span>
+                         <span class="s">&#39; (incl. water and natural gas consumption)&#39;</span><span class="p">,</span>
+            <span class="s">&#39;urls&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;http://ampds.org/&#39;</span><span class="p">],</span>
+            <span class="s">&#39;citations&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;Stephen Makonin, Fred Popowich, Lyn Bartram,&#39;</span>
+                          <span class="s">&#39; Bob Gill, and Ivan V. Bajic,&#39;</span>
+                          <span class="s">&#39; AMPds: A Public Dataset for Load Disaggregation and&#39;</span>
+                          <span class="s">&#39; Eco-Feedback Research, in Electrical Power and Energy&#39;</span>
+                          <span class="s">&#39; Conference (EPEC), 2013 IEEE, pp. 1-6, 2013.&#39;</span>
+                          <span class="p">],</span>
+            <span class="s">&#39;nominal_voltage&#39;</span><span class="p">:</span> <span class="mi">230</span>
+        <span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">building</span> <span class="o">=</span> <span class="n">Building</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">buildings</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">building</span>
+
+<div class="viewcode-block" id="AMPDS.load_hdf5"><a class="viewcode-back" href="../../../nilmtk.dataset.html#nilmtk.dataset.ampds.AMPDS.load_hdf5">[docs]</a>    <span class="k">def</span> <span class="nf">load_hdf5</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">directory</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">AMPDS</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">load_hdf5</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="AMPDS.read_electricity_csv_and_standardize"><a class="viewcode-back" href="../../../nilmtk.dataset.html#nilmtk.dataset.ampds.AMPDS.read_electricity_csv_and_standardize">[docs]</a>    <span class="k">def</span> <span class="nf">read_electricity_csv_and_standardize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">csv_path</span><span class="p">):</span>
+        <span class="c"># Loading appliance</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">csv_path</span><span class="p">)</span>
+
+        <span class="c"># Convert timestamp to ints</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">TS</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">TS</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s">&#39;int&#39;</span><span class="p">)</span>
+
+        <span class="c"># Convert index to DateTime</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">((</span><span class="n">df</span><span class="o">.</span><span class="n">TS</span><span class="o">.</span><span class="n">values</span> <span class="o">*</span> <span class="mf">1e9</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">))</span>
+
+        <span class="c"># Delete the TS column</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s">&#39;TS&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="c"># Rename columns</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">column_name_mapping</span><span class="p">[</span><span class="n">x</span><span class="p">])</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s">&#39;float32&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">df</span>
+</div>
+<div class="viewcode-block" id="AMPDS.read_water_csv_and_standardize"><a class="viewcode-back" href="../../../nilmtk.dataset.html#nilmtk.dataset.ampds.AMPDS.read_water_csv_and_standardize">[docs]</a>    <span class="k">def</span> <span class="nf">read_water_csv_and_standardize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">csv_path</span><span class="p">):</span>
+        <span class="c"># Loading appliance</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">csv_path</span><span class="p">)</span>
+
+        <span class="c"># Convert timestamp to type int</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">ts</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">ts</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s">&#39;int&#39;</span><span class="p">)</span>
+
+        <span class="c"># Convert index to DateTime</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">((</span><span class="n">df</span><span class="o">.</span><span class="n">ts</span><span class="o">.</span><span class="n">values</span> <span class="o">*</span> <span class="mf">1e9</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">))</span>
+
+        <span class="c"># Delete the TS column</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s">&#39;ts&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="c"># Rename columns</span>
+        <span class="c">#df = df.rename(columns=lambda x: column_name_mapping[x])</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s">&#39;float32&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">df</span>
+</div>
+<div class="viewcode-block" id="AMPDS.load_electricity"><a class="viewcode-back" href="../../../nilmtk.dataset.html#nilmtk.dataset.ampds.AMPDS.load_electricity">[docs]</a>    <span class="k">def</span> <span class="nf">load_electricity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root_directory</span><span class="p">):</span>
+
+        <span class="c"># Path to electricity folder</span>
+        <span class="n">electricity_folder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root_directory</span><span class="p">,</span> <span class="s">&#39;electricity&#39;</span><span class="p">)</span>
+        <span class="c"># Borrowed from http://stackoverflow.com/a/8990026/743775</span>
+
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">electricity_folder</span><span class="p">):</span>
+            <span class="n">electricity_folder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">electricity_folder</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">)</span>
+
+        <span class="n">list_of_files</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s">&quot;</span><span class="si">%s</span><span class="s">*.csv&quot;</span> <span class="o">%</span> <span class="n">electricity_folder</span><span class="p">)</span>
+
+        <span class="c"># Add mains</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">building</span><span class="o">.</span><span class="n">utility</span><span class="o">.</span><span class="n">electric</span><span class="o">.</span><span class="n">mains</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">building</span><span class="o">.</span><span class="n">utility</span><span class="o">.</span><span class="n">electric</span><span class="o">.</span><span class="n">mains</span><span class="p">[</span><span class="n">MainsName</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_electricity_csv_and_standardize</span><span class="p">(</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">electricity_folder</span><span class="p">,</span> <span class="s">&#39;WHE.csv&#39;</span><span class="p">))</span>
+
+        <span class="c"># Deleting mains from list_of_files</span>
+        <span class="n">list_of_files</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">electricity_folder</span><span class="p">,</span> <span class="s">&#39;WHE.csv&#39;</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">building</span><span class="o">.</span><span class="n">utility</span><span class="o">.</span><span class="n">electric</span><span class="o">.</span><span class="n">appliances</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">csv_file</span> <span class="ow">in</span> <span class="n">list_of_files</span><span class="p">:</span>
+            <span class="n">appliance_name</span> <span class="o">=</span> <span class="n">appliance_name_mapping</span><span class="p">[</span>
+                <span class="n">csv_file</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&quot;/&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">][:</span><span class="mi">3</span><span class="p">]]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">building</span><span class="o">.</span><span class="n">utility</span><span class="o">.</span><span class="n">electric</span><span class="o">.</span><span class="n">appliances</span><span class="p">[</span>
+                <span class="n">appliance_name</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_electricity_csv_and_standardize</span><span class="p">(</span><span class="n">csv_file</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="AMPDS.load_water"><a class="viewcode-back" href="../../../nilmtk.dataset.html#nilmtk.dataset.ampds.AMPDS.load_water">[docs]</a>    <span class="k">def</span> <span class="nf">load_water</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root_directory</span><span class="p">):</span>
+        <span class="c"># Path to water folder</span>
+        <span class="n">water_folder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root_directory</span><span class="p">,</span> <span class="s">&#39;water&#39;</span><span class="p">)</span>
+        <span class="c"># Borrowed from http://stackoverflow.com/a/8990026/743775</span>
+
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">water_folder</span><span class="p">):</span>
+            <span class="n">water_folder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">water_folder</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">building</span><span class="o">.</span><span class="n">utility</span><span class="o">.</span><span class="n">water</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">building</span><span class="o">.</span><span class="n">utility</span><span class="o">.</span><span class="n">water</span><span class="p">[</span><span class="s">&quot;mains&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_water_csv_and_standardize</span><span class="p">(</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">water_folder</span><span class="p">,</span> <span class="s">&#39;WHW.csv&#39;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">building</span><span class="o">.</span><span class="n">utility</span><span class="o">.</span><span class="n">water</span><span class="p">[</span><span class="s">&quot;instant_heating&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_water_csv_and_standardize</span><span class="p">(</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">water_folder</span><span class="p">,</span> <span class="s">&#39;HTW.csv&#39;</span><span class="p">))</span>
+</div>
+<div class="viewcode-block" id="AMPDS.load_gas"><a class="viewcode-back" href="../../../nilmtk.dataset.html#nilmtk.dataset.ampds.AMPDS.load_gas">[docs]</a>    <span class="k">def</span> <span class="nf">load_gas</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root_directory</span><span class="p">):</span>
+        <span class="c"># Path to natural gas folder</span>
+        <span class="n">gas_folder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root_directory</span><span class="p">,</span> <span class="s">&#39;natural_gas&#39;</span><span class="p">)</span>
+        <span class="c"># Borrowed from http://stackoverflow.com/a/8990026/743775</span>
+
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">gas_folder</span><span class="p">):</span>
+            <span class="n">gas_folder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">gas_folder</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">building</span><span class="o">.</span><span class="n">utility</span><span class="o">.</span><span class="n">gas</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">building</span><span class="o">.</span><span class="n">utility</span><span class="o">.</span><span class="n">gas</span><span class="p">[</span><span class="s">&quot;mains&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_water_csv_and_standardize</span><span class="p">(</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">gas_folder</span><span class="p">,</span> <span class="s">&#39;WHG.csv&#39;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">building</span><span class="o">.</span><span class="n">utility</span><span class="o">.</span><span class="n">gas</span><span class="p">[</span><span class="s">&quot;hvac&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_water_csv_and_standardize</span><span class="p">(</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">gas_folder</span><span class="p">,</span> <span class="s">&#39;FRG.csv&#39;</span><span class="p">))</span>
+</div>
+<div class="viewcode-block" id="AMPDS.load"><a class="viewcode-back" href="../../../nilmtk.dataset.html#nilmtk.dataset.ampds.AMPDS.load">[docs]</a>    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root_directory</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">load_electricity</span><span class="p">(</span><span class="n">root_directory</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">load_water</span><span class="p">(</span><span class="n">root_directory</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">load_gas</span><span class="p">(</span><span class="n">root_directory</span><span class="p">)</span></div></div>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2014, nilmtk authors.<br/>
+      Last updated on Mar 26, 2014.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

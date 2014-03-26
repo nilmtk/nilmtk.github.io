@@ -1,0 +1,753 @@
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>nilmtk.dataset package &mdash; nilmtk 0.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-3.0.0/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-3.0.0/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="_static/js/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-3.0.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="nilmtk 0.0.1 documentation" href="index.html" />
+    <link rel="up" title="nilmtk API Reference" href="nilmtk.html" />
+    <link rel="next" title="nilmtk.disaggregate package" href="nilmtk.disaggregate.html" />
+    <link rel="prev" title="nilmtk API Reference" href="nilmtk.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="index.html">nilmtk</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.0.1</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            <li class="divider-vertical"></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a href="index.html"
+     class="dropdown-toggle"
+     data-toggle="dropdown">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+    ><ul>
+<li class="toctree-l1"><a class="reference internal" href="nilmtk.html">nilmtk API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="userguide.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contribute.html">Contributing</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"><ul>
+<li><a class="reference internal" href="#">nilmtk.dataset package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-nilmtk.dataset.ampds">nilmtk.dataset.ampds module</a></li>
+<li><a class="reference internal" href="#module-nilmtk.dataset.dataset">nilmtk.dataset.dataset module</a></li>
+<li><a class="reference internal" href="#module-nilmtk.dataset.hes">nilmtk.dataset.hes module</a></li>
+<li><a class="reference internal" href="#module-nilmtk.dataset.iawe">nilmtk.dataset.iawe module</a></li>
+<li><a class="reference internal" href="#module-nilmtk.dataset.pecan">nilmtk.dataset.pecan module</a><ul>
+<li><a class="reference internal" href="#notes">NOTES</a></li>
+<li><a class="reference internal" href="#todos">TODOS</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-nilmtk.dataset.redd">nilmtk.dataset.redd module</a></li>
+<li><a class="reference internal" href="#module-nilmtk.dataset.smart">nilmtk.dataset.smart module</a></li>
+<li><a class="reference internal" href="#module-nilmtk.dataset.ukpd">nilmtk.dataset.ukpd module</a></li>
+<li><a class="reference internal" href="#module-nilmtk.dataset">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+  <li><a href="nilmtk.html"
+         title="Previous Chapter: nilmtk API Reference">&laquo; nilmtk API Refer...</a></li>
+  <li><a href="nilmtk.disaggregate.html"
+         title="Next Chapter: nilmtk.disaggregate package">nilmtk.disaggreg... &raquo;</a></li>
+            
+            
+            
+            
+              <li>
+<div id="sourcelink">
+  <a href="_sources/nilmtk.dataset.txt"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      
+  <div class="section" id="nilmtk-dataset-package">
+<h1>nilmtk.dataset package<a class="headerlink" href="#nilmtk-dataset-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-nilmtk.dataset.ampds">
+<span id="nilmtk-dataset-ampds-module"></span><h2>nilmtk.dataset.ampds module<a class="headerlink" href="#module-nilmtk.dataset.ampds" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="nilmtk.dataset.ampds.AMPDS">
+<em class="property">class </em><tt class="descclassname">nilmtk.dataset.ampds.</tt><tt class="descname">AMPDS</tt><a class="reference internal" href="_modules/nilmtk/dataset/ampds.html#AMPDS"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.dataset.ampds.AMPDS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#nilmtk.dataset.dataset.DataSet" title="nilmtk.dataset.dataset.DataSet"><tt class="xref py py-class docutils literal"><span class="pre">nilmtk.dataset.dataset.DataSet</span></tt></a></p>
+<p>Load data from AMPDS.</p>
+<dl class="method">
+<dt id="nilmtk.dataset.ampds.AMPDS.load">
+<tt class="descname">load</tt><big>(</big><em>root_directory</em><big>)</big><a class="reference internal" href="_modules/nilmtk/dataset/ampds.html#AMPDS.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.dataset.ampds.AMPDS.load" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.dataset.ampds.AMPDS.load_electricity">
+<tt class="descname">load_electricity</tt><big>(</big><em>root_directory</em><big>)</big><a class="reference internal" href="_modules/nilmtk/dataset/ampds.html#AMPDS.load_electricity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.dataset.ampds.AMPDS.load_electricity" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.dataset.ampds.AMPDS.load_gas">
+<tt class="descname">load_gas</tt><big>(</big><em>root_directory</em><big>)</big><a class="reference internal" href="_modules/nilmtk/dataset/ampds.html#AMPDS.load_gas"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.dataset.ampds.AMPDS.load_gas" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.dataset.ampds.AMPDS.load_hdf5">
+<tt class="descname">load_hdf5</tt><big>(</big><em>directory</em><big>)</big><a class="reference internal" href="_modules/nilmtk/dataset/ampds.html#AMPDS.load_hdf5"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.dataset.ampds.AMPDS.load_hdf5" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.dataset.ampds.AMPDS.load_water">
+<tt class="descname">load_water</tt><big>(</big><em>root_directory</em><big>)</big><a class="reference internal" href="_modules/nilmtk/dataset/ampds.html#AMPDS.load_water"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.dataset.ampds.AMPDS.load_water" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.dataset.ampds.AMPDS.read_electricity_csv_and_standardize">
+<tt class="descname">read_electricity_csv_and_standardize</tt><big>(</big><em>csv_path</em><big>)</big><a class="reference internal" href="_modules/nilmtk/dataset/ampds.html#AMPDS.read_electricity_csv_and_standardize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.dataset.ampds.AMPDS.read_electricity_csv_and_standardize" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.dataset.ampds.AMPDS.read_water_csv_and_standardize">
+<tt class="descname">read_water_csv_and_standardize</tt><big>(</big><em>csv_path</em><big>)</big><a class="reference internal" href="_modules/nilmtk/dataset/ampds.html#AMPDS.read_water_csv_and_standardize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.dataset.ampds.AMPDS.read_water_csv_and_standardize" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-nilmtk.dataset.dataset">
+<span id="nilmtk-dataset-dataset-module"></span><h2>nilmtk.dataset.dataset module<a class="headerlink" href="#module-nilmtk.dataset.dataset" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="nilmtk.dataset.dataset.DataSet">
+<em class="property">class </em><tt class="descclassname">nilmtk.dataset.dataset.</tt><tt class="descname">DataSet</tt><a class="reference internal" href="_modules/nilmtk/dataset/dataset.html#DataSet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.dataset.dataset.DataSet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Base class for all datasets.  This class can be used
+for loading nilmtk&#8217;s REDD+ data format.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Attributes :</th><td class="field-body"><p class="first"><strong>buildings</strong> : dict</p>
+<blockquote>
+<div><p>Each key is a string representing the name of the building and is
+preserved from the original dataset.  Each value is a
+nilmtk.building.Building object.</p>
+</div></blockquote>
+<p><strong>metadata</strong> : dict</p>
+<blockquote class="last">
+<div><p>Metadata regarding this DataSet.  Keys include:</p>
+<dl class="docutils">
+<dt>name <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
+<dd><p class="first last">Abbreviated name for the dataset, e.g. &#8220;REDD&#8221;</p>
+</dd>
+<dt>full_name <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
+<dd><p class="first last">Full name of the dataset, eg. &#8220;Reference Energy Disaggregation Data Set&#8221;</p>
+</dd>
+<dt>urls <span class="classifier-delimiter">:</span> <span class="classifier">list of strings, optional</span></dt>
+<dd><p class="first last">The URL(s) for more information about this dataset</p>
+</dd>
+<dt>citations <span class="classifier-delimiter">:</span> <span class="classifier">list of strings, optional</span></dt>
+<dd><p class="first last">Academic citation(s) for this dataset</p>
+</dd>
+</dl>
+<p>nominal_voltage : float, optional</p>
+<p>timezone : string</p>
+<dl class="docutils">
+<dt>geographic_coordinates <span class="classifier-delimiter">:</span> <span class="classifier">pair (lat, long), optional</span></dt>
+<dd><p class="first last">The geo location of the research institution.  Used as a fall back
+if geo location isn&#8217;t available for any individual building.</p>
+</dd>
+</dl>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="nilmtk.dataset.dataset.DataSet.describe">
+<tt class="descname">describe</tt><big>(</big><em>fh=&lt;open file '&lt;stdout&gt;'</em>, <em>mode 'w' at 0x2b001b786150&gt;</em><big>)</big><a class="reference internal" href="_modules/nilmtk/dataset/dataset.html#DataSet.describe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.dataset.dataset.DataSet.describe" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.dataset.dataset.DataSet.descriptive_stats">
+<tt class="descname">descriptive_stats</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/dataset/dataset.html#DataSet.descriptive_stats"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.dataset.dataset.DataSet.descriptive_stats" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.dataset.dataset.DataSet.export">
+<tt class="descname">export</tt><big>(</big><em>directory</em>, <em>format='HDF5'</em>, <em>compact=False</em><big>)</big><a class="reference internal" href="_modules/nilmtk/dataset/dataset.html#DataSet.export"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.dataset.dataset.DataSet.export" title="Permalink to this definition">¶</a></dt>
+<dd><p>Export dataset to disk as HDF5.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>directory</strong> : str</p>
+<blockquote>
+<div><p>Output directory</p>
+</div></blockquote>
+<p><strong>format</strong> : str, optional</p>
+<blockquote>
+<div><p><cite>REDD+</cite> or <cite>HDF5</cite></p>
+</div></blockquote>
+<p><strong>compact</strong> : boolean, optional</p>
+<blockquote class="last">
+<div><p>Defaults to false.  If True then only save change points.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.dataset.dataset.DataSet.export_csv">
+<tt class="descname">export_csv</tt><big>(</big><em>directory</em><big>)</big><a class="reference internal" href="_modules/nilmtk/dataset/dataset.html#DataSet.export_csv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.dataset.dataset.DataSet.export_csv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exports dataset in nilmtk standard on-disk CSV format.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><strong>directory</strong> : Complete path where to export the data</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.dataset.dataset.DataSet.load">
+<tt class="descname">load</tt><big>(</big><em>root_directory</em>, <em>buildings_to_load=None</em>, <em>**args</em><big>)</big><a class="reference internal" href="_modules/nilmtk/dataset/dataset.html#DataSet.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.dataset.dataset.DataSet.load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load dataset into memory</p>
+<p>root_direction : string
+buildings_to_load : list of strings, optional</p>
+<blockquote>
+<div>Use the native dataset names. e.g. &#8216;house_1&#8217; for REDD.
+If none then load all buildings in the dataset.</div></blockquote>
+<dl class="docutils">
+<dt><a href="#id1"><span class="problematic" id="id2">**</span></a>args <span class="classifier-delimiter">:</span> <span class="classifier">optional</span></dt>
+<dd>named arguments to pass to load_building</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.dataset.dataset.DataSet.load_building">
+<tt class="descname">load_building</tt><big>(</big><em>root_directory</em>, <em>building_name</em><big>)</big><a class="reference internal" href="_modules/nilmtk/dataset/dataset.html#DataSet.load_building"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.dataset.dataset.DataSet.load_building" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.dataset.dataset.DataSet.load_building_names">
+<tt class="descname">load_building_names</tt><big>(</big><em>root_directory</em><big>)</big><a class="reference internal" href="_modules/nilmtk/dataset/dataset.html#DataSet.load_building_names"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.dataset.dataset.DataSet.load_building_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>return list of building names</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.dataset.dataset.DataSet.load_hdf5">
+<tt class="descname">load_hdf5</tt><big>(</big><em>directory</em>, <em>building_nums=None</em>, <em>time_map=None</em><big>)</big><a class="reference internal" href="_modules/nilmtk/dataset/dataset.html#DataSet.load_hdf5"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.dataset.dataset.DataSet.load_hdf5" title="Permalink to this definition">¶</a></dt>
+<dd><p>Imports dataset from HDF5 store into NILMTK object</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>directory</strong> : str</p>
+<blockquote>
+<div><p>Directory where the HDF5 store is located</p>
+</div></blockquote>
+<p><strong>buildling_nums</strong> : list of ints, optional</p>
+<blockquote>
+<div><p>Building numbers to load</p>
+</div></blockquote>
+<p><strong>time_map</strong> : dict, optional</p>
+<blockquote class="last">
+<div><p>building number: (start, end) time to query</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.dataset.dataset.DataSet.to_json">
+<tt class="descname">to_json</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/dataset/dataset.html#DataSet.to_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.dataset.dataset.DataSet.to_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the JSON representation of the dataset</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.dataset.dataset.DataSet.to_json_temp">
+<tt class="descname">to_json_temp</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/dataset/dataset.html#DataSet.to_json_temp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.dataset.dataset.DataSet.to_json_temp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="nilmtk.dataset.dataset.create_time_query">
+<tt class="descclassname">nilmtk.dataset.dataset.</tt><tt class="descname">create_time_query</tt><big>(</big><em>start</em>, <em>end</em><big>)</big><a class="reference internal" href="_modules/nilmtk/dataset/dataset.html#create_time_query"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.dataset.dataset.create_time_query" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-nilmtk.dataset.hes">
+<span id="nilmtk-dataset-hes-module"></span><h2>nilmtk.dataset.hes module<a class="headerlink" href="#module-nilmtk.dataset.hes" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="nilmtk.dataset.hes.HES">
+<em class="property">class </em><tt class="descclassname">nilmtk.dataset.hes.</tt><tt class="descname">HES</tt><a class="reference internal" href="_modules/nilmtk/dataset/hes.html#HES"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.dataset.hes.HES" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#nilmtk.dataset.dataset.DataSet" title="nilmtk.dataset.dataset.DataSet"><tt class="xref py py-class docutils literal"><span class="pre">nilmtk.dataset.dataset.DataSet</span></tt></a></p>
+<p>Load data from UK Government&#8217;s Household Electricity Survey 
+(the cleaned version of the dataset released in summer 2013).</p>
+<dl class="method">
+<dt id="nilmtk.dataset.hes.HES.load">
+<tt class="descname">load</tt><big>(</big><em>data_dir</em>, <em>max_chunks=None</em><big>)</big><a class="reference internal" href="_modules/nilmtk/dataset/hes.html#HES.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.dataset.hes.HES.load" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.dataset.hes.HES.load_building">
+<tt class="descname">load_building</tt><big>(</big><em>filename</em>, <em>building_name</em><big>)</big><a class="reference internal" href="_modules/nilmtk/dataset/hes.html#HES.load_building"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.dataset.hes.HES.load_building" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.dataset.hes.HES.load_building_names">
+<tt class="descname">load_building_names</tt><big>(</big><em>filename</em><big>)</big><a class="reference internal" href="_modules/nilmtk/dataset/hes.html#HES.load_building_names"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.dataset.hes.HES.load_building_names" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="nilmtk.dataset.hes.datetime_converter">
+<tt class="descclassname">nilmtk.dataset.hes.</tt><tt class="descname">datetime_converter</tt><big>(</big><em>s</em><big>)</big><a class="reference internal" href="_modules/nilmtk/dataset/hes.html#datetime_converter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.dataset.hes.datetime_converter" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>s</strong> : int</p>
+<blockquote>
+<div><p>of the form 2011-02-02 14:48:00</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><p class="first last"><strong>datetime</strong> :</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="nilmtk.dataset.hes.load_list_of_house_ids">
+<tt class="descclassname">nilmtk.dataset.hes.</tt><tt class="descname">load_list_of_house_ids</tt><big>(</big><em>data_dir</em><big>)</big><a class="reference internal" href="_modules/nilmtk/dataset/hes.html#load_list_of_house_ids"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.dataset.hes.load_list_of_house_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of house IDs in HES (ints).</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-nilmtk.dataset.iawe">
+<span id="nilmtk-dataset-iawe-module"></span><h2>nilmtk.dataset.iawe module<a class="headerlink" href="#module-nilmtk.dataset.iawe" title="Permalink to this headline">¶</a></h2>
+<p>iAWE Dataset Loader</p>
+<dl class="class">
+<dt id="nilmtk.dataset.iawe.IAWE">
+<em class="property">class </em><tt class="descclassname">nilmtk.dataset.iawe.</tt><tt class="descname">IAWE</tt><a class="reference internal" href="_modules/nilmtk/dataset/iawe.html#IAWE"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.dataset.iawe.IAWE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#nilmtk.dataset.dataset.DataSet" title="nilmtk.dataset.dataset.DataSet"><tt class="xref py py-class docutils literal"><span class="pre">nilmtk.dataset.dataset.DataSet</span></tt></a></p>
+<dl class="method">
+<dt id="nilmtk.dataset.iawe.IAWE.add_appliances">
+<tt class="descname">add_appliances</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/dataset/iawe.html#IAWE.add_appliances"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.dataset.iawe.IAWE.add_appliances" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.dataset.iawe.IAWE.add_mains">
+<tt class="descname">add_mains</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/dataset/iawe.html#IAWE.add_mains"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.dataset.iawe.IAWE.add_mains" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.dataset.iawe.IAWE.load">
+<tt class="descname">load</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/dataset/iawe.html#IAWE.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.dataset.iawe.IAWE.load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load entire dataset into memory</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.dataset.iawe.IAWE.load_hdf5">
+<tt class="descname">load_hdf5</tt><big>(</big><em>directory</em><big>)</big><a class="reference internal" href="_modules/nilmtk/dataset/iawe.html#IAWE.load_hdf5"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.dataset.iawe.IAWE.load_hdf5" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="nilmtk.dataset.iawe.query_database_jplug">
+<tt class="descclassname">nilmtk.dataset.iawe.</tt><tt class="descname">query_database_jplug</tt><big>(</big><em>self</em>, <em>jplug</em><big>)</big><a class="reference internal" href="_modules/nilmtk/dataset/iawe.html#query_database_jplug"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.dataset.iawe.query_database_jplug" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-nilmtk.dataset.pecan">
+<span id="nilmtk-dataset-pecan-module"></span><h2>nilmtk.dataset.pecan module<a class="headerlink" href="#module-nilmtk.dataset.pecan" title="Permalink to this headline">¶</a></h2>
+<p>Pecan Dataset Loader</p>
+<p>These routines load Pecan Dataset into NILMTK Dataset format</p>
+<div class="section" id="notes">
+<h3>NOTES<a class="headerlink" href="#notes" title="Permalink to this headline">¶</a></h3>
+<p>In Home #8, Grid [kVA] was replaced manually by Grid* [kVA]
+The former was an entry error and breaks the convention of 
+fields where kVA was measured.</p>
+</div>
+<div class="section" id="todos">
+<h3>TODOS<a class="headerlink" href="#todos" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic simple">
+<li>Handle LEG2V</li>
+<li>Handle Grid</li>
+<li>Handle Solar</li>
+<li>Handle Gen</li>
+</ol>
+<dl class="class">
+<dt id="nilmtk.dataset.pecan.Pecan">
+<em class="property">class </em><tt class="descclassname">nilmtk.dataset.pecan.</tt><tt class="descname">Pecan</tt><a class="reference internal" href="_modules/nilmtk/dataset/pecan.html#Pecan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.dataset.pecan.Pecan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#nilmtk.dataset.dataset.DataSet" title="nilmtk.dataset.dataset.DataSet"><tt class="xref py py-class docutils literal"><span class="pre">nilmtk.dataset.dataset.DataSet</span></tt></a></p>
+<dl class="method">
+<dt id="nilmtk.dataset.pecan.Pecan.add_appliances">
+<tt class="descname">add_appliances</tt><big>(</big><em>building</em>, <em>df</em><big>)</big><a class="reference internal" href="_modules/nilmtk/dataset/pecan.html#Pecan.add_appliances"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.dataset.pecan.Pecan.add_appliances" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.dataset.pecan.Pecan.add_mains">
+<tt class="descname">add_mains</tt><big>(</big><em>building</em>, <em>df</em><big>)</big><a class="reference internal" href="_modules/nilmtk/dataset/pecan.html#Pecan.add_mains"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.dataset.pecan.Pecan.add_mains" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.dataset.pecan.Pecan.load">
+<tt class="descname">load</tt><big>(</big><em>root_directory</em><big>)</big><a class="reference internal" href="_modules/nilmtk/dataset/pecan.html#Pecan.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.dataset.pecan.Pecan.load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load entire dataset into memory</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.dataset.pecan.Pecan.standardize">
+<tt class="descname">standardize</tt><big>(</big><em>df</em>, <em>building</em><big>)</big><a class="reference internal" href="_modules/nilmtk/dataset/pecan.html#Pecan.standardize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.dataset.pecan.Pecan.standardize" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="nilmtk.dataset.pecan.Pecan_15min">
+<em class="property">class </em><tt class="descclassname">nilmtk.dataset.pecan.</tt><tt class="descname">Pecan_15min</tt><a class="reference internal" href="_modules/nilmtk/dataset/pecan.html#Pecan_15min"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.dataset.pecan.Pecan_15min" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#nilmtk.dataset.pecan.Pecan" title="nilmtk.dataset.pecan.Pecan"><tt class="xref py py-class docutils literal"><span class="pre">nilmtk.dataset.pecan.Pecan</span></tt></a></p>
+<dl class="method">
+<dt id="nilmtk.dataset.pecan.Pecan_15min.load_building">
+<tt class="descname">load_building</tt><big>(</big><em>root_directory</em>, <em>building_name</em><big>)</big><a class="reference internal" href="_modules/nilmtk/dataset/pecan.html#Pecan_15min.load_building"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.dataset.pecan.Pecan_15min.load_building" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.dataset.pecan.Pecan_15min.load_building_names">
+<tt class="descname">load_building_names</tt><big>(</big><em>root_directory</em><big>)</big><a class="reference internal" href="_modules/nilmtk/dataset/pecan.html#Pecan_15min.load_building_names"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.dataset.pecan.Pecan_15min.load_building_names" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="nilmtk.dataset.pecan.Pecan_1min">
+<em class="property">class </em><tt class="descclassname">nilmtk.dataset.pecan.</tt><tt class="descname">Pecan_1min</tt><a class="reference internal" href="_modules/nilmtk/dataset/pecan.html#Pecan_1min"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.dataset.pecan.Pecan_1min" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#nilmtk.dataset.pecan.Pecan" title="nilmtk.dataset.pecan.Pecan"><tt class="xref py py-class docutils literal"><span class="pre">nilmtk.dataset.pecan.Pecan</span></tt></a></p>
+<dl class="method">
+<dt id="nilmtk.dataset.pecan.Pecan_1min.load_building">
+<tt class="descname">load_building</tt><big>(</big><em>root_directory</em>, <em>building_name</em><big>)</big><a class="reference internal" href="_modules/nilmtk/dataset/pecan.html#Pecan_1min.load_building"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.dataset.pecan.Pecan_1min.load_building" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads electrical data for specified building</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.dataset.pecan.Pecan_1min.load_building_names">
+<tt class="descname">load_building_names</tt><big>(</big><em>root_directory</em><big>)</big><a class="reference internal" href="_modules/nilmtk/dataset/pecan.html#Pecan_1min.load_building_names"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.dataset.pecan.Pecan_1min.load_building_names" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="module-nilmtk.dataset.redd">
+<span id="nilmtk-dataset-redd-module"></span><h2>nilmtk.dataset.redd module<a class="headerlink" href="#module-nilmtk.dataset.redd" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="nilmtk.dataset.redd.ApplianceMetadata">
+<em class="property">class </em><tt class="descclassname">nilmtk.dataset.redd.</tt><tt class="descname">ApplianceMetadata</tt><a class="headerlink" href="#nilmtk.dataset.redd.ApplianceMetadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">tuple</span></tt></p>
+<dl class="attribute">
+<dt id="nilmtk.dataset.redd.ApplianceMetadata.metadata">
+<tt class="descname">metadata</tt><a class="headerlink" href="#nilmtk.dataset.redd.ApplianceMetadata.metadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="nilmtk.dataset.redd.ApplianceMetadata.name">
+<tt class="descname">name</tt><a class="headerlink" href="#nilmtk.dataset.redd.ApplianceMetadata.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="nilmtk.dataset.redd.REDD">
+<em class="property">class </em><tt class="descclassname">nilmtk.dataset.redd.</tt><tt class="descname">REDD</tt><a class="reference internal" href="_modules/nilmtk/dataset/redd.html#REDD"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.dataset.redd.REDD" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#nilmtk.dataset.dataset.DataSet" title="nilmtk.dataset.dataset.DataSet"><tt class="xref py py-class docutils literal"><span class="pre">nilmtk.dataset.dataset.DataSet</span></tt></a></p>
+<p>Load data from REDD.</p>
+<dl class="method">
+<dt id="nilmtk.dataset.redd.REDD.load_building">
+<tt class="descname">load_building</tt><big>(</big><em>root_directory</em>, <em>building_name</em><big>)</big><a class="reference internal" href="_modules/nilmtk/dataset/redd.html#REDD.load_building"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.dataset.redd.REDD.load_building" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.dataset.redd.REDD.load_building_names">
+<tt class="descname">load_building_names</tt><big>(</big><em>root_directory</em><big>)</big><a class="reference internal" href="_modules/nilmtk/dataset/redd.html#REDD.load_building_names"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.dataset.redd.REDD.load_building_names" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="nilmtk.dataset.redd.load_chan">
+<tt class="descclassname">nilmtk.dataset.redd.</tt><tt class="descname">load_chan</tt><big>(</big><em>building_dir</em>, <em>chan=None</em>, <em>filename=None</em>, <em>colnames=None</em>, <em>usecols=None</em>, <em>sep=' '</em><big>)</big><a class="reference internal" href="_modules/nilmtk/dataset/redd.html#load_chan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.dataset.redd.load_chan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads CSV files where the first column is a UNIX timestamp, 
+like REDD or UKPD CSV files.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>building_dir</strong> : string</p>
+<blockquote>
+<div><p>The base path</p>
+</div></blockquote>
+<p><strong>chan</strong> : int, optional</p>
+<blockquote>
+<div><p>filename will be formed from &#8216;building_dir/channel_&lt;chan&gt;.dat&#8217;</p>
+</div></blockquote>
+<p><strong>filename</strong> : string, optinal</p>
+<blockquote>
+<div><p>if you want to load a filename not of the form <cite>channel_&lt;chan&gt;.dat</cite> then
+leave <cite>chan</cite> as None and provide just the <cite>filename</cite>, no path.</p>
+</div></blockquote>
+<p><strong>colnames</strong> : list, optional</p>
+<blockquote>
+<div><p>The names to give to each column</p>
+</div></blockquote>
+<p><strong>usecols</strong> : list of ints, optional</p>
+<blockquote>
+<div><p>A list of column indicies to load.  Note that the index column
+counts as column 0.  If usecols is provided then load_chan
+will run <cite>usecols.insert(0,0)</cite> to load the index column.</p>
+</div></blockquote>
+<p><strong>sep</strong> : character, optional</p>
+<blockquote>
+<div><p>Defaults to &#8216; &#8216;</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><p class="first"><strong>DataFrame.  Index is DatetimeIndex in UTC.  Data values are float32.</strong> :</p>
+<blockquote class="last">
+<div><p>Column names are <cite>colnames</cite> if provided.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="nilmtk.dataset.redd.load_labels">
+<tt class="descclassname">nilmtk.dataset.redd.</tt><tt class="descname">load_labels</tt><big>(</big><em>data_dir</em><big>)</big><a class="reference internal" href="_modules/nilmtk/dataset/redd.html#load_labels"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.dataset.redd.load_labels" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads data from labels.dat file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>data_dir</strong> : str</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><p class="first"><strong>labels</strong> : dict</p>
+<blockquote class="last">
+<div><p>mapping channel numbers (ints) to appliance names (str)</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-nilmtk.dataset.smart">
+<span id="nilmtk-dataset-smart-module"></span><h2>nilmtk.dataset.smart module<a class="headerlink" href="#module-nilmtk.dataset.smart" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="nilmtk.dataset.smart.Smart">
+<em class="property">class </em><tt class="descclassname">nilmtk.dataset.smart.</tt><tt class="descname">Smart</tt><a class="reference internal" href="_modules/nilmtk/dataset/smart.html#Smart"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.dataset.smart.Smart" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#nilmtk.dataset.dataset.DataSet" title="nilmtk.dataset.dataset.DataSet"><tt class="xref py py-class docutils literal"><span class="pre">nilmtk.dataset.dataset.DataSet</span></tt></a></p>
+<p>Load data from Smart*</p>
+<dl class="method">
+<dt id="nilmtk.dataset.smart.Smart.load_building">
+<tt class="descname">load_building</tt><big>(</big><em>root_directory</em>, <em>building_name</em><big>)</big><a class="reference internal" href="_modules/nilmtk/dataset/smart.html#Smart.load_building"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.dataset.smart.Smart.load_building" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.dataset.smart.Smart.load_building_names">
+<tt class="descname">load_building_names</tt><big>(</big><em>root_directory</em><big>)</big><a class="reference internal" href="_modules/nilmtk/dataset/smart.html#Smart.load_building_names"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.dataset.smart.Smart.load_building_names" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="nilmtk.dataset.smart.circuit_name_mapping">
+<tt class="descclassname">nilmtk.dataset.smart.</tt><tt class="descname">circuit_name_mapping</tt><big>(</big><em>circuit_name</em><big>)</big><a class="reference internal" href="_modules/nilmtk/dataset/smart.html#circuit_name_mapping"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.dataset.smart.circuit_name_mapping" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="nilmtk.dataset.smart.find_appliance_nilmtk_name">
+<tt class="descclassname">nilmtk.dataset.smart.</tt><tt class="descname">find_appliance_nilmtk_name</tt><big>(</big><em>appliance_name</em><big>)</big><a class="reference internal" href="_modules/nilmtk/dataset/smart.html#find_appliance_nilmtk_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.dataset.smart.find_appliance_nilmtk_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="nilmtk.dataset.smart.load_labels">
+<tt class="descclassname">nilmtk.dataset.smart.</tt><tt class="descname">load_labels</tt><big>(</big><em>data_dir</em><big>)</big><a class="reference internal" href="_modules/nilmtk/dataset/smart.html#load_labels"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.dataset.smart.load_labels" title="Permalink to this definition">¶</a></dt>
+<dd><p>Uses unique entries in one of csv file to obtain labels
+Arguments
+&#8212;&#8212;&#8212;
+data_dir : str</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns :</th><td class="field-body"><p class="first"><strong>labels</strong> : List</p>
+<blockquote class="last">
+<div><p>of circuit names</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-nilmtk.dataset.ukpd">
+<span id="nilmtk-dataset-ukpd-module"></span><h2>nilmtk.dataset.ukpd module<a class="headerlink" href="#module-nilmtk.dataset.ukpd" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="nilmtk.dataset.ukpd.UKPD">
+<em class="property">class </em><tt class="descclassname">nilmtk.dataset.ukpd.</tt><tt class="descname">UKPD</tt><a class="reference internal" href="_modules/nilmtk/dataset/ukpd.html#UKPD"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.dataset.ukpd.UKPD" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#nilmtk.dataset.dataset.DataSet" title="nilmtk.dataset.dataset.DataSet"><tt class="xref py py-class docutils literal"><span class="pre">nilmtk.dataset.dataset.DataSet</span></tt></a></p>
+<p>Load data from UKPD.</p>
+<dl class="method">
+<dt id="nilmtk.dataset.ukpd.UKPD.load_building">
+<tt class="descname">load_building</tt><big>(</big><em>root_directory</em>, <em>building_name</em>, <em>periods_to_load=None</em>, <em>one_sec_mains_params_to_load=None</em>, <em>downsample_one_sec_mains_rule=None</em><big>)</big><a class="reference internal" href="_modules/nilmtk/dataset/ukpd.html#UKPD.load_building"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.dataset.ukpd.UKPD.load_building" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>periods_to_load</strong> : dict of tuples, optional</p>
+<blockquote>
+<div><p>Key of dict is the building number (int).
+Values are (&lt;start date&gt;, &lt;end date&gt;)
+e.g. (&#8220;2013-04-01&#8221;, None) or (&#8220;2013-04-01&#8221;, &#8220;2013-08-01&#8221;)
+defaults to {1: (&#8220;2013-04-01&#8221;, None)}</p>
+</div></blockquote>
+<p><strong>one_sec_mains_params_to_load</strong> : list of strings, optional</p>
+<blockquote>
+<div><p>some combination of {&#8216;active&#8217;, &#8216;apparent&#8217;, &#8216;voltage&#8217;}
+Defaults to [&#8216;active&#8217;, &#8216;voltage&#8217;]</p>
+</div></blockquote>
+<p><strong>downsample_one_sec_mains_rule</strong> : string, optional</p>
+<blockquote class="last">
+<div><p>How to download the 1-second mains data, if available.
+e.g. &#8216;6S&#8217;
+if None then no downsampling will be done on the 1-sec mains data.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.dataset.ukpd.UKPD.load_building_names">
+<tt class="descname">load_building_names</tt><big>(</big><em>root_directory</em><big>)</big><a class="reference internal" href="_modules/nilmtk/dataset/ukpd.html#UKPD.load_building_names"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.dataset.ukpd.UKPD.load_building_names" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-nilmtk.dataset">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-nilmtk.dataset" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2014, nilmtk authors.<br/>
+      Last updated on Mar 26, 2014.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

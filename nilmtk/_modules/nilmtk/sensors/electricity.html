@@ -1,0 +1,708 @@
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>nilmtk.sensors.electricity &mdash; nilmtk 0.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/bootstrap-3.0.0/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/bootstrap-3.0.0/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../../../_static/js/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="../../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../../_static/bootstrap-3.0.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../../_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="nilmtk 0.0.1 documentation" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../index.html">nilmtk</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.0.1</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            <li class="divider-vertical"></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a href="../../../index.html"
+     class="dropdown-toggle"
+     data-toggle="dropdown">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+    ><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../nilmtk.html">nilmtk API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../userguide.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute.html">Contributing</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"></ul>
+</li>
+              
+            
+            
+              
+            
+            
+            
+            
+              <li></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      
+  <h1>Source code for nilmtk.sensors.electricity</h1><div class="highlight"><pre>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">division</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">namedtuple</span>
+<span class="kn">import</span> <span class="nn">copy</span><span class="o">,</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">nilmtk.utils</span> <span class="kn">import</span> <span class="n">is_namedtuple</span>
+
+<span class="n">Measurement</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s">&#39;Measurement&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s">&#39;physical_quantity&#39;</span><span class="p">,</span> <span class="s">&#39;type&#39;</span><span class="p">])</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">physical_quantity : string</span>
+<span class="sd">    One of: {power, energy, voltage}</span>
+<span class="sd">type : string</span>
+<span class="sd">    One of: {active, reactive, apparent, &#39;&#39;}</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">ApplianceName</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s">&#39;ApplianceName&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s">&#39;name&#39;</span><span class="p">,</span> <span class="s">&#39;instance&#39;</span><span class="p">])</span>
+<span class="n">MainsName</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s">&#39;MainsName&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s">&#39;split&#39;</span><span class="p">,</span> <span class="s">&#39;meter&#39;</span><span class="p">])</span>
+<span class="n">CircuitName</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s">&#39;CircuitName&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s">&#39;name&#39;</span><span class="p">,</span> <span class="s">&#39;split&#39;</span><span class="p">,</span> <span class="s">&#39;meter&#39;</span><span class="p">])</span>
+<span class="n">DualSupply</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s">&#39;DualSupply&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s">&#39;measurement&#39;</span><span class="p">,</span> <span class="s">&#39;supply&#39;</span><span class="p">])</span>
+<span class="c"># Note that DualSupply might be removed from the design</span>
+
+
+<div class="viewcode-block" id="get_two_dataframes_of_dualsupply"><a class="viewcode-back" href="../../../nilmtk.sensors.html#nilmtk.sensors.electricity.get_two_dataframes_of_dualsupply">[docs]</a><span class="k">def</span> <span class="nf">get_two_dataframes_of_dualsupply</span><span class="p">(</span><span class="n">appliance_df</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Creates two appliance dataframes from a dual supply</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    appliance_df :</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    df_1</span>
+<span class="sd">    df_2</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">df_1</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">appliance_df</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+    <span class="n">df_2</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">appliance_df</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+    <span class="n">split_1_supply</span><span class="p">,</span> <span class="n">split_2_supply</span> <span class="o">=</span> <span class="n">appliance_df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span>
+        <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">supply</span><span class="p">,</span> <span class="n">appliance_df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">supply</span>
+    <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">appliance_df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">column</span><span class="o">.</span><span class="n">supply</span> <span class="o">==</span> <span class="n">split_1_supply</span><span class="p">:</span>
+            <span class="n">df_1</span><span class="p">[</span><span class="n">column</span><span class="o">.</span><span class="n">measurement</span><span class="p">]</span> <span class="o">=</span> <span class="n">appliance_df</span><span class="p">[[</span><span class="n">column</span><span class="p">]]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">df_2</span><span class="p">[</span><span class="n">column</span><span class="o">.</span><span class="n">measurement</span><span class="p">]</span> <span class="o">=</span> <span class="n">appliance_df</span><span class="p">[[</span><span class="n">column</span><span class="p">]]</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">df_1</span><span class="p">,</span> <span class="n">df_2</span><span class="p">,</span> <span class="n">split_1_supply</span><span class="p">,</span> <span class="n">split_2_supply</span><span class="p">]</span>
+
+</div>
+<div class="viewcode-block" id="get_dual_supply_columns"><a class="viewcode-back" href="../../../nilmtk.sensors.html#nilmtk.sensors.electricity.get_dual_supply_columns">[docs]</a><span class="k">def</span> <span class="nf">get_dual_supply_columns</span><span class="p">(</span><span class="n">appliance_df</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns list of columns which are dual supply &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">col_name</span> <span class="k">for</span> <span class="n">col_name</span> <span class="ow">in</span> <span class="n">appliance_df</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">is_namedtuple</span><span class="p">(</span><span class="n">col_name</span><span class="p">,</span> <span class="n">DualSupply</span><span class="p">)]</span>
+
+</div>
+<div class="viewcode-block" id="sum_dual_supply"><a class="viewcode-back" href="../../../nilmtk.sensors.html#nilmtk.sensors.electricity.sum_dual_supply">[docs]</a><span class="k">def</span> <span class="nf">sum_dual_supply</span><span class="p">(</span><span class="n">dict_of_appliances</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Sums together any DualSupply appliances.</span>
+
+<span class="sd">    The result is as if each DualSupply appliance had been metered with</span>
+<span class="sd">    a single meter (summing both supplies together).  Non-DualSupply</span>
+<span class="sd">    appliances are copied over untouched.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    dict_of_appliances : dict of pandas.DataFrames</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    new_dict_of_appliances : dict of pandas.DataFrames</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">new_dict_of_appliances</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">appliance_name</span><span class="p">,</span> <span class="n">appliance_df</span> <span class="ow">in</span> <span class="n">dict_of_appliances</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+        <span class="n">dual_supply_columns</span> <span class="o">=</span> <span class="n">get_dual_supply_columns</span><span class="p">(</span><span class="n">appliance_df</span><span class="p">)</span>
+        <span class="n">n_dual_supply_columns</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">dual_supply_columns</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">n_dual_supply_columns</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c"># do a straight copy</span>
+            <span class="n">new_dict_of_appliances</span><span class="p">[</span><span class="n">appliance_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">appliance_df</span>
+        <span class="k">elif</span> <span class="n">n_dual_supply_columns</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="c"># sum dual-supply columns</span>
+            <span class="n">summed_dual_supply</span> <span class="o">=</span> <span class="p">(</span><span class="n">appliance_df</span><span class="p">[</span><span class="n">dual_supply_columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">+</span>
+                                  <span class="n">appliance_df</span><span class="p">[</span><span class="n">dual_supply_columns</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
+            <span class="n">summed_dual_supply</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">dual_supply_columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">measurement</span>
+            <span class="n">new_dict_of_appliances</span><span class="p">[</span>
+                <span class="n">appliance_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">summed_dual_supply</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">appliance_df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+                    <span class="s">&quot;TODO: copy over any non-DualSupply columns&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&#39;{:s} has {:d} DualSupply channel(s). Should have 2.&#39;</span>
+                            <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">appliance_name</span><span class="p">,</span> <span class="n">n_dual_supply_columns</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">new_dict_of_appliances</span>
+
+</div>
+<div class="viewcode-block" id="Electricity"><a class="viewcode-back" href="../../../nilmtk.sensors.html#nilmtk.sensors.electricity.Electricity">[docs]</a><span class="k">class</span> <span class="nc">Electricity</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;Store and process electricity for a building.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    mains : dict of DataFrames, optional</span>
+<span class="sd">        The power measurements taken from the level furthest upstream.</span>
+<span class="sd">        Each key is a MainsName namedtuple with keys:</span>
+
+<span class="sd">        * `split` is the phase or split.  Indexed from 1.</span>
+<span class="sd">        * `meter` is the numeric ID of the meter. Indexed from 1.</span>
+
+<span class="sd">        Each value is a DataFrame of shape (n_samples, n_features)</span>
+<span class="sd">        where each column name is a Measurement namedtuple (please</span>
+<span class="sd">        definition of Measurement at the top of this file for a</span>
+<span class="sd">        description of what can go into a Measurement namedtuple).</span>
+
+<span class="sd">        DataFrame.index is a timezone-aware pd.DateTimeIndex.</span>
+<span class="sd">        Power values are of type np.float32.</span>
+<span class="sd">        DataFrame.name should be identical to the `mains` dict key which</span>
+<span class="sd">        maps to this DataFrame.</span>
+
+<span class="sd">        For example, if we had a dataset recorded in the UK where the home has</span>
+<span class="sd">        only a single phase supply but uses two separate meters, the first of</span>
+<span class="sd">        which measures active and reactive power; the second of which measures only</span>
+<span class="sd">        active, then we&#39;d use:</span>
+
+<span class="sd">        `mains = {MainsName(split=1, meter=1):</span>
+<span class="sd">                      DataFrame(columns=[Measurement(&#39;power&#39;,&#39;active&#39;),</span>
+<span class="sd">                                         Measurement(&#39;power&#39;,&#39;reactive&#39;)]),</span>
+<span class="sd">                  MainsName(split=1, meter=2):</span>
+<span class="sd">                      DataFrame(columns=[Measurement(&#39;power&#39;,&#39;active&#39;)])</span>
+<span class="sd">                 }`</span>
+
+<span class="sd">    circuits : dict of DataFrames, optional</span>
+<span class="sd">        The power measurements taken from midstream.</span>
+<span class="sd">        Each key is a CircuitName namedtuple with fields:</span>
+
+<span class="sd">        * `name` is the standard name for this circuit.</span>
+<span class="sd">        * `split` is the index for this circuit.  Indexed from 1.</span>
+<span class="sd">        * `meter` is the numeric ID of the meter. Indexed from 1.</span>
+<span class="sd">          Indexes into the `meters` dict.</span>
+
+<span class="sd">        Each value is a DataFrame of shape (n_samples, n_features)</span>
+<span class="sd">        where each column name is a Measurement namedtuple (please</span>
+<span class="sd">        definition of Measurement at the top of this file for a</span>
+<span class="sd">        description of what can go into a Measurement namedtuple).</span>
+
+<span class="sd">        DataFrame.index is a timezone-aware pd.DateTimeIndex.</span>
+<span class="sd">        Power values are of type np.float32.</span>
+<span class="sd">        DataFrame.name should be identical to the `circuits` dict key which</span>
+<span class="sd">        maps to this DataFrame.</span>
+
+<span class="sd">        For example:</span>
+
+<span class="sd">        `circuits = {CircuitName(circuit=&#39;lighting&#39;, split=1):</span>
+<span class="sd">                         DataFrame(columns=[Measurement(&#39;power&#39;,&#39;active&#39;)])}`</span>
+
+<span class="sd">    appliances : dict of DataFrames, optional</span>
+<span class="sd">        Power measurements taken from the furthest downstream in the dataset.</span>
+<span class="sd">        Each key is an ApplianceName namedtuple with fields:</span>
+<span class="sd">        * `name` is a standard appliance name.  For a list of valid</span>
+<span class="sd">           names, see nilmtk/docs/standard_names/appliances.txt</span>
+<span class="sd">        * `instance` is the index for that appliance within this building.</span>
+<span class="sd">           Indexed from 1.</span>
+
+<span class="sd">        For example, if a house has two TVs, whose power is recorded separately,</span>
+<span class="sd">        then use these two different keys: `(&#39;tv&#39;, 1)` and `(&#39;tv&#39;, 2)`</span>
+
+<span class="sd">        If multiple appliances are monitored on one channel (e.g. tv + dvd)</span>
+<span class="sd">        then use a tuple of appliances as the key, e.g.:</span>
+
+<span class="sd">        `((&#39;tv&#39;, 1), (&#39;dvd player&#39;, 1))`</span>
+
+<span class="sd">        Each value of the `appliances` dict is a DataFrame of</span>
+<span class="sd">        shape (n_samples, n_features) where each column name is either:</span>
+
+<span class="sd">        * a Measurement namedtuple (please definition of Measurement at the top</span>
+<span class="sd">          of this file for a description of what can go into</span>
+<span class="sd">          a Measurement namedtuple).</span>
+<span class="sd">        * a DualSupply namedtuple with fields:</span>
+<span class="sd">          * measurement : Measurement namedtuple</span>
+<span class="sd">          * supply : int. Index of supply. Start from 1. Does not have to map</span>
+<span class="sd">            directly to the index used to number the mains splits if this</span>
+<span class="sd">            information is not known.</span>
+<span class="sd">          DualSupply is used for appliances like American ovens which are</span>
+<span class="sd">          are single appliances but pull power from both &quot;splits&quot;.</span>
+<span class="sd">        * Or &#39;state&#39; (where 0 is &#39;off&#39;). This is used when the ground-truth of</span>
+<span class="sd">          the appliance state is known; for example in the BLUEd dataset.</span>
+
+<span class="sd">        DataFrame.index is a timezone-aware pd.DateTimeIndex.</span>
+<span class="sd">        Power values are of type np.float32; `state` values are np.int32</span>
+<span class="sd">        DataFrame.name should be identical to the `appliances` dict key which</span>
+<span class="sd">        maps to this DataFrame.</span>
+
+<span class="sd">        Note that `appliances` always stores measurements from the meters</span>
+<span class="sd">        in the dataset placed furthest downstream.  So, for example, in the case</span>
+<span class="sd">        of the REDD dataset where we have measurements of &#39;mains&#39; and &#39;circuits&#39;,</span>
+<span class="sd">        these &#39;circuits&#39; channels are put into `Electricity.appliances` because</span>
+<span class="sd">        REDD&#39;s &#39;circuits&#39; channels are the furthest downstream.</span>
+
+<span class="sd">    appliance_estimates : Panel (3D matrix), optional</span>
+<span class="sd">        Output from the NILM disaggregation algorithm.</span>
+<span class="sd">        The index is a timezone-aware pd.DateTimeIndex</span>
+<span class="sd">        The first two dimensions are time and ApplianceName.</span>
+<span class="sd">        The third dimension describes, for each appliance and for each time:</span>
+<span class="sd">        * `power` : np.float32. Estimated power consumption in Watts.</span>
+<span class="sd">        * `state` : np.int32, optional.</span>
+<span class="sd">        * `confidence` : np.float32 [0,1], optional.</span>
+<span class="sd">        * `power_prob_dist` : object describing the probability dist, optional</span>
+<span class="sd">        * `state_prob_dist` : object describing the probability dist, optional</span>
+
+<span class="sd">    metadata : dict, optional.  All this information should be ground-truth,</span>
+<span class="sd">        not automatically inferred.  Automatically inferred data should go into</span>
+<span class="sd">        `inferred_metadata`.</span>
+
+<span class="sd">        nominal_mains_voltage : np.float32, optional</span>
+<span class="sd">            The nominal mains voltage in volts.</span>
+
+<span class="sd">        mains_wiring : networkx.DiGraph, optional</span>
+<span class="sd">            Nodes are ApplianceNames or CircuitNames or MainsNames.</span>
+<span class="sd">            Edges describe the power wiring between mains, circuits and</span>
+<span class="sd">            appliances.</span>
+<span class="sd">            Edge direction indicates the flow of energy.  i.e. edges point</span>
+<span class="sd">            towards loads.</span>
+
+<span class="sd">        control_connections : networkx.DiGraph, optional</span>
+<span class="sd">            Each node is an ApplianceName.</span>
+<span class="sd">            Edges represent data / audio / video / control connections between</span>
+<span class="sd">            appliances.  Edges can be single-directional or bi-directional.</span>
+<span class="sd">            For example, a dvd player would have an edge pointing towards the</span>
+<span class="sd">            tv.  A wifi router would have bi-directional edges to laptops,</span>
+<span class="sd">            printers, smart TVs etc.</span>
+
+<span class="sd">        appliances : dict, optional</span>
+<span class="sd">            Metadata describing each appliance.  This should be ground truth data,</span>
+<span class="sd">            not automatically inferred information.</span>
+<span class="sd">            Each key is an ApplianceName(&lt;appliance name&gt;, &lt;instance&gt;) namedtuple.</span>
+<span class="sd">            Each value is list of dicts. Each dict describes metadata for that</span>
+<span class="sd">            specific appliance.  Multiple dicts are used to express replacing</span>
+<span class="sd">            appliances over time (in which case the items should be in</span>
+<span class="sd">            chronological order so the last element of the list is always the</span>
+<span class="sd">            most recent.)  Each dict has &#39;general&#39; appliance fields (which</span>
+<span class="sd">            all appliances can have) and fields which are specific to that</span>
+<span class="sd">            class of appliance.</span>
+
+<span class="sd">            General fields (all of which are optional)</span>
+<span class="sd">            ------------------------------------------</span>
+
+<span class="sd">            &#39;room&#39;: (&lt;room name&gt;, &lt;room instance&gt;) tuple (as used in this `Building.rooms`).</span>
+
+<span class="sd">            &#39;meter&#39;: (&lt;manufacturer&gt;, &lt;model&gt;) tuple which maps into global Meters DB.</span>
+
+<span class="sd">            &#39;start date&#39;, &#39;end date&#39;: datetime to represent the period during which</span>
+<span class="sd">                this appliance configuration was active. Set &#39;start date&#39; to 0</span>
+<span class="sd">                if this appliance was active from the start of the dataset. Set</span>
+<span class="sd">                &#39;end date&#39; to 0 if this appliance is still active at the end of</span>
+<span class="sd">                the dataset.</span>
+
+<span class="sd">            Any machine-readable field specified in the communally-defined</span>
+<span class="sd">            appliance controlled vocabulary may be overridden.</span>
+
+<span class="sd">            DualSupply appliances may have a &#39;supply1&#39; and &#39;supply2&#39;</span>
+<span class="sd">            key which maps to a list of strings describing the main</span>
+<span class="sd">            components supplied by that supply.  e.g.</span>
+
+<span class="sd">            {(&#39;washer dryer&#39;, 1): {&#39;supply1&#39;: [&#39;motor&#39;],</span>
+<span class="sd">                                   &#39;supply2&#39;: [&#39;heating element&#39;]} }</span>
+
+<span class="sd">            Valid component names are specified on the wiki at</span>
+<span class="sd">            electricity-disaggregation.org.</span>
+
+<span class="sd">            Appliance-specific fields</span>
+<span class="sd">            -------------------------</span>
+<span class="sd">            The permitted fields and values for each appliance name are</span>
+<span class="sd">            described in `nilmtk/docs/standard_names/appliances.txt`.  e.g.</span>
+
+<span class="sd">            Appliances not directly metered</span>
+<span class="sd">            -------------------------------</span>
+<span class="sd">            Appliances which are not directly metered can be listed. For</span>
+<span class="sd">            example, if a dataset records the lighting circuit (but</span>
+<span class="sd">            not each individual ceiling light) then we can specify each</span>
+<span class="sd">            ceiling light in `metadata[&#39;appliances&#39;]` and then specify</span>
+<span class="sd">            the wiring from the lighting circuit to each ceiling light in</span>
+<span class="sd">            the `metadata[&#39;mains_wiring&#39;]` graph.</span>
+
+<span class="sd">            Example</span>
+<span class="sd">            -------</span>
+<span class="sd">            `{(&#39;tv&#39;, 1):</span>
+<span class="sd">                [{&#39;original name in source dataset&#39;: &#39;Television LCD&#39;,</span>
+<span class="sd">                  &#39;display&#39;: &#39;lcd&#39;,</span>
+<span class="sd">                  &#39;backlight&#39;: &#39;led&#39;</span>
+<span class="sd">                  &#39;screen size in inches&#39;: 42,</span>
+<span class="sd">                  &#39;year of manufacture&#39;: 2001,</span>
+<span class="sd">                  &#39;start date&#39;: &#39;3/4/2012&#39;,</span>
+<span class="sd">                  &#39;end date&#39;: &#39;4/5/2013&#39;,</span>
+<span class="sd">                  &#39;quantity installed&#39;: 1,</span>
+<span class="sd">                  &#39;room&#39;: (&#39;livingroom&#39;, 1),</span>
+<span class="sd">                  &#39;meter&#39;: (&#39;Current Cost&#39;, &#39;IAM&#39;)</span>
+<span class="sd">                }],</span>
+<span class="sd">             (&#39;lights&#39;, 1):</span>
+<span class="sd">                [{&#39;room&#39;: (&#39;kitchen&#39;, 1),</span>
+<span class="sd">                  &#39;placing&#39;: &#39;ceiling&#39;,</span>
+<span class="sd">                  &#39;lamp&#39;: &#39;tungsten&#39;,</span>
+<span class="sd">                  &#39;dimmable&#39;: True,</span>
+<span class="sd">                  &#39;nominal Wattage each&#39;: 50,</span>
+<span class="sd">                  &#39;quantity installed&#39;: 10,</span>
+<span class="sd">                  &#39;meter&#39;: (&#39;Current Cost&#39;, &#39;EnviR&#39;)</span>
+<span class="sd">                 }]</span>
+<span class="sd">            }`</span>
+
+<span class="sd">        metadata_authorship_date : datetime, optional</span>
+<span class="sd">            The controlled vocabulary specified on the energy-disaggregation.org</span>
+<span class="sd">            wiki will evolve with time.  Hence state the date when the metadata</span>
+<span class="sd">            was authored.</span>
+
+<span class="sd">    inferred_metadata : dict, optional</span>
+<span class="sd">        Has the same structure as `metadata` but contains information which has</span>
+<span class="sd">        been automatically inferred from the data.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mains</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">circuits</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">appliances</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">appliance_estimates</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">inferred_metadata</span> <span class="o">=</span> <span class="p">{}</span>
+
+<div class="viewcode-block" id="Electricity.get_dataframe_of_mains"><a class="viewcode-back" href="../../../nilmtk.sensors.html#nilmtk.sensors.electricity.Electricity.get_dataframe_of_mains">[docs]</a>    <span class="k">def</span> <span class="nf">get_dataframe_of_mains</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">measurement</span><span class="o">=</span><span class="n">Measurement</span><span class="p">(</span><span class="s">&#39;power&#39;</span><span class="p">,</span> <span class="s">&#39;active&#39;</span><span class="p">)):</span>
+        <span class="sd">&quot;&quot;&quot;Get a pandas.DataFrame of all mains data</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">first_mains</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mains</span><span class="o">.</span><span class="n">values</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">shape</span> <span class="o">=</span> <span class="n">first_mains</span><span class="o">.</span><span class="n">shape</span>
+        <span class="n">columns</span> <span class="o">=</span> <span class="n">first_mains</span><span class="o">.</span><span class="n">columns</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="n">first_mains</span><span class="o">.</span><span class="n">index</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
+        <span class="n">sum_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">columns</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">main_df</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">mains</span><span class="o">.</span><span class="n">itervalues</span><span class="p">():</span>
+            <span class="n">sum_df</span> <span class="o">+=</span> <span class="n">main_df</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">sum_df</span><span class="p">[[</span><span class="n">measurement</span><span class="p">]]</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="n">fallback_measurement</span> <span class="o">=</span> <span class="n">Measurement</span><span class="p">(</span><span class="s">&#39;power&#39;</span><span class="p">,</span> <span class="s">&#39;apparent&#39;</span><span class="p">)</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">&quot;Warning, couldn&#39;t get&quot;</span><span class="p">,</span> <span class="n">measurement</span><span class="p">,</span> 
+                  <span class="s">&quot;from mains, so trying&quot;</span><span class="p">,</span> <span class="n">fallback_measurement</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">sum_df</span><span class="p">[[</span><span class="n">fallback_measurement</span><span class="p">]]</span>
+</div>
+<div class="viewcode-block" id="Electricity.get_dataframe_of_appliances"><a class="viewcode-back" href="../../../nilmtk.sensors.html#nilmtk.sensors.electricity.Electricity.get_dataframe_of_appliances">[docs]</a>    <span class="k">def</span> <span class="nf">get_dataframe_of_appliances</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                                    <span class="n">measurement</span><span class="o">=</span><span class="n">Measurement</span><span class="p">(</span><span class="s">&#39;power&#39;</span><span class="p">,</span> <span class="s">&#39;active&#39;</span><span class="p">)):</span>
+        <span class="sd">&quot;&quot;&quot;Get a pandas.DataFrame of all appliance data.</span>
+
+<span class="sd">        If any DualSupply appliances are present then sum together the two</span>
+<span class="sd">        supplies (after checking if `dualsupply.measurement == measurement`).</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        measurement : Measurement, optional</span>
+<span class="sd">            default=Measurement(&#39;power&#39;, &#39;active&#39;)</span>
+<span class="sd">            if `measurement=None` then just get the first column per DataFrame.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        pandas.DataFrame</span>
+<span class="sd">            Index is the same as the index used in the appliances DataFrames.</span>
+<span class="sd">            Each column name is an ApplianceName namedtuple.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c"># TODO: I think we should modify the behaviour so that it will always try</span>
+        <span class="c"># to return a &#39;power&#39; column per appliance if power data is available,</span>
+        <span class="c"># even if the exact parameter isn&#39;t available.  ATM this function will</span>
+        <span class="c"># silently remove some appliances if they don&#39;t include the correct</span>
+        <span class="c"># measurements.</span>
+
+        <span class="k">if</span> <span class="n">measurement</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">appliance_dict</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="n">appliance_name</span><span class="p">:</span> <span class="n">appliance_df</span><span class="o">.</span><span class="n">icol</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">appliance_name</span><span class="p">,</span> <span class="n">appliance_df</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">appliances</span><span class="o">.</span><span class="n">iteritems</span><span class="p">()}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">summed_dual_supply</span> <span class="o">=</span> <span class="n">sum_dual_supply</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">appliances</span><span class="p">)</span>
+            <span class="n">appliance_dict</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="n">appliance_name</span><span class="p">:</span> <span class="n">appliance_df</span><span class="p">[</span><span class="n">measurement</span><span class="p">]</span>
+                <span class="k">for</span> <span class="n">appliance_name</span><span class="p">,</span> <span class="n">appliance_df</span> <span class="ow">in</span> <span class="n">summed_dual_supply</span><span class="o">.</span><span class="n">iteritems</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">measurement</span> <span class="ow">in</span> <span class="n">appliance_df</span><span class="p">}</span>
+
+        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">appliance_dict</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Electricity.remove_channels_from_appliances"><a class="viewcode-back" href="../../../nilmtk.sensors.html#nilmtk.sensors.electricity.Electricity.remove_channels_from_appliances">[docs]</a>    <span class="k">def</span> <span class="nf">remove_channels_from_appliances</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channels_to_remove</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns a dict with the same structure as `electricity.appliances`.</span>
+<span class="sd">        If `electricity.appliances` contains any &#39;unmetered&#39; channels then </span>
+<span class="sd">        returns a copy of `electricity.appliances` with the unmetered channel</span>
+<span class="sd">        removed.  Otherwise just returns a reference to `appliances`.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">channels_to_remove</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">channels_to_remove</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;unmetered&#39;</span><span class="p">,</span> <span class="s">&#39;subpanel&#39;</span><span class="p">]</span>
+
+        <span class="n">there_are_channels_to_remove</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span>
+            <span class="p">[(</span><span class="n">channel_to_remove</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">appliances</span> 
+             <span class="k">for</span> <span class="n">channel_to_remove</span> <span class="ow">in</span> <span class="n">channels_to_remove</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="n">there_are_channels_to_remove</span><span class="p">:</span>
+            <span class="n">appliances</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">appliances</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">channel_to_remove</span> <span class="ow">in</span> <span class="n">channels_to_remove</span><span class="p">:</span>
+                <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span>
+                <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">appliances</span><span class="o">.</span><span class="n">pop</span><span class="p">((</span><span class="n">channel_to_remove</span><span class="p">,</span> <span class="n">i</span><span class="p">))</span>
+                    <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                        <span class="k">break</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">print</span><span class="p">(</span><span class="s">&quot;Removed&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">channel_to_remove</span><span class="p">,</span> <span class="n">i</span><span class="p">))</span>
+                        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">appliances</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">appliances</span>
+
+        <span class="k">return</span> <span class="n">appliances</span>
+</div>
+<div class="viewcode-block" id="Electricity.get_appliance"><a class="viewcode-back" href="../../../nilmtk.sensors.html#nilmtk.sensors.electricity.Electricity.get_appliance">[docs]</a>    <span class="k">def</span> <span class="nf">get_appliance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">appliance_name</span><span class="p">,</span> <span class="n">measurement</span><span class="o">=</span><span class="s">&quot;all&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        appliance_name : string</span>
+<span class="sd">        measurement : string or list of strings, optional</span>
+<span class="sd">            {&#39;apparent&#39;, &#39;active&#39;, &#39;reactive&#39;, &#39;voltage&#39;, &#39;all&#39;}</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        appliance_data : DataFrame</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+</div>
+<div class="viewcode-block" id="Electricity.count_appliances"><a class="viewcode-back" href="../../../nilmtk.sensors.html#nilmtk.sensors.electricity.Electricity.count_appliances">[docs]</a>    <span class="k">def</span> <span class="nf">count_appliances</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">appliance_name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        n_appliances : int</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+</div>
+<div class="viewcode-block" id="Electricity.get_vampire_power"><a class="viewcode-back" href="../../../nilmtk.sensors.html#nilmtk.sensors.electricity.Electricity.get_vampire_power">[docs]</a>    <span class="k">def</span> <span class="nf">get_vampire_power</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+</div>
+<div class="viewcode-block" id="Electricity.get_diff_between_aggregate_and_appliances"><a class="viewcode-back" href="../../../nilmtk.sensors.html#nilmtk.sensors.electricity.Electricity.get_diff_between_aggregate_and_appliances">[docs]</a>    <span class="k">def</span> <span class="nf">get_diff_between_aggregate_and_appliances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+</div>
+<div class="viewcode-block" id="Electricity.plot_appliance_activity"><a class="viewcode-back" href="../../../nilmtk.sensors.html#nilmtk.sensors.electricity.Electricity.plot_appliance_activity">[docs]</a>    <span class="k">def</span> <span class="nf">plot_appliance_activity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Plot a compact representation of all appliance activity.&quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+</div>
+<div class="viewcode-block" id="Electricity.crop"><a class="viewcode-back" href="../../../nilmtk.sensors.html#nilmtk.sensors.electricity.Electricity.crop">[docs]</a>    <span class="k">def</span> <span class="nf">crop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start_datetime</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">end_datetime</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Just crops all dataframes in appliances, circuits and mains.</span>
+<span class="sd">        Does not remove any channels.  Performs in-place, does not return</span>
+<span class="sd">        anything.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        start_datetime, end_datetime : strings or datetime objects, optional</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">dict_</span> <span class="ow">in</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">appliances</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">circuits</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mains</span><span class="p">]:</span>
+            <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">dict_</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="n">dict_</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">dict_</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="n">start_datetime</span><span class="p">:</span><span class="n">end_datetime</span><span class="p">]</span>
+</div>
+<div class="viewcode-block" id="Electricity.get_start_and_end_dates"><a class="viewcode-back" href="../../../nilmtk.sensors.html#nilmtk.sensors.electricity.Electricity.get_start_and_end_dates">[docs]</a>    <span class="k">def</span> <span class="nf">get_start_and_end_dates</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns the start and end dates covering the data in</span>
+<span class="sd">        appliances, circuits and mains.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        [start, end] : pd.Timestamp</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="n">end</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="k">for</span> <span class="n">dict_of_dfs</span> <span class="ow">in</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">appliances</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">circuits</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mains</span><span class="p">]:</span>
+            <span class="k">for</span> <span class="n">df</span> <span class="ow">in</span> <span class="n">dict_of_dfs</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+                <span class="n">df_start</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">start</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">or</span> <span class="n">df_start</span> <span class="o">&lt;</span> <span class="n">start</span><span class="p">:</span>
+                    <span class="n">start</span> <span class="o">=</span> <span class="n">df_start</span>
+
+                <span class="n">df_end</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">end</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">or</span> <span class="n">df_end</span> <span class="o">&gt;</span> <span class="n">end</span><span class="p">:</span>
+                    <span class="n">end</span> <span class="o">=</span> <span class="n">df_end</span>
+
+        <span class="k">return</span> <span class="p">[</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">]</span>
+</div>
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s">&quot;&quot;</span>
+
+<div class="viewcode-block" id="Electricity.to_json"><a class="viewcode-back" href="../../../nilmtk.sensors.html#nilmtk.sensors.electricity.Electricity.to_json">[docs]</a>    <span class="k">def</span> <span class="nf">to_json</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">representation</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">)</span>
+        <span class="n">representation</span><span class="p">[</span><span class="s">&quot;mains&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
+        <span class="n">representation</span><span class="p">[</span><span class="s">&quot;appliances&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
+        <span class="n">representation</span><span class="p">[</span><span class="s">&quot;circuits&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">representation</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Electricity.simplify"><a class="viewcode-back" href="../../../nilmtk.sensors.html#nilmtk.sensors.electricity.Electricity.simplify">[docs]</a>    <span class="k">def</span> <span class="nf">simplify</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">measurement</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">normalise</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">downsample</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> 
+                 <span class="n">in_place</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns a simplified Electricity object where mains is represented</span>
+<span class="sd">        by a DataFrame with a single column and each appliance is also </span>
+<span class="sd">        a single column.</span>
+
+<span class="sd">        * Sums together split-phase supplies</span>
+<span class="sd">        * If multiple meters measure the same mains parameters then selects</span>
+<span class="sd">          the meter with the highest sample rate</span>
+<span class="sd">        * Optionally normalises by voltage</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        measurement : Measurement, optional</span>
+<span class="sd">            If None then will attempt to use the same Measurement</span>
+<span class="sd">            for mains and appliances.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        electricity_copy : Electricity</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+</div>
+<div class="viewcode-block" id="Electricity.sum_split_supplies"><a class="viewcode-back" href="../../../nilmtk.sensors.html#nilmtk.sensors.electricity.Electricity.sum_split_supplies">[docs]</a>    <span class="k">def</span> <span class="nf">sum_split_supplies</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns a new Electricity object where everything is the same</span>
+<span class="sd">        EXCEPT that split-supply mains are summed; and DualSupply</span>
+<span class="sd">        appliances are summed.  The main use case is data from North America,</span>
+<span class="sd">        e.g. REDD.  Does not touch `circuits`.</span>
+
+<span class="sd">        .. warning:: for mains data, this function assumes that there are</span>
+<span class="sd">           only 1 or 2 splits and only a single meter per split.</span>
+<span class="sd">           For DualSupply appliances, we assume only 2 supplies and a</span>
+<span class="sd">           single meter per appliance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">e_copy</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">power_energy_columns</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">mains</span><span class="o">.</span><span class="n">values</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">columns</span> 
+            <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">physical_quantity</span> <span class="ow">in</span> <span class="p">[</span><span class="s">&#39;power&#39;</span><span class="p">,</span> <span class="s">&#39;energy&#39;</span><span class="p">]]</span>
+
+        <span class="n">non_power_energy_columns</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">mains</span><span class="o">.</span><span class="n">values</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">columns</span> 
+            <span class="k">if</span> <span class="n">x</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">power_energy_columns</span><span class="p">]</span>
+
+        <span class="c"># Sum split-supply mains</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">mains</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mains</span><span class="p">[(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)]</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+            <span class="n">mains</span><span class="p">[</span><span class="n">power_energy_columns</span><span class="p">]</span> <span class="o">=</span> <span class="n">e_copy</span><span class="o">.</span><span class="n">mains</span><span class="p">[(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)][</span><span class="n">power_energy_columns</span><span class="p">]</span> <span class="o">+</span> \
+                <span class="n">e_copy</span><span class="o">.</span><span class="n">mains</span><span class="p">[(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)][</span><span class="n">power_energy_columns</span><span class="p">]</span>
+            <span class="n">mains</span><span class="p">[</span><span class="n">non_power_energy_columns</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">e_copy</span><span class="o">.</span><span class="n">mains</span><span class="p">[(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)][</span><span class="n">non_power_energy_columns</span><span class="p">]</span> <span class="o">+</span>
+                                               <span class="n">e_copy</span><span class="o">.</span><span class="n">mains</span><span class="p">[(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)][</span><span class="n">non_power_energy_columns</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span>
+            <span class="c">#mains = e_copy.mains[(1, 1)] + e_copy.mains[(2, 1)]</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">pass</span>  <span class="c"># doesn&#39;t have split-phase mains so nothing to do</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">e_copy</span><span class="o">.</span><span class="n">mains</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+            <span class="n">e_copy</span><span class="o">.</span><span class="n">mains</span><span class="p">[</span><span class="n">MainsName</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)]</span> <span class="o">=</span> <span class="n">mains</span>
+
+        <span class="c"># Sum DualSupply appliances</span>
+        <span class="n">e_copy</span><span class="o">.</span><span class="n">appliances</span> <span class="o">=</span> <span class="n">sum_dual_supply</span><span class="p">(</span><span class="n">e_copy</span><span class="o">.</span><span class="n">appliances</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">e_copy</span>
+</div>
+<div class="viewcode-block" id="Electricity.drop_duplicate_indicies"><a class="viewcode-back" href="../../../nilmtk.sensors.html#nilmtk.sensors.electricity.Electricity.drop_duplicate_indicies">[docs]</a>    <span class="k">def</span> <span class="nf">drop_duplicate_indicies</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Removes duplicate indicies in all dataframes in appliances,</span>
+<span class="sd">        circuits and mains; in place.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&#39;Dropping duplicate indicies...&#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">dict_</span> <span class="ow">in</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">appliances</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">circuits</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mains</span><span class="p">]:</span>
+            <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">dict_</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="n">df</span> <span class="o">=</span> <span class="n">dict_</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+                <span class="n">df</span><span class="p">[</span><span class="s">&#39;index&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">index</span>
+                <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span><span class="n">cols</span><span class="o">=</span><span class="s">&#39;index&#39;</span><span class="p">)</span>
+                <span class="k">del</span> <span class="n">df</span><span class="p">[</span><span class="s">&#39;index&#39;</span><span class="p">]</span>
+                <span class="n">dict_</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span>
+                <span class="k">print</span><span class="p">(</span><span class="s">&#39;.&#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">)</span>
+                <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&#39;Done&#39;</span><span class="p">)</span>
+        </div>
+<div class="viewcode-block" id="Electricity.remove_voltage"><a class="viewcode-back" href="../../../nilmtk.sensors.html#nilmtk.sensors.electricity.Electricity.remove_voltage">[docs]</a>    <span class="k">def</span> <span class="nf">remove_voltage</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">dict_</span> <span class="ow">in</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">appliances</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">circuits</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mains</span><span class="p">]:</span>
+            <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">dict_</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="n">df</span> <span class="o">=</span> <span class="n">dict_</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+                <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">col</span><span class="o">.</span><span class="n">physical_quantity</span> <span class="o">==</span> <span class="s">&#39;voltage&#39;</span><span class="p">:</span>
+                        <span class="k">del</span> <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span>
+                </div></div>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2014, nilmtk authors.<br/>
+      Last updated on Mar 26, 2014.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

@@ -1,0 +1,343 @@
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>nilmtk.dataset.hes &mdash; nilmtk 0.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/bootstrap-3.0.0/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/bootstrap-3.0.0/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../../../_static/js/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="../../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../../_static/bootstrap-3.0.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../../_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="nilmtk 0.0.1 documentation" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../index.html">nilmtk</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.0.1</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            <li class="divider-vertical"></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a href="../../../index.html"
+     class="dropdown-toggle"
+     data-toggle="dropdown">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+    ><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../nilmtk.html">nilmtk API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../userguide.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute.html">Contributing</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"></ul>
+</li>
+              
+            
+            
+              
+            
+            
+            
+            
+              <li></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      
+  <h1>Source code for nilmtk.dataset.hes</h1><div class="highlight"><pre>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">division</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">join</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">pytz</span> <span class="kn">import</span> <span class="n">UTC</span>
+<span class="kn">from</span> <span class="nn">sys</span> <span class="kn">import</span> <span class="n">stderr</span>
+<span class="kn">from</span> <span class="nn">nilmtk.dataset</span> <span class="kn">import</span> <span class="n">DataSet</span>
+<span class="kn">from</span> <span class="nn">nilmtk.building</span> <span class="kn">import</span> <span class="n">Building</span>
+<span class="kn">from</span> <span class="nn">nilmtk.sensors.electricity</span> <span class="kn">import</span> <span class="n">Measurement</span><span class="p">,</span> <span class="n">MainsName</span><span class="p">,</span> <span class="n">CircuitName</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">TODO</span>
+<span class="sd">----</span>
+
+<span class="sd">* convert HES appliance names to NILMTK standard</span>
+<span class="sd">* what exactly is measured? Real power? Apparent?</span>
+<span class="sd">* houses which have multiple mains: are they multiple &#39;splits&#39; or phases or meters?</span>
+<span class="sd">* dataset metadata</span>
+<span class="sd">* some houses have both 2- and 10-minute data.  Might need a function to ignore 10 minute data.</span>
+<span class="sd">* set up wiring to take into consideration the information in </span>
+<span class="sd">  &#39;total_profiles.csv&#39;  Sockets 1-11 are circuits monitored</span>
+<span class="sd">  at the consumer unit which feed fall sockets around the dwelling.</span>
+<span class="sd">* import the enormous amount of appliance metadata in &#39;appliance_data.csv&#39;, </span>
+<span class="sd">  especially channels which recorded multiple appliances</span>
+<span class="sd">* use the metadata in &#39;ipsos.csv&#39; and &#39;rdsap_data.csv&#39; and &#39;rdsap_*.csv&#39; for each Building</span>
+<span class="sd">* Maybe email CAR to let them know that nilmtk can now import HES.</span>
+
+<span class="sd">HES notes</span>
+<span class="sd">---------</span>
+
+<span class="sd">* 14 homes recorded mains but only 5 were kept after cleaning</span>
+<span class="sd">* circuit-level data from the consumer unit was recorded as &#39;sockets&#39; for 216 houses</span>
+<span class="sd">* &#39;total_profiles.csv&#39; records pairs of &lt;house&gt;,&lt;appliance&gt; which are the </span>
+<span class="sd">  channels which need to be added to produce the whole-home total, which</span>
+<span class="sd">  I think consists of all the circuit-level meters plus all appliances</span>
+<span class="sd">  which are not also monitored at circuit level.</span>
+<span class="sd">* appliance 2000 represents the calculated aggregate ???</span>
+<span class="sd">* appliance 159 represents the difference between ???</span>
+<span class="sd">  this and the sum of the known appliances</span>
+<span class="sd">* appliance_codes.csv maps from &lt;appliance code&gt; to &lt;appliance name&gt;</span>
+<span class="sd">* seasonal_adjustments.csv stores the trends in energy usage per appliance </span>
+<span class="sd">  activation over a year.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">FILENAMES</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;appliance_group_data-{}.csv&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span>
+             <span class="p">[</span><span class="s">&#39;1a&#39;</span><span class="p">,</span><span class="s">&#39;1b&#39;</span><span class="p">,</span><span class="s">&#39;1c&#39;</span><span class="p">,</span><span class="s">&#39;1d&#39;</span><span class="p">,</span><span class="s">&#39;2&#39;</span><span class="p">,</span><span class="s">&#39;3&#39;</span><span class="p">]]</span>
+<span class="n">CHUNKSIZE</span> <span class="o">=</span> <span class="mf">1E5</span> <span class="c"># number of rows</span>
+<span class="n">COL_NAMES</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;interval id&#39;</span><span class="p">,</span> <span class="s">&#39;house id&#39;</span><span class="p">,</span> <span class="s">&#39;appliance code&#39;</span><span class="p">,</span> <span class="s">&#39;date&#39;</span><span class="p">,</span>
+             <span class="s">&#39;data&#39;</span><span class="p">,</span> <span class="s">&#39;time&#39;</span><span class="p">]</span>
+<span class="n">LAST_PWR_COLUMN</span> <span class="o">=</span> <span class="mi">250</span>
+<span class="n">NANOSECONDS_PER_TENTH_OF_AN_HOUR</span> <span class="o">=</span> <span class="mf">1E9</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">6</span>
+<span class="n">MAINS_CODES</span> <span class="o">=</span> <span class="p">[</span><span class="mi">240</span><span class="p">,</span> <span class="mi">241</span><span class="p">]</span>
+<span class="n">TEMPERATURE_CODES</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">251</span><span class="p">,</span><span class="mi">256</span><span class="p">)</span>
+<span class="n">CIRCUIT_CODES</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">208</span><span class="p">,</span> <span class="mi">218</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span><span class="mi">222</span><span class="p">]</span>
+<span class="n">E_MEASUREMENT</span> <span class="o">=</span> <span class="n">Measurement</span><span class="p">(</span><span class="s">&#39;energy&#39;</span><span class="p">,</span> <span class="s">&#39;active&#39;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="datetime_converter"><a class="viewcode-back" href="../../../nilmtk.dataset.html#nilmtk.dataset.hes.datetime_converter">[docs]</a><span class="k">def</span> <span class="nf">datetime_converter</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    s : int</span>
+<span class="sd">        of the form 2011-02-02 14:48:00</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    datetime</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c"># 0123456789012345678</span>
+    <span class="c"># 2011-02-02 14:48:00</span>
+    <span class="c"># the code below is ~8 times faster </span>
+    <span class="c"># than datetime.strptime(s, &#39;%Y-%m-%d %H:%M:%S&#39;)</span>
+    <span class="k">return</span> <span class="n">datetime</span><span class="p">(</span><span class="n">year</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">4</span><span class="p">]),</span> <span class="n">month</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="mi">5</span><span class="p">:</span><span class="mi">7</span><span class="p">]),</span> <span class="n">day</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="mi">8</span><span class="p">:</span><span class="mi">10</span><span class="p">]),</span>
+                    <span class="n">hour</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="mi">11</span><span class="p">:</span><span class="mi">13</span><span class="p">]),</span> <span class="n">minute</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="mi">14</span><span class="p">:</span><span class="mi">16</span><span class="p">]),</span> 
+                    <span class="n">second</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="mi">17</span><span class="p">:</span><span class="mi">19</span><span class="p">]),</span> <span class="n">tzinfo</span><span class="o">=</span><span class="n">UTC</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="load_list_of_house_ids"><a class="viewcode-back" href="../../../nilmtk.dataset.html#nilmtk.dataset.hes.load_list_of_house_ids">[docs]</a><span class="k">def</span> <span class="nf">load_list_of_house_ids</span><span class="p">(</span><span class="n">data_dir</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns a list of house IDs in HES (ints).&quot;&quot;&quot;</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="n">data_dir</span><span class="p">,</span> <span class="s">&#39;ipsos-anonymised-corrected 310713.csv&#39;</span><span class="p">)</span>
+    <span class="n">series</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">index_col</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">squeeze</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">series</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+</div>
+<div class="viewcode-block" id="HES"><a class="viewcode-back" href="../../../nilmtk.dataset.html#nilmtk.dataset.hes.HES">[docs]</a><span class="k">class</span> <span class="nc">HES</span><span class="p">(</span><span class="n">DataSet</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Load data from UK Government&#39;s Household Electricity Survey </span>
+<span class="sd">    (the cleaned version of the dataset released in summer 2013).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c"># TODO: re-use code from </span>
+    <span class="c"># https://github.com/JackKelly/pda/blob/master/scripts/hes/load_hes.py</span>
+
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Broad approach:</span>
+<span class="sd">    * load list of houses</span>
+<span class="sd">    * create dataset.buildings dict with empty Buildings</span>
+<span class="sd">    * the keys of `dataset.buildings` are the HES house IDs, which</span>
+<span class="sd">      will be converted to the nilmtk standard after loading.</span>
+
+<span class="sd">    * load CHUNK_SIZE of data from CSV into a DataFrame</span>
+<span class="sd">    * convert datetime</span>
+<span class="sd">    * get list of houses in the DF</span>
+<span class="sd">    * for each house:</span>
+<span class="sd">        * Load previously converted data from the HDFStore</span>
+<span class="sd">        * append new data</span>
+<span class="sd">        * save back to HDFStore</span>
+
+<span class="sd">    * When all houses are complete, post-process:</span>
+<span class="sd">        * sort all indicies</span>
+<span class="sd">        * set timezone</span>
+<span class="sd">        * convert energy to nilmtk standard energy unit (kWh?)</span>
+<span class="sd">        * convert Wh to watts (retain energy) </span>
+<span class="sd">          (see &#39;convert_hes_to_watts.py&#39; from pda)</span>
+<span class="sd">        * convert keys of `dataset.buildings`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">HES</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s">&#39;name&#39;</span><span class="p">:</span> <span class="s">&#39;HES&#39;</span><span class="p">,</span>
+            <span class="s">&#39;geographic_coordinates&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mf">51.464462</span><span class="p">,</span><span class="o">-</span><span class="mf">0.076544</span><span class="p">),</span> <span class="c"># London</span>
+            <span class="s">&#39;timezone&#39;</span><span class="p">:</span> <span class="s">&#39;Europe/London&#39;</span>
+        <span class="p">}</span>
+
+<div class="viewcode-block" id="HES.load"><a class="viewcode-back" href="../../../nilmtk.dataset.html#nilmtk.dataset.hes.HES.load">[docs]</a>    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_dir</span><span class="p">,</span> <span class="n">max_chunks</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="c"># load list of houses</span>
+        <span class="n">house_ids</span> <span class="o">=</span> <span class="n">load_list_of_house_ids</span><span class="p">(</span><span class="n">data_dir</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">house_id</span> <span class="ow">in</span> <span class="n">house_ids</span><span class="p">:</span>
+            <span class="n">building</span> <span class="o">=</span> <span class="n">Building</span><span class="p">()</span>
+            <span class="n">building</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s">&#39;original_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">house_id</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">buildings</span><span class="p">[</span><span class="n">house_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">building</span>
+
+        <span class="n">houses_loaded</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">FILENAMES</span><span class="p">:</span>
+            <span class="c"># Load appliance energy data chunk-by-chunk</span>
+            <span class="n">full_filename</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="n">data_dir</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">&#39;loading&#39;</span><span class="p">,</span> <span class="n">full_filename</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">reader</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">full_filename</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="n">COL_NAMES</span><span class="p">,</span> 
+                                     <span class="n">index_col</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">chunksize</span><span class="o">=</span><span class="n">CHUNKSIZE</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">IOError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="k">print</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="nb">file</span><span class="o">=</span><span class="n">stderr</span><span class="p">)</span>
+                <span class="k">continue</span>
+
+            <span class="c"># Process each chunks</span>
+            <span class="n">chunk_i</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">reader</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">max_chunks</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="ow">and</span> <span class="n">chunk_i</span> <span class="o">&gt;=</span> <span class="n">max_chunks</span><span class="p">:</span>
+                    <span class="k">break</span>
+
+                <span class="k">print</span><span class="p">(</span><span class="s">&#39;processing chunk&#39;</span><span class="p">,</span> <span class="n">chunk_i</span><span class="p">,</span> <span class="s">&#39;of&#39;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+                <span class="c"># Convert date and time columns to np.datetime64 objects</span>
+                <span class="n">dt</span> <span class="o">=</span> <span class="n">chunk</span><span class="p">[</span><span class="s">&#39;date&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s">&#39; &#39;</span> <span class="o">+</span> <span class="n">chunk</span><span class="p">[</span><span class="s">&#39;time&#39;</span><span class="p">]</span>
+                <span class="k">del</span> <span class="n">chunk</span><span class="p">[</span><span class="s">&#39;date&#39;</span><span class="p">]</span>
+                <span class="k">del</span> <span class="n">chunk</span><span class="p">[</span><span class="s">&#39;time&#39;</span><span class="p">]</span>
+                <span class="n">chunk</span><span class="p">[</span><span class="s">&#39;datetime&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dt</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">datetime_converter</span><span class="p">)</span>
+
+                <span class="c"># Data is either tenths of a Wh or tenths of a degree</span>
+                <span class="n">chunk</span><span class="p">[</span><span class="s">&#39;data&#39;</span><span class="p">]</span> <span class="o">*=</span> <span class="mi">10</span>
+                <span class="n">chunk</span><span class="p">[</span><span class="s">&#39;data&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">chunk</span><span class="p">[</span><span class="s">&#39;data&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+
+                <span class="c"># Process each house in chunk</span>
+                <span class="n">houses_in_chunk</span> <span class="o">=</span> <span class="n">chunk</span><span class="p">[</span><span class="s">&#39;house id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span> <span class="c">#TODO: use groupby?!?</span>
+                <span class="n">houses_loaded</span> <span class="o">=</span> <span class="n">houses_loaded</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">houses_in_chunk</span><span class="p">))</span>
+                <span class="k">for</span> <span class="n">house_id</span> <span class="ow">in</span> <span class="n">houses_in_chunk</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_process_house_in_chunk</span><span class="p">(</span><span class="n">house_id</span><span class="p">,</span> <span class="n">chunk</span><span class="p">)</span>
+
+                <span class="n">chunk_i</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&#39;houses with some data loaded:&#39;</span><span class="p">,</span> <span class="n">houses_loaded</span><span class="p">)</span>
+</div>
+    <span class="k">def</span> <span class="nf">_process_house_in_chunk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">house_id</span><span class="p">,</span> <span class="n">chunk</span><span class="p">):</span>
+        <span class="n">building</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">buildings</span><span class="p">[</span><span class="n">house_id</span><span class="p">]</span>
+        <span class="n">electric</span> <span class="o">=</span> <span class="n">building</span><span class="o">.</span><span class="n">utility</span><span class="o">.</span><span class="n">electric</span>
+        <span class="n">house_data</span> <span class="o">=</span> <span class="n">chunk</span><span class="p">[</span><span class="n">chunk</span><span class="p">[</span><span class="s">&#39;house id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">house_id</span><span class="p">]</span>
+        <span class="n">appliances_in_house_chunk</span> <span class="o">=</span> <span class="n">house_data</span><span class="p">[</span><span class="s">&#39;appliance code&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">appliance_code</span> <span class="ow">in</span> <span class="n">appliances_in_house_chunk</span><span class="p">:</span>
+            <span class="c"># TODO: do this using Pandas groupby???</span>
+            <span class="n">appliance_data</span> <span class="o">=</span> <span class="n">house_data</span><span class="p">[</span><span class="n">house_data</span><span class="p">[</span><span class="s">&#39;appliance code&#39;</span><span class="p">]</span> <span class="o">==</span> 
+                                        <span class="n">appliance_code</span><span class="p">]</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">appliance_data</span><span class="p">[</span><span class="s">&#39;data&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+            <span class="n">index</span> <span class="o">=</span> <span class="n">appliance_data</span><span class="p">[</span><span class="s">&#39;datetime&#39;</span><span class="p">]</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">,</span>
+                              <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="n">E_MEASUREMENT</span><span class="p">])</span>
+
+            <span class="n">is_temperature</span> <span class="o">=</span> <span class="bp">False</span>
+            <span class="k">if</span> <span class="n">appliance_code</span> <span class="ow">in</span> <span class="n">MAINS_CODES</span><span class="p">:</span>
+                <span class="n">dict_</span> <span class="o">=</span> <span class="n">electric</span><span class="o">.</span><span class="n">mains</span>
+                <span class="n">split</span> <span class="o">=</span> <span class="n">MAINS_CODES</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">appliance_code</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+                <span class="n">key</span> <span class="o">=</span> <span class="n">MainsName</span><span class="p">(</span><span class="n">split</span><span class="o">=</span><span class="n">split</span><span class="p">,</span> <span class="n">meter</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">appliance_code</span> <span class="ow">in</span> <span class="n">CIRCUIT_CODES</span><span class="p">:</span>
+                <span class="n">dict_</span> <span class="o">=</span> <span class="n">electric</span><span class="o">.</span><span class="n">circuits</span>
+                <span class="n">split</span> <span class="o">=</span> <span class="n">CIRCUIT_CODES</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">appliance_code</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+                <span class="n">key</span> <span class="o">=</span> <span class="n">CircuitName</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&#39;sockets&#39;</span><span class="p">,</span> <span class="n">split</span><span class="o">=</span><span class="n">split</span><span class="p">,</span> <span class="n">meter</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">appliance_code</span> <span class="ow">in</span> <span class="n">TEMPERATURE_CODES</span><span class="p">:</span>
+                <span class="n">is_temperature</span> <span class="o">=</span> <span class="bp">True</span>
+                <span class="c"># TODO</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">dict_</span> <span class="o">=</span> <span class="n">electric</span><span class="o">.</span><span class="n">appliances</span>
+                <span class="n">key</span> <span class="o">=</span> <span class="n">appliance_code</span> <span class="c"># TODO use nilmtk ApplianceNames</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">is_temperature</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">dict_</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                    <span class="n">dict_</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span>
+
+<div class="viewcode-block" id="HES.load_building"><a class="viewcode-back" href="../../../nilmtk.dataset.html#nilmtk.dataset.hes.HES.load_building">[docs]</a>    <span class="k">def</span> <span class="nf">load_building</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">building_name</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+</div>
+<div class="viewcode-block" id="HES.load_building_names"><a class="viewcode-back" href="../../../nilmtk.dataset.html#nilmtk.dataset.hes.HES.load_building_names">[docs]</a>    <span class="k">def</span> <span class="nf">load_building_names</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div></div>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2014, nilmtk authors.<br/>
+      Last updated on Mar 26, 2014.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

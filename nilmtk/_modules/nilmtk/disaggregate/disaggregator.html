@@ -1,0 +1,209 @@
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>nilmtk.disaggregate.disaggregator &mdash; nilmtk 0.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/bootstrap-3.0.0/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/bootstrap-3.0.0/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../../../_static/js/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="../../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../../_static/bootstrap-3.0.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../../_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="nilmtk 0.0.1 documentation" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../index.html">nilmtk</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.0.1</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            <li class="divider-vertical"></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a href="../../../index.html"
+     class="dropdown-toggle"
+     data-toggle="dropdown">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+    ><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../nilmtk.html">nilmtk API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../userguide.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute.html">Contributing</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"></ul>
+</li>
+              
+            
+            
+              
+            
+            
+            
+            
+              <li></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      
+  <h1>Source code for nilmtk.disaggregate.disaggregator</h1><div class="highlight"><pre>
+<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABCMeta</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<span class="kn">from</span> <span class="nn">nilmtk.sensors.electricity</span> <span class="kn">import</span> <span class="n">Measurement</span>
+
+
+<div class="viewcode-block" id="Disaggregator"><a class="viewcode-back" href="../../../nilmtk.disaggregate.html#nilmtk.disaggregate.disaggregator.Disaggregator">[docs]</a><span class="k">class</span> <span class="nc">Disaggregator</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;Abstract Base Class for all Disaggregators.  This class</span>
+<span class="sd">    defines the common interface to all Disaggregators.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">__metaclass__</span> <span class="o">=</span> <span class="n">ABCMeta</span>
+
+    <span class="nd">@abstractmethod</span>
+<div class="viewcode-block" id="Disaggregator.train"><a class="viewcode-back" href="../../../nilmtk.disaggregate.html#nilmtk.disaggregate.disaggregator.Disaggregator.train">[docs]</a>    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">building</span><span class="p">,</span> <span class="n">aggregate</span><span class="o">=</span><span class="s">&#39;mains&#39;</span><span class="p">,</span> <span class="n">submetered</span><span class="o">=</span><span class="s">&#39;appliances&#39;</span><span class="p">,</span>
+              <span class="n">disagg_features</span><span class="o">=</span><span class="p">[</span><span class="n">Measurement</span><span class="p">(</span><span class="s">&#39;power&#39;</span><span class="p">,</span> <span class="s">&#39;active&#39;</span><span class="p">)],</span>
+              <span class="n">environmental</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Train the disaggregation algorithm.</span>
+
+<span class="sd">        There are three training modes:</span>
+
+<span class="sd">        * Supervised training on appliance data</span>
+<span class="sd">        * Supervised training on mains data, using simultaneously recorded</span>
+<span class="sd">          appliance data as the labels</span>
+<span class="sd">        * Unsupervised training on mains data only</span>
+
+<span class="sd">        Some subclasses of Disaggregator will be trainable using more</span>
+<span class="sd">        than one training mode.  In this case, `train` will attempt to use</span>
+<span class="sd">        all training modes available, in order to produce the best models.</span>
+
+<span class="sd">        `train` can be called more than once during the lifetime of</span>
+<span class="sd">        the disaggregator object to train on new data.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        building : a nilmtk Building object</span>
+
+<span class="sd">        aggregate : &#39;mains&#39; | &#39;circuits&#39;, optional</span>
+
+<span class="sd">        submetered : &#39;appliances&#39; | &#39;circuits&#39;, optional</span>
+
+<span class="sd">        disagg_features : list of Measurements, optional</span>
+<span class="sd">            default=[Measurement(&#39;power&#39;, &#39;active&#39;)]</span>
+
+<span class="sd">        environmental :</span>
+<span class="sd">            External sensor data, e.g. weather data from the local</span>
+<span class="sd">            metoffice weather station.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span>
+</div>
+    <span class="nd">@abstractmethod</span>
+<div class="viewcode-block" id="Disaggregator.disaggregate"><a class="viewcode-back" href="../../../nilmtk.disaggregate.html#nilmtk.disaggregate.disaggregator.Disaggregator.disaggregate">[docs]</a>    <span class="k">def</span> <span class="nf">disaggregate</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">building</span><span class="p">,</span> <span class="n">disagg_features</span><span class="o">=</span><span class="p">[</span><span class="n">Measurement</span><span class="p">(</span><span class="s">&#39;power&#39;</span><span class="p">,</span> <span class="s">&#39;active&#39;</span><span class="p">)],</span>
+            <span class="n">environmental</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Runs non-intrusive load monitoring on the aggregate data from</span>
+<span class="sd">        the building.</span>
+
+<span class="sd">        We pass in an entire Building object because some Disaggregators</span>
+<span class="sd">        can take advantage of building metadata such a geo location to</span>
+<span class="sd">        improve the estimates.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        building : Building</span>
+
+<span class="sd">        disagg_features : list of Measurements</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        appliance_estimates: DataFrame or Panel, shape (n_samples, n_appliances, [1,3])</span>
+<span class="sd">            Returns a 3D matrix (Panel). The third dimension represents</span>
+<span class="sd">            some combination of:</span>
+<span class="sd">            * estimated power</span>
+<span class="sd">            * estimated state</span>
+<span class="sd">            * confidence [0,1]</span>
+
+<span class="sd">        `disaggregate` also sets the `appliance_estimates` attribute of</span>
+<span class="sd">        `building.utility.electric`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span></div></div>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2014, nilmtk authors.<br/>
+      Last updated on Mar 26, 2014.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

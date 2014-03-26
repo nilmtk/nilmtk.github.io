@@ -1,0 +1,268 @@
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Dataset Preprocessing &mdash; nilmtk 0.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-3.0.0/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-3.0.0/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="_static/js/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-3.0.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="nilmtk 0.0.1 documentation" href="index.html" />
+    <link rel="up" title="User Guide" href="userguide.html" />
+    <link rel="next" title="Contributing" href="contribute.html" />
+    <link rel="prev" title="Statistics and dataset diagnostics" href="stats.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="index.html">nilmtk</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.0.1</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            <li class="divider-vertical"></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a href="index.html"
+     class="dropdown-toggle"
+     data-toggle="dropdown">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+    ><ul>
+<li class="toctree-l1"><a class="reference internal" href="nilmtk.html">nilmtk API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="userguide.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contribute.html">Contributing</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"><ul>
+<li><a class="reference internal" href="#">Dataset Preprocessing</a><ul>
+<li><a class="reference internal" href="#finding-the-range-of-voltage-for-air-conditioner-1">Finding the range of voltage for air conditioner 1</a></li>
+<li><a class="reference internal" href="#removing-readings-in-the-dataset-where-voltage-260-or-voltage-160">Removing readings in the dataset where <cite>voltage</cite> &gt;260 or <cite>voltage</cite> &lt;160</a></li>
+<li><a class="reference internal" href="#filtering-data-from-13-july-to-4-august">Filtering data from 13 July to 4 August</a></li>
+<li><a class="reference internal" href="#downsampling-the-dataset-to-1-minute">Downsampling the dataset to 1 minute</a></li>
+<li><a class="reference internal" href="#fill-large-gaps-in-appliances-with-zeros-and-forward-fill-small-gaps">Fill large gaps in appliances with zeros and forward-fill small gaps</a></li>
+<li><a class="reference internal" href="#prepend-and-append-zeros">Prepend and append zeros</a></li>
+<li><a class="reference internal" href="#drop-missing-samples-from-mains">Drop missing samples from mains</a></li>
+<li><a class="reference internal" href="#find-intersection-of-mains-and-appliance-datetime-indicies">Find intersection of mains and appliance datetime indicies</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+  <li><a href="stats.html"
+         title="Previous Chapter: Statistics and dataset diagnostics">&laquo; Statistics and d...</a></li>
+  <li><a href="contribute.html"
+         title="Next Chapter: Contributing">Contributing &raquo;</a></li>
+            
+            
+            
+            
+              <li>
+<div id="sourcelink">
+  <a href="_sources/preprocessing.txt"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      
+  <div class="section" id="dataset-preprocessing">
+<span id="preprocessing"></span><h1>Dataset Preprocessing<a class="headerlink" href="#dataset-preprocessing" title="Permalink to this headline">¶</a></h1>
+<p>As a demonstration, let us first load the iAWE dataset (which has
+already been converted to HDF5 format):</p>
+<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [1]: </span><span class="kn">from</span> <span class="nn">nilmtk.dataset</span> <span class="kn">import</span> <span class="n">DataSet</span>
+
+<span class="gp">In [2]: </span><span class="kn">from</span> <span class="nn">nilmtk.sensors.electricity</span> <span class="kn">import</span> <span class="n">Measurement</span>
+
+<span class="gp">In [3]: </span><span class="n">dataset</span> <span class="o">=</span> <span class="n">DataSet</span><span class="p">()</span>
+
+<span class="gp">In [4]: </span><span class="n">dataset</span><span class="o">.</span><span class="n">load_hdf5</span><span class="p">(</span><span class="s">&#39;/home/nipun/Dropbox/nilmtk_datasets/iawe/&#39;</span><span class="p">)</span>
+
+<span class="gp">In [5]: </span><span class="n">building</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">buildings</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="gp">In [6]: </span><span class="n">electric</span> <span class="o">=</span> <span class="n">building</span><span class="o">.</span><span class="n">utility</span><span class="o">.</span><span class="n">electric</span>
+
+<span class="gp">In [7]: </span><span class="n">electric</span><span class="o">.</span><span class="n">appliances</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+
+<span class="go">[ApplianceName(name=&#39;fridge&#39;, instance=1),</span>
+<span class="go"> ApplianceName(name=&#39;kitchen outlets&#39;, instance=1),</span>
+<span class="go"> ApplianceName(name=&#39;clothes iron&#39;, instance=1),</span>
+<span class="go"> ApplianceName(name=&#39;washing machine&#39;, instance=1),</span>
+<span class="go"> ApplianceName(name=&#39;laptop computer&#39;, instance=1),</span>
+<span class="go"> ApplianceName(name=&#39;air conditioner&#39;, instance=1),</span>
+<span class="go"> ApplianceName(name=&#39;air conditioner&#39;, instance=2),</span>
+<span class="go"> ApplianceName(name=&#39;water motor&#39;, instance=1),</span>
+<span class="go"> ApplianceName(name=&#39;entertainment unit&#39;, instance=1),</span>
+<span class="go"> ApplianceName(name=&#39;water filter&#39;, instance=1)]</span>
+</pre></div>
+</div>
+<div class="section" id="finding-the-range-of-voltage-for-air-conditioner-1">
+<h2>Finding the range of voltage for air conditioner 1<a class="headerlink" href="#finding-the-range-of-voltage-for-air-conditioner-1" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [8]: </span><span class="n">electric</span><span class="o">.</span><span class="n">appliances</span><span class="p">[(</span><span class="s">&#39;air conditioner&#39;</span><span class="p">,</span><span class="mi">1</span><span class="p">)][(</span><span class="s">&#39;voltage&#39;</span><span class="p">,</span><span class="s">&#39;&#39;</span><span class="p">)]</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+
+<span class="go">count    640250.000000</span>
+<span class="go">mean        223.134811</span>
+<span class="go">std          17.853157</span>
+<span class="go">min           0.000000</span>
+<span class="go">25%         212.250000</span>
+<span class="go">50%         224.860001</span>
+<span class="go">75%         236.009995</span>
+<span class="go">max        5140.970215</span>
+<span class="go">Name: (voltage, ), dtype: float64</span>
+</pre></div>
+</div>
+<p>We observe minimum voltage of 0 and maximum of 5140. Clearly, these are due to some fault in data collection. These readings should be removed</p>
+</div>
+<div class="section" id="removing-readings-in-the-dataset-where-voltage-260-or-voltage-160">
+<h2>Removing readings in the dataset where <cite>voltage</cite> &gt;260 or <cite>voltage</cite> &lt;160<a class="headerlink" href="#removing-readings-in-the-dataset-where-voltage-260-or-voltage-160" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [9]: </span><span class="kn">import</span> <span class="nn">nilmtk.preprocessing.electricity.building</span> <span class="kn">as</span> <span class="nn">prepb</span>
+
+<span class="gp">In [10]: </span><span class="n">building</span> <span class="o">=</span> <span class="n">prepb</span><span class="o">.</span><span class="n">filter_out_implausible_values</span><span class="p">(</span>
+<span class="gp">   ....:</span>            <span class="n">building</span><span class="p">,</span> <span class="n">Measurement</span><span class="p">(</span><span class="s">&#39;voltage&#39;</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">),</span> <span class="mi">160</span><span class="p">,</span> <span class="mi">260</span><span class="p">)</span>
+<span class="gp">   ....:</span> 
+</pre></div>
+</div>
+<p>Now, observing the voltage variation in the same air conditioner as before.</p>
+<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [11]: </span><span class="n">building</span><span class="o">.</span><span class="n">utility</span><span class="o">.</span><span class="n">electric</span><span class="o">.</span><span class="n">appliances</span><span class="p">[(</span><span class="s">&#39;air conditioner&#39;</span><span class="p">,</span><span class="mi">1</span><span class="p">)][(</span><span class="s">&#39;voltage&#39;</span><span class="p">,</span><span class="s">&#39;&#39;</span><span class="p">)]</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+
+<span class="go">count    640185.000000</span>
+<span class="go">mean        223.126633</span>
+<span class="go">std          16.356781</span>
+<span class="go">min         160.020004</span>
+<span class="go">25%         212.259995</span>
+<span class="go">50%         224.860001</span>
+<span class="go">75%         236.009995</span>
+<span class="go">max         251.449997</span>
+<span class="go">Name: (voltage, ), dtype: float64</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="filtering-data-from-13-july-to-4-august">
+<h2>Filtering data from 13 July to 4 August<a class="headerlink" href="#filtering-data-from-13-july-to-4-august" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [12]: </span><span class="n">building</span> <span class="o">=</span> <span class="n">prepb</span><span class="o">.</span><span class="n">filter_datetime</span><span class="p">(</span>
+<span class="gp">   ....:</span>  <span class="n">building</span><span class="p">,</span> <span class="s">&#39;7-13-2013&#39;</span><span class="p">,</span> <span class="s">&#39;8-4-2013&#39;</span><span class="p">)</span>
+<span class="gp">   ....:</span> 
+<span class="go">DELETING ApplianceName(name=&#39;water motor&#39;, instance=1)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="downsampling-the-dataset-to-1-minute">
+<h2>Downsampling the dataset to 1 minute<a class="headerlink" href="#downsampling-the-dataset-to-1-minute" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [13]: </span><span class="n">building</span> <span class="o">=</span><span class="n">prepb</span><span class="o">.</span><span class="n">downsample</span><span class="p">(</span><span class="n">building</span><span class="p">,</span> <span class="n">rule</span><span class="o">=</span><span class="s">&#39;1T&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="fill-large-gaps-in-appliances-with-zeros-and-forward-fill-small-gaps">
+<h2>Fill large gaps in appliances with zeros and forward-fill small gaps<a class="headerlink" href="#fill-large-gaps-in-appliances-with-zeros-and-forward-fill-small-gaps" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [14]: </span><span class="n">building</span> <span class="o">=</span> <span class="n">prepb</span><span class="o">.</span><span class="n">fill_appliance_gaps</span><span class="p">(</span><span class="n">building</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="prepend-and-append-zeros">
+<h2>Prepend and append zeros<a class="headerlink" href="#prepend-and-append-zeros" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [15]: </span><span class="n">building</span> <span class="o">=</span> <span class="n">prepb</span><span class="o">.</span><span class="n">prepend_append_zeros</span><span class="p">(</span>
+<span class="gp">   ....:</span>  <span class="n">building</span><span class="p">,</span> <span class="s">&#39;7-13-2013&#39;</span><span class="p">,</span> <span class="s">&#39;8-4-2013&#39;</span><span class="p">,</span> <span class="s">&#39;1T&#39;</span><span class="p">,</span> <span class="s">&#39;Asia/Kolkata&#39;</span><span class="p">)</span>
+<span class="gp">   ....:</span> 
+
+<span class="gp">In [16]: </span><span class="n">building</span><span class="o">.</span><span class="n">utility</span><span class="o">.</span><span class="n">electric</span><span class="o">.</span><span class="n">appliances</span><span class="p">[(</span><span class="s">&#39;air conditioner&#39;</span><span class="p">,</span><span class="mi">1</span><span class="p">)][(</span><span class="s">&#39;voltage&#39;</span><span class="p">,</span><span class="s">&#39;&#39;</span><span class="p">)]</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+<span class="go">&lt;matplotlib.axes.AxesSubplot at 0x610dc90&gt;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="drop-missing-samples-from-mains">
+<h2>Drop missing samples from mains<a class="headerlink" href="#drop-missing-samples-from-mains" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [17]: </span><span class="n">building</span> <span class="o">=</span> <span class="n">prepb</span><span class="o">.</span><span class="n">drop_missing_mains</span><span class="p">(</span><span class="n">building</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="find-intersection-of-mains-and-appliance-datetime-indicies">
+<h2>Find intersection of mains and appliance datetime indicies<a class="headerlink" href="#find-intersection-of-mains-and-appliance-datetime-indicies" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [18]: </span><span class="n">building</span> <span class="o">=</span> <span class="n">prepb</span><span class="o">.</span><span class="n">make_common_index</span><span class="p">(</span><span class="n">building</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2014, nilmtk authors.<br/>
+      Last updated on Mar 26, 2014.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

@@ -1,0 +1,1215 @@
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>nilmtk.stats.electricity.single &mdash; nilmtk 0.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/bootstrap-3.0.0/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/bootstrap-3.0.0/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../../../../_static/js/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="../../../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../../../_static/bootstrap-3.0.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="nilmtk 0.0.1 documentation" href="../../../../index.html" />
+    <link rel="up" title="Module code" href="../../../index.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../../index.html">nilmtk</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.0.1</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            <li class="divider-vertical"></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a href="../../../../index.html"
+     class="dropdown-toggle"
+     data-toggle="dropdown">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+    ><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../nilmtk.html">nilmtk API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../userguide.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../contribute.html">Contributing</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"></ul>
+</li>
+              
+            
+            
+              
+            
+            
+            
+            
+              <li></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      
+  <h1>Source code for nilmtk.stats.electricity.single</h1><div class="highlight"><pre>
+<span class="sd">&quot;&quot;&quot;Statistics applicable to a single appliance / circuit / mains split.</span>
+
+<span class="sd">In general, these functions each take a DataFrame representing a single</span>
+<span class="sd">appliance / circuit / mains split.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">division</span>
+<span class="kn">import</span> <span class="nn">scipy.stats</span> <span class="kn">as</span> <span class="nn">stats</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">matplotlib.dates</span> <span class="kn">import</span> <span class="n">SEC_PER_HOUR</span><span class="p">,</span> <span class="n">SEC_PER_DAY</span>
+<span class="kn">import</span> <span class="nn">matplotlib.dates</span> <span class="kn">as</span> <span class="nn">mdates</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">nilmtk.utils</span> <span class="kn">import</span> <span class="n">secs_per_period_alias</span><span class="p">,</span> <span class="n">timedelta64_to_secs</span>
+<span class="kn">from</span> <span class="nn">nilmtk.exceptions</span> <span class="kn">import</span> <span class="n">TooFewSamplesError</span>
+
+<span class="n">DEFAULT_MAX_DROPOUT_RATE</span> <span class="o">=</span> <span class="mf">0.4</span>  <span class="c"># [0,1]</span>
+<span class="n">DEFAULT_ON_POWER_THRESHOLD</span> <span class="o">=</span> <span class="mi">5</span>  <span class="c"># watts</span>
+
+
+<div class="viewcode-block" id="get_sample_period"><a class="viewcode-back" href="../../../../nilmtk.stats.electricity.html#nilmtk.stats.electricity.single.get_sample_period">[docs]</a><span class="k">def</span> <span class="nf">get_sample_period</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Estimate the sample period in seconds.</span>
+
+<span class="sd">    Find the sample period by finding the stats.mode of the </span>
+<span class="sd">    time deltas.  Only use the first 100 samples (for speed).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    data : pandas.DataFrame or Series or DatetimeIndex</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    period_secs : float</span>
+<span class="sd">        Sample period_secs in seconds.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    TooFewSamplesError</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c"># return 60</span>
+    <span class="n">N_SAMPLES</span> <span class="o">=</span> <span class="mi">90</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">N_SAMPLES</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">name</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="s">&#39;&#39;</span>
+        <span class="k">raise</span> <span class="n">TooFewSamplesError</span><span class="p">(</span><span class="s">&#39;{:d} samples required. Only {:d} in data! {:s}&#39;</span>
+                                 <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">N_SAMPLES</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="n">name</span><span class="p">))</span>
+    <span class="n">index</span> <span class="o">=</span> <span class="n">_get_index</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="n">time_delta_ns</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">index</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="o">-</span><span class="n">N_SAMPLES</span><span class="p">:])</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">)</span>
+    <span class="n">mode_time_delta_ns</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">mode</span><span class="p">(</span><span class="n">time_delta_ns</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">td_ns_filtered</span> <span class="o">=</span> <span class="n">time_delta_ns</span><span class="p">[</span>
+        <span class="n">time_delta_ns</span> <span class="o">&lt;=</span> <span class="n">mode_time_delta_ns</span> <span class="o">+</span> <span class="n">time_delta_ns</span><span class="o">.</span><span class="n">std</span><span class="p">()]</span>
+    <span class="n">period_secs</span> <span class="o">=</span> <span class="n">td_ns_filtered</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">/</span> <span class="mf">1E9</span>
+    <span class="k">assert</span><span class="p">(</span><span class="n">period_secs</span> <span class="o">&gt;</span> <span class="mf">0.0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">period_secs</span>
+
+</div>
+<div class="viewcode-block" id="get_dropout_rate"><a class="viewcode-back" href="../../../../nilmtk.stats.electricity.html#nilmtk.stats.electricity.single.get_dropout_rate">[docs]</a><span class="k">def</span> <span class="nf">get_dropout_rate</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">sample_period</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The proportion of samples that have been lost.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    data : pandas.DataFrame or Series or DatetimeIndex</span>
+
+<span class="sd">    sample_period : int or float, optional</span>
+<span class="sd">        Sample period in seconds.  If not provided then will</span>
+<span class="sd">        calculate it.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    rate : float [0,1]</span>
+<span class="sd">        The proportion of samples that have been lost; where </span>
+<span class="sd">        1 means that all samples have been lost and </span>
+<span class="sd">        0 means that no samples have been lost.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    TooFewSamplesError</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">sample_period</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">sample_period</span> <span class="o">=</span> <span class="n">get_sample_period</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+    <span class="n">N_SAMPLES</span> <span class="o">=</span> <span class="mi">100</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">N_SAMPLES</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">TooFewSamplesError</span>
+
+    <span class="n">index</span> <span class="o">=</span> <span class="n">_get_index</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="k">assert</span><span class="p">(</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">duration</span> <span class="o">=</span> <span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">n_expected_samples</span> <span class="o">=</span> <span class="nb">round</span><span class="p">((</span><span class="n">duration</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span> <span class="o">/</span> <span class="n">sample_period</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">dropout_rate</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="n">index</span><span class="o">.</span><span class="n">size</span> <span class="o">/</span> <span class="n">n_expected_samples</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">dropout_rate</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">dropout_rate</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="k">assert</span><span class="p">(</span><span class="mi">1</span> <span class="o">&gt;=</span> <span class="n">dropout_rate</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">dropout_rate</span>
+
+</div>
+<div class="viewcode-block" id="get_dropout_rate_ignore_gaps"><a class="viewcode-back" href="../../../../nilmtk.stats.electricity.html#nilmtk.stats.electricity.single.get_dropout_rate_ignore_gaps">[docs]</a><span class="k">def</span> <span class="nf">get_dropout_rate_ignore_gaps</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">sample_period</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                                 <span class="n">sample_period_multiplier</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The proportion of samples that have been lost, but first</span>
+<span class="sd">    remove any large gaps.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    data : pandas.DataFrame or Series or DatetimeIndex</span>
+
+<span class="sd">    sample_period : int or float, optional</span>
+<span class="sd">        Sample period in seconds.  If not provided then will</span>
+<span class="sd">        calculate it.</span>
+
+<span class="sd">    max_sample_period : int or float, optional</span>
+<span class="sd">        Seconds. Threshold which defines a &#39;gap&#39;</span>
+<span class="sd">        If not provided then will use sample_period * 4</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    rate : float [0,1]</span>
+<span class="sd">        The proportion of samples that have been lost; where </span>
+<span class="sd">        1 means that all samples have been lost and </span>
+<span class="sd">        0 means that no samples have been lost.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">sample_period</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">sample_period</span> <span class="o">=</span> <span class="n">get_sample_period</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="n">max_sample_period</span> <span class="o">=</span> <span class="n">sample_period</span> <span class="o">*</span> <span class="n">sample_period_multiplier</span>
+
+    <span class="n">index</span> <span class="o">=</span> <span class="n">_get_index</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="n">dropout_rates</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">starts</span><span class="p">,</span> <span class="n">ends</span> <span class="o">=</span> <span class="n">get_good_section_starts_and_ends</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">max_sample_period</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">starts</span><span class="p">,</span> <span class="n">ends</span><span class="p">):</span>
+        <span class="n">slice_</span> <span class="o">=</span> <span class="n">index</span><span class="o">.</span><span class="n">slice_indexer</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">dropout_rate</span> <span class="o">=</span> <span class="n">get_dropout_rate</span><span class="p">(</span><span class="n">index</span><span class="p">[</span><span class="n">slice_</span><span class="p">],</span>
+                                            <span class="n">sample_period</span><span class="o">=</span><span class="n">sample_period</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">TooFewSamplesError</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">dropout_rates</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dropout_rate</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">dropout_rates</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+
+</div>
+<span class="k">def</span> <span class="nf">_has_nans_series</span><span class="p">(</span><span class="n">series</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">series</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span><span class="o">.</span><span class="n">any</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="has_nans"><a class="viewcode-back" href="../../../../nilmtk.stats.electricity.html#nilmtk.stats.electricity.single.has_nans">[docs]</a><span class="k">def</span> <span class="nf">has_nans</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    data : pandas.DataFrame or Series</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    bool</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">_has_nans_series</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">([</span><span class="n">_has_nans_series</span><span class="p">(</span><span class="n">series</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">series</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">iteritems</span><span class="p">()])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span>
+
+</div>
+<div class="viewcode-block" id="plot_missing_samples"><a class="viewcode-back" href="../../../../nilmtk.stats.electricity.html#nilmtk.stats.electricity.single.plot_missing_samples">[docs]</a><span class="k">def</span> <span class="nf">plot_missing_samples</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">fig</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">max_sample_period</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                         <span class="n">window_start</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">window_end</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                         <span class="n">bottom</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s">&#39;k&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Plots missing samples as Rectanges on `ax`.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    data : pandas.DataFrame or Series or DatetimeIndex</span>
+
+<span class="sd">    max_sample_period : int or float, optional</span>
+<span class="sd">        Maximum allowed sample period in seconds.  This defines what</span>
+<span class="sd">        counts as a &#39;gap&#39;.  If not provided then will use sample</span>
+<span class="sd">        period * 4.  Note that by using a `max_sample_period` equal to</span>
+<span class="sd">        `sample_period * 4` (and not, say times 1.5) then this</span>
+<span class="sd">        function will not report *every* missing sample.</span>
+
+<span class="sd">    window_start, window_end : pd.Timestamp</span>
+<span class="sd">        The start and end of the window of interest.  If this window</span>
+<span class="sd">        is larger than the duration of `data` then gaps will be</span>
+<span class="sd">        appended to the front / back as necessary.  If this window</span>
+<span class="sd">        is shorter than the duration of `data` data will be cropped.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+    <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+        <span class="c"># if data is DatetimeIndex then it has no `dropna()` method</span>
+        <span class="k">pass</span>
+
+    <span class="n">index</span> <span class="o">=</span> <span class="n">_get_index</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s">&quot;Missing samples&quot;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">axis_date</span><span class="p">(</span><span class="n">index</span><span class="o">.</span><span class="n">tzinfo</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_major_formatter</span><span class="p">(</span><span class="n">mdates</span><span class="o">.</span><span class="n">DateFormatter</span><span class="p">(</span><span class="s">&#39;</span><span class="si">%d</span><span class="s">/%m/%y&#39;</span><span class="p">,</span>
+                                                          <span class="n">tz</span><span class="o">=</span><span class="n">index</span><span class="o">.</span><span class="n">tzinfo</span><span class="p">))</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]])</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">autofmt_xdate</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">max_sample_period</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">max_sample_period</span> <span class="o">=</span> <span class="n">get_sample_period</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">*</span> <span class="mi">4</span>
+
+    <span class="n">gap_starts</span><span class="p">,</span> <span class="n">gap_ends</span> <span class="o">=</span> <span class="n">get_gap_starts_and_gap_ends</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">max_sample_period</span><span class="p">,</span>
+                                                       <span class="n">window_start</span><span class="p">,</span> <span class="n">window_end</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">gap_starts</span><span class="p">,</span> <span class="n">gap_ends</span><span class="p">):</span>
+        <span class="n">rect</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">Rectangle</span><span class="p">(</span><span class="n">xy</span><span class="o">=</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">bottom</span><span class="p">),</span>  <span class="c"># bottom left corner</span>
+                             <span class="n">width</span><span class="o">=</span><span class="p">(</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span> <span class="o">/</span> <span class="n">SEC_PER_DAY</span><span class="p">,</span>
+                             <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">rect</span><span class="p">)</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">ax</span><span class="p">,</span> <span class="n">fig</span>
+
+</div>
+<div class="viewcode-block" id="get_gap_starts_and_gap_ends"><a class="viewcode-back" href="../../../../nilmtk.stats.electricity.html#nilmtk.stats.electricity.single.get_gap_starts_and_gap_ends">[docs]</a><span class="k">def</span> <span class="nf">get_gap_starts_and_gap_ends</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">max_sample_period</span><span class="p">,</span>
+                                <span class="n">window_start</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">window_end</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ---------</span>
+<span class="sd">    data : pandas.DataFrame or Series or DatetimeIndex</span>
+
+<span class="sd">    max_sample_period : int or float</span>
+<span class="sd">        Maximum allowed sample period in seconds.  This defines what</span>
+<span class="sd">        counts as a &#39;gap&#39;.</span>
+
+<span class="sd">    window_start, window_end : pd.Timestamp</span>
+<span class="sd">        The start and end of the window of interest.  If this window</span>
+<span class="sd">        is larger than the duration of `data` then gaps will be</span>
+<span class="sd">        appended to the front / back as necessary.  If this window</span>
+<span class="sd">        is shorter than the duration of `data` data will be cropped.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    gap_starts, gap_ends: DatetimeIndex</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c"># TODO: this might be a rather nasty hack to fix the circular dependency</span>
+    <span class="kn">from</span> <span class="nn">nilmtk.preprocessing.electricity.single</span> <span class="kn">import</span> <span class="n">reframe_index</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+    <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+        <span class="c"># if data is DatetimeIndex then it has no `dropna()` method</span>
+        <span class="k">pass</span>
+
+    <span class="n">index</span> <span class="o">=</span> <span class="n">_get_index</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="n">index</span> <span class="o">=</span> <span class="n">reframe_index</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">window_start</span><span class="p">,</span> <span class="n">window_end</span><span class="p">)</span>
+    <span class="n">timedeltas_sec</span> <span class="o">=</span> <span class="n">timedelta64_to_secs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">index</span><span class="o">.</span><span class="n">values</span><span class="p">))</span>
+    <span class="n">overlong_timedeltas</span> <span class="o">=</span> <span class="n">timedeltas_sec</span> <span class="o">&gt;</span> <span class="n">max_sample_period</span>
+    <span class="n">gap_starts</span> <span class="o">=</span> <span class="n">index</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">overlong_timedeltas</span><span class="p">]</span>
+    <span class="n">gap_ends</span> <span class="o">=</span> <span class="n">index</span><span class="p">[</span><span class="mi">1</span><span class="p">:][</span><span class="n">overlong_timedeltas</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">gap_starts</span><span class="p">,</span> <span class="n">gap_ends</span>
+
+</div>
+<div class="viewcode-block" id="get_good_section_starts_and_ends"><a class="viewcode-back" href="../../../../nilmtk.stats.electricity.html#nilmtk.stats.electricity.single.get_good_section_starts_and_ends">[docs]</a><span class="k">def</span> <span class="nf">get_good_section_starts_and_ends</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">max_sample_period</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ---------</span>
+<span class="sd">    data : pandas.DataFrame or Series or DatetimeIndex</span>
+
+<span class="sd">    max_sample_period : int or float</span>
+<span class="sd">        Maximum allowed sample period in seconds.  This defines what</span>
+<span class="sd">        counts as a &#39;gap&#39;.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    starts, ends: DatetimeIndex</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">&quot;Getting good section starts and ends..&quot;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">)</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+    <span class="n">index</span> <span class="o">=</span> <span class="n">_get_index</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="n">gap_starts</span><span class="p">,</span> <span class="n">gap_ends</span> <span class="o">=</span> <span class="n">get_gap_starts_and_gap_ends</span><span class="p">(</span>
+        <span class="n">index</span><span class="p">,</span> <span class="n">max_sample_period</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">gap_starts</span><span class="o">.</span><span class="n">size</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">gap_ends</span><span class="o">.</span><span class="n">size</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="n">gap_ends</span> <span class="ow">or</span> <span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">gap_ends</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="n">starts</span> <span class="o">=</span> <span class="n">gap_ends</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">starts</span> <span class="o">=</span> <span class="n">gap_ends</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">starts</span> <span class="o">=</span> <span class="n">starts</span><span class="o">.</span><span class="n">tz_localize</span><span class="p">(</span><span class="s">&#39;UTC&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">tz_convert</span><span class="p">(</span><span class="n">index</span><span class="o">.</span><span class="n">tzinfo</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="n">gap_starts</span> <span class="ow">or</span> <span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">gap_starts</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="n">ends</span> <span class="o">=</span> <span class="n">gap_starts</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ends</span> <span class="o">=</span> <span class="n">gap_starts</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">gap_starts</span><span class="p">),</span> <span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">ends</span> <span class="o">=</span> <span class="n">ends</span><span class="o">.</span><span class="n">tz_localize</span><span class="p">(</span><span class="s">&#39;UTC&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">tz_convert</span><span class="p">(</span><span class="n">index</span><span class="o">.</span><span class="n">tzinfo</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c"># there are no gaps in the data!</span>
+        <span class="n">starts</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DatetimeIndex</span><span class="p">([</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
+        <span class="n">ends</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DatetimeIndex</span><span class="p">([</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]])</span>
+
+    <span class="k">print</span><span class="p">(</span><span class="s">&quot;found {:d} good sections. done&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">starts</span><span class="p">)))</span>
+
+    <span class="k">return</span> <span class="n">starts</span><span class="p">,</span> <span class="n">ends</span>
+
+</div>
+<div class="viewcode-block" id="get_uptime"><a class="viewcode-back" href="../../../../nilmtk.stats.electricity.html#nilmtk.stats.electricity.single.get_uptime">[docs]</a><span class="k">def</span> <span class="nf">get_uptime</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">max_sample_period</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    float : total duration of good data segments, in days</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">&quot;Calculating uptime...&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">max_sample_period</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">max_sample_period</span> <span class="o">=</span> <span class="n">get_sample_period</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">*</span> <span class="mi">4</span>
+    <span class="n">starts</span><span class="p">,</span> <span class="n">ends</span> <span class="o">=</span> <span class="n">get_good_section_starts_and_ends</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">max_sample_period</span><span class="p">)</span>
+    <span class="n">secs</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">starts</span><span class="p">,</span> <span class="n">ends</span><span class="p">):</span>
+        <span class="n">secs</span> <span class="o">+=</span> <span class="p">(</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">&quot;done calculating uptime&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">secs</span> <span class="o">/</span> <span class="n">SEC_PER_DAY</span>
+
+</div>
+<div class="viewcode-block" id="periods_with_sufficient_samples"><a class="viewcode-back" href="../../../../nilmtk.stats.electricity.html#nilmtk.stats.electricity.single.periods_with_sufficient_samples">[docs]</a><span class="k">def</span> <span class="nf">periods_with_sufficient_samples</span><span class="p">(</span><span class="n">datetime_index</span><span class="p">,</span> <span class="n">freq</span><span class="p">,</span>
+                                    <span class="n">max_dropout_rate</span><span class="o">=</span><span class="n">DEFAULT_MAX_DROPOUT_RATE</span><span class="p">,</span>
+                                    <span class="n">use_local_time</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Find periods where the dropout rate is less than max_dropout_rate.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    set of Periods</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">good_periods</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="n">periods</span><span class="p">,</span> <span class="n">boundaries</span> <span class="o">=</span> <span class="n">_indicies_of_periods</span><span class="p">(</span><span class="n">datetime_index</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="n">freq</span><span class="p">,</span>
+                                               <span class="n">use_local_time</span><span class="o">=</span><span class="n">use_local_time</span><span class="p">)</span>
+    <span class="n">sample_period</span> <span class="o">=</span> <span class="n">get_sample_period</span><span class="p">(</span><span class="n">datetime_index</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">period</span> <span class="ow">in</span> <span class="n">periods</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">start_i</span><span class="p">,</span> <span class="n">end_i</span> <span class="o">=</span> <span class="n">boundaries</span><span class="p">[</span><span class="n">period</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">index_for_period</span> <span class="o">=</span> <span class="n">datetime_index</span><span class="p">[</span><span class="n">start_i</span><span class="p">:</span><span class="n">end_i</span><span class="p">]</span>
+        <span class="n">dropout_rate</span> <span class="o">=</span> <span class="n">get_dropout_rate</span><span class="p">(</span><span class="n">index_for_period</span><span class="p">,</span> <span class="n">sample_period</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">dropout_rate</span> <span class="o">&lt;</span> <span class="n">max_dropout_rate</span><span class="p">:</span>
+            <span class="n">good_periods</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">period</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">good_periods</span>
+
+</div>
+<div class="viewcode-block" id="timestamps_of_missing_samples"><a class="viewcode-back" href="../../../../nilmtk.stats.electricity.html#nilmtk.stats.electricity.single.timestamps_of_missing_samples">[docs]</a><span class="k">def</span> <span class="nf">timestamps_of_missing_samples</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">max_sample_period</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                                  <span class="n">window_start</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">window_end</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    data : pandas.DataFrame or Series or DatetimeIndex</span>
+
+<span class="sd">    max_sample_period : int or float, optional</span>
+<span class="sd">        Maximum allowed sample period in seconds.  This defines what</span>
+<span class="sd">        counts as a &#39;gap&#39;.  If not provided then will use sample</span>
+<span class="sd">        period * 1.5</span>
+
+<span class="sd">    window_start, window_end : pd.Timestamp</span>
+<span class="sd">        The start and end of the window of interest.  If this window</span>
+<span class="sd">        is larger than the duration of `data` then gaps will be</span>
+<span class="sd">        appended to the front / back as necessary.  If this window</span>
+<span class="sd">        is shorter than the duration of `data` data will be cropped.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    missing_samples : pd.DatetimeIndex</span>
+<span class="sd">        Every missing sample in `data` is represented by a timestamp</span>
+<span class="sd">        in `missing_samples`.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+    <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+        <span class="c"># if data is DatetimeIndex then it has no `dropna()` method</span>
+        <span class="k">pass</span>
+
+    <span class="n">index</span> <span class="o">=</span> <span class="n">_get_index</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="n">sample_period_secs</span> <span class="o">=</span> <span class="n">get_sample_period</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="n">sample_period_dateoffset</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DateOffset</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">sample_period_secs</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">max_sample_period</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">max_sample_period</span> <span class="o">=</span> <span class="n">sample_period_secs</span> <span class="o">*</span> <span class="mf">1.5</span>
+
+    <span class="n">gap_starts</span><span class="p">,</span> <span class="n">gap_ends</span> <span class="o">=</span> <span class="n">get_gap_starts_and_gap_ends</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">max_sample_period</span><span class="p">,</span>
+                                                       <span class="n">window_start</span><span class="p">,</span> <span class="n">window_end</span><span class="p">)</span>
+
+    <span class="n">missing_samples_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">gap_starts</span><span class="p">,</span> <span class="n">gap_ends</span><span class="p">):</span>
+        <span class="n">missing_sample</span> <span class="o">=</span> <span class="n">start</span> <span class="o">+</span> <span class="n">sample_period_dateoffset</span>
+        <span class="k">while</span> <span class="n">missing_sample</span> <span class="o">&lt;</span> <span class="n">end</span><span class="p">:</span>
+            <span class="n">missing_samples_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">missing_sample</span><span class="p">)</span>
+            <span class="n">missing_sample</span> <span class="o">+=</span> <span class="n">sample_period_dateoffset</span>
+
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DatetimeIndex</span><span class="p">(</span><span class="n">missing_samples_list</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="dropout_rate_per_period"><a class="viewcode-back" href="../../../../nilmtk.stats.electricity.html#nilmtk.stats.electricity.single.dropout_rate_per_period">[docs]</a><span class="k">def</span> <span class="nf">dropout_rate_per_period</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">rule</span><span class="p">,</span> <span class="n">window_start</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">window_end</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    data : pandas.DataFrame or Series or DatetimeIndex</span>
+
+<span class="sd">    rule : pandas Offset string (or what ever the `rule` parameter in</span>
+<span class="sd">        pd.Series.resample accepts)</span>
+
+<span class="sd">    window_start, window_end : pd.Timestamp</span>
+<span class="sd">        The start and end of the window of interest.  If this window</span>
+<span class="sd">        is larger than the duration of `data` then gaps will be</span>
+<span class="sd">        appended to the front / back as necessary.  If this window</span>
+<span class="sd">        is shorter than the duration of `data` data will be cropped.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    pd.Series</span>
+<span class="sd">        Index is a regular DatetimeIndex with freq=rule and</span>
+<span class="sd">        timezone=data.index.tzinfo</span>
+<span class="sd">        Values are the number of dropped in that time period.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c"># TODO: this might be a rather nasty hack to fix the circular dependency</span>
+    <span class="kn">from</span> <span class="nn">nilmtk.preprocessing.electricity.single</span> <span class="kn">import</span> <span class="n">reframe_index</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+    <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+        <span class="c"># if data is DatetimeIndex then it has no `dropna()` method</span>
+        <span class="k">pass</span>
+
+    <span class="n">sample_period_secs</span> <span class="o">=</span> <span class="n">get_sample_period</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="n">n_expected_samples_per_period</span> <span class="o">=</span> <span class="p">(</span><span class="n">secs_per_period_alias</span><span class="p">(</span><span class="n">rule</span><span class="p">)</span> <span class="o">/</span>
+                                     <span class="n">sample_period_secs</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">n_expected_samples_per_period</span> <span class="o">&lt;</span> <span class="mf">1.0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;Date period specified by rule is shorter than&#39;</span>
+                         <span class="s">&#39; sample period!&#39;</span><span class="p">)</span>
+
+    <span class="n">index</span> <span class="o">=</span> <span class="n">_get_index</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="n">index</span> <span class="o">=</span> <span class="n">reframe_index</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">window_start</span><span class="p">,</span> <span class="n">window_end</span><span class="p">)</span>
+    <span class="n">n_samples_per_period</span> <span class="o">=</span> <span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">)</span>
+                            <span class="o">.</span><span class="n">resample</span><span class="p">(</span><span class="n">rule</span><span class="o">=</span><span class="n">rule</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s">&#39;sum&#39;</span><span class="p">)</span>
+                            <span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+
+    <span class="n">dropout_rate_per_period_</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="n">n_samples_per_period</span> <span class="o">/</span>
+                                    <span class="n">n_expected_samples_per_period</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">dropout_rate_per_period_</span>
+
+</div>
+<div class="viewcode-block" id="hours_on"><a class="viewcode-back" href="../../../../nilmtk.stats.electricity.html#nilmtk.stats.electricity.single.hours_on">[docs]</a><span class="k">def</span> <span class="nf">hours_on</span><span class="p">(</span><span class="n">series</span><span class="p">,</span> <span class="n">on_power_threshold</span><span class="o">=</span><span class="n">DEFAULT_ON_POWER_THRESHOLD</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns a float representing the number of hours this channel</span>
+<span class="sd">    has been above threshold.</span>
+
+<span class="sd">    If input data has gaps then pre-process data with `insert_zeros`</span>
+<span class="sd">    before sending it to this function.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    series : pandas.Series</span>
+
+<span class="sd">    on_power_threshold : float or int, optional, default = 5</span>
+<span class="sd">        Threshold which defines the distinction between &quot;on&quot; and &quot;off&quot;.  Watts.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    hours_above_threshold : float</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    kwh</span>
+<span class="sd">    joules</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">i_above_threshold</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">series</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">on_power_threshold</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="c"># now calculate timedelta (&#39;td&#39;) above threshold...</span>
+    <span class="n">td_above_thresh</span> <span class="o">=</span> <span class="p">(</span><span class="n">series</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">i_above_threshold</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">values</span> <span class="o">-</span>
+                       <span class="n">series</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">i_above_threshold</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+    <span class="n">secs_on</span> <span class="o">=</span> <span class="n">timedelta64_to_secs</span><span class="p">(</span><span class="n">td_above_thresh</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+    <span class="k">return</span> <span class="n">secs_on</span> <span class="o">/</span> <span class="n">SEC_PER_HOUR</span>
+
+</div>
+<div class="viewcode-block" id="energy"><a class="viewcode-back" href="../../../../nilmtk.stats.electricity.html#nilmtk.stats.electricity.single.energy">[docs]</a><span class="k">def</span> <span class="nf">energy</span><span class="p">(</span><span class="n">series</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s">&#39;kwh&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns a float representing the quantity of energy this </span>
+<span class="sd">    channel consumed.</span>
+
+<span class="sd">    If input data has gaps then pre-process data with `insert_zeros`</span>
+<span class="sd">    before sending it to this function.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    series : pd.Series or pd.DataFrame</span>
+
+<span class="sd">    unit : {&#39;kwh&#39;, &#39;joules&#39;}</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    _energy : float</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    hours_on</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c"># TODO: replace this evil hack to handle dataframes(!)</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">series</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+        <span class="n">series</span> <span class="o">=</span> <span class="n">series</span><span class="o">.</span><span class="n">icol</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="n">timedelta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">series</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+    <span class="n">timedelta_secs</span> <span class="o">=</span> <span class="n">timedelta64_to_secs</span><span class="p">(</span><span class="n">timedelta</span><span class="p">)</span>
+    <span class="n">joules</span> <span class="o">=</span> <span class="p">(</span><span class="n">timedelta_secs</span> <span class="o">*</span> <span class="n">series</span><span class="o">.</span><span class="n">values</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">unit</span> <span class="o">==</span> <span class="s">&#39;kwh&#39;</span><span class="p">:</span>
+        <span class="n">JOULES_PER_KWH</span> <span class="o">=</span> <span class="mi">3600000</span>
+        <span class="n">_energy</span> <span class="o">=</span> <span class="n">joules</span> <span class="o">/</span> <span class="n">JOULES_PER_KWH</span>
+    <span class="k">elif</span> <span class="n">unit</span> <span class="o">==</span> <span class="s">&#39;joules&#39;</span><span class="p">:</span>
+        <span class="n">_energy</span> <span class="o">=</span> <span class="n">joules</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;unrecognised value for `unit`.&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">_energy</span>
+
+</div>
+<div class="viewcode-block" id="usage_per_period"><a class="viewcode-back" href="../../../../nilmtk.stats.electricity.html#nilmtk.stats.electricity.single.usage_per_period">[docs]</a><span class="k">def</span> <span class="nf">usage_per_period</span><span class="p">(</span><span class="n">series</span><span class="p">,</span> <span class="n">freq</span><span class="p">,</span>
+                     <span class="n">on_power_threshold</span><span class="o">=</span><span class="n">DEFAULT_ON_POWER_THRESHOLD</span><span class="p">,</span>
+                     <span class="n">max_dropout_rate</span><span class="o">=</span><span class="n">DEFAULT_MAX_DROPOUT_RATE</span><span class="p">,</span>
+                     <span class="n">verbose</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+                     <span class="n">energy_unit</span><span class="o">=</span><span class="s">&#39;kwh&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Calculate the usage (hours on and kwh) per time period.</span>
+
+<span class="sd">    If input data has gaps then pre-process data with `insert_zeros`</span>
+<span class="sd">    before sending it to this function.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    series : pd.Series</span>
+
+<span class="sd">    freq : str</span>
+<span class="sd">        see _indicies_of_periods() for acceptable values.</span>
+
+<span class="sd">    on_power_threshold : float or int, optional, default = 5</span>
+<span class="sd">        Threshold which defines the distinction between &quot;on&quot; and &quot;off&quot;.  Watts.</span>
+
+<span class="sd">    max_dropout_rate : float (0,1), optional, default = 0.4</span>
+<span class="sd">        Remove any row which has a worse (larger) dropout rate.</span>
+<span class="sd">    </span>
+<span class="sd">    verbose : boolean, optional, default = False</span>
+<span class="sd">        if True then print more information</span>
+<span class="sd">    </span>
+<span class="sd">    energy_unit : {&#39;kwh&#39;, &#39;joules&#39;}, optional</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    usage : pd.DataFrame</span>
+<span class="sd">        One row per period (as defined by `freq`).  </span>
+<span class="sd">        Index is PeriodIndex (UTC).</span>
+<span class="sd">        Columns:</span>
+<span class="sd">            hours_on</span>
+<span class="sd">            &lt;`energy_unit`&gt;</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Say we have loaded fridge data from house_1 in REDD into `fridge` and we</span>
+<span class="sd">    want to see how it was used each day:</span>
+
+<span class="sd">    &gt;&gt;&gt; usage_per_period(fridge, &#39;D&#39;)</span>
+
+<span class="sd">                 hours_on       kwh</span>
+<span class="sd">    2011-04-18        NaN       NaN</span>
+<span class="sd">    2011-04-19  23.999444  1.104083</span>
+<span class="sd">    2011-04-20  23.998889  1.293223</span>
+<span class="sd">    2011-04-21  23.998889  1.138540</span>
+<span class="sd">    ...</span>
+<span class="sd">    2011-05-22  23.832500  2.042271</span>
+<span class="sd">    2011-05-23  23.931111  1.394619</span>
+<span class="sd">    2011-05-24        NaN       NaN </span>
+
+<span class="sd">    Hmmm... why does the fridge appear to be on for 24 hours per day?</span>
+<span class="sd">    Inspecting the fridge.plot(), we find that the fridge rarely ever</span>
+<span class="sd">    gets below this function&#39;s default on_power_threshold of 5 Watts,</span>
+<span class="sd">    so let&#39;s specify a larger threshold:</span>
+
+<span class="sd">    &gt;&gt;&gt; usage_per_period(fridge, &#39;D&#39;, on_power_threshold=100)</span>
+
+<span class="sd">                hours_on       kwh</span>
+<span class="sd">    2011-04-18       NaN       NaN</span>
+<span class="sd">    2011-04-19  5.036111  1.104083</span>
+<span class="sd">    2011-04-20  5.756667  1.293223</span>
+<span class="sd">    2011-04-21  4.931667  1.138540</span>
+<span class="sd">    2011-04-22  4.926111  1.076958</span>
+<span class="sd">    2011-04-23  6.099167  1.357812</span>
+<span class="sd">    2011-04-24  6.373056  1.361579</span>
+<span class="sd">    2011-04-25  6.496667  1.441966</span>
+<span class="sd">    2011-04-26  6.381389  1.404637</span>
+<span class="sd">    2011-04-27  5.558611  1.196464</span>
+<span class="sd">    2011-04-28  6.668611  1.478141</span>
+<span class="sd">    2011-04-29  6.493056  1.446713</span>
+<span class="sd">    2011-04-30  5.885278  1.263918</span>
+<span class="sd">    2011-05-01  5.983611  1.351419</span>
+<span class="sd">    2011-05-02  5.398333  1.167111</span>
+<span class="sd">    2011-05-03       NaN       NaN</span>
+<span class="sd">    2011-05-04       NaN       NaN</span>
+<span class="sd">    2011-05-05       NaN       NaN</span>
+<span class="sd">    2011-05-06       NaN       NaN</span>
+<span class="sd">    2011-05-07  5.112222  1.120848</span>
+<span class="sd">    2011-05-08  6.349722  1.413897</span>
+<span class="sd">    2011-05-09  7.270833  1.573199</span>
+<span class="sd">    2011-05-10  5.997778  1.249120</span>
+<span class="sd">    2011-05-11  5.685556  1.264841</span>
+<span class="sd">    2011-05-12  7.153333  1.478244</span>
+<span class="sd">    2011-05-13  5.949444  1.306350</span>
+<span class="sd">    2011-05-14  6.446944  1.415302</span>
+<span class="sd">    2011-05-15  5.958333  1.275853</span>
+<span class="sd">    2011-05-16  6.801944  1.501816</span>
+<span class="sd">    2011-05-17  5.836389  1.342787</span>
+<span class="sd">    2011-05-18  5.254444  1.164683</span>
+<span class="sd">    2011-05-19  6.234444  1.397851</span>
+<span class="sd">    2011-05-20  5.814444  1.265143</span>
+<span class="sd">    2011-05-21  6.738333  1.498687</span>
+<span class="sd">    2011-05-22  9.308056  2.042271</span>
+<span class="sd">    2011-05-23  6.127778  1.394619</span>
+<span class="sd">    2011-05-24       NaN       NaN</span>
+
+<span class="sd">    That looks sensible!  Now, let&#39;s find out why the cause of the NaNs by </span>
+<span class="sd">    setting verbose=True:</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; usage_per_period(fridge, &#39;D&#39;, on_power_threshold=100, verbose=True)</span>
+
+<span class="sd">    Insufficient samples for 2011-04-18; n samples = 13652; dropout_rate = 52.60%</span>
+<span class="sd">                     start = 2011-04-18 09:22:13-04:00</span>
+<span class="sd">                       end = 2011-04-18 23:59:57-04:00</span>
+<span class="sd">    Insufficient samples for 2011-05-03; n samples = 16502; dropout_rate = 42.70%</span>
+<span class="sd">                     start = 2011-05-03 00:00:03-04:00</span>
+<span class="sd">                       end = 2011-05-03 17:33:17-04:00</span>
+<span class="sd">    No data available for    2011-05-04</span>
+<span class="sd">    No data available for    2011-05-05</span>
+<span class="sd">    Insufficient samples for 2011-05-06; n samples = 12465; dropout_rate = 56.72%</span>
+<span class="sd">                     start = 2011-05-06 10:51:50-04:00</span>
+<span class="sd">                       end = 2011-05-06 23:59:58-04:00</span>
+<span class="sd">    Insufficient samples for 2011-05-24; n samples = 13518; dropout_rate = 53.06%</span>
+<span class="sd">                     start = 2011-05-24 00:00:02-04:00</span>
+<span class="sd">                       end = 2011-05-24 15:56:34-04:00</span>
+<span class="sd">    Out[209]: </span>
+<span class="sd">                hours_on       kwh</span>
+<span class="sd">    2011-04-18       NaN       NaN</span>
+<span class="sd">    2011-04-19  5.036111  1.104083</span>
+<span class="sd">    2011-04-20  5.756667  1.293223</span>
+<span class="sd">    ...</span>
+
+<span class="sd">    Ah, OK, there are insufficient samples for the periods with NaNs.  We could</span>
+<span class="sd">    set max_dropout_rate to a number closer to 1, but that would give us data</span>
+<span class="sd">    for days where there isn&#39;t much data for that day.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c"># TODO: replace this evil hack to handle dataframes(!)</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">series</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+        <span class="n">series</span> <span class="o">=</span> <span class="n">series</span><span class="o">.</span><span class="n">icol</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">assert</span><span class="p">(</span><span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">max_dropout_rate</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">period_range</span><span class="p">,</span> <span class="n">boundaries</span> <span class="o">=</span> <span class="n">_indicies_of_periods</span><span class="p">(</span><span class="n">series</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">freq</span><span class="p">)</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">series</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+    <span class="n">hours_on_series</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">period_range</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">,</span>
+                                <span class="n">name</span><span class="o">=</span><span class="n">name</span> <span class="o">+</span> <span class="s">&#39; hours on&#39;</span><span class="p">)</span>
+    <span class="n">energy_series</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">period_range</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">,</span>
+                              <span class="n">name</span><span class="o">=</span><span class="n">name</span> <span class="o">+</span> <span class="s">&#39; &#39;</span> <span class="o">+</span> <span class="n">energy_unit</span><span class="p">)</span>
+
+    <span class="n">MAX_SAMPLES_PER_PERIOD</span> <span class="o">=</span> <span class="p">(</span><span class="n">secs_per_period_alias</span><span class="p">(</span><span class="n">freq</span><span class="p">)</span> <span class="o">/</span>
+                              <span class="n">get_sample_period</span><span class="p">(</span><span class="n">series</span><span class="p">))</span>
+    <span class="n">MIN_SAMPLES_PER_PERIOD</span> <span class="o">=</span> <span class="p">(</span><span class="n">MAX_SAMPLES_PER_PERIOD</span> <span class="o">*</span>
+                              <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">max_dropout_rate</span><span class="p">))</span>
+
+    <span class="k">for</span> <span class="n">period</span> <span class="ow">in</span> <span class="n">period_range</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">period_start_i</span><span class="p">,</span> <span class="n">period_end_i</span> <span class="o">=</span> <span class="n">boundaries</span><span class="p">[</span><span class="n">period</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                <span class="k">print</span><span class="p">(</span><span class="s">&quot;No data available for   &quot;</span><span class="p">,</span>
+                      <span class="n">period</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">&#39;%Y-%m-</span><span class="si">%d</span><span class="s">&#39;</span><span class="p">))</span>
+            <span class="k">continue</span>
+
+        <span class="n">data_for_period</span> <span class="o">=</span> <span class="n">series</span><span class="p">[</span><span class="n">period_start_i</span><span class="p">:</span><span class="n">period_end_i</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">data_for_period</span><span class="o">.</span><span class="n">size</span> <span class="o">&lt;</span> <span class="n">MIN_SAMPLES_PER_PERIOD</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                <span class="n">dropout_rate</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="n">data_for_period</span><span class="o">.</span><span class="n">size</span> <span class="o">/</span>
+                                     <span class="n">MAX_SAMPLES_PER_PERIOD</span><span class="p">))</span>
+                <span class="k">print</span><span class="p">(</span><span class="s">&quot;Insufficient samples for &quot;</span><span class="p">,</span>
+                      <span class="n">period</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">&#39;%Y-%m-</span><span class="si">%d</span><span class="s">&#39;</span><span class="p">),</span>
+                      <span class="s">&quot;; n samples = &quot;</span><span class="p">,</span> <span class="n">data_for_period</span><span class="o">.</span><span class="n">size</span><span class="p">,</span>
+                      <span class="s">&quot;; dropout_rate = {:.2%}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dropout_rate</span><span class="p">),</span> <span class="n">sep</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">)</span>
+                <span class="k">print</span><span class="p">(</span><span class="s">&quot;                 start =&quot;</span><span class="p">,</span> <span class="n">data_for_period</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                <span class="k">print</span><span class="p">(</span><span class="s">&quot;                   end =&quot;</span><span class="p">,</span> <span class="n">data_for_period</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+            <span class="k">continue</span>
+
+        <span class="n">hours_on_series</span><span class="p">[</span><span class="n">period</span><span class="p">]</span> <span class="o">=</span> <span class="n">hours_on</span><span class="p">(</span><span class="n">data_for_period</span><span class="p">,</span>
+                                           <span class="n">on_power_threshold</span><span class="o">=</span><span class="n">on_power_threshold</span><span class="p">)</span>
+        <span class="n">energy_series</span><span class="p">[</span><span class="n">period</span><span class="p">]</span> <span class="o">=</span> <span class="n">energy</span><span class="p">(</span><span class="n">data_for_period</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="n">energy_unit</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s">&#39;hours_on&#39;</span><span class="p">:</span> <span class="n">hours_on_series</span><span class="p">,</span>
+                         <span class="n">energy_unit</span><span class="p">:</span> <span class="n">energy_series</span><span class="p">})</span>
+
+</div>
+<div class="viewcode-block" id="activity_distribution"><a class="viewcode-back" href="../../../../nilmtk.stats.electricity.html#nilmtk.stats.electricity.single.activity_distribution">[docs]</a><span class="k">def</span> <span class="nf">activity_distribution</span><span class="p">(</span>
+    <span class="n">series</span><span class="p">,</span> <span class="n">on_power_threshold</span><span class="o">=</span><span class="n">DEFAULT_ON_POWER_THRESHOLD</span><span class="p">,</span>
+        <span class="n">bin_size</span><span class="o">=</span><span class="s">&#39;T&#39;</span><span class="p">,</span> <span class="n">timespan</span><span class="o">=</span><span class="s">&#39;D&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns a distribution describing when this appliance was turned</span>
+<span class="sd">    on over repeating timespans.  For example, if you want to see</span>
+<span class="sd">    which times of day this appliance was used, on average, then use </span>
+<span class="sd">    bin_size=&#39;T&#39; (minutely) or bin_size=&#39;H&#39; (hourly) and</span>
+<span class="sd">    timespan=&#39;D&#39; (daily).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    series : pandas.Series</span>
+
+<span class="sd">    on_power_threshold : float, optional, default=5</span>
+<span class="sd">        Threshold which defines the difference between &#39;on&#39; and &#39;off&#39;. Watts.</span>
+
+<span class="sd">    bin_size, timespan : str</span>
+<span class="sd">        offset alias (e.g. &#39;T&#39; or &#39;D&#39;)</span>
+<span class="sd">        For valid offset aliases, see:</span>
+<span class="sd">        http://pandas.pydata.org/pandas-docs/dev/timeseries.html#offset-aliases</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    pandas.Series</span>
+<span class="sd">        One row for each bin in a timespan.</span>
+<span class="sd">        The values count the number of times this appliance has been on at</span>
+<span class="sd">        that particular time of the timespan.</span>
+<span class="sd">        Times are handled in local time.</span>
+<span class="sd">        The index uses specific dates. For example, if `timespan=&#39;D&#39;` then</span>
+<span class="sd">        the index might be from &#39;2012/1/1 00:00&#39; to &#39;2012/1/1 59:59&#39;. In this</span>
+<span class="sd">        example, ignore the &#39;2012/1/1&#39;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c"># TODO: replace this evil hack to handle dataframes(!)</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">series</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+        <span class="n">series</span> <span class="o">=</span> <span class="n">series</span><span class="o">.</span><span class="n">icol</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="c"># Create a pd.Series with PeriodIndex</span>
+    <span class="n">binned_data</span> <span class="o">=</span> <span class="n">series</span><span class="o">.</span><span class="n">resample</span><span class="p">(</span><span class="n">bin_size</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s">&#39;max&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">to_period</span><span class="p">()</span>
+    <span class="n">binned_data</span> <span class="o">=</span> <span class="n">binned_data</span> <span class="o">&gt;</span> <span class="n">on_power_threshold</span>
+
+    <span class="n">timespans</span><span class="p">,</span> <span class="n">boundaries</span> <span class="o">=</span> <span class="n">_indicies_of_periods</span><span class="p">(</span>
+        <span class="n">binned_data</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">to_timestamp</span><span class="p">(),</span>
+        <span class="n">freq</span><span class="o">=</span><span class="n">timespan</span><span class="p">)</span>
+
+    <span class="n">first_timespan</span> <span class="o">=</span> <span class="n">timespans</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">bins</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">period_range</span><span class="p">(</span><span class="n">first_timespan</span><span class="o">.</span><span class="n">start_time</span><span class="p">,</span>
+                           <span class="n">first_timespan</span><span class="o">.</span><span class="n">end_time</span><span class="p">,</span>
+                           <span class="n">freq</span><span class="o">=</span><span class="n">bin_size</span><span class="p">)</span>
+    <span class="n">distribution</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">bins</span><span class="p">)</span>
+
+    <span class="n">bins_per_timespan</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">secs_per_period_alias</span><span class="p">(</span><span class="n">timespan</span><span class="p">)</span> <span class="o">/</span>
+                                  <span class="n">secs_per_period_alias</span><span class="p">(</span><span class="n">bin_size</span><span class="p">)))</span>
+
+    <span class="k">for</span> <span class="n">span</span> <span class="ow">in</span> <span class="n">timespans</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">start_index</span><span class="p">,</span> <span class="n">end_index</span> <span class="o">=</span> <span class="n">boundaries</span><span class="p">[</span><span class="n">span</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">&quot;No data for&quot;</span><span class="p">,</span> <span class="n">span</span><span class="p">)</span>
+            <span class="k">continue</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">data_for_timespan</span> <span class="o">=</span> <span class="n">binned_data</span><span class="p">[</span><span class="n">start_index</span><span class="p">:</span><span class="n">end_index</span><span class="p">]</span>
+
+        <span class="n">bins_since_first_timespan</span> <span class="o">=</span> <span class="p">(</span><span class="n">first_timespan</span> <span class="o">-</span> <span class="n">span</span><span class="p">)</span> <span class="o">*</span> <span class="n">bins_per_timespan</span>
+        <span class="n">data_shifted</span> <span class="o">=</span> <span class="n">data_for_timespan</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="n">bins_since_first_timespan</span><span class="p">,</span>
+                                               <span class="n">bin_size</span><span class="p">)</span>
+        <span class="n">distribution</span> <span class="o">=</span> <span class="n">distribution</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">data_shifted</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">distribution</span>
+
+</div>
+<div class="viewcode-block" id="on"><a class="viewcode-back" href="../../../../nilmtk.stats.electricity.html#nilmtk.stats.electricity.single.on">[docs]</a><span class="k">def</span> <span class="nf">on</span><span class="p">(</span><span class="n">series</span><span class="p">,</span> <span class="n">on_power_threshold</span><span class="o">=</span><span class="n">DEFAULT_ON_POWER_THRESHOLD</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns pd.Series with Boolean values indicating whether the</span>
+<span class="sd">    appliance is on (True) or off (False).</span>
+
+<span class="sd">    If input data has gaps then pre-process data with `insert_zeros`</span>
+<span class="sd">    before sending it to this function.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    series : pandas.Series</span>
+
+<span class="sd">    on_power_threshold : float, optional, default=5</span>
+<span class="sd">        Threshold which defines the difference between &#39;on&#39; and &#39;off&#39;. Watts.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    when_on : pandas.Series</span>
+<span class="sd">        index is the same as for input `series`</span>
+<span class="sd">        values are booleans</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c"># TODO: replace this evil hack to handle dataframes(!)</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">series</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+        <span class="n">series</span> <span class="o">=</span> <span class="n">series</span><span class="o">.</span><span class="n">icol</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="n">when_on</span> <span class="o">=</span> <span class="n">series</span> <span class="o">&gt;=</span> <span class="n">on_power_threshold</span>
+    <span class="k">return</span> <span class="n">when_on</span>
+
+</div>
+<div class="viewcode-block" id="on_off_events"><a class="viewcode-back" href="../../../../nilmtk.stats.electricity.html#nilmtk.stats.electricity.single.on_off_events">[docs]</a><span class="k">def</span> <span class="nf">on_off_events</span><span class="p">(</span><span class="n">on_series</span><span class="p">,</span> <span class="n">ignore_n_off_samples</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Detects on/off switch events.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    on_series : pd.Series</span>
+<span class="sd">        Series of booleans indicating if the appliance is on or off.</span>
+<span class="sd">        Produced, for example, by `on()`.</span>
+
+<span class="sd">    ignore_n_off_samples : int, optional</span>
+<span class="sd">        Ignore this number of off samples.  For example, if the input</span>
+<span class="sd">        is [0, 100, 0, 100, 100, 0, 0] then the single zero with 100</span>
+<span class="sd">        either side could be ignored if ignore_n_off_samples = 1,</span>
+<span class="sd">        hence only one on-event and one off-event would be reported.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    events : pd.Series</span>
+<span class="sd">        Index is the same as the input `on_series`.</span>
+<span class="sd">        Values are np.int8:</span>
+<span class="sd">         1 == turn-on event</span>
+<span class="sd">        -1 == turn-off event</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; series = pd.Series([0, 0, 100, 100, 100, 0])</span>
+<span class="sd">    &gt;&gt;&gt; on_off_events(series)</span>
+<span class="sd">    2:  1</span>
+<span class="sd">    5: -1</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    on</span>
+<span class="sd">    durations</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">ignore_n_off_samples</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">on_smoothed</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">rolling_max</span><span class="p">(</span>
+            <span class="n">on_series</span><span class="p">,</span> <span class="n">window</span><span class="o">=</span><span class="n">ignore_n_off_samples</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">on_smoothed</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:</span><span class="n">ignore_n_off_samples</span><span class="p">]</span> <span class="o">=</span> <span class="n">on_series</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span>
+            <span class="p">:</span><span class="n">ignore_n_off_samples</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+        <span class="n">on_series</span> <span class="o">=</span> <span class="n">on_smoothed</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+
+    <span class="n">on_series</span> <span class="o">=</span> <span class="n">on_series</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int8</span><span class="p">)</span>
+    <span class="n">events</span> <span class="o">=</span> <span class="n">on_series</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">-</span> <span class="n">on_series</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">:]</span>
+
+    <span class="k">if</span> <span class="n">ignore_n_off_samples</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">i_off_events</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">events</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>  <span class="c"># indicies of off-events</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ignore_n_off_samples</span><span class="p">):</span>
+            <span class="n">events</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i_off_events</span> <span class="o">-</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">events</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i_off_events</span> <span class="o">-</span> <span class="n">ignore_n_off_samples</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+
+    <span class="n">events</span> <span class="o">=</span> <span class="n">events</span><span class="p">[</span><span class="n">events</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">]</span>
+    <span class="n">events</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s">&#39;on/off events for &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">events</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">events</span>
+
+</div>
+<div class="viewcode-block" id="durations"><a class="viewcode-back" href="../../../../nilmtk.stats.electricity.html#nilmtk.stats.electricity.single.durations">[docs]</a><span class="k">def</span> <span class="nf">durations</span><span class="p">(</span><span class="n">on_series</span><span class="p">,</span> <span class="n">on_or_off</span><span class="p">,</span> <span class="n">ignore_n_off_samples</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+              <span class="n">sample_period</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The length of every on or off duration (in seconds).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    on_series : pd.Series</span>
+<span class="sd">        Series of booleans indicating if the appliance is on or off.</span>
+<span class="sd">        Produced, for example, by `on()`.</span>
+
+<span class="sd">    on_or_off : {&#39;on&#39;, &#39;off&#39;}</span>
+
+<span class="sd">    ignore_n_off_samples : int, optional</span>
+<span class="sd">        Ignore this number of off samples.  For example, if the input</span>
+<span class="sd">        is [0, 100, 0, 100, 100, 0, 0] then the single zero with 100</span>
+<span class="sd">        either side could be ignored if ignore_n_off_samples = 1,</span>
+<span class="sd">        hence only one on-event and one off-event would be reported.</span>
+
+<span class="sd">    sample_period : int, optional</span>
+<span class="sd">        Only used if `ignore_n_off_samples` is not None. Sample period</span>
+<span class="sd">        in seconds.  If not provided the the function will get the</span>
+<span class="sd">        sample period of the data.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    pd.Series</span>
+<span class="sd">        Index is the datetime at which the event starts.</span>
+<span class="sd">        Values are the length of every on or off duration (in seconds).</span>
+
+<span class="sd">    See also</span>
+<span class="sd">    --------</span>
+<span class="sd">    on_off_events()</span>
+<span class="sd">    on()</span>
+<span class="sd">    sample_period()</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c"># TODO: ignore_n_off_samples should be generalised so it does the</span>
+    <span class="c"># right thing when `on_or_off=&#39;off&#39;`</span>
+    <span class="k">if</span> <span class="n">sample_period</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">sample_period</span> <span class="o">=</span> <span class="n">get_sample_period</span><span class="p">(</span><span class="n">on_series</span><span class="p">)</span>
+    <span class="n">events</span> <span class="o">=</span> <span class="n">on_off_events</span><span class="p">(</span><span class="n">on_series</span><span class="p">,</span> <span class="n">ignore_n_off_samples</span><span class="p">)</span>
+    <span class="n">delta_time_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">events</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span> <span class="o">/</span> <span class="mf">1E9</span>
+    <span class="n">delta_time</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">delta_time_array</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">events</span><span class="o">.</span><span class="n">index</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">diff_for_mode</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">on_or_off</span> <span class="o">==</span> <span class="s">&#39;on&#39;</span> <span class="k">else</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="n">events_for_mode</span> <span class="o">=</span> <span class="n">events</span> <span class="o">==</span> <span class="n">diff_for_mode</span>
+    <span class="n">durations</span> <span class="o">=</span> <span class="n">delta_time</span><span class="p">[</span><span class="n">events_for_mode</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">ignore_n_off_samples</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">durations</span> <span class="o">=</span> <span class="n">durations</span><span class="p">[</span><span class="n">durations</span> <span class="o">&gt;</span> <span class="n">sample_period</span> <span class="o">*</span> <span class="n">ignore_n_off_samples</span><span class="p">]</span>
+
+    <span class="n">durations</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s">&#39;seconds &#39;</span> <span class="o">+</span> <span class="n">on_or_off</span> <span class="o">+</span> <span class="s">&#39; for &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">on_series</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">durations</span>
+
+</div>
+<div class="viewcode-block" id="start_end_datetime"><a class="viewcode-back" href="../../../../nilmtk.stats.electricity.html#nilmtk.stats.electricity.single.start_end_datetime">[docs]</a><span class="k">def</span> <span class="nf">start_end_datetime</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns the first and the last time for which data is recorded</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    data : pandas.DataFrame or Series or DatetimeIndex</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    start_end_datetimes : List</span>
+<span class="sd">        Contains two elements- start and end timestamps </span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">index</span> <span class="o">=</span> <span class="n">_get_index</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
+
+
+<span class="c">#------------------------ HELPER FUNCTIONS -------------------------</span>
+</div>
+<span class="k">def</span> <span class="nf">_indicies_of_periods</span><span class="p">(</span><span class="n">datetime_index</span><span class="p">,</span> <span class="n">freq</span><span class="p">,</span> <span class="n">use_local_time</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Find which elements of `datetime_index` fall into each period</span>
+<span class="sd">    of a regular periods with frequency `freq`.  Uses some tricks to do</span>
+<span class="sd">    this more efficiently that appears possible with native Pandas tools.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    datetime_index : pd.tseries.index.DatetimeIndex</span>
+
+<span class="sd">    freq : str</span>
+<span class="sd">        one of the following:</span>
+<span class="sd">        &#39;A&#39; for yearly</span>
+<span class="sd">        &#39;M&#39; for monthly</span>
+<span class="sd">        &#39;D&#39; for daily</span>
+<span class="sd">        &#39;H&#39; for hourly</span>
+<span class="sd">        &#39;T&#39; for minutely</span>
+
+<span class="sd">    use_local_time : boolean, optional, default=True</span>
+<span class="sd">        If True then start and end each time period at appropriate local times.</span>
+<span class="sd">        e.g. if `freq=&#39;D&#39;` and:</span>
+<span class="sd">            `use_local_time=True` then divide at midnight *local time* or if</span>
+<span class="sd">            `use_local_time=False` then divide at midnight UTC</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    periods : pd.tseries.period.PeriodIndex</span>
+
+<span class="sd">    boundaries : dict</span>
+<span class="sd">        Each key is a pd.tseries.period.Period</span>
+<span class="sd">        Each value is a tuple of ints:</span>
+<span class="sd">        (&lt;start index into `datetime_index` for period&gt;, &lt;end index&gt;)</span>
+<span class="sd">        Periods for which no data exists will not have a key.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Say you have a pd.Series with data covering a month:</span>
+
+<span class="sd">    &gt;&gt;&gt; series.index</span>
+<span class="sd">    &lt;class &#39;pandas.tseries.index.DatetimeIndex&#39;&gt;</span>
+<span class="sd">    [2011-04-18 09:22:13, ..., 2011-05-24 15:56:34]</span>
+<span class="sd">    Length: 745878, Freq: None, Timezone: US/Eastern</span>
+
+<span class="sd">    You want to divide it up into day-sized chunks, starting and ending each</span>
+<span class="sd">    chunk at midnight local time:</span>
+
+<span class="sd">    &gt;&gt;&gt; periods, boundaries = _indicies_of_periods(series.index, freq=&#39;D&#39;)</span>
+
+<span class="sd">    &gt;&gt;&gt; periods</span>
+<span class="sd">    &lt;class &#39;pandas.tseries.period.PeriodIndex&#39;&gt;</span>
+<span class="sd">    freq: D</span>
+<span class="sd">    [2011-04-18, ..., 2011-05-24]</span>
+<span class="sd">    length: 37</span>
+
+<span class="sd">    &gt;&gt;&gt; boundaries</span>
+<span class="sd">    {Period(&#39;2011-04-18&#39;, &#39;D&#39;): (0, 13652),</span>
+<span class="sd">     Period(&#39;2011-04-19&#39;, &#39;D&#39;): (13652, 34926),</span>
+<span class="sd">     Period(&#39;2011-04-20&#39;, &#39;D&#39;): (34926, 57310),</span>
+<span class="sd">     ...</span>
+<span class="sd">     Period(&#39;2011-05-23&#39;, &#39;D&#39;): (710750, 732360),</span>
+<span class="sd">     Period(&#39;2011-05-24&#39;, &#39;D&#39;): (732360, 745878)}</span>
+
+<span class="sd">    Now, say that we want chomp though our data a day at a time:</span>
+
+<span class="sd">    &gt;&gt;&gt; for period in periods:</span>
+<span class="sd">    &gt;&gt;&gt;     start_i, end_i = boundaries[period]</span>
+<span class="sd">    &gt;&gt;&gt;     data_for_day = series.iloc[start_i:end_i]</span>
+<span class="sd">    &gt;&gt;&gt;     # do something with data_for_day</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">use_local_time</span><span class="p">:</span>
+        <span class="n">datetime_index</span> <span class="o">=</span> <span class="n">_tz_to_naive</span><span class="p">(</span><span class="n">datetime_index</span><span class="p">)</span>
+
+    <span class="n">periods</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">period_range</span><span class="p">(</span><span class="n">datetime_index</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">datetime_index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">freq</span><span class="o">=</span><span class="n">freq</span><span class="p">)</span>
+
+    <span class="c"># Declare and initialise some constants and variables used</span>
+    <span class="c"># during the loop...</span>
+
+    <span class="c"># Find the minimum sample period.</span>
+    <span class="n">MIN_SAMPLE_PERIOD</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">get_sample_period</span><span class="p">(</span><span class="n">datetime_index</span><span class="p">))</span>
+    <span class="n">MAX_SAMPLES_PER_PERIOD</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span>
+        <span class="n">secs_per_period_alias</span><span class="p">(</span><span class="n">freq</span><span class="p">)</span> <span class="o">/</span> <span class="n">MIN_SAMPLE_PERIOD</span><span class="p">)</span>
+    <span class="n">MAX_SAMPLES_PER_2_PERIODS</span> <span class="o">=</span> <span class="n">MAX_SAMPLES_PER_PERIOD</span> <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">n_rows_processed</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">boundaries</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">period</span> <span class="ow">in</span> <span class="n">periods</span><span class="p">:</span>
+        <span class="c"># The simplest way to get data for just a single period is to use</span>
+        <span class="c"># data_for_day = datetime_index[period.strftime(&#39;%Y-%m-%d&#39;)]</span>
+        <span class="c"># but this takes about 300ms per call on my machine.</span>
+        <span class="c"># So we take advantage of several features of the data to achieve</span>
+        <span class="c"># a 300x speedup:</span>
+        <span class="c"># 1. We use the fact that the data is sorted in order, hence</span>
+        <span class="c">#    we can chomp through it in order.</span>
+        <span class="c"># 2. MAX_SAMPLES_PER_PERIOD sets an upper bound on the number of</span>
+        <span class="c">#    datapoints per period.  The code is conservative and uses</span>
+        <span class="c">#    MAX_SAMPLES_PER_2_PERIODS. We only search through a small subset</span>
+        <span class="c">#    of the available data.</span>
+
+        <span class="n">end_index</span> <span class="o">=</span> <span class="n">n_rows_processed</span> <span class="o">+</span> <span class="n">MAX_SAMPLES_PER_2_PERIODS</span>
+        <span class="n">rows_to_process</span> <span class="o">=</span> <span class="n">datetime_index</span><span class="p">[</span><span class="n">n_rows_processed</span><span class="p">:</span><span class="n">end_index</span><span class="p">]</span>
+        <span class="n">indicies_for_period</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">rows_to_process</span> <span class="o">&lt;</span> <span class="n">period</span><span class="o">.</span><span class="n">end_time</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">indicies_for_period</span><span class="o">.</span><span class="n">size</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">first_i_for_period</span> <span class="o">=</span> <span class="n">indicies_for_period</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">n_rows_processed</span>
+            <span class="n">last_i_for_period</span> <span class="o">=</span> <span class="n">indicies_for_period</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">n_rows_processed</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="n">boundaries</span><span class="p">[</span><span class="n">period</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">first_i_for_period</span><span class="p">,</span> <span class="n">last_i_for_period</span><span class="p">)</span>
+            <span class="n">n_rows_processed</span> <span class="o">+=</span> <span class="n">last_i_for_period</span> <span class="o">-</span> <span class="n">first_i_for_period</span>
+
+    <span class="k">return</span> <span class="n">periods</span><span class="p">,</span> <span class="n">boundaries</span>
+
+
+<span class="k">def</span> <span class="nf">_tz_to_naive</span><span class="p">(</span><span class="n">datetime_index</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Converts a tz-aware DatetimeIndex into a tz-naive DatetimeIndex,</span>
+<span class="sd">    effectively baking the timezone into the internal representation.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    datetime_index : pandas.DatetimeIndex, tz-aware</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    pandas.DatetimeIndex, tz-naive</span>
+
+<span class="sd">    .. warning: TODO a fix is required for this function to cope with</span>
+<span class="sd">       datetimeindicies with a daylight saving transition in them.</span>
+<span class="sd">       See: http://stackoverflow.com/q/16628819/732596</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">datetime_index</span><span class="o">.</span><span class="n">tzinfo</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">datetime_index</span>
+
+    <span class="c"># Calculate timezone offset relative to UTC</span>
+    <span class="n">timestamp</span> <span class="o">=</span> <span class="n">datetime_index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">tz_offset</span> <span class="o">=</span> <span class="p">(</span><span class="n">timestamp</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">tzinfo</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span> <span class="o">-</span>
+                 <span class="n">timestamp</span><span class="o">.</span><span class="n">tz_convert</span><span class="p">(</span><span class="s">&#39;UTC&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">tzinfo</span><span class="o">=</span><span class="bp">None</span><span class="p">))</span>
+    <span class="n">tz_offset_td64</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">timedelta64</span><span class="p">(</span><span class="n">tz_offset</span><span class="p">)</span>
+
+    <span class="c"># Now convert to naive DatetimeIndex</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DatetimeIndex</span><span class="p">(</span><span class="n">datetime_index</span><span class="o">.</span><span class="n">values</span> <span class="o">+</span> <span class="n">tz_offset_td64</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_get_index</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    data : pandas.DataFrame or Series or DatetimeIndex</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    index : the index for the DataFrame or Series</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">)):</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">index</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DatetimeIndex</span><span class="p">):</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="n">data</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s">&#39;wrong type for `data`.&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">index</span>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2014, nilmtk authors.<br/>
+      Last updated on Mar 26, 2014.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

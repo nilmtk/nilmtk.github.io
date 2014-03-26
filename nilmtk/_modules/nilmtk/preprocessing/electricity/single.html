@@ -1,0 +1,446 @@
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>nilmtk.preprocessing.electricity.single &mdash; nilmtk 0.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/bootstrap-3.0.0/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/bootstrap-3.0.0/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../../../../_static/js/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="../../../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../../../_static/bootstrap-3.0.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="nilmtk 0.0.1 documentation" href="../../../../index.html" />
+    <link rel="up" title="Module code" href="../../../index.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../../index.html">nilmtk</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.0.1</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            <li class="divider-vertical"></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a href="../../../../index.html"
+     class="dropdown-toggle"
+     data-toggle="dropdown">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+    ><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../nilmtk.html">nilmtk API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../userguide.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../contribute.html">Contributing</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"></ul>
+</li>
+              
+            
+            
+              
+            
+            
+            
+            
+              <li></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      
+  <h1>Source code for nilmtk.preprocessing.electricity.single</h1><div class="highlight"><pre>
+<span class="sd">&quot;&quot;&quot;Preprocessing functions for a single appliance / mains / circuit DataFrame&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">division</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
+
+<span class="kn">from</span> <span class="nn">nilmtk.stats.electricity.single</span> <span class="kn">import</span> <span class="n">get_sample_period</span>
+<span class="kn">from</span> <span class="nn">nilmtk.sensors.electricity</span> <span class="kn">import</span> <span class="n">Measurement</span>
+<span class="kn">from</span> <span class="nn">nilmtk.utils</span> <span class="kn">import</span> <span class="n">secs_per_period_alias</span><span class="p">,</span> <span class="n">timedelta64_to_secs</span>
+
+
+<div class="viewcode-block" id="insert_zeros"><a class="viewcode-back" href="../../../../nilmtk.preprocessing.electricity.html#nilmtk.preprocessing.electricity.single.insert_zeros">[docs]</a><span class="k">def</span> <span class="nf">insert_zeros</span><span class="p">(</span><span class="n">single_appliance_dataframe</span><span class="p">,</span>
+                 <span class="n">sample_period_multiplier</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+                 <span class="n">round_sample_period</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Find all gaps in `single_appliance_dataframe` longer than</span>
+<span class="sd">    `max_sample_period` and insert a zero 1 sample period after</span>
+<span class="sd">    the start of the gap and insert a second zero 1 sample period</span>
+<span class="sd">    before the end of the gap.</span>
+
+<span class="sd">    In other words: &quot;book-end&quot; the gap with a zero at each end.</span>
+
+<span class="sd">    Zeros are only inserted at the start of the gap if the gap</span>
+<span class="sd">    starts with a reading above zero; and likewise for insertion</span>
+<span class="sd">    of zeros at the end of the gap.</span>
+
+<span class="sd">    Note that this function does not fill the entire gap with zeros,</span>
+<span class="sd">    if you want that then try pandas.DataFrame.fillna</span>
+
+<span class="sd">    What is `insert_zeros` useful for?</span>
+
+<span class="sd">    There are two possible reasons for lost samples in individual</span>
+<span class="sd">    appliance data: </span>
+
+<span class="sd">    1) a broken IAM (hence we do not have any information about the appliance)</span>
+<span class="sd">    2) the IAM and appliance have been unplugged (hence we can infer that the</span>
+<span class="sd">       appliance is off)</span>
+
+<span class="sd">    Only the user who can decide which of these two assumptions best</span>
+<span class="sd">    fits their data.  insert_zeros is applicable only in case 2.</span>
+
+<span class="sd">    For example, say a hoover&#39;s IAM is permanently attached to the</span>
+<span class="sd">    hoover&#39;s power cord, even when the hoover is unplugged and put</span>
+<span class="sd">    away in the cupboard.</span>
+
+<span class="sd">    Say the hoover was switched on when both the hoover and the</span>
+<span class="sd">    hoover&#39;s IAM were unplugged.  This would result in the dataset</span>
+<span class="sd">    having a gap immediately after an on-segment.  This combination of</span>
+<span class="sd">    an on-segment followed (without any zeros) by a gap might confuse</span>
+<span class="sd">    downstream statistics and disaggregation functions which assume</span>
+<span class="sd">    that the power drawn by an appliance between reading[i] and</span>
+<span class="sd">    reading[i+1] is held constant at reading[i] watts.</span>
+
+<span class="sd">    TODO: a smarter version of this function might use information from</span>
+<span class="sd">    the aggregate data to do a better job of estimating exactly when</span>
+<span class="sd">    the appliance was turned off.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    single_appliance_dataframe : pandas.DataFrame</span>
+<span class="sd">        Data from a single appliance.</span>
+
+<span class="sd">    max_sample_period : float or int, optional</span>
+
+<span class="sd">    sample_period_multiplier : float or int, optional </span>
+<span class="sd">        default = 4.  Must be 4 or larger (to ensure we do not add zeros</span>
+<span class="sd">        less than sample_period seconds apart).</span>
+<span class="sd">        max_sample_period = sample_period x sample_period_multiplier.</span>
+<span class="sd">        max_sample_period is the maximum permissible sample period (in</span>
+<span class="sd">        seconds). Any gap longer than `max_sample_period` is assumed</span>
+<span class="sd">        to imply that the IAM and appliance are off.</span>
+
+<span class="sd">    round_sample_period : bool, optional</span>
+<span class="sd">        default = True. Whether or not to round sample_period to the </span>
+<span class="sd">        nearest int.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    df_with_zeros : pandas.DataFrame</span>
+<span class="sd">        A copy of `single_appliance_dataframe` with zeros inserted </span>
+<span class="sd">        `max_sample_period` seconds after the last sample of each on-segment.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c">#sample_period = 60</span>
+    <span class="n">sample_period</span> <span class="o">=</span> <span class="n">get_sample_period</span><span class="p">(</span><span class="n">single_appliance_dataframe</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">round_sample_period</span><span class="p">:</span>
+        <span class="n">sample_period</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">sample_period</span><span class="p">))</span>
+
+    <span class="n">max_sample_period</span> <span class="o">=</span> <span class="n">sample_period</span> <span class="o">*</span> <span class="n">sample_period_multiplier</span>
+
+    <span class="c"># Drop NaNs (because we want those to be gaps in the index)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">single_appliance_dataframe</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+
+    <span class="c"># Get the length of time between each pair of consecutive samples. Seconds.</span>
+    <span class="n">timedeltas</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">timedelta64</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s">&#39;s&#39;</span><span class="p">)</span>
+    <span class="n">gaps_mask</span> <span class="o">=</span> <span class="n">timedeltas</span> <span class="o">&gt;</span> <span class="n">max_sample_period</span>
+    <span class="n">readings_before_gaps</span> <span class="o">=</span> <span class="n">df</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">gaps_mask</span><span class="p">]</span>
+    <span class="n">readings_after_gaps</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="mi">1</span><span class="p">:][</span><span class="n">gaps_mask</span><span class="p">]</span>
+
+    <span class="c"># we only add a 0 if the recorded value just before the gap is &gt; 0</span>
+    <span class="n">readings_before_gaps</span> <span class="o">=</span> <span class="n">readings_before_gaps</span><span class="p">[</span>
+        <span class="n">readings_before_gaps</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span>
+
+    <span class="n">readings_after_gaps</span> <span class="o">=</span> <span class="n">readings_after_gaps</span><span class="p">[</span>
+        <span class="n">readings_after_gaps</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span>
+
+    <span class="c"># Find dates to insert zeros</span>
+    <span class="n">dates_to_insert_zeros_before_gaps</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">readings_before_gaps</span><span class="o">.</span><span class="n">index</span> <span class="o">+</span> <span class="n">pd</span><span class="o">.</span><span class="n">DateOffset</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">sample_period</span><span class="p">))</span>
+
+    <span class="n">dates_to_insert_zeros_after_gaps</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">readings_after_gaps</span><span class="o">.</span><span class="n">index</span> <span class="o">-</span> <span class="n">pd</span><span class="o">.</span><span class="n">DateOffset</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">sample_period</span><span class="p">))</span>
+
+    <span class="n">dates_to_insert_zeros</span> <span class="o">=</span> <span class="n">dates_to_insert_zeros_before_gaps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+        <span class="n">dates_to_insert_zeros_after_gaps</span><span class="p">)</span>
+
+    <span class="c"># Columns containing power</span>
+    <span class="n">power_columns</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">non_power_columns</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">col</span><span class="o">.</span><span class="n">physical_quantity</span> <span class="o">==</span> <span class="s">&#39;power&#39;</span><span class="p">:</span>
+            <span class="n">power_columns</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">col</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">non_power_columns</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">col</span><span class="p">)</span>
+
+    <span class="c"># Don&#39;t insert duplicate indicies</span>
+    <span class="c"># TODO: remove this assert when we&#39;re confident the code is correct</span>
+    <span class="k">assert</span><span class="p">((</span><span class="n">dates_to_insert_zeros</span> <span class="o">&amp;</span> <span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">)</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+
+    <span class="c"># Create new dataframe of zeros at new indicies ready for insertion</span>
+    <span class="n">zeros</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                         <span class="n">index</span><span class="o">=</span><span class="n">dates_to_insert_zeros</span><span class="p">,</span>
+                         <span class="n">columns</span><span class="o">=</span><span class="n">power_columns</span><span class="p">,</span>
+                         <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+
+    <span class="c"># Check no zeros are closer than sample_period</span>
+    <span class="c"># TODO: remove this assert when we&#39;re confident the code is correct</span>
+    <span class="c"># also remove the sort_index().</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">zeros</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">zeros</span> <span class="o">=</span> <span class="n">zeros</span><span class="o">.</span><span class="n">sort_index</span><span class="p">()</span>
+        <span class="k">assert</span><span class="p">(</span><span class="n">timedelta64_to_secs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">zeros</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span><span class="p">)</span><span class="o">.</span><span class="n">min</span><span class="p">())</span> <span class="o">&gt;</span>
+               <span class="n">sample_period</span><span class="p">)</span>
+
+    <span class="c"># Now, take median of non-power columns (like voltage)</span>
+    <span class="k">for</span> <span class="n">measurement</span> <span class="ow">in</span> <span class="n">non_power_columns</span><span class="p">:</span>
+        <span class="n">zeros</span><span class="p">[</span><span class="n">measurement</span><span class="p">]</span> <span class="o">=</span> <span class="n">single_appliance_dataframe</span><span class="p">[</span><span class="n">measurement</span><span class="p">]</span><span class="o">.</span><span class="n">median</span><span class="p">()</span>
+
+    <span class="c"># Insert the dataframe of zeros into the data.</span>
+    <span class="n">df_with_zeros</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">single_appliance_dataframe</span><span class="p">)</span>
+    <span class="n">df_with_zeros</span> <span class="o">=</span> <span class="n">df_with_zeros</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">zeros</span><span class="p">)</span>
+    <span class="n">df_with_zeros</span> <span class="o">=</span> <span class="n">df_with_zeros</span><span class="o">.</span><span class="n">sort_index</span><span class="p">()</span>
+
+    <span class="c"># If input data had a regular frequency then resample</span>
+    <span class="c"># because appending turns off the regular frequency.</span>
+    <span class="n">original_freq</span> <span class="o">=</span> <span class="n">single_appliance_dataframe</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">freq</span>
+    <span class="k">if</span> <span class="n">original_freq</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">df_with_zeros</span> <span class="o">=</span> <span class="n">df_with_zeros</span><span class="o">.</span><span class="n">resample</span><span class="p">(</span><span class="n">rule</span><span class="o">=</span><span class="n">original_freq</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">df_with_zeros</span>
+
+</div>
+<div class="viewcode-block" id="normalise_power"><a class="viewcode-back" href="../../../../nilmtk.preprocessing.electricity.html#nilmtk.preprocessing.electricity.single.normalise_power">[docs]</a><span class="k">def</span> <span class="nf">normalise_power</span><span class="p">(</span><span class="n">power</span><span class="p">,</span> <span class="n">voltage</span><span class="p">,</span> <span class="n">nominal_voltage</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Uses Hart&#39;s formula to calculate:</span>
+<span class="sd">     &quot;admittance in the guise of &#39;normalized power&#39;:</span>
+<span class="sd">        </span>
+<span class="sd">    P_{Norm}(t) = 230 ^ 2 x Y(t) = (230 / V(t)) ^ 2 x P(t)</span>
+
+<span class="sd">    This is just the admittance adjusted by a constant scale</span>
+<span class="sd">    factor, resulting in the power normalized to 120 V, i.e.,</span>
+<span class="sd">    what the power would be if the utility provided a steady</span>
+<span class="sd">    120 V and the load obeyed a linear model. It is a far more</span>
+<span class="sd">    consistent signature than power... All of our prototype</span>
+<span class="sd">    NALMs use step changes in the normalized power as the</span>
+<span class="sd">    signature.&quot;</span>
+<span class="sd">    (equation 4, page 8 of Hart 1992)</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    power : pd.Series</span>
+<span class="sd">    voltage : pd.Series</span>
+<span class="sd">    nominal_voltage :float</span>
+<span class="sd">        Rated voltage supply in the country</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    power_normalized : pd.Series</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">power_normalized</span> <span class="o">=</span> <span class="p">((</span><span class="n">nominal_voltage</span> <span class="o">/</span> <span class="n">voltage</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">power</span>
+    <span class="k">return</span> <span class="n">power_normalized</span>
+
+</div>
+<div class="viewcode-block" id="remove_implausible_entries"><a class="viewcode-back" href="../../../../nilmtk.preprocessing.electricity.html#nilmtk.preprocessing.electricity.single.remove_implausible_entries">[docs]</a><span class="k">def</span> <span class="nf">remove_implausible_entries</span><span class="p">(</span><span class="n">channel_df</span><span class="p">,</span> <span class="n">measurement</span><span class="p">,</span>
+                               <span class="n">min_threshold</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">max_threshold</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    It is sometimes observed that sometimes sensors may give implausible</span>
+<span class="sd">    entries. eg. Voltage of 0.0 makes no sense or power of an appliance </span>
+<span class="sd">    to be 1MW makes no sense. These records must be filtered out. This</span>
+<span class="sd">    method filters out values outside a given range.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    channel_df : pandas.DataFrame</span>
+<span class="sd">        Corresponds to either an appliance or mains or circuit which </span>
+<span class="sd">        contains `measurement` as one of the columns</span>
+
+<span class="sd">    measurement : nilmtk.sensors.electricity.Measurement</span>
+<span class="sd">    min_threshold: float</span>
+<span class="sd">    max_threshold: float</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    implausible_entries_dropped : pandas.DataFrame</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">assert</span><span class="p">(</span><span class="n">measurement</span> <span class="ow">in</span> <span class="n">channel_df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+    <span class="c"># Atleast one of min_threshold or max_threshold must be there</span>
+    <span class="k">assert</span><span class="p">((</span><span class="n">min_threshold</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">max_threshold</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">min_threshold</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">min_threshold</span> <span class="o">=</span> <span class="n">channel_df</span><span class="p">[</span><span class="n">measurement</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">max_threshold</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">max_threshold</span> <span class="o">=</span> <span class="n">channel_df</span><span class="p">[</span><span class="n">measurement</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+
+    <span class="n">s</span> <span class="o">=</span> <span class="n">channel_df</span><span class="p">[</span><span class="n">measurement</span><span class="p">]</span>
+    <span class="n">implausible_entries_dropped</span> <span class="o">=</span> <span class="n">channel_df</span><span class="p">[</span>
+        <span class="p">(</span><span class="n">s</span> <span class="o">&gt;</span> <span class="n">min_threshold</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">s</span> <span class="o">&lt;</span> <span class="n">max_threshold</span><span class="p">)]</span>
+    <span class="k">return</span> <span class="n">implausible_entries_dropped</span>
+
+</div>
+<div class="viewcode-block" id="filter_datetime_single"><a class="viewcode-back" href="../../../../nilmtk.preprocessing.electricity.html#nilmtk.preprocessing.electricity.single.filter_datetime_single">[docs]</a><span class="k">def</span> <span class="nf">filter_datetime_single</span><span class="p">(</span><span class="n">channel_df</span><span class="p">,</span> <span class="n">start_datetime</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">end_datetime</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Filtering out a channel outside certain datetimes</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    channel_df : pandas.DataFrame</span>
+<span class="sd">        Corresponds to either an appliance or mains or circuit         </span>
+<span class="sd">    </span>
+<span class="sd">    start_datetime :string, &#39;mm-dd-yyyy hh:mm:ss&#39;</span>
+<span class="sd">    end_datetime : string, &#39;mm-dd-yyyy hh:mm:ss&#39;</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    pandas.DataFrame</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c"># Atleast one of start_datetime or end_datetime must be there</span>
+    <span class="k">assert</span><span class="p">((</span><span class="n">start_datetime</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">end_datetime</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">start_datetime</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">start_datetime</span> <span class="o">=</span> <span class="n">channel_df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">end_datetime</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">end_datetime</span> <span class="o">=</span> <span class="n">channel_df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">channel_df</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="p">(</span><span class="n">start_datetime</span><span class="p">):</span><span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="p">(</span><span class="n">end_datetime</span><span class="p">)]</span>
+
+</div>
+<div class="viewcode-block" id="reframe_index"><a class="viewcode-back" href="../../../../nilmtk.preprocessing.electricity.html#nilmtk.preprocessing.electricity.single.reframe_index">[docs]</a><span class="k">def</span> <span class="nf">reframe_index</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">window_start</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">window_end</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    index : pd.DatetimeIndex</span>
+
+<span class="sd">    window_start, window_end : pd.Timestamp</span>
+<span class="sd">        The start and end of the window of interest.  If this window</span>
+<span class="sd">        is larger than the duration of `data` then a single zero will be</span>
+<span class="sd">        inserted at `window_start` or `window_end` as necessary.  If this window</span>
+<span class="sd">        is shorter than the duration of `data` data will be cropped.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    index : pd.DatetimeIndex</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c"># TODO: can this function be merged with</span>
+    <span class="c"># preprocessing.building.building.prepend_append_zeros ?</span>
+
+    <span class="n">tz</span> <span class="o">=</span> <span class="n">index</span><span class="o">.</span><span class="n">tzinfo</span>
+
+    <span class="c"># Handle window...</span>
+    <span class="k">if</span> <span class="n">window_start</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">window_start</span> <span class="o">&gt;=</span> <span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="n">index</span> <span class="o">=</span> <span class="n">index</span><span class="p">[</span><span class="n">index</span> <span class="o">&gt;=</span> <span class="n">window_start</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">index</span> <span class="o">=</span> <span class="n">index</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">window_start</span><span class="p">)</span><span class="o">.</span><span class="n">tz_localize</span><span class="p">(</span>
+                <span class="s">&#39;UTC&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">tz_convert</span><span class="p">(</span><span class="n">tz</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">window_end</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">window_end</span> <span class="o">&lt;=</span> <span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="n">index</span> <span class="o">=</span> <span class="n">index</span><span class="p">[</span><span class="n">index</span> <span class="o">&lt;=</span> <span class="n">window_end</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">index</span> <span class="o">=</span> <span class="n">index</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">index</span><span class="p">),</span> <span class="n">window_end</span><span class="p">)</span><span class="o">.</span><span class="n">tz_localize</span><span class="p">(</span>
+                <span class="s">&#39;UTC&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">tz_convert</span><span class="p">(</span><span class="n">tz</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">index</span>
+
+</div>
+<div class="viewcode-block" id="contiguous_blocks"><a class="viewcode-back" href="../../../../nilmtk.preprocessing.electricity.html#nilmtk.preprocessing.electricity.single.contiguous_blocks">[docs]</a><span class="k">def</span> <span class="nf">contiguous_blocks</span><span class="p">(</span><span class="n">datetimeindex</span><span class="p">):</span>
+    <span class="n">sample_period</span> <span class="o">=</span> <span class="n">get_sample_period</span><span class="p">(</span><span class="n">datetimeindex</span><span class="p">)</span>
+    <span class="n">time_delta</span> <span class="o">=</span> <span class="n">timedelta64_to_secs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">datetimeindex</span><span class="o">.</span><span class="n">values</span><span class="p">))</span>
+    <span class="n">breaks</span> <span class="o">=</span> <span class="n">time_delta</span> <span class="o">&gt;</span> <span class="n">sample_period</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">breaks</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="c"># All contiguous data</span>
+        <span class="n">contiguous_time_tuples</span> <span class="o">=</span> <span class="p">[(</span><span class="n">datetimeindex</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">datetimeindex</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])]</span>
+    <span class="c"># Data has breaks</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">break_indices_int</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">breaks</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">contiguous_time_tuples</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">end</span> <span class="ow">in</span> <span class="n">break_indices_int</span><span class="p">:</span>
+            <span class="n">contiguous_time_tuples</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="p">(</span><span class="n">datetimeindex</span><span class="p">[</span><span class="n">start</span><span class="p">],</span> <span class="n">datetimeindex</span><span class="p">[</span><span class="n">end</span><span class="p">]))</span>
+            <span class="n">start</span> <span class="o">=</span> <span class="n">end</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="c"># Appending last block</span>
+        <span class="n">contiguous_time_tuples</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">datetimeindex</span><span class="p">[</span><span class="n">start</span><span class="p">],</span> <span class="n">datetimeindex</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+    <span class="k">return</span> <span class="n">contiguous_time_tuples</span></div>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2014, nilmtk authors.<br/>
+      Last updated on Mar 26, 2014.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

@@ -1,0 +1,688 @@
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>nilmtk.stats.electricity.building &mdash; nilmtk 0.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/bootstrap-3.0.0/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/bootstrap-3.0.0/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../../../../_static/js/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="../../../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../../../_static/bootstrap-3.0.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="nilmtk 0.0.1 documentation" href="../../../../index.html" />
+    <link rel="up" title="Module code" href="../../../index.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../../index.html">nilmtk</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.0.1</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            <li class="divider-vertical"></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a href="../../../../index.html"
+     class="dropdown-toggle"
+     data-toggle="dropdown">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+    ><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../nilmtk.html">nilmtk API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../userguide.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../contribute.html">Contributing</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"></ul>
+</li>
+              
+            
+            
+              
+            
+            
+            
+            
+              <li></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      
+  <h1>Source code for nilmtk.stats.electricity.building</h1><div class="highlight"><pre>
+<span class="sd">&quot;&quot;&quot;Statistics for applying to an entire building&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">division</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">matplotlib.ticker</span> <span class="kn">import</span> <span class="n">FuncFormatter</span>
+<span class="kn">import</span> <span class="nn">matplotlib.dates</span> <span class="kn">as</span> <span class="nn">mdates</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
+<span class="kn">from</span> <span class="nn">nilmtk.sensors.electricity</span> <span class="kn">import</span> <span class="n">Measurement</span>
+<span class="kn">from</span> <span class="nn">nilmtk.stats.electricity.single</span> <span class="kn">import</span> <span class="n">DEFAULT_MAX_DROPOUT_RATE</span><span class="p">,</span> <span class="n">usage_per_period</span>
+<span class="kn">import</span> <span class="nn">nilmtk.stats.electricity.single</span> <span class="kn">as</span> <span class="nn">single</span>
+<span class="kn">from</span> <span class="nn">nilmtk.exceptions</span> <span class="kn">import</span> <span class="n">NoSuitableMeasurementError</span><span class="p">,</span> <span class="n">NoCommonMeasurementError</span>
+<span class="kn">from</span> <span class="nn">nilmtk.utils</span> <span class="kn">import</span> <span class="n">apply_func_to_values_of_dicts</span>
+
+<div class="viewcode-block" id="find_common_measurements"><a class="viewcode-back" href="../../../../nilmtk.stats.electricity.html#nilmtk.stats.electricity.building.find_common_measurements">[docs]</a><span class="k">def</span> <span class="nf">find_common_measurements</span><span class="p">(</span><span class="n">electricity</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Finds common measurement contained in all electricity streams</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    electricity : nilmtk.sensors.electricity</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    list of common measurements</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c"># Measurements in first mains</span>
+    <span class="n">measurements</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">electricity</span><span class="o">.</span><span class="n">mains</span><span class="o">.</span><span class="n">values</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+
+    <span class="c"># Finding intersection with other mains</span>
+    <span class="k">for</span> <span class="n">main</span> <span class="ow">in</span> <span class="n">electricity</span><span class="o">.</span><span class="n">mains</span><span class="o">.</span><span class="n">itervalues</span><span class="p">():</span>
+        <span class="n">measurements</span> <span class="o">=</span> <span class="n">measurements</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span>
+            <span class="n">main</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+
+    <span class="c"># Finding intersection with appliances</span>
+    <span class="k">for</span> <span class="n">appliance</span> <span class="ow">in</span> <span class="n">electricity</span><span class="o">.</span><span class="n">appliances</span><span class="o">.</span><span class="n">itervalues</span><span class="p">():</span>
+        <span class="n">measurements</span> <span class="o">=</span> <span class="n">measurements</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span>
+            <span class="n">appliance</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">measurements</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="proportion_of_energy_submetered"><a class="viewcode-back" href="../../../../nilmtk.stats.electricity.html#nilmtk.stats.electricity.building.proportion_of_energy_submetered">[docs]</a><span class="k">def</span> <span class="nf">proportion_of_energy_submetered</span><span class="p">(</span><span class="n">electricity</span><span class="p">,</span>
+                                    <span class="n">sample_period_multiplier</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
+<span class="c">#                                    require_common_measurements=True):</span>
+    <span class="sd">&quot;&quot;&quot;Reports the proportion of energy in a building that is submetered.</span>
+
+<span class="sd">    Assumes that missing appliance data means that the appliance is off.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    electricity : nilmtk.sensors.electricity.Electricity</span>
+
+<span class="sd">    sample_period_multiplier : float, optional</span>
+<span class="sd">        Defines a &#39;gap&#39;.  Any gap &gt; sample_period x sample_period_multiplier</span>
+<span class="sd">        is counted as a gap.  Default = 4.</span>
+
+<span class="sd">    require_common_measurements : boolean, optional, default=True</span>
+<span class="sd">        If True then raise a NoCommonMeasurementsError exception if </span>
+<span class="sd">        there is not at least one shared</span>
+<span class="sd">        Measurement (e.g. (&#39;power&#39;, &#39;active&#39;)) across all channels.</span>
+<span class="sd">        If False then continue even if measurements do not match.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    float</span>
+<span class="sd">        0 = no energy submetered</span>
+<span class="sd">        1 = all energy submetered</span>
+<span class="sd">       &gt;1 = more energy submetered than is recorded on the mains channels!</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c"># TODO: get common measurements!</span>
+    <span class="c"># TODO: Handle circuits.</span>
+    <span class="c"># TODO: Handle wiring diagram.</span>
+
+    <span class="k">print</span><span class="p">(</span><span class="s">&quot;Calculating proportion of energy submetered...&quot;</span><span class="p">)</span>
+    <span class="n">total_mains_energy</span><span class="p">,</span> <span class="n">totals_per_appliance</span> <span class="o">=</span> <span class="n">energy_per_dataframe</span><span class="p">(</span>
+        <span class="n">electricity</span><span class="p">,</span> <span class="n">sample_period_multiplier</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">totals_per_appliance</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">/</span> <span class="n">total_mains_energy</span>
+
+</div>
+<div class="viewcode-block" id="proportion_per_appliance"><a class="viewcode-back" href="../../../../nilmtk.stats.electricity.html#nilmtk.stats.electricity.building.proportion_per_appliance">[docs]</a><span class="k">def</span> <span class="nf">proportion_per_appliance</span><span class="p">(</span><span class="n">electricity</span><span class="p">,</span> <span class="n">merge</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    merge : boolean, optional</span>
+<span class="sd">        If True then merge multiple instances of the same appliance name</span>
+<span class="sd">        and merge all appliances with &#39;light&#39; in their name.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Series, sorted by value</span>
+<span class="sd">       Keys are ApplianceNames.names if `merge` else ApplianceNames.names</span>
+<span class="sd">       Values are proportion of total energy expressed as a float</span>
+<span class="sd">       between 0 and 1.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">total_mains_energy</span><span class="p">,</span> <span class="n">totals_per_appliance</span> <span class="o">=</span> <span class="n">energy_per_dataframe</span><span class="p">(</span>
+        <span class="n">electricity</span><span class="p">)</span>
+    <span class="n">prop_per_appliance</span> <span class="o">=</span> <span class="n">totals_per_appliance</span> <span class="o">/</span> <span class="n">total_mains_energy</span>
+
+    <span class="k">if</span> <span class="n">merge</span><span class="p">:</span>
+        <span class="n">names</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="n">appliance</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">appliance</span> <span class="ow">in</span> <span class="n">prop_per_appliance</span><span class="o">.</span><span class="n">index</span><span class="p">])</span>
+
+        <span class="c"># Split names into lighting and non-lighting</span>
+        <span class="n">names_excl_lights</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">names_of_lights</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">names</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">([</span><span class="n">light_name</span> <span class="ow">in</span> <span class="n">name</span> <span class="k">for</span> <span class="n">light_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s">&#39;light&#39;</span><span class="p">,</span><span class="s">&#39;lamp&#39;</span><span class="p">]]):</span>
+                <span class="n">names_of_lights</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">names_excl_lights</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="c"># Merge non-lighting appliances</span>
+        <span class="n">ppa_merged</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">names_excl_lights</span><span class="p">:</span>
+            <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="n">ppa_merged</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">ppa_merged</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">+=</span> <span class="n">prop_per_appliance</span><span class="p">[(</span><span class="n">name</span><span class="p">,</span> <span class="n">i</span><span class="p">)]</span>
+                <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                    <span class="k">break</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="c"># Merge lighting</span>
+        <span class="n">ppa_merged</span><span class="p">[</span><span class="s">&#39;lighting&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">names_of_lights</span><span class="p">:</span>
+            <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">ppa_merged</span><span class="p">[</span><span class="s">&#39;lighting&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">prop_per_appliance</span><span class="p">[(</span><span class="n">name</span><span class="p">,</span> <span class="n">i</span><span class="p">)]</span>
+                <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                    <span class="k">break</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="n">prop_per_appliance</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">ppa_merged</span><span class="p">)</span>
+
+    <span class="n">prop_per_appliance</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">ascending</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">prop_per_appliance</span>
+
+</div>
+<div class="viewcode-block" id="energy_per_dataframe"><a class="viewcode-back" href="../../../../nilmtk.stats.electricity.html#nilmtk.stats.electricity.building.energy_per_dataframe">[docs]</a><span class="k">def</span> <span class="nf">energy_per_dataframe</span><span class="p">(</span><span class="n">electricity</span><span class="p">,</span> <span class="n">sample_period_multiplier</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s">&#39;kwh&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;pre-processes electricity and then gets total energy per channel, </span>
+<span class="sd">    after masking out all gaps in mains.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    mains_total_energy, totals_per_appliance</span>
+
+<span class="sd">    total_mains_energy : float</span>
+<span class="sd">    totals_per_appliance : pd.Series</span>
+<span class="sd">        each key is an ApplianceName</span>
+<span class="sd">        each value is total energy</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c"># TODO: this might be an ugly hack to resolve circular dependencies.</span>
+    <span class="kn">from</span> <span class="nn">nilmtk.preprocessing.electricity.building</span> <span class="kn">import</span> <span class="n">mask_appliances_with_mains</span>
+    <span class="kn">from</span> <span class="nn">nilmtk.preprocessing.electricity.single</span> <span class="kn">import</span> <span class="n">insert_zeros</span>
+
+    <span class="c"># remove &#39;unmetered&#39; and &#39;subpanels&#39; from appliances</span>
+    <span class="n">electricity</span><span class="o">.</span><span class="n">appliances</span> <span class="o">=</span> <span class="n">electricity</span><span class="o">.</span><span class="n">remove_channels_from_appliances</span><span class="p">()</span>
+
+    <span class="c"># Sum split mains and DualSupply appliances</span>
+    <span class="n">electricity</span> <span class="o">=</span> <span class="n">electricity</span><span class="o">.</span><span class="n">sum_split_supplies</span><span class="p">()</span>
+
+    <span class="c"># TODO: Select common measurements. Maybe use electricity.select_common_measurements?</span>
+    <span class="c"># MEASUREMENT_PREFERENCES = [Measurement(&#39;power&#39;, &#39;active&#39;),</span>
+    <span class="c">#                            Measurement(&#39;power&#39;, &#39;apparent&#39;)]</span>
+
+    <span class="c"># # Check if all channels share at least one Measurement (e.g. (&#39;power&#39;, &#39;active&#39;))</span>
+    <span class="c"># common_measurements = find_common_measurements(electricity)</span>
+    <span class="c"># common_measurement = None</span>
+    <span class="c"># for measurement_preference in MEASUREMENT_PREFERENCES:</span>
+    <span class="c">#     if measurement_preference in common_measurements:</span>
+    <span class="c">#         common_measurement = measurement_preference</span>
+    <span class="c">#         print(&quot;Using common_measurement:&quot;, common_measurement)</span>
+    <span class="c">#         break</span>
+    <span class="c"># if common_measurements is None and require_common_measurements:</span>
+    <span class="c">#     raise NoCommonMeasurementError</span>
+
+    <span class="c"># Find large gaps in mains data and ignore those gaps for all appliance channels</span>
+    <span class="n">electricity</span> <span class="o">=</span> <span class="n">mask_appliances_with_mains</span><span class="p">(</span><span class="n">electricity</span><span class="p">,</span> 
+                                             <span class="n">sample_period_multiplier</span><span class="p">)</span>
+
+    <span class="c"># Drop NaNs on all channels</span>
+    <span class="n">electricity</span> <span class="o">=</span> <span class="n">apply_func_to_values_of_dicts</span><span class="p">(</span><span class="n">electricity</span><span class="p">,</span> 
+                                                <span class="k">lambda</span> <span class="n">df</span><span class="p">:</span> <span class="n">df</span><span class="o">.</span><span class="n">dropna</span><span class="p">(),</span>
+                                                <span class="p">[</span><span class="s">&#39;appliances&#39;</span><span class="p">,</span> <span class="s">&#39;mains&#39;</span><span class="p">])</span>
+
+    <span class="c"># Insert_zeros on appliance data.</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">&quot;Inserting zeros... may take a little while...&quot;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">)</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+    <span class="n">single_insert_zeros</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">df</span><span class="p">:</span> <span class="n">insert_zeros</span><span class="p">(</span>
+        <span class="n">df</span><span class="p">,</span> <span class="n">sample_period_multiplier</span><span class="o">=</span><span class="n">sample_period_multiplier</span><span class="p">)</span>
+    <span class="n">electricity</span> <span class="o">=</span> <span class="n">apply_func_to_values_of_dicts</span><span class="p">(</span><span class="n">electricity</span><span class="p">,</span> <span class="n">single_insert_zeros</span><span class="p">,</span>
+                                                <span class="p">[</span><span class="s">&#39;appliances&#39;</span><span class="p">,</span> <span class="s">&#39;mains&#39;</span><span class="p">])</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">&quot;done inserting zeros&quot;</span><span class="p">)</span>
+
+    <span class="c"># Total energy used for mains</span>
+    <span class="n">total_mains_energy</span> <span class="o">=</span> <span class="n">get_total_energy_per_dict</span><span class="p">(</span><span class="n">electricity</span><span class="p">,</span> <span class="s">&#39;mains&#39;</span><span class="p">,</span> <span class="n">unit</span><span class="p">)</span>
+
+    <span class="n">totals_per_appliance</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">df</span> <span class="ow">in</span> <span class="n">electricity</span><span class="o">.</span><span class="n">appliances</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+        <span class="n">totals_per_appliance</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">single</span><span class="o">.</span><span class="n">energy</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="n">unit</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">total_mains_energy</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">totals_per_appliance</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="get_total_energy_per_dict"><a class="viewcode-back" href="../../../../nilmtk.stats.electricity.html#nilmtk.stats.electricity.building.get_total_energy_per_dict">[docs]</a><span class="k">def</span> <span class="nf">get_total_energy_per_dict</span><span class="p">(</span><span class="n">electricity</span><span class="p">,</span> <span class="n">dict_</span><span class="o">=</span><span class="s">&#39;mains&#39;</span><span class="p">,</span>  <span class="n">unit</span><span class="o">=</span><span class="s">&#39;kwh&#39;</span><span class="p">):</span>
+    <span class="n">total_energy</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="k">for</span> <span class="n">df</span> <span class="ow">in</span> <span class="n">electricity</span><span class="o">.</span><span class="n">__dict__</span><span class="p">[</span><span class="n">dict_</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+        <span class="n">energy_for_df</span> <span class="o">=</span> <span class="n">single</span><span class="o">.</span><span class="n">energy</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">unit</span><span class="p">)</span>
+        <span class="n">total_energy</span> <span class="o">+=</span> <span class="n">energy_for_df</span>
+    <span class="k">return</span> <span class="n">total_energy</span>
+
+</div>
+<div class="viewcode-block" id="average_energy"><a class="viewcode-back" href="../../../../nilmtk.stats.electricity.html#nilmtk.stats.electricity.building.average_energy">[docs]</a><span class="k">def</span> <span class="nf">average_energy</span><span class="p">(</span><span class="n">electricity</span><span class="p">,</span>
+                   <span class="n">max_dropout_rate</span><span class="o">=</span><span class="n">DEFAULT_MAX_DROPOUT_RATE</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    float</span>
+<span class="sd">       Average energy usage for this building in kWh per day.</span>
+
+<span class="sd">    .. warning:: NOT IMPLEMENTED YET</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+</div>
+<div class="viewcode-block" id="average_energy_per_appliance"><a class="viewcode-back" href="../../../../nilmtk.stats.electricity.html#nilmtk.stats.electricity.building.average_energy_per_appliance">[docs]</a><span class="k">def</span> <span class="nf">average_energy_per_appliance</span><span class="p">(</span><span class="n">electricity</span><span class="p">,</span>
+                                 <span class="n">max_dropout_rate</span><span class="o">=</span><span class="n">DEFAULT_MAX_DROPOUT_RATE</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Reports the average energy consumed by each appliance.</span>
+
+<span class="sd">    For each appliance, we ignore any days which have a dropout rate</span>
+<span class="sd">    above `max_dropout_rate`.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    electricity:</span>
+<span class="sd">        nilmtk.sensors.electricity.Electricity</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    av_energy:</span>
+<span class="sd">        pd.Series</span>
+<span class="sd">        Each element of the index is an ApplianceName</span>
+<span class="sd">        Values are average energy in kWh per day</span>
+
+<span class="sd">    .. warning:: NOT IMPLEMENTED YET</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+</div>
+<div class="viewcode-block" id="find_appliances_contribution"><a class="viewcode-back" href="../../../../nilmtk.stats.electricity.html#nilmtk.stats.electricity.building.find_appliances_contribution">[docs]</a><span class="k">def</span> <span class="nf">find_appliances_contribution</span><span class="p">(</span><span class="n">electricity</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Reports dataframe of form (appliance : contribution) type</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    electricity : nilmtk.sensors.Elictricity</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    series_contribution: pandas.DataFrame</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c"># Finding number of mains</span>
+    <span class="n">num_mains</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">electricity</span><span class="o">.</span><span class="n">mains</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+
+    <span class="c"># If more than 1 mains exists, add them up</span>
+    <span class="n">combined_mains</span> <span class="o">=</span> <span class="n">electricity</span><span class="o">.</span><span class="n">mains</span><span class="o">.</span><span class="n">values</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">num_mains</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_mains</span><span class="p">):</span>
+            <span class="n">combined_mains</span> <span class="o">+=</span> <span class="n">electricity</span><span class="o">.</span><span class="n">mains</span><span class="o">.</span><span class="n">values</span><span class="p">()[</span><span class="n">i</span><span class="p">]</span>
+
+    <span class="c"># Finding common measurements</span>
+    <span class="n">common_measurements</span> <span class="o">=</span> <span class="n">find_common_measurements</span><span class="p">(</span><span class="n">electricity</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">common_measurements</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&#39;Cannot proceed further; no common attribute&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">Measurement</span><span class="p">(</span><span class="s">&#39;power&#39;</span><span class="p">,</span> <span class="s">&#39;active&#39;</span><span class="p">)</span> <span class="ow">in</span> <span class="n">common_measurements</span><span class="p">:</span>
+        <span class="n">common_measurement</span> <span class="o">=</span> <span class="n">Measurement</span><span class="p">(</span><span class="s">&#39;power&#39;</span><span class="p">,</span> <span class="s">&#39;active&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c"># Choose the first attribute for comparison</span>
+        <span class="n">common_measurement</span> <span class="o">=</span> <span class="n">common_measurements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">print</span><span class="p">(</span><span class="s">&quot;Common Measurement: &quot;</span><span class="p">,</span> <span class="n">common_measurement</span><span class="p">)</span>
+
+    <span class="c"># Applying function over all appliances</span>
+    <span class="n">series_appliances</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">appliance</span> <span class="ow">in</span> <span class="n">electricity</span><span class="o">.</span><span class="n">appliances</span><span class="p">:</span>
+        <span class="n">series_appliances</span><span class="p">[</span><span class="n">appliance</span><span class="p">]</span> <span class="o">=</span> <span class="n">electricity</span><span class="o">.</span><span class="n">appliances</span><span class="p">[</span>
+            <span class="n">appliance</span><span class="p">][</span><span class="n">common_measurement</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+
+    <span class="n">series_appliances</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">series_appliances</span><span class="p">)</span>
+
+    <span class="c"># Applying function over all mains summed up</span>
+    <span class="n">series_mains</span> <span class="o">=</span> <span class="n">combined_mains</span><span class="p">[</span><span class="n">common_measurement</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+
+    <span class="c"># Contribution per appliance</span>
+    <span class="n">series_appliances_contribution</span> <span class="o">=</span> <span class="n">series_appliances</span> <span class="o">/</span> <span class="n">series_mains</span>
+
+    <span class="k">return</span> <span class="n">series_appliances_contribution</span>
+
+</div>
+<div class="viewcode-block" id="top_k_appliances"><a class="viewcode-back" href="../../../../nilmtk.stats.electricity.html#nilmtk.stats.electricity.building.top_k_appliances">[docs]</a><span class="k">def</span> <span class="nf">top_k_appliances</span><span class="p">(</span><span class="n">electricity</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="s">&#39;desc&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Reports the top k appliances by &#39;how&#39; attribute</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    electricity:</span>
+<span class="sd">        nilmtk.sensors.electricity.Electricity</span>
+<span class="sd">    k:</span>
+<span class="sd">        Number of results to be returned, int</span>
+<span class="sd">        Default value:</span>
+<span class="sd">            3</span>
+<span class="sd">    how:</span>
+<span class="sd">        Function by which to order top k appliances</span>
+<span class="sd">        Default:</span>
+<span class="sd">            numpy.mean</span>
+<span class="sd">    order:</span>
+<span class="sd">        Order whether top k from highest(desc) or from lowest(asc)</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    top_k:</span>
+<span class="sd">        pd.Series</span>
+<span class="sd">        appliance:</span>
+<span class="sd">            contribution</span>
+
+<span class="sd">    # TODO: Allow arbitrary functions</span>
+<span class="sd">    # TODO: Handle case when number of appliances is less than default k=3</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">series_appliances_contribution</span> <span class="o">=</span> <span class="n">find_appliances_contribution</span><span class="p">(</span><span class="n">electricity</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">order</span> <span class="o">==</span> <span class="s">&#39;asc&#39;</span><span class="p">:</span>
+        <span class="c"># Sorting</span>
+        <span class="n">series_appliances_contribution</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">series_appliances_contribution</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">ascending</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">series_appliances_contribution</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="plot_missing_samples_using_rectangles"><a class="viewcode-back" href="../../../../nilmtk.stats.electricity.html#nilmtk.stats.electricity.building.plot_missing_samples_using_rectangles">[docs]</a><span class="k">def</span> <span class="nf">plot_missing_samples_using_rectangles</span><span class="p">(</span><span class="n">electricity</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">fig</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                                          <span class="n">color</span><span class="o">=</span><span class="s">&#39;k&#39;</span><span class="p">):</span>
+    <span class="c"># TODO: docstrings!</span>
+    <span class="c"># TODO: better default date format</span>
+
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">electricity</span><span class="o">.</span><span class="n">appliances</span><span class="p">)</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">electricity</span><span class="o">.</span><span class="n">mains</span><span class="p">)</span>
+    <span class="n">ylabels</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">appliances</span> <span class="o">=</span> <span class="n">electricity</span><span class="o">.</span><span class="n">remove_channels_from_appliances</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">appliance_name</span><span class="p">,</span> <span class="n">appliance_df</span> <span class="ow">in</span> <span class="n">appliances</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+        <span class="n">ax</span><span class="p">,</span> <span class="n">fig</span> <span class="o">=</span> <span class="n">single</span><span class="o">.</span><span class="n">plot_missing_samples</span><span class="p">(</span>
+            <span class="n">appliance_df</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">fig</span><span class="p">,</span> <span class="n">bottom</span><span class="o">=</span><span class="n">i</span> <span class="o">+</span> <span class="mf">0.1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>
+        <span class="n">ylabels</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">appliance_name</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">appliance_name</span><span class="o">.</span><span class="n">instance</span><span class="p">))</span>
+        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="k">for</span> <span class="n">mains_name</span><span class="p">,</span> <span class="n">mains_df</span> <span class="ow">in</span> <span class="n">electricity</span><span class="o">.</span><span class="n">mains</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+        <span class="n">ax</span><span class="p">,</span> <span class="n">fig</span> <span class="o">=</span> <span class="n">single</span><span class="o">.</span><span class="n">plot_missing_samples</span><span class="p">(</span>
+            <span class="n">mains_df</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">fig</span><span class="p">,</span> <span class="n">bottom</span><span class="o">=</span><span class="n">i</span> <span class="o">+</span> <span class="mf">0.1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>
+        <span class="n">ylabels</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s">&#39;mains&#39;</span><span class="p">,</span> <span class="n">mains_name</span><span class="o">.</span><span class="n">split</span><span class="p">,</span> <span class="n">mains_name</span><span class="o">.</span><span class="n">meter</span><span class="p">))</span>
+        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="n">i</span> <span class="o">-=</span> <span class="mi">1</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mf">1.5</span><span class="p">))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">electricity</span><span class="o">.</span><span class="n">get_start_and_end_dates</span><span class="p">())</span>
+
+    <span class="k">def</span> <span class="nf">formatter</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">pos</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ylabels</span><span class="p">[</span><span class="n">x</span><span class="p">]</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_major_formatter</span><span class="p">(</span><span class="n">FuncFormatter</span><span class="p">(</span><span class="n">formatter</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_yticklabels</span><span class="p">():</span>
+        <span class="n">item</span><span class="o">.</span><span class="n">set_fontsize</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="plot_missing_samples_using_bitmap"><a class="viewcode-back" href="../../../../nilmtk.stats.electricity.html#nilmtk.stats.electricity.building.plot_missing_samples_using_bitmap">[docs]</a><span class="k">def</span> <span class="nf">plot_missing_samples_using_bitmap</span><span class="p">(</span><span class="n">electricity</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">fig</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                                      <span class="n">fig_width</span><span class="o">=</span><span class="mi">800</span><span class="p">,</span> <span class="n">add_colorbar</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+                                      <span class="n">cmap</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">Blues</span><span class="p">,</span>
+                                      <span class="n">gain</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">horiz_bars</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    fig_width : int, default=800</span>
+<span class="sd">        The width of the plotted figure, in pixels</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c"># TODO: docstring!!!</span>
+
+    <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">fig</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span>
+
+    <span class="n">dataset_start</span><span class="p">,</span> <span class="n">dataset_end</span> <span class="o">=</span> <span class="n">electricity</span><span class="o">.</span><span class="n">get_start_and_end_dates</span><span class="p">()</span>
+    <span class="n">sec_per_pixel</span> <span class="o">=</span> <span class="p">(</span><span class="n">dataset_end</span> <span class="o">-</span> <span class="n">dataset_start</span><span class="p">)</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span> <span class="o">/</span> <span class="n">fig_width</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">&quot;Seconds per pixel = {:.1f}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sec_per_pixel</span><span class="p">))</span>
+    <span class="n">rule_code</span> <span class="o">=</span> <span class="s">&#39;{:d}S&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">sec_per_pixel</span><span class="p">)))</span>
+
+    <span class="n">missing_samples_per_period</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">dict_of_dfs</span> <span class="ow">in</span> <span class="p">[</span><span class="n">electricity</span><span class="o">.</span><span class="n">remove_channels_from_appliances</span><span class="p">(),</span>
+                        <span class="n">electricity</span><span class="o">.</span><span class="n">circuits</span><span class="p">,</span>
+                        <span class="n">electricity</span><span class="o">.</span><span class="n">mains</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">df</span> <span class="ow">in</span> <span class="n">dict_of_dfs</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">name_str</span> <span class="o">=</span> <span class="s">&#39;{} {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">name</span><span class="o">.</span><span class="n">instance</span><span class="p">)</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="n">name_str</span> <span class="o">=</span> <span class="s">&#39;mains {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">)</span>
+
+            <span class="n">missing_samples_per_period</span><span class="p">[</span><span class="n">name_str</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">single</span><span class="o">.</span><span class="n">dropout_rate_per_period</span><span class="p">(</span>
+                    <span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="p">,</span> <span class="n">rule</span><span class="o">=</span><span class="n">rule_code</span><span class="p">,</span>
+                    <span class="n">window_start</span><span class="o">=</span><span class="n">dataset_start</span><span class="p">,</span> <span class="n">window_end</span><span class="o">=</span><span class="n">dataset_end</span><span class="p">))</span>
+
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">missing_samples_per_period</span><span class="p">)</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">img</span> <span class="o">*</span> <span class="n">gain</span>
+    <span class="n">img</span><span class="p">[</span><span class="n">img</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">start_datenum</span> <span class="o">=</span> <span class="n">mdates</span><span class="o">.</span><span class="n">date2num</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">end_datenum</span> <span class="o">=</span> <span class="n">mdates</span><span class="o">.</span><span class="n">date2num</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">im</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="s">&#39;auto&#39;</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s">&#39;none&#39;</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s">&#39;lower&#39;</span><span class="p">,</span>
+                   <span class="n">extent</span><span class="o">=</span><span class="p">(</span><span class="n">start_datenum</span><span class="p">,</span> <span class="n">end_datenum</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">size</span><span class="p">),</span>
+                   <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">add_colorbar</span><span class="p">:</span>
+        <span class="n">max_rate</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">gain</span>
+        <span class="k">def</span> <span class="nf">func_formatter</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">pos</span><span class="p">):</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="s">&#39;&#39;</span>
+            <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">s</span> <span class="o">=</span> <span class="s">&#39;&#39;&#39;\ge&#39;&#39;&#39;</span>
+            <span class="n">s</span> <span class="o">+=</span> <span class="s">&#39;{:.0%}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">x</span><span class="o">/</span><span class="n">gain</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">s</span>
+        <span class="n">fmt</span> <span class="o">=</span> <span class="n">FuncFormatter</span><span class="p">(</span><span class="n">func_formatter</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">ticks</span><span class="o">=</span><span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span> <span class="n">format</span><span class="o">=</span><span class="n">fmt</span><span class="p">)</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s">&#39;Proportion of lost samples&#39;</span><span class="p">)</span>
+
+    <span class="c"># y axis</span>
+    <span class="k">def</span> <span class="nf">formatter</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">pos</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="n">x</span><span class="p">]</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_major_formatter</span><span class="p">(</span><span class="n">FuncFormatter</span><span class="p">(</span><span class="n">formatter</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_yticklabels</span><span class="p">():</span>
+        <span class="n">item</span><span class="o">.</span><span class="n">set_fontsize</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
+
+    <span class="c"># x axis</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="n">start_datenum</span><span class="p">,</span> <span class="n">end_datenum</span><span class="p">])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s">&#39;Time (day/month/year)&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([</span><span class="n">start_datenum</span><span class="p">,</span> <span class="p">(</span><span class="n">start_datenum</span><span class="o">+</span><span class="n">end_datenum</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> 
+                   <span class="n">end_datenum</span><span class="p">])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_major_formatter</span><span class="p">(</span><span class="n">mdates</span><span class="o">.</span><span class="n">DateFormatter</span><span class="p">(</span><span class="s">&#39;</span><span class="si">%d</span><span class="s">/%m/%y&#39;</span><span class="p">,</span>
+                                                      <span class="n">tz</span><span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tzinfo</span><span class="p">))</span>
+
+<span class="c">#    fig.autofmt_xdate()</span>
+    <span class="c"># Plot horizontal lines separating appliances</span>
+    <span class="k">if</span> <span class="n">horiz_bars</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">start_datenum</span><span class="p">,</span> <span class="n">end_datenum</span><span class="p">],</span>
+                    <span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s">&#39;white&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">ax</span>
+
+</div>
+<div class="viewcode-block" id="get_dropout_rates"><a class="viewcode-back" href="../../../../nilmtk.stats.electricity.html#nilmtk.stats.electricity.building.get_dropout_rates">[docs]</a><span class="k">def</span> <span class="nf">get_dropout_rates</span><span class="p">(</span><span class="n">electricity</span><span class="p">,</span> <span class="n">ignore_gaps</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    electricity : Electricity object</span>
+<span class="sd">    ignore_gaps : boolean</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    list of dropout rates, one per dataframe</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">&quot;Calculating dropout rates...&quot;</span><span class="p">)</span>
+    <span class="n">dropout_func</span> <span class="o">=</span> <span class="p">(</span><span class="n">single</span><span class="o">.</span><span class="n">get_dropout_rate_ignore_gaps</span> <span class="k">if</span> <span class="n">ignore_gaps</span> 
+                    <span class="k">else</span> <span class="n">single</span><span class="o">.</span><span class="n">get_dropout_rate</span><span class="p">)</span>
+    <span class="n">dropout_rates</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">attribute</span> <span class="ow">in</span> <span class="p">[</span><span class="s">&#39;appliances&#39;</span><span class="p">,</span> <span class="s">&#39;circuits&#39;</span><span class="p">,</span> <span class="s">&#39;mains&#39;</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">df</span> <span class="ow">in</span> <span class="n">electricity</span><span class="o">.</span><span class="n">__dict__</span><span class="p">[</span><span class="n">attribute</span><span class="p">]</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+            <span class="k">print</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">dropout_rates</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dropout_func</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">))</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="k">print</span><span class="p">(</span><span class="s">&quot;Error occurred when processing attribute={}, name={}&quot;</span>
+                      <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">attribute</span><span class="p">,</span> <span class="n">name</span><span class="p">),</span> <span class="nb">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+                <span class="k">raise</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">&quot;done calculating dropout rates&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">dropout_rates</span>
+    
+</div>
+<div class="viewcode-block" id="proportion_of_time_where_more_energy_submetered"><a class="viewcode-back" href="../../../../nilmtk.stats.electricity.html#nilmtk.stats.electricity.building.proportion_of_time_where_more_energy_submetered">[docs]</a><span class="k">def</span> <span class="nf">proportion_of_time_where_more_energy_submetered</span><span class="p">(</span><span class="n">building</span><span class="p">,</span> 
+                                                    <span class="n">min_proportion_submetered</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span>
+                                                    <span class="n">require_common_indicies</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Report the proportion of time slices where the sum of all the appliances</span>
+<span class="sd">    submetered is greater than the mains * `min_proportion_submetered`</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    building : Building</span>
+<span class="sd">    min_proportion_submetered : float [0,1], optional</span>
+<span class="sd">        default = 0.7</span>
+<span class="sd">    require_common_indicies : boolean, optional</span>
+<span class="sd">        default = True.  Decides what to use for the &#39;total duration&#39; when </span>
+<span class="sd">        calculating the proportion of time.  If False then use the total</span>
+<span class="sd">        duration between the first and last samples. If True then only</span>
+<span class="sd">        use the non-NaN timeslices after finding the intersection of the</span>
+<span class="sd">        appliance and mains indicies.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    float [0,1] proportion of time</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c"># mask appliance with mains &amp; remove large gaps in mains</span>
+    <span class="c"># (take a look at proportion_of_time_where_more_energy_submetered)</span>
+    <span class="c"># put mains and appliances into one big DF (make sure we take the correct appliances!)</span>
+    <span class="c"># downsample to 10 minute chunks, using mean</span>
+    <span class="c"># </span>
+    <span class="c"># OR....</span>
+    <span class="c"># ignore large gaps in mains... then...</span>
+    <span class="c"># chop into 10 min chunks and pass these to proportion_of_energy_submetered.</span>
+    <span class="c"># maybe can do this efficiently by putting everything into a big dataframe</span>
+    <span class="c"># and using indicies_of_periods, and then extracting these chunks back</span>
+    <span class="c"># into an Electricity object.</span>
+
+    <span class="n">building</span><span class="o">.</span><span class="n">utility</span><span class="o">.</span><span class="n">electric</span> <span class="o">=</span> <span class="n">building</span><span class="o">.</span><span class="n">utility</span><span class="o">.</span><span class="n">electric</span><span class="o">.</span><span class="n">sum_split_supplies</span><span class="p">()</span>
+    
+    <span class="kn">import</span> <span class="nn">nilmtk.preprocessing.electricity.building</span> <span class="kn">as</span> <span class="nn">prepb</span>
+
+    <span class="c"># downsample mains, circuits and appliances</span>
+    <span class="n">b_downsampled</span> <span class="o">=</span> <span class="n">prepb</span><span class="o">.</span><span class="n">downsample</span><span class="p">(</span><span class="n">building</span><span class="p">,</span> <span class="s">&#39;1T&#39;</span><span class="p">)</span>
+    
+    <span class="n">electric</span> <span class="o">=</span> <span class="n">b_downsampled</span><span class="o">.</span><span class="n">utility</span><span class="o">.</span><span class="n">electric</span>
+    <span class="n">appliance_df</span> <span class="o">=</span> <span class="n">electric</span><span class="o">.</span><span class="n">get_dataframe_of_appliances</span><span class="p">()</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+    <span class="n">mains_df</span> <span class="o">=</span> <span class="n">electric</span><span class="o">.</span><span class="n">get_dataframe_of_mains</span><span class="p">()</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+    <span class="n">common_index</span> <span class="o">=</span> <span class="n">mains_df</span><span class="o">.</span><span class="n">index</span> <span class="o">&amp;</span> <span class="n">appliance_df</span><span class="o">.</span><span class="n">index</span>
+    <span class="n">appliance_df</span> <span class="o">=</span> <span class="n">appliance_df</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="n">common_index</span><span class="p">]</span>
+    <span class="n">mains_df</span> <span class="o">=</span> <span class="n">mains_df</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="n">common_index</span><span class="p">]</span>
+    <span class="n">appliances_summed</span> <span class="o">=</span> <span class="n">appliance_df</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">timeslices_above_thresh</span> <span class="o">=</span> <span class="n">appliances_summed</span> <span class="o">&gt;</span> <span class="p">(</span><span class="n">mains_df</span> <span class="o">*</span> <span class="n">min_proportion_submetered</span><span class="p">)</span>
+
+    <span class="n">mins_above_thresh</span> <span class="o">=</span> <span class="n">timeslices_above_thresh</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">secs_above_thresh</span> <span class="o">=</span> <span class="n">mins_above_thresh</span> <span class="o">*</span> <span class="mi">60</span>
+    
+    <span class="c"># Calc total duration</span>
+    <span class="k">if</span> <span class="n">require_common_indicies</span><span class="p">:</span>
+        <span class="n">total_duration_secs</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">common_index</span><span class="p">)</span> <span class="o">*</span> <span class="mi">60</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="o">=</span> <span class="n">building</span><span class="o">.</span><span class="n">utility</span><span class="o">.</span><span class="n">electric</span><span class="o">.</span><span class="n">get_start_and_end_dates</span><span class="p">()</span>
+        <span class="n">total_duration_secs</span> <span class="o">=</span> <span class="p">(</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">secs_above_thresh</span> <span class="o">/</span> <span class="n">total_duration_secs</span></div>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2014, nilmtk authors.<br/>
+      Last updated on Mar 26, 2014.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

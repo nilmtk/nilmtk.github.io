@@ -1,0 +1,772 @@
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>nilmtk.sensors package &mdash; nilmtk 0.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-3.0.0/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-3.0.0/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="_static/js/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-3.0.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="nilmtk 0.0.1 documentation" href="index.html" />
+    <link rel="up" title="nilmtk API Reference" href="nilmtk.html" />
+    <link rel="next" title="nilmtk.stats package" href="nilmtk.stats.html" />
+    <link rel="prev" title="nilmtk.preprocessing.electricity package" href="nilmtk.preprocessing.electricity.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="index.html">nilmtk</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.0.1</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            <li class="divider-vertical"></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a href="index.html"
+     class="dropdown-toggle"
+     data-toggle="dropdown">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+    ><ul>
+<li class="toctree-l1"><a class="reference internal" href="nilmtk.html">nilmtk API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="userguide.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contribute.html">Contributing</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"><ul>
+<li><a class="reference internal" href="#">nilmtk.sensors package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-nilmtk.sensors.ambient">nilmtk.sensors.ambient module</a></li>
+<li><a class="reference internal" href="#module-nilmtk.sensors.door">nilmtk.sensors.door module</a></li>
+<li><a class="reference internal" href="#module-nilmtk.sensors.electricity">nilmtk.sensors.electricity module</a></li>
+<li><a class="reference internal" href="#module-nilmtk.sensors.gas">nilmtk.sensors.gas module</a></li>
+<li><a class="reference internal" href="#module-nilmtk.sensors.pir">nilmtk.sensors.pir module</a></li>
+<li><a class="reference internal" href="#module-nilmtk.sensors.temperature">nilmtk.sensors.temperature module</a></li>
+<li><a class="reference internal" href="#module-nilmtk.sensors.utility">nilmtk.sensors.utility module</a></li>
+<li><a class="reference internal" href="#module-nilmtk.sensors.water">nilmtk.sensors.water module</a></li>
+<li><a class="reference internal" href="#module-nilmtk.sensors">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+  <li><a href="nilmtk.preprocessing.electricity.html"
+         title="Previous Chapter: nilmtk.preprocessing.electricity package">&laquo; nilmtk.preproces...</a></li>
+  <li><a href="nilmtk.stats.html"
+         title="Next Chapter: nilmtk.stats package">nilmtk.stats pac... &raquo;</a></li>
+            
+            
+            
+            
+              <li>
+<div id="sourcelink">
+  <a href="_sources/nilmtk.sensors.txt"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      
+  <div class="section" id="nilmtk-sensors-package">
+<h1>nilmtk.sensors package<a class="headerlink" href="#nilmtk-sensors-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-nilmtk.sensors.ambient">
+<span id="nilmtk-sensors-ambient-module"></span><h2>nilmtk.sensors.ambient module<a class="headerlink" href="#module-nilmtk.sensors.ambient" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="nilmtk.sensors.ambient.Ambient">
+<em class="property">class </em><tt class="descclassname">nilmtk.sensors.ambient.</tt><tt class="descname">Ambient</tt><a class="reference internal" href="_modules/nilmtk/sensors/ambient.html#Ambient"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.sensors.ambient.Ambient" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Store and process utility information for a building.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Attributes :</th><td class="field-body"><p class="first"><strong>pir</strong> :</p>
+<p><strong>door</strong> :</p>
+<p class="last"><strong>temperature</strong> :</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-nilmtk.sensors.door">
+<span id="nilmtk-sensors-door-module"></span><h2>nilmtk.sensors.door module<a class="headerlink" href="#module-nilmtk.sensors.door" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="nilmtk.sensors.door.DoorStatus">
+<em class="property">class </em><tt class="descclassname">nilmtk.sensors.door.</tt><tt class="descname">DoorStatus</tt><a class="reference internal" href="_modules/nilmtk/sensors/door.html#DoorStatus"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.sensors.door.DoorStatus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-nilmtk.sensors.electricity">
+<span id="nilmtk-sensors-electricity-module"></span><h2>nilmtk.sensors.electricity module<a class="headerlink" href="#module-nilmtk.sensors.electricity" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="nilmtk.sensors.electricity.ApplianceName">
+<em class="property">class </em><tt class="descclassname">nilmtk.sensors.electricity.</tt><tt class="descname">ApplianceName</tt><a class="headerlink" href="#nilmtk.sensors.electricity.ApplianceName" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">tuple</span></tt></p>
+<dl class="attribute">
+<dt id="nilmtk.sensors.electricity.ApplianceName.instance">
+<tt class="descname">instance</tt><a class="headerlink" href="#nilmtk.sensors.electricity.ApplianceName.instance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="nilmtk.sensors.electricity.ApplianceName.name">
+<tt class="descname">name</tt><a class="headerlink" href="#nilmtk.sensors.electricity.ApplianceName.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="nilmtk.sensors.electricity.CircuitName">
+<em class="property">class </em><tt class="descclassname">nilmtk.sensors.electricity.</tt><tt class="descname">CircuitName</tt><a class="headerlink" href="#nilmtk.sensors.electricity.CircuitName" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">tuple</span></tt></p>
+<dl class="attribute">
+<dt id="nilmtk.sensors.electricity.CircuitName.meter">
+<tt class="descname">meter</tt><a class="headerlink" href="#nilmtk.sensors.electricity.CircuitName.meter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 2</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="nilmtk.sensors.electricity.CircuitName.name">
+<tt class="descname">name</tt><a class="headerlink" href="#nilmtk.sensors.electricity.CircuitName.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="nilmtk.sensors.electricity.CircuitName.split">
+<tt class="descname">split</tt><a class="headerlink" href="#nilmtk.sensors.electricity.CircuitName.split" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="nilmtk.sensors.electricity.DualSupply">
+<em class="property">class </em><tt class="descclassname">nilmtk.sensors.electricity.</tt><tt class="descname">DualSupply</tt><a class="headerlink" href="#nilmtk.sensors.electricity.DualSupply" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">tuple</span></tt></p>
+<dl class="attribute">
+<dt id="nilmtk.sensors.electricity.DualSupply.measurement">
+<tt class="descname">measurement</tt><a class="headerlink" href="#nilmtk.sensors.electricity.DualSupply.measurement" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="nilmtk.sensors.electricity.DualSupply.supply">
+<tt class="descname">supply</tt><a class="headerlink" href="#nilmtk.sensors.electricity.DualSupply.supply" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="nilmtk.sensors.electricity.Electricity">
+<em class="property">class </em><tt class="descclassname">nilmtk.sensors.electricity.</tt><tt class="descname">Electricity</tt><a class="reference internal" href="_modules/nilmtk/sensors/electricity.html#Electricity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.sensors.electricity.Electricity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Store and process electricity for a building.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Attributes :</th><td class="field-body"><p class="first"><strong>mains</strong> : dict of DataFrames, optional</p>
+<blockquote>
+<div><p>The power measurements taken from the level furthest upstream.
+Each key is a MainsName namedtuple with keys:</p>
+<ul class="simple">
+<li><cite>split</cite> is the phase or split.  Indexed from 1.</li>
+<li><cite>meter</cite> is the numeric ID of the meter. Indexed from 1.</li>
+</ul>
+<p>Each value is a DataFrame of shape (n_samples, n_features)
+where each column name is a Measurement namedtuple (please
+definition of Measurement at the top of this file for a
+description of what can go into a Measurement namedtuple).</p>
+<p>DataFrame.index is a timezone-aware pd.DateTimeIndex.
+Power values are of type np.float32.
+DataFrame.name should be identical to the <cite>mains</cite> dict key which
+maps to this DataFrame.</p>
+<p>For example, if we had a dataset recorded in the UK where the home has
+only a single phase supply but uses two separate meters, the first of
+which measures active and reactive power; the second of which measures only
+active, then we&#8217;d use:</p>
+<dl class="docutils">
+<dt><a href="#id1"><span class="problematic" id="id2">`</span></a>mains = {MainsName(split=1, meter=1):</dt>
+<dd><blockquote class="first">
+<div><blockquote>
+<div><dl class="docutils">
+<dt>DataFrame(columns=[Measurement(&#8216;power&#8217;,&#8217;active&#8217;),</dt>
+<dd><p class="first last">Measurement(&#8216;power&#8217;,&#8217;reactive&#8217;)]),</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="docutils">
+<dt>MainsName(split=1, meter=2):</dt>
+<dd><p class="first last">DataFrame(columns=[Measurement(&#8216;power&#8217;,&#8217;active&#8217;)])</p>
+</dd>
+</dl>
+</div></blockquote>
+<p class="last">}`</p>
+</dd>
+</dl>
+</div></blockquote>
+<p><strong>circuits</strong> : dict of DataFrames, optional</p>
+<blockquote>
+<div><p>The power measurements taken from midstream.
+Each key is a CircuitName namedtuple with fields:</p>
+<ul class="simple">
+<li><cite>name</cite> is the standard name for this circuit.</li>
+<li><cite>split</cite> is the index for this circuit.  Indexed from 1.</li>
+<li><cite>meter</cite> is the numeric ID of the meter. Indexed from 1.
+Indexes into the <cite>meters</cite> dict.</li>
+</ul>
+<p>Each value is a DataFrame of shape (n_samples, n_features)
+where each column name is a Measurement namedtuple (please
+definition of Measurement at the top of this file for a
+description of what can go into a Measurement namedtuple).</p>
+<p>DataFrame.index is a timezone-aware pd.DateTimeIndex.
+Power values are of type np.float32.
+DataFrame.name should be identical to the <cite>circuits</cite> dict key which
+maps to this DataFrame.</p>
+<p>For example:</p>
+<dl class="docutils">
+<dt><a href="#id3"><span class="problematic" id="id4">`</span></a>circuits = {CircuitName(circuit=&#8217;lighting&#8217;, split=1):</dt>
+<dd><p class="first last">DataFrame(columns=[Measurement(&#8216;power&#8217;,&#8217;active&#8217;)])}`</p>
+</dd>
+</dl>
+</div></blockquote>
+<p><strong>appliances</strong> : dict of DataFrames, optional</p>
+<blockquote>
+<div><p>Power measurements taken from the furthest downstream in the dataset.
+Each key is an ApplianceName namedtuple with fields:
+* <cite>name</cite> is a standard appliance name.  For a list of valid</p>
+<blockquote>
+<div><p>names, see nilmtk/docs/standard_names/appliances.txt</p>
+</div></blockquote>
+<ul>
+<li><dl class="first docutils">
+<dt><cite>instance</cite> is the index for that appliance within this building.</dt>
+<dd><p class="first last">Indexed from 1.</p>
+</dd>
+</dl>
+</li>
+</ul>
+<p>For example, if a house has two TVs, whose power is recorded separately,
+then use these two different keys: <cite>(&#8216;tv&#8217;, 1)</cite> and <cite>(&#8216;tv&#8217;, 2)</cite></p>
+<p>If multiple appliances are monitored on one channel (e.g. tv + dvd)
+then use a tuple of appliances as the key, e.g.:</p>
+<p><cite>((&#8216;tv&#8217;, 1), (&#8216;dvd player&#8217;, 1))</cite></p>
+<p>Each value of the <cite>appliances</cite> dict is a DataFrame of
+shape (n_samples, n_features) where each column name is either:</p>
+<ul>
+<li><p class="first">a Measurement namedtuple (please definition of Measurement at the top
+of this file for a description of what can go into
+a Measurement namedtuple).</p>
+</li>
+<li><p class="first">a DualSupply namedtuple with fields:
+* measurement : Measurement namedtuple
+* supply : int. Index of supply. Start from 1. Does not have to map</p>
+<blockquote>
+<div><p>directly to the index used to number the mains splits if this
+information is not known.</p>
+</div></blockquote>
+<p>DualSupply is used for appliances like American ovens which are
+are single appliances but pull power from both &#8220;splits&#8221;.</p>
+</li>
+<li><p class="first">Or &#8216;state&#8217; (where 0 is &#8216;off&#8217;). This is used when the ground-truth of
+the appliance state is known; for example in the BLUEd dataset.</p>
+</li>
+</ul>
+<p>DataFrame.index is a timezone-aware pd.DateTimeIndex.
+Power values are of type np.float32; <cite>state</cite> values are np.int32
+DataFrame.name should be identical to the <cite>appliances</cite> dict key which
+maps to this DataFrame.</p>
+<p>Note that <cite>appliances</cite> always stores measurements from the meters
+in the dataset placed furthest downstream.  So, for example, in the case
+of the REDD dataset where we have measurements of &#8216;mains&#8217; and &#8216;circuits&#8217;,
+these &#8216;circuits&#8217; channels are put into <cite>Electricity.appliances</cite> because
+REDD&#8217;s &#8216;circuits&#8217; channels are the furthest downstream.</p>
+</div></blockquote>
+<p><strong>appliance_estimates</strong> : Panel (3D matrix), optional</p>
+<blockquote>
+<div><p>Output from the NILM disaggregation algorithm.
+The index is a timezone-aware pd.DateTimeIndex
+The first two dimensions are time and ApplianceName.
+The third dimension describes, for each appliance and for each time:
+* <cite>power</cite> : np.float32. Estimated power consumption in Watts.
+* <cite>state</cite> : np.int32, optional.
+* <cite>confidence</cite> : np.float32 [0,1], optional.
+* <cite>power_prob_dist</cite> : object describing the probability dist, optional
+* <cite>state_prob_dist</cite> : object describing the probability dist, optional</p>
+</div></blockquote>
+<p><strong>metadata</strong> : dict, optional.  All this information should be ground-truth,</p>
+<blockquote class="last">
+<div><p>not automatically inferred.  Automatically inferred data should go into
+<cite>inferred_metadata</cite>.</p>
+<dl class="docutils">
+<dt>nominal_mains_voltage <span class="classifier-delimiter">:</span> <span class="classifier">np.float32, optional</span></dt>
+<dd><p class="first last">The nominal mains voltage in volts.</p>
+</dd>
+<dt>mains_wiring <span class="classifier-delimiter">:</span> <span class="classifier">networkx.DiGraph, optional</span></dt>
+<dd><p class="first last">Nodes are ApplianceNames or CircuitNames or MainsNames.
+Edges describe the power wiring between mains, circuits and
+appliances.
+Edge direction indicates the flow of energy.  i.e. edges point
+towards loads.</p>
+</dd>
+<dt>control_connections <span class="classifier-delimiter">:</span> <span class="classifier">networkx.DiGraph, optional</span></dt>
+<dd><p class="first last">Each node is an ApplianceName.
+Edges represent data / audio / video / control connections between
+appliances.  Edges can be single-directional or bi-directional.
+For example, a dvd player would have an edge pointing towards the
+tv.  A wifi router would have bi-directional edges to laptops,
+printers, smart TVs etc.</p>
+</dd>
+<dt>appliances <span class="classifier-delimiter">:</span> <span class="classifier">dict, optional</span></dt>
+<dd><p class="first last">Metadata describing each appliance.  This should be ground truth data,
+not automatically inferred information.
+Each key is an ApplianceName(&lt;appliance name&gt;, &lt;instance&gt;) namedtuple.
+Each value is list of dicts. Each dict describes metadata for that
+specific appliance.  Multiple dicts are used to express replacing
+appliances over time (in which case the items should be in
+chronological order so the last element of the list is always the
+most recent.)  Each dict has &#8216;general&#8217; appliance fields (which
+all appliances can have) and fields which are specific to that
+class of appliance.</p>
+</dd>
+</dl>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="nilmtk.sensors.electricity.Electricity.count_appliances">
+<tt class="descname">count_appliances</tt><big>(</big><em>appliance_name</em><big>)</big><a class="reference internal" href="_modules/nilmtk/sensors/electricity.html#Electricity.count_appliances"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.sensors.electricity.Electricity.count_appliances" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns :</th><td class="field-body"><strong>n_appliances</strong> : int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.sensors.electricity.Electricity.crop">
+<tt class="descname">crop</tt><big>(</big><em>start_datetime=None</em>, <em>end_datetime=None</em><big>)</big><a class="reference internal" href="_modules/nilmtk/sensors/electricity.html#Electricity.crop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.sensors.electricity.Electricity.crop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Just crops all dataframes in appliances, circuits and mains.
+Does not remove any channels.  Performs in-place, does not return
+anything.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><strong>start_datetime, end_datetime</strong> : strings or datetime objects, optional</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.sensors.electricity.Electricity.drop_duplicate_indicies">
+<tt class="descname">drop_duplicate_indicies</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/sensors/electricity.html#Electricity.drop_duplicate_indicies"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.sensors.electricity.Electricity.drop_duplicate_indicies" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes duplicate indicies in all dataframes in appliances,
+circuits and mains; in place.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.sensors.electricity.Electricity.get_appliance">
+<tt class="descname">get_appliance</tt><big>(</big><em>appliance_name</em>, <em>measurement='all'</em><big>)</big><a class="reference internal" href="_modules/nilmtk/sensors/electricity.html#Electricity.get_appliance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.sensors.electricity.Electricity.get_appliance" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>appliance_name</strong> : string</p>
+<p><strong>measurement</strong> : string or list of strings, optional</p>
+<blockquote>
+<div><p>{&#8216;apparent&#8217;, &#8216;active&#8217;, &#8216;reactive&#8217;, &#8216;voltage&#8217;, &#8216;all&#8217;}</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><p class="first last"><strong>appliance_data</strong> : DataFrame</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.sensors.electricity.Electricity.get_dataframe_of_appliances">
+<tt class="descname">get_dataframe_of_appliances</tt><big>(</big><em>measurement=Measurement(physical_quantity='power'</em>, <em>type='active')</em><big>)</big><a class="reference internal" href="_modules/nilmtk/sensors/electricity.html#Electricity.get_dataframe_of_appliances"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.sensors.electricity.Electricity.get_dataframe_of_appliances" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a pandas.DataFrame of all appliance data.</p>
+<p>If any DualSupply appliances are present then sum together the two
+supplies (after checking if <cite>dualsupply.measurement == measurement</cite>).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>measurement</strong> : Measurement, optional</p>
+<blockquote>
+<div><p>default=Measurement(&#8216;power&#8217;, &#8216;active&#8217;)
+if <cite>measurement=None</cite> then just get the first column per DataFrame.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><p class="first"><strong>pandas.DataFrame</strong> :</p>
+<blockquote class="last">
+<div><p>Index is the same as the index used in the appliances DataFrames.
+Each column name is an ApplianceName namedtuple.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.sensors.electricity.Electricity.get_dataframe_of_mains">
+<tt class="descname">get_dataframe_of_mains</tt><big>(</big><em>measurement=Measurement(physical_quantity='power'</em>, <em>type='active')</em><big>)</big><a class="reference internal" href="_modules/nilmtk/sensors/electricity.html#Electricity.get_dataframe_of_mains"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.sensors.electricity.Electricity.get_dataframe_of_mains" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a pandas.DataFrame of all mains data</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.sensors.electricity.Electricity.get_diff_between_aggregate_and_appliances">
+<tt class="descname">get_diff_between_aggregate_and_appliances</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/sensors/electricity.html#Electricity.get_diff_between_aggregate_and_appliances"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.sensors.electricity.Electricity.get_diff_between_aggregate_and_appliances" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.sensors.electricity.Electricity.get_start_and_end_dates">
+<tt class="descname">get_start_and_end_dates</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/sensors/electricity.html#Electricity.get_start_and_end_dates"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.sensors.electricity.Electricity.get_start_and_end_dates" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the start and end dates covering the data in
+appliances, circuits and mains.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns :</th><td class="field-body"><strong>[start, end]</strong> : pd.Timestamp</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.sensors.electricity.Electricity.get_vampire_power">
+<tt class="descname">get_vampire_power</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/sensors/electricity.html#Electricity.get_vampire_power"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.sensors.electricity.Electricity.get_vampire_power" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.sensors.electricity.Electricity.plot_appliance_activity">
+<tt class="descname">plot_appliance_activity</tt><big>(</big><em>source</em><big>)</big><a class="reference internal" href="_modules/nilmtk/sensors/electricity.html#Electricity.plot_appliance_activity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.sensors.electricity.Electricity.plot_appliance_activity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot a compact representation of all appliance activity.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.sensors.electricity.Electricity.remove_channels_from_appliances">
+<tt class="descname">remove_channels_from_appliances</tt><big>(</big><em>channels_to_remove=None</em><big>)</big><a class="reference internal" href="_modules/nilmtk/sensors/electricity.html#Electricity.remove_channels_from_appliances"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.sensors.electricity.Electricity.remove_channels_from_appliances" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a dict with the same structure as <cite>electricity.appliances</cite>.
+If <cite>electricity.appliances</cite> contains any &#8216;unmetered&#8217; channels then 
+returns a copy of <cite>electricity.appliances</cite> with the unmetered channel
+removed.  Otherwise just returns a reference to <cite>appliances</cite>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.sensors.electricity.Electricity.remove_voltage">
+<tt class="descname">remove_voltage</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/sensors/electricity.html#Electricity.remove_voltage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.sensors.electricity.Electricity.remove_voltage" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.sensors.electricity.Electricity.simplify">
+<tt class="descname">simplify</tt><big>(</big><em>measurement=None</em>, <em>normalise=False</em>, <em>downsample=None</em>, <em>in_place=False</em><big>)</big><a class="reference internal" href="_modules/nilmtk/sensors/electricity.html#Electricity.simplify"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.sensors.electricity.Electricity.simplify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a simplified Electricity object where mains is represented
+by a DataFrame with a single column and each appliance is also 
+a single column.</p>
+<ul class="simple">
+<li>Sums together split-phase supplies</li>
+<li>If multiple meters measure the same mains parameters then selects
+the meter with the highest sample rate</li>
+<li>Optionally normalises by voltage</li>
+</ul>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>measurement</strong> : Measurement, optional</p>
+<blockquote>
+<div><p>If None then will attempt to use the same Measurement
+for mains and appliances.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><p class="first last"><strong>electricity_copy</strong> : Electricity</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.sensors.electricity.Electricity.sum_split_supplies">
+<tt class="descname">sum_split_supplies</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/sensors/electricity.html#Electricity.sum_split_supplies"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.sensors.electricity.Electricity.sum_split_supplies" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a new Electricity object where everything is the same
+EXCEPT that split-supply mains are summed; and DualSupply
+appliances are summed.  The main use case is data from North America,
+e.g. REDD.  Does not touch <cite>circuits</cite>.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">for mains data, this function assumes that there are
+only 1 or 2 splits and only a single meter per split.
+For DualSupply appliances, we assume only 2 supplies and a
+single meter per appliance.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.sensors.electricity.Electricity.to_json">
+<tt class="descname">to_json</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/sensors/electricity.html#Electricity.to_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.sensors.electricity.Electricity.to_json" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="nilmtk.sensors.electricity.MainsName">
+<em class="property">class </em><tt class="descclassname">nilmtk.sensors.electricity.</tt><tt class="descname">MainsName</tt><a class="headerlink" href="#nilmtk.sensors.electricity.MainsName" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">tuple</span></tt></p>
+<dl class="attribute">
+<dt id="nilmtk.sensors.electricity.MainsName.meter">
+<tt class="descname">meter</tt><a class="headerlink" href="#nilmtk.sensors.electricity.MainsName.meter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="nilmtk.sensors.electricity.MainsName.split">
+<tt class="descname">split</tt><a class="headerlink" href="#nilmtk.sensors.electricity.MainsName.split" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="nilmtk.sensors.electricity.Measurement">
+<em class="property">class </em><tt class="descclassname">nilmtk.sensors.electricity.</tt><tt class="descname">Measurement</tt><a class="headerlink" href="#nilmtk.sensors.electricity.Measurement" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">tuple</span></tt></p>
+<dl class="attribute">
+<dt id="nilmtk.sensors.electricity.Measurement.physical_quantity">
+<tt class="descname">physical_quantity</tt><a class="headerlink" href="#nilmtk.sensors.electricity.Measurement.physical_quantity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="nilmtk.sensors.electricity.Measurement.type">
+<tt class="descname">type</tt><a class="headerlink" href="#nilmtk.sensors.electricity.Measurement.type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="nilmtk.sensors.electricity.get_dual_supply_columns">
+<tt class="descclassname">nilmtk.sensors.electricity.</tt><tt class="descname">get_dual_supply_columns</tt><big>(</big><em>appliance_df</em><big>)</big><a class="reference internal" href="_modules/nilmtk/sensors/electricity.html#get_dual_supply_columns"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.sensors.electricity.get_dual_supply_columns" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns list of columns which are dual supply</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="nilmtk.sensors.electricity.get_two_dataframes_of_dualsupply">
+<tt class="descclassname">nilmtk.sensors.electricity.</tt><tt class="descname">get_two_dataframes_of_dualsupply</tt><big>(</big><em>appliance_df</em><big>)</big><a class="reference internal" href="_modules/nilmtk/sensors/electricity.html#get_two_dataframes_of_dualsupply"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.sensors.electricity.get_two_dataframes_of_dualsupply" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates two appliance dataframes from a dual supply</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>appliance_df :</strong> :</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><p class="first"><strong>df_1</strong> :</p>
+<p class="last"><strong>df_2</strong> :</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="nilmtk.sensors.electricity.sum_dual_supply">
+<tt class="descclassname">nilmtk.sensors.electricity.</tt><tt class="descname">sum_dual_supply</tt><big>(</big><em>dict_of_appliances</em><big>)</big><a class="reference internal" href="_modules/nilmtk/sensors/electricity.html#sum_dual_supply"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.sensors.electricity.sum_dual_supply" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sums together any DualSupply appliances.</p>
+<p>The result is as if each DualSupply appliance had been metered with
+a single meter (summing both supplies together).  Non-DualSupply
+appliances are copied over untouched.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><strong>dict_of_appliances</strong> : dict of pandas.DataFrames</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><strong>new_dict_of_appliances</strong> : dict of pandas.DataFrames</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-nilmtk.sensors.gas">
+<span id="nilmtk-sensors-gas-module"></span><h2>nilmtk.sensors.gas module<a class="headerlink" href="#module-nilmtk.sensors.gas" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="nilmtk.sensors.gas.Gas">
+<em class="property">class </em><tt class="descclassname">nilmtk.sensors.gas.</tt><tt class="descname">Gas</tt><a class="reference internal" href="_modules/nilmtk/sensors/gas.html#Gas"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.sensors.gas.Gas" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-nilmtk.sensors.pir">
+<span id="nilmtk-sensors-pir-module"></span><h2>nilmtk.sensors.pir module<a class="headerlink" href="#module-nilmtk.sensors.pir" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="nilmtk.sensors.pir.PIR">
+<em class="property">class </em><tt class="descclassname">nilmtk.sensors.pir.</tt><tt class="descname">PIR</tt><a class="reference internal" href="_modules/nilmtk/sensors/pir.html#PIR"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.sensors.pir.PIR" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-nilmtk.sensors.temperature">
+<span id="nilmtk-sensors-temperature-module"></span><h2>nilmtk.sensors.temperature module<a class="headerlink" href="#module-nilmtk.sensors.temperature" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="nilmtk.sensors.temperature.Temperature">
+<em class="property">class </em><tt class="descclassname">nilmtk.sensors.temperature.</tt><tt class="descname">Temperature</tt><a class="reference internal" href="_modules/nilmtk/sensors/temperature.html#Temperature"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.sensors.temperature.Temperature" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-nilmtk.sensors.utility">
+<span id="nilmtk-sensors-utility-module"></span><h2>nilmtk.sensors.utility module<a class="headerlink" href="#module-nilmtk.sensors.utility" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="nilmtk.sensors.utility.Utility">
+<em class="property">class </em><tt class="descclassname">nilmtk.sensors.utility.</tt><tt class="descname">Utility</tt><a class="reference internal" href="_modules/nilmtk/sensors/utility.html#Utility"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.sensors.utility.Utility" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Store and process utility information for a building.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Attributes :</th><td class="field-body"><p class="first"><strong>electric</strong> : nilmtk Electricity object</p>
+<p><strong>gas</strong> : Series, optional</p>
+<blockquote>
+<div><p>gas consumption in kWh</p>
+</div></blockquote>
+<p><strong>water</strong> : Series, optional</p>
+<blockquote class="last">
+<div><p>water consumption in cubic meters</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="nilmtk.sensors.utility.Utility.to_json">
+<tt class="descname">to_json</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/sensors/utility.html#Utility.to_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.sensors.utility.Utility.to_json" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-nilmtk.sensors.water">
+<span id="nilmtk-sensors-water-module"></span><h2>nilmtk.sensors.water module<a class="headerlink" href="#module-nilmtk.sensors.water" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="nilmtk.sensors.water.Water">
+<em class="property">class </em><tt class="descclassname">nilmtk.sensors.water.</tt><tt class="descname">Water</tt><a class="reference internal" href="_modules/nilmtk/sensors/water.html#Water"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.sensors.water.Water" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-nilmtk.sensors">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-nilmtk.sensors" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2014, nilmtk authors.<br/>
+      Last updated on Mar 26, 2014.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

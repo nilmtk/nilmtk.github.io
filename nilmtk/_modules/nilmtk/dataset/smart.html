@@ -1,0 +1,358 @@
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>nilmtk.dataset.smart &mdash; nilmtk 0.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/bootstrap-3.0.0/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/bootstrap-3.0.0/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../../../_static/js/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="../../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../../_static/bootstrap-3.0.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../../_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="nilmtk 0.0.1 documentation" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../index.html">nilmtk</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.0.1</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            <li class="divider-vertical"></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a href="../../../index.html"
+     class="dropdown-toggle"
+     data-toggle="dropdown">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+    ><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../nilmtk.html">nilmtk API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../userguide.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute.html">Contributing</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"></ul>
+</li>
+              
+            
+            
+              
+            
+            
+            
+            
+              <li></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      
+  <h1>Source code for nilmtk.dataset.smart</h1><div class="highlight"><pre>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">division</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+
+<span class="kn">from</span> <span class="nn">nilmtk.sensors.electricity</span> <span class="kn">import</span> <span class="n">CircuitName</span><span class="p">,</span> <span class="n">ApplianceName</span><span class="p">,</span> <span class="n">Measurement</span><span class="p">,</span> <span class="n">MainsName</span>
+<span class="kn">from</span> <span class="nn">nilmtk.building</span> <span class="kn">import</span> <span class="n">Building</span>
+<span class="kn">from</span> <span class="nn">nilmtk.dataset</span> <span class="kn">import</span> <span class="n">DataSet</span>
+<span class="kn">from</span> <span class="nn">nilmtk.utils</span> <span class="kn">import</span> <span class="n">get_immediate_subdirectories</span>
+
+
+<span class="c"># Column headers for circuits data (including mains)</span>
+<span class="n">names_circuits</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;CircuitName&#39;</span><span class="p">,</span> <span class="s">&#39;CircuitNumber&#39;</span><span class="p">,</span> <span class="s">&#39;TimestampUTC&#39;</span><span class="p">,</span>
+                  <span class="s">&#39;RealPowerWatts&#39;</span><span class="p">,</span> <span class="s">&#39;ApparentPowerVAs&#39;</span><span class="p">]</span>
+
+<span class="n">names_meter</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;MeterName&#39;</span><span class="p">,</span> <span class="s">&#39;TimestampUTC&#39;</span><span class="p">,</span> <span class="s">&#39;RealPowerWatts&#39;</span><span class="p">,</span> <span class="s">&#39;CircuitNumber&#39;</span>
+               <span class="p">]</span>
+
+<span class="c"># Mapping from smart* to nilmtk</span>
+<span class="n">MAINS_NAME_MAP</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">&#39;grid&#39;</span><span class="p">:</span> <span class="n">MainsName</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="n">APPLIANCE_NAME_MAP</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">&#39;ac&#39;</span><span class="p">:</span> <span class="n">ApplianceName</span><span class="p">(</span><span class="s">&#39;air conditioner&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="s">&#39;toaster&#39;</span><span class="p">:</span> <span class="n">ApplianceName</span><span class="p">(</span><span class="s">&#39;toaster&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="s">&#39;waterpump&#39;</span><span class="p">:</span> <span class="n">ApplianceName</span><span class="p">(</span><span class="s">&#39;water pump&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="s">&#39;nitelight&#39;</span><span class="p">:</span> <span class="n">ApplianceName</span><span class="p">(</span><span class="s">&#39;light&#39;</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>
+    <span class="s">&#39;laptop&#39;</span><span class="p">:</span> <span class="n">ApplianceName</span><span class="p">(</span><span class="s">&#39;computer laptop&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="s">&#39;telephone&#39;</span><span class="p">:</span> <span class="n">ApplianceName</span><span class="p">(</span><span class="s">&#39;phone&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="s">&#39;wii&#39;</span><span class="p">:</span> <span class="n">ApplianceName</span><span class="p">(</span><span class="s">&#39;entertainment&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="s">&#39;batteries&#39;</span><span class="p">:</span> <span class="n">ApplianceName</span><span class="p">(</span><span class="s">&#39;misc&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="s">&#39;printer&#39;</span><span class="p">:</span> <span class="n">ApplianceName</span><span class="p">(</span><span class="s">&#39;printer&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="s">&#39;video&#39;</span><span class="p">:</span> <span class="n">ApplianceName</span><span class="p">(</span><span class="s">&#39;entertainment unit&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="s">&#39;lamp2&#39;</span><span class="p">:</span> <span class="n">ApplianceName</span><span class="p">(</span><span class="s">&#39;light&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+    <span class="s">&#39;lamp1&#39;</span><span class="p">:</span> <span class="n">ApplianceName</span><span class="p">(</span><span class="s">&#39;light&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+    <span class="s">&#39;tassimo&#39;</span><span class="p">:</span> <span class="n">ApplianceName</span><span class="p">(</span><span class="s">&#39;misc&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+    <span class="s">&#39;timemachine&#39;</span><span class="p">:</span> <span class="n">ApplianceName</span><span class="p">(</span><span class="s">&#39;misc&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+    <span class="s">&#39;microwave&#39;</span><span class="p">:</span> <span class="n">ApplianceName</span><span class="p">(</span><span class="s">&#39;microwave&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="s">&#39;monitor&#39;</span><span class="p">:</span> <span class="n">ApplianceName</span><span class="p">(</span><span class="s">&#39;monitor&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="s">&#39;clock&#39;</span><span class="p">:</span> <span class="n">ApplianceName</span><span class="p">(</span><span class="s">&#39;misc&#39;</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>
+    <span class="s">&#39;tv&#39;</span><span class="p">:</span> <span class="n">ApplianceName</span><span class="p">(</span><span class="s">&#39;entertainment unit&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+    <span class="s">&#39;hrv&#39;</span><span class="p">:</span> <span class="n">ApplianceName</span><span class="p">(</span><span class="s">&#39;hrv&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="s">&#39;coffeepot&#39;</span><span class="p">:</span> <span class="n">ApplianceName</span><span class="p">(</span><span class="s">&#39;coffee maker&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="s">&#39;freezer&#39;</span><span class="p">:</span> <span class="n">ApplianceName</span><span class="p">(</span><span class="s">&#39;fridge&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="s">&#39;lamp&#39;</span><span class="p">:</span> <span class="n">ApplianceName</span><span class="p">(</span><span class="s">&#39;light&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="s">&#39;dehumidifier&#39;</span><span class="p">:</span> <span class="n">ApplianceName</span><span class="p">(</span><span class="s">&#39;dehumidifier&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="s">&#39;noise&#39;</span><span class="p">:</span> <span class="n">ApplianceName</span><span class="p">(</span><span class="s">&#39;misc&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
+    <span class="s">&#39;ipod&#39;</span><span class="p">:</span> <span class="n">ApplianceName</span><span class="p">(</span><span class="s">&#39;entertainment unit&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+    <span class="s">&#39;subwoofer&#39;</span><span class="p">:</span> <span class="n">ApplianceName</span><span class="p">(</span><span class="s">&#39;entertainment unit&#39;</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>
+    <span class="s">&#39;tivo&#39;</span><span class="p">:</span> <span class="n">ApplianceName</span><span class="p">(</span><span class="s">&#39;misc&#39;</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span>
+    <span class="s">&#39;clock1&#39;</span><span class="p">:</span> <span class="n">ApplianceName</span><span class="p">(</span><span class="s">&#39;misc&#39;</span><span class="p">,</span> <span class="mi">7</span><span class="p">),</span>
+    <span class="s">&#39;macmini&#39;</span><span class="p">:</span> <span class="n">ApplianceName</span><span class="p">(</span><span class="s">&#39;computer desktop&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="s">&#39;fan&#39;</span><span class="p">:</span> <span class="n">ApplianceName</span><span class="p">(</span><span class="s">&#39;fan&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="s">&#39;cablebox&#39;</span><span class="p">:</span> <span class="n">ApplianceName</span><span class="p">(</span><span class="s">&#39;entertainment unit&#39;</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>
+    <span class="s">&#39;desklamp&#39;</span><span class="p">:</span> <span class="n">ApplianceName</span><span class="p">(</span><span class="s">&#39;light&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
+    <span class="s">&#39;refrigerator&#39;</span><span class="p">:</span> <span class="n">ApplianceName</span><span class="p">(</span><span class="s">&#39;refrigerator&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+    <span class="s">&#39;cablemodem&#39;</span><span class="p">:</span> <span class="n">ApplianceName</span><span class="p">(</span><span class="s">&#39;entertainment unit&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
+    <span class="s">&#39;nightstand2&#39;</span><span class="p">:</span> <span class="n">ApplianceName</span><span class="p">(</span><span class="s">&#39;misc&#39;</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span>
+    <span class="s">&#39;washingmachine&#39;</span><span class="p">:</span> <span class="n">ApplianceName</span><span class="p">(</span><span class="s">&#39;washing machine&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="s">&#39;dvd&#39;</span><span class="p">:</span> <span class="n">ApplianceName</span><span class="p">(</span><span class="s">&#39;entertainment&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
+    <span class="s">&#39;iphone1&#39;</span><span class="p">:</span> <span class="n">ApplianceName</span><span class="p">(</span><span class="s">&#39;misc&#39;</span><span class="p">,</span> <span class="mi">9</span><span class="p">),</span>
+    <span class="s">&#39;roku&#39;</span><span class="p">:</span> <span class="n">ApplianceName</span><span class="p">(</span><span class="s">&#39;misc&#39;</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+    <span class="s">&#39;panini&#39;</span><span class="p">:</span> <span class="n">ApplianceName</span><span class="p">(</span><span class="s">&#39;misc&#39;</span><span class="p">,</span> <span class="mi">11</span><span class="p">),</span>
+    <span class="s">&#39;receiver&#39;</span><span class="p">:</span> <span class="n">ApplianceName</span><span class="p">(</span><span class="s">&#39;misc&#39;</span><span class="p">,</span> <span class="mi">12</span><span class="p">),</span>
+    <span class="s">&#39;clockphone&#39;</span><span class="p">:</span> <span class="n">ApplianceName</span><span class="p">(</span><span class="s">&#39;misc&#39;</span><span class="p">,</span> <span class="mi">13</span><span class="p">)</span>
+<span class="p">}</span>
+
+
+<div class="viewcode-block" id="find_appliance_nilmtk_name"><a class="viewcode-back" href="../../../nilmtk.dataset.html#nilmtk.dataset.smart.find_appliance_nilmtk_name">[docs]</a><span class="k">def</span> <span class="nf">find_appliance_nilmtk_name</span><span class="p">(</span><span class="n">appliance_name</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">APPLIANCE_NAME_MAP</span><span class="p">[</span><span class="n">appliance_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&quot;:&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]]</span>
+
+</div>
+<div class="viewcode-block" id="circuit_name_mapping"><a class="viewcode-back" href="../../../nilmtk.dataset.html#nilmtk.dataset.smart.circuit_name_mapping">[docs]</a><span class="k">def</span> <span class="nf">circuit_name_mapping</span><span class="p">(</span><span class="n">circuit_name</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">CircuitName</span><span class="p">(</span><span class="n">circuit_name</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="c"># Building name mapping</span></div>
+<span class="n">building_name_mapping</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">&#39;A&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s">&#39;B&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="s">&#39;C&#39;</span><span class="p">:</span> <span class="mi">3</span>
+<span class="p">}</span>
+
+
+<div class="viewcode-block" id="load_labels"><a class="viewcode-back" href="../../../nilmtk.dataset.html#nilmtk.dataset.smart.load_labels">[docs]</a><span class="k">def</span> <span class="nf">load_labels</span><span class="p">(</span><span class="n">data_dir</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Uses unique entries in one of csv file to obtain labels</span>
+<span class="sd">        Arguments</span>
+<span class="sd">        ---------</span>
+<span class="sd">        data_dir : str</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        labels : List</span>
+<span class="sd">            of circuit names</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c"># List of csvs in the directory</span>
+    <span class="n">list_csv</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">data_dir</span> <span class="o">+</span> <span class="s">&#39;/*-circuit/*.csv&#39;</span><span class="p">)</span>
+    <span class="c"># Reaaing first CSV</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">list_csv</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">header</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                     <span class="n">names</span><span class="o">=</span><span class="n">names_circuits</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+    <span class="c"># Assuming first CSV has all appliances</span>
+    <span class="n">labels</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">CircuitName</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span>
+    <span class="k">return</span> <span class="n">labels</span>
+
+</div>
+<div class="viewcode-block" id="Smart"><a class="viewcode-back" href="../../../nilmtk.dataset.html#nilmtk.dataset.smart.Smart">[docs]</a><span class="k">class</span> <span class="nc">Smart</span><span class="p">(</span><span class="n">DataSet</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;Load data from Smart*&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Smart</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s">&#39;name&#39;</span><span class="p">:</span> <span class="s">&#39;Smart*&#39;</span><span class="p">,</span>
+            <span class="s">&#39;full_name&#39;</span><span class="p">:</span> <span class="s">&#39;UMass Smart* Home Data Set&#39;</span><span class="p">,</span>
+            <span class="s">&#39;urls&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;http://traces.cs.umass.edu/index.php/Smart/Smart&#39;</span><span class="p">],</span>
+            <span class="c">#&#39;citations&#39;:</span>
+            <span class="c">#&#39;geographic_coordinates&#39;: (, )</span>
+            <span class="s">&#39;timezone&#39;</span><span class="p">:</span> <span class="s">&#39;US/Eastern&#39;</span>
+        <span class="p">}</span>
+
+    <span class="k">def</span> <span class="nf">_pre_process_dataframe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">):</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_drop_circuit_number</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sort_index</span><span class="p">()</span>  <span class="c"># raw data isn&#39;t always sorted</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">tz_convert</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s">&#39;timezone&#39;</span><span class="p">])</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rename_columns</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+        <span class="c"># COnvert to 32bits</span>
+        <span class="c">#df = df.astype(&#39;float32&#39;)</span>
+        <span class="k">return</span> <span class="n">df</span>
+
+    <span class="k">def</span> <span class="nf">_rename_columns</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Rename columns from smart* to nilmtk&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">df</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span>
+            <span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;RealPowerWatts&#39;</span><span class="p">:</span> <span class="n">Measurement</span><span class="p">(</span><span class="s">&#39;power&#39;</span><span class="p">,</span> <span class="s">&#39;active&#39;</span><span class="p">),</span>
+                     <span class="s">&#39;ApparentPowerVAs&#39;</span><span class="p">:</span> <span class="n">Measurement</span><span class="p">(</span><span class="s">&#39;power&#39;</span><span class="p">,</span> <span class="s">&#39;apparent&#39;</span><span class="p">)})</span>
+
+    <span class="k">def</span> <span class="nf">_drop_circuit_number</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Drops circuit number and name from columns&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="s">&quot;CircuitName&quot;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s">&quot;CircuitNumber&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s">&quot;CircuitName&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s">&quot;MeterName&quot;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s">&quot;MeterName&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s">&quot;CircuitNumber&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">df</span>
+
+<div class="viewcode-block" id="Smart.load_building"><a class="viewcode-back" href="../../../nilmtk.dataset.html#nilmtk.dataset.smart.Smart.load_building">[docs]</a>    <span class="k">def</span> <span class="nf">load_building</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root_directory</span><span class="p">,</span> <span class="n">building_name</span><span class="p">):</span>
+        <span class="n">building</span> <span class="o">=</span> <span class="n">Building</span><span class="p">()</span>
+        <span class="n">building_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root_directory</span><span class="p">,</span> <span class="n">building_name</span><span class="p">)</span>
+        <span class="c"># Finds house number i.e. A, B or C; then maps it to 1,2,3</span>
+        <span class="n">building_name</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span>
+            <span class="s">&#39;home(?P&lt;building_name&gt;\w+)&#39;</span><span class="p">,</span> <span class="n">building_dir</span><span class="p">)</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s">&#39;building_name&#39;</span><span class="p">)</span>
+        <span class="n">labels</span> <span class="o">=</span> <span class="n">load_labels</span><span class="p">(</span><span class="n">building_dir</span><span class="p">)</span>
+
+        <span class="c"># --------Loading data from circuits- mains and circuit------#</span>
+
+        <span class="c"># Finding all CSVs</span>
+        <span class="n">list_csv</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">building_dir</span> <span class="o">+</span> <span class="s">&#39;/*-circuit/*.csv&#39;</span><span class="p">)</span>
+        <span class="c"># List of dataframes</span>
+        <span class="n">df_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c"># Iterating over all CSVs and appending to list of dataframes</span>
+        <span class="k">for</span> <span class="n">csv</span> <span class="ow">in</span> <span class="n">list_csv</span><span class="p">:</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">csv</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                             <span class="n">names</span><span class="o">=</span><span class="n">names_circuits</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+            <span class="c"># Converting the index to DatetimeIndex</span>
+            <span class="n">df</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span>
+                <span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span> <span class="o">*</span> <span class="mf">1E9</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span> <span class="n">utc</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+            <span class="c"># Append to list of dfs</span>
+            <span class="n">df_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+        <span class="c"># Merging all dfs</span>
+        <span class="n">combined_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">df_list</span><span class="p">)</span>
+
+        <span class="c"># Getting all the mains data</span>
+        <span class="n">mains_df</span> <span class="o">=</span> <span class="n">combined_df</span><span class="p">[</span><span class="n">combined_df</span><span class="p">[</span><span class="s">&quot;CircuitName&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s">&quot;Grid&quot;</span><span class="p">]</span>
+        <span class="n">mains_df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pre_process_dataframe</span><span class="p">(</span><span class="n">mains_df</span><span class="p">)</span>
+        <span class="n">building</span><span class="o">.</span><span class="n">utility</span><span class="o">.</span><span class="n">electric</span><span class="o">.</span><span class="n">mains</span><span class="p">[</span><span class="n">MainsName</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)]</span> <span class="o">=</span> <span class="n">mains_df</span>
+
+        <span class="c"># Dropping data from combined_df which contained information about</span>
+        <span class="c"># mains</span>
+        <span class="n">combined_df</span> <span class="o">=</span> <span class="n">combined_df</span><span class="p">[</span><span class="n">combined_df</span><span class="p">[</span><span class="s">&quot;CircuitName&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s">&quot;Grid&quot;</span><span class="p">]</span>
+
+        <span class="c"># Grouping circuits data</span>
+        <span class="n">circuit_df_groups</span> <span class="o">=</span> <span class="n">combined_df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s">&#39;CircuitName&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">df</span> <span class="ow">in</span> <span class="n">circuit_df_groups</span><span class="p">:</span>
+            <span class="c"># Getting nilmtk name</span>
+            <span class="n">circuit_name</span> <span class="o">=</span> <span class="n">circuit_name_mapping</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pre_process_dataframe</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+            <span class="n">building</span><span class="o">.</span><span class="n">utility</span><span class="o">.</span><span class="n">electric</span><span class="o">.</span><span class="n">circuits</span><span class="p">[</span><span class="n">circuit_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span>
+
+        <span class="c"># --------Loading data from meter------#</span>
+        <span class="n">list_csv</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">building_dir</span> <span class="o">+</span> <span class="s">&#39;/*-meter/*.csv&#39;</span><span class="p">)</span>
+        <span class="c"># List of dataframes</span>
+        <span class="n">df_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c"># Iterating over all CSVs and appending to list of dataframes</span>
+        <span class="k">for</span> <span class="n">csv</span> <span class="ow">in</span> <span class="n">list_csv</span><span class="p">:</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">csv</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                             <span class="n">names</span><span class="o">=</span><span class="n">names_meter</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="c"># Converting the index to DatetimeIndex</span>
+            <span class="n">df</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span>
+                <span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span> <span class="o">*</span> <span class="mf">1E9</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span> <span class="n">utc</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+            <span class="c"># Append to list of dfs</span>
+            <span class="n">df_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+        <span class="c"># Merging all dfs</span>
+        <span class="n">combined_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">df_list</span><span class="p">)</span>
+
+        <span class="c"># Grouping appliance data</span>
+        <span class="n">appliance_df_groups</span> <span class="o">=</span> <span class="n">combined_df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s">&#39;MeterName&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">df</span> <span class="ow">in</span> <span class="n">appliance_df_groups</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+            <span class="c"># Getting nilmtk name</span>
+            <span class="n">appliance_name</span> <span class="o">=</span> <span class="n">find_appliance_nilmtk_name</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pre_process_dataframe</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+            <span class="n">building</span><span class="o">.</span><span class="n">utility</span><span class="o">.</span><span class="n">electric</span><span class="o">.</span><span class="n">appliances</span><span class="p">[</span><span class="n">appliance_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span>
+
+        <span class="c"># Storing building in buildings dictionary</span>
+        <span class="n">building_number</span> <span class="o">=</span> <span class="n">building_name_mapping</span><span class="p">[</span><span class="n">building_name</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">buildings</span><span class="p">[</span><span class="n">building_number</span><span class="p">]</span> <span class="o">=</span> <span class="n">building</span>
+</div>
+<div class="viewcode-block" id="Smart.load_building_names"><a class="viewcode-back" href="../../../nilmtk.dataset.html#nilmtk.dataset.smart.Smart.load_building_names">[docs]</a>    <span class="k">def</span> <span class="nf">load_building_names</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root_directory</span><span class="p">):</span>
+        <span class="n">dirs</span> <span class="o">=</span> <span class="n">get_immediate_subdirectories</span><span class="p">(</span><span class="n">root_directory</span><span class="p">)</span>
+        <span class="n">pattern</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s">&#39;home[A-Z].*&#39;</span><span class="p">)</span>
+        <span class="n">dirs</span> <span class="o">=</span> <span class="p">[</span><span class="nb">dir</span> <span class="k">for</span> <span class="nb">dir</span> <span class="ow">in</span> <span class="n">dirs</span> <span class="k">if</span> <span class="n">pattern</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="nb">dir</span><span class="p">)]</span>
+        <span class="n">dirs</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">dirs</span></div></div>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2014, nilmtk authors.<br/>
+      Last updated on Mar 26, 2014.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>
