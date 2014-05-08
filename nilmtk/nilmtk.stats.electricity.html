@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 
 
@@ -10,13 +9,13 @@
     
     <link rel="stylesheet" href="_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="_static/bootstrap-3.0.0/css/bootstrap.min.css" type="text/css" />
-    <link rel="stylesheet" href="_static/bootstrap-3.0.0/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-3.1.0/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-3.1.0/css/bootstrap-theme.min.css" type="text/css" />
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '',
+        URL_ROOT:    './',
         VERSION:     '0.0.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
@@ -27,9 +26,9 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/javascript" src="_static/js/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="_static/bootstrap-3.0.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-3.1.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
     <link rel="top" title="nilmtk 0.0.1 documentation" href="index.html" />
     <link rel="up" title="nilmtk.stats package" href="nilmtk.stats.html" />
@@ -52,7 +51,8 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="index.html">nilmtk</a>
+        <a class="navbar-brand" href="index.html">
+          nilmtk</a>
         <span class="navbar-text navbar-version pull-left"><b>0.0.1</b></span>
       </div>
 
@@ -62,12 +62,15 @@
             
             
               <li class="dropdown globaltoc-container">
-  <a href="index.html"
-     class="dropdown-toggle"
-     data-toggle="dropdown">Site <b class="caret"></b></a>
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="index.html">Site <b class="caret"></b></a>
   <ul class="dropdown-menu globaltoc"
-    ><ul>
-<li class="toctree-l1"><a class="reference internal" href="nilmtk.html">nilmtk API Reference</a></li>
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="nilmtk.html">nilmtk API Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="userguide.html">User Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contribute.html">Contributing</a></li>
 </ul>
@@ -75,8 +78,14 @@
 </li>
               
                 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Page <b class="caret"></b></a>
-  <ul class="dropdown-menu localtoc"><ul>
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
 <li><a class="reference internal" href="#">nilmtk.stats.electricity package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
 <li><a class="reference internal" href="#module-nilmtk.stats.electricity.building">nilmtk.stats.electricity.building module</a></li>
@@ -91,15 +100,21 @@
             
             
               
-  <li><a href="nilmtk.stats.html"
-         title="Previous Chapter: nilmtk.stats package">&laquo; nilmtk.stats pac...</a></li>
-  <li><a href="nilmtk.tests.html"
-         title="Next Chapter: nilmtk.tests package">nilmtk.tests pac... &raquo;</a></li>
+                
+  <li>
+    <a href="nilmtk.stats.html" title="Previous Chapter: nilmtk.stats package"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm">&laquo; nilmtk.stats pac...</span>
+    </a>
+  </li>
+  <li>
+    <a href="nilmtk.tests.html" title="Next Chapter: nilmtk.tests package"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm">nilmtk.tests pac... &raquo;</span>
+    </a>
+  </li>
+              
             
             
             
             
-              <li>
+              <li class="hidden-sm">
 <div id="sourcelink">
   <a href="_sources/nilmtk.stats.electricity.txt"
      rel="nofollow">Source</a>
@@ -140,7 +155,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns :</th><td class="field-body"><p class="first"><strong>float</strong> :</p>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>float</strong> :</p>
 <blockquote>
 <div><p>Average energy usage for this building in kWh per day.</p>
 </div></blockquote>
@@ -161,13 +176,13 @@ above <cite>max_dropout_rate</cite>.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>electricity:</strong> :</p>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>electricity:</strong> :</p>
 <blockquote>
 <div><p>nilmtk.sensors.electricity.Electricity</p>
 </div></blockquote>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><p class="first"><strong>av_energy:</strong> :</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>av_energy:</strong> :</p>
 <blockquote>
 <div><p>pd.Series
 Each element of the index is an ApplianceName
@@ -189,7 +204,7 @@ after masking out all gaps in mains.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns :</th><td class="field-body"><p class="first"><strong>mains_total_energy, totals_per_appliance</strong> :</p>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>mains_total_energy, totals_per_appliance</strong> :</p>
 <p><strong>total_mains_energy</strong> : float</p>
 <p><strong>totals_per_appliance</strong> : pd.Series</p>
 <blockquote class="last">
@@ -204,15 +219,15 @@ each value is total energy</p>
 
 <dl class="function">
 <dt id="nilmtk.stats.electricity.building.find_appliances_contribution">
-<tt class="descclassname">nilmtk.stats.electricity.building.</tt><tt class="descname">find_appliances_contribution</tt><big>(</big><em>electricity</em>, <em>how=&lt;function mean at 0x2536320&gt;</em><big>)</big><a class="reference internal" href="_modules/nilmtk/stats/electricity/building.html#find_appliances_contribution"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.stats.electricity.building.find_appliances_contribution" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">nilmtk.stats.electricity.building.</tt><tt class="descname">find_appliances_contribution</tt><big>(</big><em>electricity</em>, <em>how=&lt;function mean at 0x38aa410&gt;</em><big>)</big><a class="reference internal" href="_modules/nilmtk/stats/electricity/building.html#find_appliances_contribution"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.stats.electricity.building.find_appliances_contribution" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reports dataframe of form (appliance : contribution) type</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><strong>electricity</strong> : nilmtk.sensors.Elictricity</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>electricity</strong> : nilmtk.sensors.Elictricity</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><strong>series_contribution: pandas.DataFrame</strong> :</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>series_contribution: pandas.DataFrame</strong> :</td>
 </tr>
 </tbody>
 </table>
@@ -226,9 +241,9 @@ each value is total energy</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><strong>electricity</strong> : nilmtk.sensors.electricity</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>electricity</strong> : nilmtk.sensors.electricity</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><strong>list of common measurements</strong> :</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>list of common measurements</strong> :</td>
 </tr>
 </tbody>
 </table>
@@ -241,11 +256,11 @@ each value is total energy</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>electricity</strong> : Electricity object</p>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>electricity</strong> : Electricity object</p>
 <p><strong>ignore_gaps</strong> : boolean</p>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><p class="first last"><strong>list of dropout rates, one per dataframe</strong> :</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>list of dropout rates, one per dataframe</strong> :</p>
 </td>
 </tr>
 </tbody>
@@ -259,12 +274,12 @@ each value is total energy</p>
 
 <dl class="function">
 <dt id="nilmtk.stats.electricity.building.plot_missing_samples_using_bitmap">
-<tt class="descclassname">nilmtk.stats.electricity.building.</tt><tt class="descname">plot_missing_samples_using_bitmap</tt><big>(</big><em>electricity</em>, <em>ax=None</em>, <em>fig=None</em>, <em>fig_width=800</em>, <em>add_colorbar=True</em>, <em>cmap=&lt;matplotlib.colors.LinearSegmentedColormap object at 0x3fffcd0&gt;</em>, <em>gain=1</em>, <em>horiz_bars=True</em><big>)</big><a class="reference internal" href="_modules/nilmtk/stats/electricity/building.html#plot_missing_samples_using_bitmap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.stats.electricity.building.plot_missing_samples_using_bitmap" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">nilmtk.stats.electricity.building.</tt><tt class="descname">plot_missing_samples_using_bitmap</tt><big>(</big><em>electricity</em>, <em>ax=None</em>, <em>fig=None</em>, <em>fig_width=800</em>, <em>add_colorbar=True</em>, <em>cmap=&lt;matplotlib.colors.LinearSegmentedColormap object at 0x48bc9d0&gt;</em>, <em>gain=1</em>, <em>horiz_bars=True</em><big>)</big><a class="reference internal" href="_modules/nilmtk/stats/electricity/building.html#plot_missing_samples_using_bitmap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.stats.electricity.building.plot_missing_samples_using_bitmap" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>fig_width</strong> : int, default=800</p>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>fig_width</strong> : int, default=800</p>
 <blockquote class="last">
 <div><p>The width of the plotted figure, in pixels</p>
 </div></blockquote>
@@ -288,7 +303,7 @@ each value is total energy</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>electricity</strong> : nilmtk.sensors.electricity.Electricity</p>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>electricity</strong> : nilmtk.sensors.electricity.Electricity</p>
 <p><strong>sample_period_multiplier</strong> : float, optional</p>
 <blockquote>
 <div><p>Defines a &#8216;gap&#8217;.  Any gap &gt; sample_period x sample_period_multiplier
@@ -303,7 +318,7 @@ If False then continue even if measurements do not match.</p>
 </div></blockquote>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><p class="first"><strong>float</strong> :</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>float</strong> :</p>
 <blockquote class="last">
 <div><blockquote>
 <div><p>0 = no energy submetered
@@ -326,7 +341,7 @@ submetered is greater than the mains * <cite>min_proportion_submetered</cite></p
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>building</strong> : Building</p>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>building</strong> : Building</p>
 <p><strong>min_proportion_submetered</strong> : float [0,1], optional</p>
 <blockquote>
 <div><p>default = 0.7</p>
@@ -341,7 +356,7 @@ appliance and mains indicies.</p>
 </div></blockquote>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><p class="first last"><strong>float [0,1] proportion of time</strong> :</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>float [0,1] proportion of time</strong> :</p>
 </td>
 </tr>
 </tbody>
@@ -355,14 +370,14 @@ appliance and mains indicies.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>merge</strong> : boolean, optional</p>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>merge</strong> : boolean, optional</p>
 <blockquote>
 <div><p>If True then merge multiple instances of the same appliance name
 and merge all appliances with &#8216;light&#8217; in their name.</p>
 </div></blockquote>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><p class="first"><strong>Series, sorted by value</strong> :</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>Series, sorted by value</strong> :</p>
 <blockquote class="last">
 <div><p>Keys are ApplianceNames.names if <cite>merge</cite> else ApplianceNames.names
 Values are proportion of total energy expressed as a float
@@ -376,13 +391,13 @@ between 0 and 1.</p>
 
 <dl class="function">
 <dt id="nilmtk.stats.electricity.building.top_k_appliances">
-<tt class="descclassname">nilmtk.stats.electricity.building.</tt><tt class="descname">top_k_appliances</tt><big>(</big><em>electricity</em>, <em>k=3</em>, <em>how=&lt;function mean at 0x2536320&gt;</em>, <em>order='desc'</em><big>)</big><a class="reference internal" href="_modules/nilmtk/stats/electricity/building.html#top_k_appliances"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.stats.electricity.building.top_k_appliances" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">nilmtk.stats.electricity.building.</tt><tt class="descname">top_k_appliances</tt><big>(</big><em>electricity</em>, <em>k=3</em>, <em>how=&lt;function mean at 0x38aa410&gt;</em>, <em>order='desc'</em><big>)</big><a class="reference internal" href="_modules/nilmtk/stats/electricity/building.html#top_k_appliances"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.stats.electricity.building.top_k_appliances" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reports the top k appliances by &#8216;how&#8217; attribute</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>electricity:</strong> :</p>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>electricity:</strong> :</p>
 <blockquote>
 <div><p>nilmtk.sensors.electricity.Electricity</p>
 </div></blockquote>
@@ -408,7 +423,7 @@ Default:</p>
 </div></blockquote>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><p class="first"><strong>top_k:</strong> :</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>top_k:</strong> :</p>
 <blockquote>
 <div><p>pd.Series
 appliance:</p>
@@ -442,7 +457,7 @@ timespan=&#8217;D&#8217; (daily).</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>series</strong> : pandas.Series</p>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>series</strong> : pandas.Series</p>
 <p><strong>on_power_threshold</strong> : float, optional, default=5</p>
 <blockquote>
 <div><p>Threshold which defines the difference between &#8216;on&#8217; and &#8216;off&#8217;. Watts.</p>
@@ -455,7 +470,7 @@ For valid offset aliases, see:
 </div></blockquote>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><p class="first"><strong>pandas.Series</strong> :</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>pandas.Series</strong> :</p>
 <blockquote class="last">
 <div><p>One row for each bin in a timespan.
 The values count the number of times this appliance has been on at
@@ -478,7 +493,7 @@ example, ignore the &#8216;2012/1/1&#8217;.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>data</strong> : pandas.DataFrame or Series or DatetimeIndex</p>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>data</strong> : pandas.DataFrame or Series or DatetimeIndex</p>
 <p><strong>rule</strong> : pandas Offset string (or what ever the <cite>rule</cite> parameter in</p>
 <blockquote>
 <div><p>pd.Series.resample accepts)</p>
@@ -492,7 +507,7 @@ is shorter than the duration of <cite>data</cite> data will be cropped.</p>
 </div></blockquote>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><p class="first"><strong>pd.Series</strong> :</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>pd.Series</strong> :</p>
 <blockquote class="last">
 <div><p>Index is a regular DatetimeIndex with freq=rule and
 timezone=data.index.tzinfo
@@ -512,7 +527,7 @@ Values are the number of dropped in that time period.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>on_series</strong> : pd.Series</p>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>on_series</strong> : pd.Series</p>
 <blockquote>
 <div><p>Series of booleans indicating if the appliance is on or off.
 Produced, for example, by <cite>on()</cite>.</p>
@@ -533,7 +548,7 @@ sample period of the data.</p>
 </div></blockquote>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><p class="first"><strong>pd.Series</strong> :</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>pd.Series</strong> :</p>
 <blockquote class="last">
 <div><p>Index is the datetime at which the event starts.
 Values are the length of every on or off duration (in seconds).</p>
@@ -542,7 +557,7 @@ Values are the length of every on or off duration (in seconds).</p>
 </tr>
 </tbody>
 </table>
-<div class="admonition-see-also admonition seealso">
+<div class="admonition seealso">
 <p class="first admonition-title">See also</p>
 <p class="last"><a class="reference internal" href="#nilmtk.stats.electricity.single.on_off_events" title="nilmtk.stats.electricity.single.on_off_events"><tt class="xref py py-obj docutils literal"><span class="pre">on_off_events</span></tt></a>, <a class="reference internal" href="#nilmtk.stats.electricity.single.on" title="nilmtk.stats.electricity.single.on"><tt class="xref py py-obj docutils literal"><span class="pre">on</span></tt></a>, <tt class="xref py py-obj docutils literal"><span class="pre">sample_period</span></tt></p>
 </div>
@@ -559,16 +574,16 @@ before sending it to this function.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>series</strong> : pd.Series or pd.DataFrame</p>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>series</strong> : pd.Series or pd.DataFrame</p>
 <p><strong>unit</strong> : {&#8216;kwh&#8217;, &#8216;joules&#8217;}</p>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><p class="first last"><strong>_energy</strong> : float</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>_energy</strong> : float</p>
 </td>
 </tr>
 </tbody>
 </table>
-<div class="admonition-see-also admonition seealso">
+<div class="admonition seealso">
 <p class="first admonition-title">See also</p>
 <p class="last"><a class="reference internal" href="#nilmtk.stats.electricity.single.hours_on" title="nilmtk.stats.electricity.single.hours_on"><tt class="xref py py-obj docutils literal"><span class="pre">hours_on</span></tt></a></p>
 </div>
@@ -582,7 +597,7 @@ before sending it to this function.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>data</strong> : pandas.DataFrame or Series or DatetimeIndex</p>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>data</strong> : pandas.DataFrame or Series or DatetimeIndex</p>
 <p><strong>sample_period</strong> : int or float, optional</p>
 <blockquote>
 <div><p>Sample period in seconds.  If not provided then will
@@ -590,7 +605,7 @@ calculate it.</p>
 </div></blockquote>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><p class="first"><strong>rate</strong> : float [0,1]</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>rate</strong> : float [0,1]</p>
 <blockquote>
 <div><p>The proportion of samples that have been lost; where 
 1 means that all samples have been lost and 
@@ -598,7 +613,7 @@ calculate it.</p>
 </div></blockquote>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Raises :</th><td class="field-body"><p class="first last"><strong>TooFewSamplesError</strong> :</p>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><strong>TooFewSamplesError</strong> :</p>
 </td>
 </tr>
 </tbody>
@@ -614,7 +629,7 @@ remove any large gaps.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>data</strong> : pandas.DataFrame or Series or DatetimeIndex</p>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>data</strong> : pandas.DataFrame or Series or DatetimeIndex</p>
 <p><strong>sample_period</strong> : int or float, optional</p>
 <blockquote>
 <div><p>Sample period in seconds.  If not provided then will
@@ -627,7 +642,7 @@ If not provided then will use sample_period * 4</p>
 </div></blockquote>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><p class="first"><strong>rate</strong> : float [0,1]</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>rate</strong> : float [0,1]</p>
 <blockquote class="last">
 <div><p>The proportion of samples that have been lost; where 
 1 means that all samples have been lost and 
@@ -657,7 +672,7 @@ is shorter than the duration of <cite>data</cite> data will be cropped.</dd>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns :</th><td class="field-body"><strong>gap_starts, gap_ends: DatetimeIndex</strong> :</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>gap_starts, gap_ends: DatetimeIndex</strong> :</td>
 </tr>
 </tbody>
 </table>
@@ -676,7 +691,7 @@ counts as a &#8216;gap&#8217;.</dd>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns :</th><td class="field-body"><strong>starts, ends: DatetimeIndex</strong> :</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>starts, ends: DatetimeIndex</strong> :</td>
 </tr>
 </tbody>
 </table>
@@ -692,16 +707,16 @@ time deltas.  Only use the first 100 samples (for speed).</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>data</strong> : pandas.DataFrame or Series or DatetimeIndex</p>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>data</strong> : pandas.DataFrame or Series or DatetimeIndex</p>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><p class="first"><strong>period_secs</strong> : float</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>period_secs</strong> : float</p>
 <blockquote>
 <div><p>Sample period_secs in seconds.</p>
 </div></blockquote>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Raises :</th><td class="field-body"><p class="first last"><strong>TooFewSamplesError</strong> :</p>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><strong>TooFewSamplesError</strong> :</p>
 </td>
 </tr>
 </tbody>
@@ -715,7 +730,7 @@ time deltas.  Only use the first 100 samples (for speed).</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns :</th><td class="field-body"><strong>float</strong> : total duration of good data segments, in days</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>float</strong> : total duration of good data segments, in days</td>
 </tr>
 </tbody>
 </table>
@@ -728,9 +743,9 @@ time deltas.  Only use the first 100 samples (for speed).</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><strong>data</strong> : pandas.DataFrame or Series</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> : pandas.DataFrame or Series</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><strong>bool</strong> :</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>bool</strong> :</td>
 </tr>
 </tbody>
 </table>
@@ -747,19 +762,19 @@ before sending it to this function.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>series</strong> : pandas.Series</p>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>series</strong> : pandas.Series</p>
 <p><strong>on_power_threshold</strong> : float or int, optional, default = 5</p>
 <blockquote>
 <div><p>Threshold which defines the distinction between &#8220;on&#8221; and &#8220;off&#8221;.  Watts.</p>
 </div></blockquote>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><p class="first last"><strong>hours_above_threshold</strong> : float</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>hours_above_threshold</strong> : float</p>
 </td>
 </tr>
 </tbody>
 </table>
-<div class="admonition-see-also admonition seealso">
+<div class="admonition seealso">
 <p class="first admonition-title">See also</p>
 <p class="last"><tt class="xref py py-obj docutils literal"><span class="pre">kwh</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">joules</span></tt></p>
 </div>
@@ -776,14 +791,14 @@ before sending it to this function.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>series</strong> : pandas.Series</p>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>series</strong> : pandas.Series</p>
 <p><strong>on_power_threshold</strong> : float, optional, default=5</p>
 <blockquote>
 <div><p>Threshold which defines the difference between &#8216;on&#8217; and &#8216;off&#8217;. Watts.</p>
 </div></blockquote>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><p class="first"><strong>when_on</strong> : pandas.Series</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>when_on</strong> : pandas.Series</p>
 <blockquote class="last">
 <div><p>index is the same as for input <cite>series</cite>
 values are booleans</p>
@@ -802,7 +817,7 @@ values are booleans</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>on_series</strong> : pd.Series</p>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>on_series</strong> : pd.Series</p>
 <blockquote>
 <div><p>Series of booleans indicating if the appliance is on or off.
 Produced, for example, by <cite>on()</cite>.</p>
@@ -816,7 +831,7 @@ hence only one on-event and one off-event would be reported.</p>
 </div></blockquote>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><p class="first"><strong>events</strong> : pd.Series</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>events</strong> : pd.Series</p>
 <blockquote class="last">
 <div><p>Index is the same as the input <cite>on_series</cite>.
 Values are np.int8:</p>
@@ -829,7 +844,7 @@ Values are np.int8:</p>
 </tr>
 </tbody>
 </table>
-<div class="admonition-see-also admonition seealso">
+<div class="admonition seealso">
 <p class="first admonition-title">See also</p>
 <p class="last"><a class="reference internal" href="#nilmtk.stats.electricity.single.on" title="nilmtk.stats.electricity.single.on"><tt class="xref py py-obj docutils literal"><span class="pre">on</span></tt></a>, <a class="reference internal" href="#nilmtk.stats.electricity.single.durations" title="nilmtk.stats.electricity.single.durations"><tt class="xref py py-obj docutils literal"><span class="pre">durations</span></tt></a></p>
 </div>
@@ -850,7 +865,7 @@ Values are np.int8:</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns :</th><td class="field-body"><strong>set of Periods</strong> :</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>set of Periods</strong> :</td>
 </tr>
 </tbody>
 </table>
@@ -864,7 +879,7 @@ Values are np.int8:</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>data</strong> : pandas.DataFrame or Series or DatetimeIndex</p>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>data</strong> : pandas.DataFrame or Series or DatetimeIndex</p>
 <p><strong>max_sample_period</strong> : int or float, optional</p>
 <blockquote>
 <div><p>Maximum allowed sample period in seconds.  This defines what
@@ -894,10 +909,10 @@ is shorter than the duration of <cite>data</cite> data will be cropped.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>data</strong> : pandas.DataFrame or Series or DatetimeIndex</p>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>data</strong> : pandas.DataFrame or Series or DatetimeIndex</p>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><p class="first"><strong>start_end_datetimes</strong> : List</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>start_end_datetimes</strong> : List</p>
 <blockquote class="last">
 <div><p>Contains two elements- start and end timestamps</p>
 </div></blockquote>
@@ -914,7 +929,7 @@ is shorter than the duration of <cite>data</cite> data will be cropped.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>data</strong> : pandas.DataFrame or Series or DatetimeIndex</p>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>data</strong> : pandas.DataFrame or Series or DatetimeIndex</p>
 <p><strong>max_sample_period</strong> : int or float, optional</p>
 <blockquote>
 <div><p>Maximum allowed sample period in seconds.  This defines what
@@ -930,7 +945,7 @@ is shorter than the duration of <cite>data</cite> data will be cropped.</p>
 </div></blockquote>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><p class="first"><strong>missing_samples</strong> : pd.DatetimeIndex</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>missing_samples</strong> : pd.DatetimeIndex</p>
 <blockquote class="last">
 <div><p>Every missing sample in <cite>data</cite> is represented by a timestamp
 in <cite>missing_samples</cite>.</p>
@@ -951,7 +966,7 @@ before sending it to this function.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>series</strong> : pd.Series</p>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>series</strong> : pd.Series</p>
 <p><strong>freq</strong> : str</p>
 <blockquote>
 <div><p>see _indicies_of_periods() for acceptable values.</p>
@@ -971,7 +986,7 @@ before sending it to this function.</p>
 <p><strong>energy_unit</strong> : {&#8216;kwh&#8217;, &#8216;joules&#8217;}, optional</p>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><p class="first"><strong>usage</strong> : pd.DataFrame</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>usage</strong> : pd.DataFrame</p>
 <blockquote class="last">
 <div><p>One row per period (as defined by <cite>freq</cite>).  
 Index is PeriodIndex (UTC).
@@ -1113,8 +1128,8 @@ for days where there isn&#8217;t much data for that day.</p>
     </p>
     <p>
         &copy; Copyright 2014, nilmtk authors.<br/>
-      Last updated on Mar 26, 2014.<br/>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.<br/>
+      Last updated on May 08, 2014.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.2.<br/>
     </p>
   </div>
 </footer>

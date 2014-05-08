@@ -1,6 +1,4 @@
 
-
-
 <!DOCTYPE html>
 
 
@@ -12,13 +10,13 @@
     
     <link rel="stylesheet" href="_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="_static/bootstrap-3.0.0/css/bootstrap.min.css" type="text/css" />
-    <link rel="stylesheet" href="_static/bootstrap-3.0.0/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-3.1.0/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-3.1.0/css/bootstrap-theme.min.css" type="text/css" />
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '',
+        URL_ROOT:    './',
         VERSION:     '0.0.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
@@ -29,9 +27,9 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/javascript" src="_static/js/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="_static/bootstrap-3.0.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-3.1.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
     <link rel="top" title="nilmtk 0.0.1 documentation" href="index.html" />
 <meta charset='utf-8'>
@@ -51,7 +49,8 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="index.html">nilmtk</a>
+        <a class="navbar-brand" href="index.html">
+          nilmtk</a>
         <span class="navbar-text navbar-version pull-left"><b>0.0.1</b></span>
       </div>
 
@@ -61,11 +60,14 @@
             
             
               <li class="dropdown globaltoc-container">
-  <a href="index.html"
-     class="dropdown-toggle"
-     data-toggle="dropdown">Site <b class="caret"></b></a>
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="index.html">Site <b class="caret"></b></a>
   <ul class="dropdown-menu globaltoc"
-    ><ul>
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
 <li class="toctree-l1"><a class="reference internal" href="nilmtk.html">nilmtk API Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="userguide.html">User Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contribute.html">Contributing</a></li>
@@ -74,21 +76,26 @@
 </li>
               
                 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Page <b class="caret"></b></a>
-  <ul class="dropdown-menu localtoc"></ul>
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
 </li>
               
             
             
               
-
-   
-
+                
+              
             
             
             
             
-              <li></li>
+              <li class="hidden-sm"></li>
             
           </ul>
 
@@ -128,7 +135,6 @@
  | <a href="#N"><strong>N</strong></a>
  | <a href="#O"><strong>O</strong></a>
  | <a href="#P"><strong>P</strong></a>
- | <a href="#Q"><strong>Q</strong></a>
  | <a href="#R"><strong>R</strong></a>
  | <a href="#S"><strong>S</strong></a>
  | <a href="#T"><strong>T</strong></a>
@@ -144,25 +150,13 @@
   </dt>
 
       
-  <dt><a href="nilmtk.dataset.html#nilmtk.dataset.iawe.IAWE.add_appliances">add_appliances() (nilmtk.dataset.iawe.IAWE method)</a>
+  <dt><a href="nilmtk.dataset.html#nilmtk.dataset.pecan.Pecan.add_appliances">add_appliances() (nilmtk.dataset.pecan.Pecan method)</a>
   </dt>
 
-      <dd><dl>
-        
-  <dt><a href="nilmtk.dataset.html#nilmtk.dataset.pecan.Pecan.add_appliances">(nilmtk.dataset.pecan.Pecan method)</a>
-  </dt>
-
-      </dl></dd>
       
-  <dt><a href="nilmtk.dataset.html#nilmtk.dataset.iawe.IAWE.add_mains">add_mains() (nilmtk.dataset.iawe.IAWE method)</a>
+  <dt><a href="nilmtk.dataset.html#nilmtk.dataset.pecan.Pecan.add_mains">add_mains() (nilmtk.dataset.pecan.Pecan method)</a>
   </dt>
 
-      <dd><dl>
-        
-  <dt><a href="nilmtk.dataset.html#nilmtk.dataset.pecan.Pecan.add_mains">(nilmtk.dataset.pecan.Pecan method)</a>
-  </dt>
-
-      </dl></dd>
       
   <dt><a href="nilmtk.sensors.html#nilmtk.sensors.ambient.Ambient">Ambient (class in nilmtk.sensors.ambient)</a>
   </dt>
@@ -171,18 +165,14 @@
   <dt><a href="nilmtk.dataset.html#nilmtk.dataset.ampds.AMPDS">AMPDS (class in nilmtk.dataset.ampds)</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="nilmtk.dataset.html#nilmtk.dataset.redd.ApplianceMetadata">ApplianceMetadata (class in nilmtk.dataset.redd)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="nilmtk.sensors.html#nilmtk.sensors.electricity.ApplianceName">ApplianceName (class in nilmtk.sensors.electricity)</a>
-  </dt>
-
-      
-  <dt><a href="nilmtk.disaggregate.html#nilmtk.disaggregate.co_1d.apply_clustering">apply_clustering() (in module nilmtk.disaggregate.co_1d)</a>
   </dt>
 
       
@@ -222,37 +212,13 @@
   </dt>
 
       
-  <dt><a href="nilmtk.disaggregate.html#nilmtk.disaggregate.co_1d.CO_1d">CO_1d (class in nilmtk.disaggregate.co_1d)</a>
-  </dt>
-
-      
-  <dt><a href="nilmtk.disaggregate.html#nilmtk.disaggregate.fhmm_exact.compute_A_fhmm">compute_A_fhmm() (in module nilmtk.disaggregate.fhmm_exact)</a>
-  </dt>
-
-      
-  <dt><a href="nilmtk.disaggregate.html#nilmtk.disaggregate.fhmm_exact.compute_means_fhmm">compute_means_fhmm() (in module nilmtk.disaggregate.fhmm_exact)</a>
-  </dt>
-
-      
-  <dt><a href="nilmtk.disaggregate.html#nilmtk.disaggregate.fhmm_exact.compute_pi_fhmm">compute_pi_fhmm() (in module nilmtk.disaggregate.fhmm_exact)</a>
+  <dt><a href="nilmtk.preprocessing.electricity.html#nilmtk.preprocessing.electricity.single.contiguous_blocks">contiguous_blocks() (in module nilmtk.preprocessing.electricity.single)</a>
   </dt>
 
   </dl></td>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="nilmtk.html#nilmtk.metrics.confusion_matrices">confusion_matrices() (in module nilmtk.metrics)</a>
-  </dt>
-
-      
-  <dt><a href="nilmtk.preprocessing.electricity.html#nilmtk.preprocessing.electricity.single.contiguous_blocks">contiguous_blocks() (in module nilmtk.preprocessing.electricity.single)</a>
-  </dt>
-
-      
   <dt><a href="nilmtk.sensors.html#nilmtk.sensors.electricity.Electricity.count_appliances">count_appliances() (nilmtk.sensors.electricity.Electricity method)</a>
-  </dt>
-
-      
-  <dt><a href="nilmtk.disaggregate.html#nilmtk.disaggregate.fhmm_exact.create_combined_hmm">create_combined_hmm() (in module nilmtk.disaggregate.fhmm_exact)</a>
   </dt>
 
       
@@ -284,14 +250,6 @@
   </dt>
 
       
-  <dt><a href="nilmtk.disaggregate.html#nilmtk.disaggregate.co_1d.decode_co">decode_co() (in module nilmtk.disaggregate.co_1d)</a>
-  </dt>
-
-      
-  <dt><a href="nilmtk.disaggregate.html#nilmtk.disaggregate.fhmm_exact.decode_hmm">decode_hmm() (in module nilmtk.disaggregate.fhmm_exact)</a>
-  </dt>
-
-      
   <dt><a href="nilmtk.dataset.html#nilmtk.dataset.dataset.DataSet.describe">describe() (nilmtk.dataset.dataset.DataSet method)</a>
   </dt>
 
@@ -300,29 +258,19 @@
   </dt>
 
       
-  <dt><a href="nilmtk.disaggregate.html#nilmtk.disaggregate.co_1d.CO_1d.disaggregate">disaggregate() (nilmtk.disaggregate.co_1d.CO_1d method)</a>
+  <dt><a href="nilmtk.disaggregate.html#nilmtk.disaggregate.disaggregator.Disaggregator.disaggregate">disaggregate() (nilmtk.disaggregate.disaggregator.Disaggregator method)</a>
   </dt>
 
-      <dd><dl>
-        
-  <dt><a href="nilmtk.disaggregate.html#nilmtk.disaggregate.disaggregator.Disaggregator.disaggregate">(nilmtk.disaggregate.disaggregator.Disaggregator method)</a>
-  </dt>
-
-        
-  <dt><a href="nilmtk.disaggregate.html#nilmtk.disaggregate.fhmm_exact.FHMM.disaggregate">(nilmtk.disaggregate.fhmm_exact.FHMM method)</a>
-  </dt>
-
-      </dl></dd>
       
   <dt><a href="nilmtk.disaggregate.html#nilmtk.disaggregate.disaggregator.Disaggregator">Disaggregator (class in nilmtk.disaggregate.disaggregator)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="nilmtk.sensors.html#nilmtk.sensors.door.DoorStatus">DoorStatus (class in nilmtk.sensors.door)</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="nilmtk.preprocessing.electricity.html#nilmtk.preprocessing.electricity.building.downsample">downsample() (in module nilmtk.preprocessing.electricity.building)</a>
   </dt>
@@ -365,10 +313,6 @@
   <dt><a href="nilmtk.stats.electricity.html#nilmtk.stats.electricity.building.energy_per_dataframe">energy_per_dataframe() (in module nilmtk.stats.electricity.building)</a>
   </dt>
 
-      
-  <dt><a href="nilmtk.html#nilmtk.metrics.error_energy">error_energy() (in module nilmtk.metrics)</a>
-  </dt>
-
   </dl></td>
   <td style="width: 33%" valign="top"><dl>
       
@@ -379,24 +323,12 @@
   <dt><a href="nilmtk.dataset.html#nilmtk.dataset.dataset.DataSet.export_csv">export_csv() (nilmtk.dataset.dataset.DataSet method)</a>
   </dt>
 
-      
-  <dt><a href="nilmtk.disaggregate.html#nilmtk.disaggregate.co_1d.CO_1d.export_model">export_model() (nilmtk.disaggregate.co_1d.CO_1d method)</a>
-  </dt>
-
   </dl></td>
 </tr></table>
 
 <h2 id="F">F</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
-      
-  <dt><a href="nilmtk.html#nilmtk.metrics.f_score">f_score() (in module nilmtk.metrics)</a>
-  </dt>
-
-      
-  <dt><a href="nilmtk.disaggregate.html#nilmtk.disaggregate.fhmm_exact.FHMM">FHMM (class in nilmtk.disaggregate.fhmm_exact)</a>
-  </dt>
-
       
   <dt><a href="nilmtk.preprocessing.electricity.html#nilmtk.preprocessing.electricity.building.fill_appliance_gaps">fill_appliance_gaps() (in module nilmtk.preprocessing.electricity.building)</a>
   </dt>
@@ -461,10 +393,6 @@
 
       
   <dt><a href="nilmtk.html#nilmtk.plots.format_axes">format_axes() (in module nilmtk.plots)</a>
-  </dt>
-
-      
-  <dt><a href="nilmtk.html#nilmtk.metrics.fraction_energy_assigned_correctly">fraction_energy_assigned_correctly() (in module nilmtk.metrics)</a>
   </dt>
 
   </dl></td>
@@ -554,19 +482,15 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="nilmtk.html#nilmtk.metrics.hamming_loss">hamming_loss() (in module nilmtk.metrics)</a>
-  </dt>
-
-      
   <dt><a href="nilmtk.stats.electricity.html#nilmtk.stats.electricity.single.has_nans">has_nans() (in module nilmtk.stats.electricity.single)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="nilmtk.dataset.html#nilmtk.dataset.hes.HES">HES (class in nilmtk.dataset.hes)</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="nilmtk.stats.electricity.html#nilmtk.stats.electricity.single.hours_on">hours_on() (in module nilmtk.stats.electricity.single)</a>
   </dt>
@@ -578,23 +502,15 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="nilmtk.dataset.html#nilmtk.dataset.iawe.IAWE">IAWE (class in nilmtk.dataset.iawe)</a>
-  </dt>
-
-      
-  <dt><a href="nilmtk.disaggregate.html#nilmtk.disaggregate.co_1d.CO_1d.import_model">import_model() (nilmtk.disaggregate.co_1d.CO_1d method)</a>
-  </dt>
-
-      
   <dt><a href="nilmtk.preprocessing.electricity.html#nilmtk.preprocessing.electricity.single.insert_zeros">insert_zeros() (in module nilmtk.preprocessing.electricity.single)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="nilmtk.sensors.html#nilmtk.sensors.electricity.ApplianceName.instance">instance (nilmtk.sensors.electricity.ApplianceName attribute)</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="nilmtk.html#nilmtk.utils.is_namedtuple">is_namedtuple() (in module nilmtk.utils)</a>
   </dt>
@@ -620,10 +536,6 @@
 
         
   <dt><a href="nilmtk.dataset.html#nilmtk.dataset.hes.HES.load">(nilmtk.dataset.hes.HES method)</a>
-  </dt>
-
-        
-  <dt><a href="nilmtk.dataset.html#nilmtk.dataset.iawe.IAWE.load">(nilmtk.dataset.iawe.IAWE method)</a>
   </dt>
 
         
@@ -714,10 +626,6 @@
   <dt><a href="nilmtk.dataset.html#nilmtk.dataset.dataset.DataSet.load_hdf5">(nilmtk.dataset.dataset.DataSet method)</a>
   </dt>
 
-        
-  <dt><a href="nilmtk.dataset.html#nilmtk.dataset.iawe.IAWE.load_hdf5">(nilmtk.dataset.iawe.IAWE method)</a>
-  </dt>
-
       </dl></dd>
       
   <dt><a href="nilmtk.dataset.html#nilmtk.dataset.redd.load_labels">load_labels() (in module nilmtk.dataset.redd)</a>
@@ -756,10 +664,6 @@
   </dt>
 
       
-  <dt><a href="nilmtk.html#nilmtk.metrics.mean_normalized_error_power">mean_normalized_error_power() (in module nilmtk.metrics)</a>
-  </dt>
-
-      
   <dt><a href="nilmtk.sensors.html#nilmtk.sensors.electricity.Measurement">Measurement (class in nilmtk.sensors.electricity)</a>
   </dt>
 
@@ -767,10 +671,6 @@
   <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="nilmtk.sensors.html#nilmtk.sensors.electricity.DualSupply.measurement">measurement (nilmtk.sensors.electricity.DualSupply attribute)</a>
-  </dt>
-
-      
-  <dt><a href="nilmtk.disaggregate.html#nilmtk.disaggregate.co_1d.merge_clusters">merge_clusters() (in module nilmtk.disaggregate.co_1d)</a>
   </dt>
 
       
@@ -836,10 +736,6 @@
   </dt>
 
       
-  <dt><a href="nilmtk.dataset.html#module-nilmtk.dataset.iawe">nilmtk.dataset.iawe (module)</a>
-  </dt>
-
-      
   <dt><a href="nilmtk.dataset.html#module-nilmtk.dataset.pecan">nilmtk.dataset.pecan (module)</a>
   </dt>
 
@@ -864,19 +760,7 @@
   </dt>
 
       
-  <dt><a href="nilmtk.disaggregate.html#module-nilmtk.disaggregate.co_1d">nilmtk.disaggregate.co_1d (module)</a>
-  </dt>
-
-      
   <dt><a href="nilmtk.disaggregate.html#module-nilmtk.disaggregate.disaggregator">nilmtk.disaggregate.disaggregator (module)</a>
-  </dt>
-
-      
-  <dt><a href="nilmtk.disaggregate.html#module-nilmtk.disaggregate.fhmm_exact">nilmtk.disaggregate.fhmm_exact (module)</a>
-  </dt>
-
-      
-  <dt><a href="nilmtk.html#module-nilmtk.metrics">nilmtk.metrics (module)</a>
   </dt>
 
       
@@ -887,8 +771,6 @@
   <dt><a href="nilmtk.preprocessing.html#module-nilmtk.preprocessing">nilmtk.preprocessing (module)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="nilmtk.preprocessing.electricity.html#module-nilmtk.preprocessing.electricity">nilmtk.preprocessing.electricity (module)</a>
   </dt>
@@ -897,6 +779,8 @@
   <dt><a href="nilmtk.preprocessing.electricity.html#module-nilmtk.preprocessing.electricity.building">nilmtk.preprocessing.electricity.building (module)</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="nilmtk.preprocessing.electricity.html#module-nilmtk.preprocessing.electricity.single">nilmtk.preprocessing.electricity.single (module)</a>
   </dt>
@@ -1027,26 +911,18 @@
   <dt><a href="nilmtk.stats.electricity.html#nilmtk.stats.electricity.single.plot_missing_samples">plot_missing_samples() (in module nilmtk.stats.electricity.single)</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="nilmtk.stats.electricity.html#nilmtk.stats.electricity.building.plot_missing_samples_using_bitmap">plot_missing_samples_using_bitmap() (in module nilmtk.stats.electricity.building)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="nilmtk.stats.electricity.html#nilmtk.stats.electricity.building.plot_missing_samples_using_rectangles">plot_missing_samples_using_rectangles() (in module nilmtk.stats.electricity.building)</a>
   </dt>
 
       
   <dt><a href="nilmtk.html#nilmtk.plots.plot_series">plot_series() (in module nilmtk.plots)</a>
-  </dt>
-
-      
-  <dt><a href="nilmtk.html#nilmtk.metrics.powers_to_states">powers_to_states() (in module nilmtk.metrics)</a>
-  </dt>
-
-      
-  <dt><a href="nilmtk.html#nilmtk.metrics.precision_recall">precision_recall() (in module nilmtk.metrics)</a>
   </dt>
 
       
@@ -1063,16 +939,6 @@
 
       
   <dt><a href="nilmtk.stats.electricity.html#nilmtk.stats.electricity.building.proportion_per_appliance">proportion_per_appliance() (in module nilmtk.stats.electricity.building)</a>
-  </dt>
-
-  </dl></td>
-</tr></table>
-
-<h2 id="Q">Q</h2>
-<table style="width: 100%" class="indextable genindextable"><tr>
-  <td style="width: 33%" valign="top"><dl>
-      
-  <dt><a href="nilmtk.dataset.html#nilmtk.dataset.iawe.query_database_jplug">query_database_jplug() (in module nilmtk.dataset.iawe)</a>
   </dt>
 
   </dl></td>
@@ -1097,12 +963,12 @@
   <dt><a href="nilmtk.dataset.html#nilmtk.dataset.redd.REDD">REDD (class in nilmtk.dataset.redd)</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="nilmtk.preprocessing.electricity.html#nilmtk.preprocessing.electricity.single.reframe_index">reframe_index() (in module nilmtk.preprocessing.electricity.single)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="nilmtk.sensors.html#nilmtk.sensors.electricity.Electricity.remove_channels_from_appliances">remove_channels_from_appliances() (nilmtk.sensors.electricity.Electricity method)</a>
   </dt>
@@ -1113,14 +979,6 @@
 
       
   <dt><a href="nilmtk.sensors.html#nilmtk.sensors.electricity.Electricity.remove_voltage">remove_voltage() (nilmtk.sensors.electricity.Electricity method)</a>
-  </dt>
-
-      
-  <dt><a href="nilmtk.disaggregate.html#nilmtk.disaggregate.fhmm_exact.return_sorting_mapping">return_sorting_mapping() (in module nilmtk.disaggregate.fhmm_exact)</a>
-  </dt>
-
-      
-  <dt><a href="nilmtk.html#nilmtk.metrics.rms_error_power">rms_error_power() (in module nilmtk.metrics)</a>
   </dt>
 
   </dl></td>
@@ -1142,24 +1000,6 @@
   </dt>
 
       
-  <dt><a href="nilmtk.disaggregate.html#nilmtk.disaggregate.fhmm_exact.sort_covars">sort_covars() (in module nilmtk.disaggregate.fhmm_exact)</a>
-  </dt>
-
-      
-  <dt><a href="nilmtk.disaggregate.html#nilmtk.disaggregate.fhmm_exact.sort_learnt_parameters">sort_learnt_parameters() (in module nilmtk.disaggregate.fhmm_exact)</a>
-  </dt>
-
-      
-  <dt><a href="nilmtk.disaggregate.html#nilmtk.disaggregate.fhmm_exact.sort_startprob">sort_startprob() (in module nilmtk.disaggregate.fhmm_exact)</a>
-  </dt>
-
-      
-  <dt><a href="nilmtk.disaggregate.html#nilmtk.disaggregate.fhmm_exact.sort_transition_matrix">sort_transition_matrix() (in module nilmtk.disaggregate.fhmm_exact)</a>
-  </dt>
-
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
-      
   <dt><a href="nilmtk.sensors.html#nilmtk.sensors.electricity.CircuitName.split">split (nilmtk.sensors.electricity.CircuitName attribute)</a>
   </dt>
 
@@ -1173,6 +1013,8 @@
   <dt><a href="nilmtk.dataset.html#nilmtk.dataset.pecan.Pecan.standardize">standardize() (nilmtk.dataset.pecan.Pecan method)</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="nilmtk.stats.electricity.html#nilmtk.stats.electricity.single.start_end_datetime">start_end_datetime() (in module nilmtk.stats.electricity.single)</a>
   </dt>
@@ -1237,44 +1079,22 @@
   </dt>
 
       </dl></dd>
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="nilmtk.dataset.html#nilmtk.dataset.dataset.DataSet.to_json_temp">to_json_temp() (nilmtk.dataset.dataset.DataSet method)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="nilmtk.stats.electricity.html#nilmtk.stats.electricity.building.top_k_appliances">top_k_appliances() (in module nilmtk.stats.electricity.building)</a>
   </dt>
 
       
-  <dt><a href="nilmtk.html#nilmtk.metrics.tp_fp_fn_tn">tp_fp_fn_tn() (in module nilmtk.metrics)</a>
+  <dt><a href="nilmtk.disaggregate.html#nilmtk.disaggregate.disaggregator.Disaggregator.train">train() (nilmtk.disaggregate.disaggregator.Disaggregator method)</a>
   </dt>
 
-      
-  <dt><a href="nilmtk.html#nilmtk.metrics.tpr_fpr">tpr_fpr() (in module nilmtk.metrics)</a>
-  </dt>
-
-      
-  <dt><a href="nilmtk.disaggregate.html#nilmtk.disaggregate.co_1d.CO_1d.train">train() (nilmtk.disaggregate.co_1d.CO_1d method)</a>
-  </dt>
-
-      <dd><dl>
-        
-  <dt><a href="nilmtk.disaggregate.html#nilmtk.disaggregate.disaggregator.Disaggregator.train">(nilmtk.disaggregate.disaggregator.Disaggregator method)</a>
-  </dt>
-
-        
-  <dt><a href="nilmtk.disaggregate.html#nilmtk.disaggregate.fhmm_exact.FHMM.train">(nilmtk.disaggregate.fhmm_exact.FHMM method)</a>
-  </dt>
-
-      </dl></dd>
       
   <dt><a href="nilmtk.html#nilmtk.cross_validation.train_test_split">train_test_split() (in module nilmtk.cross_validation)</a>
-  </dt>
-
-      
-  <dt><a href="nilmtk.disaggregate.html#nilmtk.disaggregate.co_1d.transform_data">transform_data() (in module nilmtk.disaggregate.co_1d)</a>
   </dt>
 
       
@@ -1328,8 +1148,8 @@
     </p>
     <p>
         &copy; Copyright 2014, nilmtk authors.<br/>
-      Last updated on Mar 26, 2014.<br/>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.<br/>
+      Last updated on May 08, 2014.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.2.<br/>
     </p>
   </div>
 </footer>

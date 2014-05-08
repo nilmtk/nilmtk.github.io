@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 
 
@@ -10,13 +9,13 @@
     
     <link rel="stylesheet" href="_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="_static/bootstrap-3.0.0/css/bootstrap.min.css" type="text/css" />
-    <link rel="stylesheet" href="_static/bootstrap-3.0.0/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-3.1.0/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-3.1.0/css/bootstrap-theme.min.css" type="text/css" />
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '',
+        URL_ROOT:    './',
         VERSION:     '0.0.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
@@ -27,9 +26,9 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/javascript" src="_static/js/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="_static/bootstrap-3.0.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-3.1.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
     <link rel="top" title="nilmtk 0.0.1 documentation" href="index.html" />
     <link rel="up" title="nilmtk API Reference" href="nilmtk.html" />
@@ -52,7 +51,8 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="index.html">nilmtk</a>
+        <a class="navbar-brand" href="index.html">
+          nilmtk</a>
         <span class="navbar-text navbar-version pull-left"><b>0.0.1</b></span>
       </div>
 
@@ -62,12 +62,15 @@
             
             
               <li class="dropdown globaltoc-container">
-  <a href="index.html"
-     class="dropdown-toggle"
-     data-toggle="dropdown">Site <b class="caret"></b></a>
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="index.html">Site <b class="caret"></b></a>
   <ul class="dropdown-menu globaltoc"
-    ><ul>
-<li class="toctree-l1"><a class="reference internal" href="nilmtk.html">nilmtk API Reference</a></li>
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="nilmtk.html">nilmtk API Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="userguide.html">User Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contribute.html">Contributing</a></li>
 </ul>
@@ -75,14 +78,20 @@
 </li>
               
                 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Page <b class="caret"></b></a>
-  <ul class="dropdown-menu localtoc"><ul>
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
 <li><a class="reference internal" href="#">nilmtk.dataset package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
 <li><a class="reference internal" href="#module-nilmtk.dataset.ampds">nilmtk.dataset.ampds module</a></li>
 <li><a class="reference internal" href="#module-nilmtk.dataset.dataset">nilmtk.dataset.dataset module</a></li>
 <li><a class="reference internal" href="#module-nilmtk.dataset.hes">nilmtk.dataset.hes module</a></li>
-<li><a class="reference internal" href="#module-nilmtk.dataset.iawe">nilmtk.dataset.iawe module</a></li>
+<li><a class="reference internal" href="#nilmtk-dataset-iawe-module">nilmtk.dataset.iawe module</a></li>
 <li><a class="reference internal" href="#module-nilmtk.dataset.pecan">nilmtk.dataset.pecan module</a><ul>
 <li><a class="reference internal" href="#notes">NOTES</a></li>
 <li><a class="reference internal" href="#todos">TODOS</a></li>
@@ -101,15 +110,21 @@
             
             
               
-  <li><a href="nilmtk.html"
-         title="Previous Chapter: nilmtk API Reference">&laquo; nilmtk API Refer...</a></li>
-  <li><a href="nilmtk.disaggregate.html"
-         title="Next Chapter: nilmtk.disaggregate package">nilmtk.disaggreg... &raquo;</a></li>
+                
+  <li>
+    <a href="nilmtk.html" title="Previous Chapter: nilmtk API Reference"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm">&laquo; nilmtk API Refer...</span>
+    </a>
+  </li>
+  <li>
+    <a href="nilmtk.disaggregate.html" title="Next Chapter: nilmtk.disaggregate package"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm">nilmtk.disaggreg... &raquo;</span>
+    </a>
+  </li>
+              
             
             
             
             
-              <li>
+              <li class="hidden-sm">
 <div id="sourcelink">
   <a href="_sources/nilmtk.dataset.txt"
      rel="nofollow">Source</a>
@@ -197,7 +212,7 @@ for loading nilmtk&#8217;s REDD+ data format.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Attributes :</th><td class="field-body"><p class="first"><strong>buildings</strong> : dict</p>
+<tr class="field-odd field"><th class="field-name">Attributes:</th><td class="field-body"><p class="first"><strong>buildings</strong> : dict</p>
 <blockquote>
 <div><p>Each key is a string representing the name of the building and is
 preserved from the original dataset.  Each value is a
@@ -235,7 +250,7 @@ if geo location isn&#8217;t available for any individual building.</p>
 </table>
 <dl class="method">
 <dt id="nilmtk.dataset.dataset.DataSet.describe">
-<tt class="descname">describe</tt><big>(</big><em>fh=&lt;open file '&lt;stdout&gt;'</em>, <em>mode 'w' at 0x2b001b786150&gt;</em><big>)</big><a class="reference internal" href="_modules/nilmtk/dataset/dataset.html#DataSet.describe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.dataset.dataset.DataSet.describe" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">describe</tt><big>(</big><em>fh=&lt;open file '&lt;stdout&gt;'</em>, <em>mode 'w' at 0x2b968dae1150&gt;</em><big>)</big><a class="reference internal" href="_modules/nilmtk/dataset/dataset.html#DataSet.describe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.dataset.dataset.DataSet.describe" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -251,7 +266,7 @@ if geo location isn&#8217;t available for any individual building.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>directory</strong> : str</p>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>directory</strong> : str</p>
 <blockquote>
 <div><p>Output directory</p>
 </div></blockquote>
@@ -277,7 +292,7 @@ if geo location isn&#8217;t available for any individual building.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><strong>directory</strong> : Complete path where to export the data</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>directory</strong> : Complete path where to export the data</td>
 </tr>
 </tbody>
 </table>
@@ -317,7 +332,7 @@ If none then load all buildings in the dataset.</div></blockquote>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>directory</strong> : str</p>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>directory</strong> : str</p>
 <blockquote>
 <div><p>Directory where the HDF5 store is located</p>
 </div></blockquote>
@@ -386,13 +401,13 @@ If none then load all buildings in the dataset.</div></blockquote>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>s</strong> : int</p>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>s</strong> : int</p>
 <blockquote>
 <div><p>of the form 2011-02-02 14:48:00</p>
 </div></blockquote>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><p class="first last"><strong>datetime</strong> :</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>datetime</strong> :</p>
 </td>
 </tr>
 </tbody>
@@ -406,41 +421,8 @@ If none then load all buildings in the dataset.</div></blockquote>
 </dd></dl>
 
 </div>
-<div class="section" id="module-nilmtk.dataset.iawe">
-<span id="nilmtk-dataset-iawe-module"></span><h2>nilmtk.dataset.iawe module<a class="headerlink" href="#module-nilmtk.dataset.iawe" title="Permalink to this headline">¶</a></h2>
-<p>iAWE Dataset Loader</p>
-<dl class="class">
-<dt id="nilmtk.dataset.iawe.IAWE">
-<em class="property">class </em><tt class="descclassname">nilmtk.dataset.iawe.</tt><tt class="descname">IAWE</tt><a class="reference internal" href="_modules/nilmtk/dataset/iawe.html#IAWE"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.dataset.iawe.IAWE" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#nilmtk.dataset.dataset.DataSet" title="nilmtk.dataset.dataset.DataSet"><tt class="xref py py-class docutils literal"><span class="pre">nilmtk.dataset.dataset.DataSet</span></tt></a></p>
-<dl class="method">
-<dt id="nilmtk.dataset.iawe.IAWE.add_appliances">
-<tt class="descname">add_appliances</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/dataset/iawe.html#IAWE.add_appliances"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.dataset.iawe.IAWE.add_appliances" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="nilmtk.dataset.iawe.IAWE.add_mains">
-<tt class="descname">add_mains</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/dataset/iawe.html#IAWE.add_mains"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.dataset.iawe.IAWE.add_mains" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="nilmtk.dataset.iawe.IAWE.load">
-<tt class="descname">load</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/dataset/iawe.html#IAWE.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.dataset.iawe.IAWE.load" title="Permalink to this definition">¶</a></dt>
-<dd><p>Load entire dataset into memory</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="nilmtk.dataset.iawe.IAWE.load_hdf5">
-<tt class="descname">load_hdf5</tt><big>(</big><em>directory</em><big>)</big><a class="reference internal" href="_modules/nilmtk/dataset/iawe.html#IAWE.load_hdf5"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.dataset.iawe.IAWE.load_hdf5" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="function">
-<dt id="nilmtk.dataset.iawe.query_database_jplug">
-<tt class="descclassname">nilmtk.dataset.iawe.</tt><tt class="descname">query_database_jplug</tt><big>(</big><em>self</em>, <em>jplug</em><big>)</big><a class="reference internal" href="_modules/nilmtk/dataset/iawe.html#query_database_jplug"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.dataset.iawe.query_database_jplug" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
+<div class="section" id="nilmtk-dataset-iawe-module">
+<h2>nilmtk.dataset.iawe module<a class="headerlink" href="#nilmtk-dataset-iawe-module" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="module-nilmtk.dataset.pecan">
 <span id="nilmtk-dataset-pecan-module"></span><h2>nilmtk.dataset.pecan module<a class="headerlink" href="#module-nilmtk.dataset.pecan" title="Permalink to this headline">¶</a></h2>
@@ -568,7 +550,7 @@ like REDD or UKPD CSV files.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>building_dir</strong> : string</p>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>building_dir</strong> : string</p>
 <blockquote>
 <div><p>The base path</p>
 </div></blockquote>
@@ -597,7 +579,7 @@ will run <cite>usecols.insert(0,0)</cite> to load the index column.</p>
 </div></blockquote>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><p class="first"><strong>DataFrame.  Index is DatetimeIndex in UTC.  Data values are float32.</strong> :</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>DataFrame.  Index is DatetimeIndex in UTC.  Data values are float32.</strong> :</p>
 <blockquote class="last">
 <div><p>Column names are <cite>colnames</cite> if provided.</p>
 </div></blockquote>
@@ -615,10 +597,10 @@ will run <cite>usecols.insert(0,0)</cite> to load the index column.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>data_dir</strong> : str</p>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>data_dir</strong> : str</p>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><p class="first"><strong>labels</strong> : dict</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>labels</strong> : dict</p>
 <blockquote class="last">
 <div><p>mapping channel numbers (ints) to appliance names (str)</p>
 </div></blockquote>
@@ -669,7 +651,7 @@ data_dir : str</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns :</th><td class="field-body"><p class="first"><strong>labels</strong> : List</p>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>labels</strong> : List</p>
 <blockquote class="last">
 <div><p>of circuit names</p>
 </div></blockquote>
@@ -694,7 +676,7 @@ data_dir : str</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>periods_to_load</strong> : dict of tuples, optional</p>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>periods_to_load</strong> : dict of tuples, optional</p>
 <blockquote>
 <div><p>Key of dict is the building number (int).
 Values are (&lt;start date&gt;, &lt;end date&gt;)
@@ -744,8 +726,8 @@ if None then no downsampling will be done on the 1-sec mains data.</p>
     </p>
     <p>
         &copy; Copyright 2014, nilmtk authors.<br/>
-      Last updated on Mar 26, 2014.<br/>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.<br/>
+      Last updated on May 08, 2014.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.2.<br/>
     </p>
   </div>
 </footer>

@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 
 
@@ -10,13 +9,13 @@
     
     <link rel="stylesheet" href="_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="_static/bootstrap-3.0.0/css/bootstrap.min.css" type="text/css" />
-    <link rel="stylesheet" href="_static/bootstrap-3.0.0/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-3.1.0/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-3.1.0/css/bootstrap-theme.min.css" type="text/css" />
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '',
+        URL_ROOT:    './',
         VERSION:     '0.0.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
@@ -27,9 +26,9 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/javascript" src="_static/js/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="_static/bootstrap-3.0.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-3.1.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
     <link rel="top" title="nilmtk 0.0.1 documentation" href="index.html" />
     <link rel="up" title="nilmtk API Reference" href="nilmtk.html" />
@@ -52,7 +51,8 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="index.html">nilmtk</a>
+        <a class="navbar-brand" href="index.html">
+          nilmtk</a>
         <span class="navbar-text navbar-version pull-left"><b>0.0.1</b></span>
       </div>
 
@@ -62,12 +62,15 @@
             
             
               <li class="dropdown globaltoc-container">
-  <a href="index.html"
-     class="dropdown-toggle"
-     data-toggle="dropdown">Site <b class="caret"></b></a>
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="index.html">Site <b class="caret"></b></a>
   <ul class="dropdown-menu globaltoc"
-    ><ul>
-<li class="toctree-l1"><a class="reference internal" href="nilmtk.html">nilmtk API Reference</a></li>
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="nilmtk.html">nilmtk API Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="userguide.html">User Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contribute.html">Contributing</a></li>
 </ul>
@@ -75,8 +78,14 @@
 </li>
               
                 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Page <b class="caret"></b></a>
-  <ul class="dropdown-menu localtoc"><ul>
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
 <li><a class="reference internal" href="#">nilmtk.sensors package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
 <li><a class="reference internal" href="#module-nilmtk.sensors.ambient">nilmtk.sensors.ambient module</a></li>
@@ -97,15 +106,21 @@
             
             
               
-  <li><a href="nilmtk.preprocessing.electricity.html"
-         title="Previous Chapter: nilmtk.preprocessing.electricity package">&laquo; nilmtk.preproces...</a></li>
-  <li><a href="nilmtk.stats.html"
-         title="Next Chapter: nilmtk.stats package">nilmtk.stats pac... &raquo;</a></li>
+                
+  <li>
+    <a href="nilmtk.preprocessing.electricity.html" title="Previous Chapter: nilmtk.preprocessing.electricity package"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm">&laquo; nilmtk.preproces...</span>
+    </a>
+  </li>
+  <li>
+    <a href="nilmtk.stats.html" title="Next Chapter: nilmtk.stats package"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm">nilmtk.stats pac... &raquo;</span>
+    </a>
+  </li>
+              
             
             
             
             
-              <li>
+              <li class="hidden-sm">
 <div id="sourcelink">
   <a href="_sources/nilmtk.sensors.txt"
      rel="nofollow">Source</a>
@@ -147,7 +162,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Attributes :</th><td class="field-body"><p class="first"><strong>pir</strong> :</p>
+<tr class="field-odd field"><th class="field-name">Attributes:</th><td class="field-body"><p class="first"><strong>pir</strong> :</p>
 <p><strong>door</strong> :</p>
 <p class="last"><strong>temperature</strong> :</p>
 </td>
@@ -237,7 +252,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Attributes :</th><td class="field-body"><p class="first"><strong>mains</strong> : dict of DataFrames, optional</p>
+<tr class="field-odd field"><th class="field-name">Attributes:</th><td class="field-body"><p class="first"><strong>mains</strong> : dict of DataFrames, optional</p>
 <blockquote>
 <div><p>The power measurements taken from the level furthest upstream.
 Each key is a MainsName namedtuple with keys:</p>
@@ -414,7 +429,7 @@ class of appliance.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns :</th><td class="field-body"><strong>n_appliances</strong> : int</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>n_appliances</strong> : int</td>
 </tr>
 </tbody>
 </table>
@@ -430,7 +445,7 @@ anything.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><strong>start_datetime, end_datetime</strong> : strings or datetime objects, optional</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>start_datetime, end_datetime</strong> : strings or datetime objects, optional</td>
 </tr>
 </tbody>
 </table>
@@ -450,14 +465,14 @@ circuits and mains; in place.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>appliance_name</strong> : string</p>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>appliance_name</strong> : string</p>
 <p><strong>measurement</strong> : string or list of strings, optional</p>
 <blockquote>
 <div><p>{&#8216;apparent&#8217;, &#8216;active&#8217;, &#8216;reactive&#8217;, &#8216;voltage&#8217;, &#8216;all&#8217;}</p>
 </div></blockquote>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><p class="first last"><strong>appliance_data</strong> : DataFrame</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>appliance_data</strong> : DataFrame</p>
 </td>
 </tr>
 </tbody>
@@ -474,14 +489,14 @@ supplies (after checking if <cite>dualsupply.measurement == measurement</cite>).
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>measurement</strong> : Measurement, optional</p>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>measurement</strong> : Measurement, optional</p>
 <blockquote>
 <div><p>default=Measurement(&#8216;power&#8217;, &#8216;active&#8217;)
 if <cite>measurement=None</cite> then just get the first column per DataFrame.</p>
 </div></blockquote>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><p class="first"><strong>pandas.DataFrame</strong> :</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>pandas.DataFrame</strong> :</p>
 <blockquote class="last">
 <div><p>Index is the same as the index used in the appliances DataFrames.
 Each column name is an ApplianceName namedtuple.</p>
@@ -512,7 +527,7 @@ appliances, circuits and mains.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns :</th><td class="field-body"><strong>[start, end]</strong> : pd.Timestamp</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>[start, end]</strong> : pd.Timestamp</td>
 </tr>
 </tbody>
 </table>
@@ -559,14 +574,14 @@ the meter with the highest sample rate</li>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>measurement</strong> : Measurement, optional</p>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>measurement</strong> : Measurement, optional</p>
 <blockquote>
 <div><p>If None then will attempt to use the same Measurement
 for mains and appliances.</p>
 </div></blockquote>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><p class="first last"><strong>electricity_copy</strong> : Electricity</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>electricity_copy</strong> : Electricity</p>
 </td>
 </tr>
 </tbody>
@@ -646,10 +661,10 @@ single meter per appliance.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>appliance_df :</strong> :</p>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>appliance_df :</strong> :</p>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><p class="first"><strong>df_1</strong> :</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>df_1</strong> :</p>
 <p class="last"><strong>df_2</strong> :</p>
 </td>
 </tr>
@@ -668,9 +683,9 @@ appliances are copied over untouched.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><strong>dict_of_appliances</strong> : dict of pandas.DataFrames</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>dict_of_appliances</strong> : dict of pandas.DataFrames</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><strong>new_dict_of_appliances</strong> : dict of pandas.DataFrames</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>new_dict_of_appliances</strong> : dict of pandas.DataFrames</td>
 </tr>
 </tbody>
 </table>
@@ -715,7 +730,7 @@ appliances are copied over untouched.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Attributes :</th><td class="field-body"><p class="first"><strong>electric</strong> : nilmtk Electricity object</p>
+<tr class="field-odd field"><th class="field-name">Attributes:</th><td class="field-body"><p class="first"><strong>electric</strong> : nilmtk Electricity object</p>
 <p><strong>gas</strong> : Series, optional</p>
 <blockquote>
 <div><p>gas consumption in kWh</p>
@@ -763,8 +778,8 @@ appliances are copied over untouched.</p>
     </p>
     <p>
         &copy; Copyright 2014, nilmtk authors.<br/>
-      Last updated on Mar 26, 2014.<br/>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.<br/>
+      Last updated on May 08, 2014.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.2.<br/>
     </p>
   </div>
 </footer>

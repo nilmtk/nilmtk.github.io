@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 
 
@@ -10,13 +9,13 @@
     
     <link rel="stylesheet" href="_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="_static/bootstrap-3.0.0/css/bootstrap.min.css" type="text/css" />
-    <link rel="stylesheet" href="_static/bootstrap-3.0.0/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-3.1.0/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-3.1.0/css/bootstrap-theme.min.css" type="text/css" />
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '',
+        URL_ROOT:    './',
         VERSION:     '0.0.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
@@ -27,9 +26,9 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/javascript" src="_static/js/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="_static/bootstrap-3.0.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-3.1.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
     <link rel="top" title="nilmtk 0.0.1 documentation" href="index.html" />
     <link rel="up" title="User Guide" href="userguide.html" />
@@ -52,7 +51,8 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="index.html">nilmtk</a>
+        <a class="navbar-brand" href="index.html">
+          nilmtk</a>
         <span class="navbar-text navbar-version pull-left"><b>0.0.1</b></span>
       </div>
 
@@ -62,21 +62,30 @@
             
             
               <li class="dropdown globaltoc-container">
-  <a href="index.html"
-     class="dropdown-toggle"
-     data-toggle="dropdown">Site <b class="caret"></b></a>
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="index.html">Site <b class="caret"></b></a>
   <ul class="dropdown-menu globaltoc"
-    ><ul>
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="nilmtk.html">nilmtk API Reference</a></li>
-<li class="toctree-l1"><a class="reference internal" href="userguide.html">User Guide</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="userguide.html">User Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contribute.html">Contributing</a></li>
 </ul>
 </ul>
 </li>
               
                 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Page <b class="caret"></b></a>
-  <ul class="dropdown-menu localtoc"><ul>
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
 <li><a class="reference internal" href="#">Statistics and dataset diagnostics</a><ul>
 <li><a class="reference internal" href="#basic-stats-for-a-whole-building">Basic stats for a whole building</a></li>
 <li><a class="reference internal" href="#diagnosing-problems-with-data">Diagnosing problems with data</a></li>
@@ -90,15 +99,21 @@
             
             
               
-  <li><a href="userguide.html"
-         title="Previous Chapter: User Guide">&laquo; User Guide</a></li>
-  <li><a href="preprocessing.html"
-         title="Next Chapter: Dataset Preprocessing">Dataset Preproce... &raquo;</a></li>
+                
+  <li>
+    <a href="userguide.html" title="Previous Chapter: User Guide"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm">&laquo; User Guide</span>
+    </a>
+  </li>
+  <li>
+    <a href="preprocessing.html" title="Next Chapter: Dataset Preprocessing"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm">Dataset Preproce... &raquo;</span>
+    </a>
+  </li>
+              
             
             
             
             
-              <li>
+              <li class="hidden-sm">
 <div id="sourcelink">
   <a href="_sources/stats.txt"
      rel="nofollow">Source</a>
@@ -125,54 +140,14 @@
     <div class="col-md-12">
       
   <div class="section" id="statistics-and-dataset-diagnostics">
-<span id="stats"></span><h1>Statistics and dataset diagnostics<a class="headerlink" href="#statistics-and-dataset-diagnostics" title="Permalink to this headline">¶</a></h1>
+<h1>Statistics and dataset diagnostics<a class="headerlink" href="#statistics-and-dataset-diagnostics" title="Permalink to this headline">¶</a></h1>
 <p>As a demonstration, let us first load the REDD dataset (which has
 already been converted to HDF5 format):</p>
-<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [1]: </span><span class="kn">from</span> <span class="nn">nilmtk.dataset</span> <span class="kn">import</span> <span class="n">DataSet</span>
-
-<span class="gp">In [2]: </span><span class="n">dataset</span> <span class="o">=</span> <span class="n">DataSet</span><span class="p">()</span>
-
-<span class="gp">In [3]: </span><span class="n">dataset</span><span class="o">.</span><span class="n">load_hdf5</span><span class="p">(</span><span class="s">&#39;/home/nipun/Dropbox/nilmtk_datasets/redd/low_freq/&#39;</span><span class="p">)</span>
-
-<span class="gp">In [4]: </span><span class="n">electric</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">buildings</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">utility</span><span class="o">.</span><span class="n">electric</span>
-
-<span class="gp">In [5]: </span><span class="n">electric</span><span class="o">.</span><span class="n">appliances</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
-
-<span class="go">[ApplianceName(name=&#39;fridge&#39;, instance=1),</span>
-<span class="go"> ApplianceName(name=&#39;washer dryer&#39;, instance=1),</span>
-<span class="go"> ApplianceName(name=&#39;kitchen outlets&#39;, instance=2),</span>
-<span class="go"> ApplianceName(name=&#39;lighting&#39;, instance=3),</span>
-<span class="go"> ApplianceName(name=&#39;kitchen outlets&#39;, instance=1),</span>
-<span class="go"> ApplianceName(name=&#39;lighting&#39;, instance=2),</span>
-<span class="go"> ApplianceName(name=&#39;kitchen outlets&#39;, instance=4),</span>
-<span class="go"> ApplianceName(name=&#39;kitchen outlets&#39;, instance=3),</span>
-<span class="go"> ApplianceName(name=&#39;lighting&#39;, instance=1),</span>
-<span class="go"> ApplianceName(name=&#39;dishwasher&#39;, instance=1),</span>
-<span class="go"> ApplianceName(name=&#39;microwave&#39;, instance=1),</span>
-<span class="go"> ApplianceName(name=&#39;bathroom misc&#39;, instance=1),</span>
-<span class="go"> ApplianceName(name=&#39;space heater&#39;, instance=1),</span>
-<span class="go"> ApplianceName(name=&#39;oven&#39;, instance=1),</span>
-<span class="go"> ApplianceName(name=&#39;hob&#39;, instance=1)]</span>
-</pre></div>
-</div>
 <div class="section" id="basic-stats-for-a-whole-building">
 <h2>Basic stats for a whole building<a class="headerlink" href="#basic-stats-for-a-whole-building" title="Permalink to this headline">¶</a></h2>
 <p><cite>proportion_of_energy_submetered</cite> reports the proportion of energy in
 a building that is submetered where 0 = no energy submetered and 1 =
 all energy submetered:</p>
-<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [6]: </span><span class="kn">import</span> <span class="nn">nilmtk.stats.electricity.building</span> <span class="kn">as</span> <span class="nn">building_stats</span>
-
-<span class="gp">In [7]: </span><span class="n">building_stats</span><span class="o">.</span><span class="n">proportion_of_energy_submetered</span><span class="p">(</span><span class="n">electric</span><span class="p">)</span>
-<span class="go">Calculating proportion of energy submetered...</span>
-<span class="go">Masking appliances with mains... may take a little while...Mains sample period = 1.0, max_sample_period = 20.0</span>
-<span class="go">Getting gap starts and ends...</span>
-<span class="go">Found 27 gap starts and 27 gap ends.</span>
-<span class="go">...............done</span>
-<span class="go">Inserting zeros... may take a little while...done inserting zeros</span>
-<span class="go">0.8</span>
-
-</pre></div>
-</div>
 </div>
 <div class="section" id="diagnosing-problems-with-data">
 <h2>Diagnosing problems with data<a class="headerlink" href="#diagnosing-problems-with-data" title="Permalink to this headline">¶</a></h2>
@@ -191,10 +166,6 @@ by the <cite>max_sample_period</cite> argument.  If two consecutive samples are
 more than <cite>max_sample_period</cite> apart then that&#8217;s a gap!  The default is
 <cite>4 x sample_period</cite>. The plot below shows that the two mains channels
 are inactive for most of the second half of May 2011:</p>
-<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [8]: </span><span class="n">building_stats</span><span class="o">.</span><span class="n">plot_missing_samples_using_rectangles</span><span class="p">(</span><span class="n">electric</span><span class="p">)</span>
-</pre></div>
-</div>
-<img alt="_images/plot_missing_samples_using_rectangles.png" src="_images/plot_missing_samples_using_rectangles.png" />
 <p>The advantages of <cite>plot_missing_samples_using_rectangles</cite> are:</p>
 <ul class="simple">
 <li>clearly shows large gaps</li>
@@ -206,12 +177,6 @@ are inactive for most of the second half of May 2011:</p>
 <li>Because it plots lots of rectangles, it can be slow to plot.</li>
 </ul>
 <p>To overcome both of these disadvantages, we have a sister function:</p>
-<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [9]: </span><span class="n">building_stats</span><span class="o">.</span><span class="n">plot_missing_samples_using_bitmap</span><span class="p">(</span><span class="n">electric</span><span class="p">)</span>
-<span class="go">Seconds per pixel = 3917.6</span>
-<span class="go">&lt;matplotlib.axes.AxesSubplot at 0x62eecd0&gt;</span>
-</pre></div>
-</div>
-<img alt="_images/plot_missing_samples_using_bitmap.png" src="_images/plot_missing_samples_using_bitmap.png" />
 <p>Here, the darkness of the blue colour indicates the proportion of
 samples lost, where dark blue means all samples are lost, light blue
 means some samples are lost and white means no samples are lost.  In
@@ -224,234 +189,19 @@ dropouts are spread evenly.</p>
 <h2>Exploring a single appliance<a class="headerlink" href="#exploring-a-single-appliance" title="Permalink to this headline">¶</a></h2>
 <p>Let&#8217;s get a more precise understanding of the dropout rate of a
 REDD circuit by getting the dropout rate per day:</p>
-<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [10]: </span><span class="kn">import</span> <span class="nn">nilmtk.stats.electricity.single</span> <span class="kn">as</span> <span class="nn">nstats</span>
-
-<span class="gp">In [11]: </span><span class="n">oven</span> <span class="o">=</span> <span class="n">electric</span><span class="o">.</span><span class="n">appliances</span><span class="p">[(</span><span class="s">&#39;oven&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)]</span>
-
-<span class="gp">In [12]: </span><span class="n">nstats</span><span class="o">.</span><span class="n">dropout_rate_per_period</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">oven</span><span class="p">,</span> <span class="n">rule</span><span class="o">=</span><span class="s">&#39;D&#39;</span><span class="p">)</span>
-
-<span class="go">2011-04-18 00:00:00-04:00    0.403874</span>
-<span class="go">2011-04-19 00:00:00-04:00    0.071053</span>
-<span class="go">2011-04-20 00:00:00-04:00    0.022584</span>
-<span class="go">2011-04-21 00:00:00-04:00    0.106030</span>
-<span class="go">2011-04-22 00:00:00-04:00    0.026252</span>
-<span class="go">2011-04-23 00:00:00-04:00    0.024986</span>
-<span class="go">2011-04-24 00:00:00-04:00    0.015685</span>
-<span class="go">2011-04-25 00:00:00-04:00    0.024200</span>
-<span class="go">2011-04-26 00:00:00-04:00    0.020532</span>
-<span class="go">2011-04-27 00:00:00-04:00    0.026907</span>
-<span class="go">2011-04-28 00:00:00-04:00    0.025510</span>
-<span class="go">2011-04-29 00:00:00-04:00    0.024243</span>
-<span class="go">2011-04-30 00:00:00-04:00    0.014899</span>
-<span class="go">2011-05-01 00:00:00-04:00    0.017694</span>
-<span class="go">2011-05-02 00:00:00-04:00    0.032496</span>
-<span class="go">2011-05-03 00:00:00-04:00    0.279427</span>
-<span class="go">2011-05-04 00:00:00-04:00    1.000000</span>
-<span class="go">2011-05-05 00:00:00-04:00    1.000000</span>
-<span class="go">2011-05-06 00:00:00-04:00    0.455705</span>
-<span class="go">2011-05-07 00:00:00-04:00    0.020488</span>
-<span class="go">2011-05-08 00:00:00-04:00    0.020619</span>
-<span class="go">2011-05-09 00:00:00-04:00    0.026689</span>
-<span class="go">2011-05-10 00:00:00-04:00    0.027431</span>
-<span class="go">2011-05-11 00:00:00-04:00    0.007301</span>
-<span class="go">2011-05-12 00:00:00-04:00    0.128954</span>
-<span class="go">2011-05-13 00:00:00-04:00    0.026863</span>
-<span class="go">2011-05-14 00:00:00-04:00    0.017301</span>
-<span class="go">2011-05-15 00:00:00-04:00    0.007432</span>
-<span class="go">2011-05-16 00:00:00-04:00    0.009048</span>
-<span class="go">2011-05-17 00:00:00-04:00    0.005773</span>
-<span class="go">2011-05-18 00:00:00-04:00    0.028872</span>
-<span class="go">2011-05-19 00:00:00-04:00    0.009703</span>
-<span class="go">2011-05-20 00:00:00-04:00    0.007388</span>
-<span class="go">2011-05-21 00:00:00-04:00    0.010707</span>
-<span class="go">2011-05-22 00:00:00-04:00    0.017868</span>
-<span class="go">2011-05-23 00:00:00-04:00    0.056382</span>
-<span class="go">2011-05-24 00:00:00-04:00    0.409725</span>
-<span class="go">Freq: D, dtype: float64</span>
-</pre></div>
-</div>
 <p>And a histogram of power consumption:</p>
-<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [13]: </span><span class="n">oven_above_zero</span> <span class="o">=</span> <span class="p">(</span><span class="n">oven</span><span class="p">[</span><span class="n">oven</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">icol</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
-
-<span class="gp">In [14]: </span><span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">&#39;power (watts)&#39;</span><span class="p">)</span>
-<span class="go">&lt;matplotlib.text.Text at 0x1781cdd0&gt;</span>
-
-<span class="gp">In [15]: </span><span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">&#39;frequency&#39;</span><span class="p">)</span>
-<span class="go">&lt;matplotlib.text.Text at 0x68fac50&gt;</span>
-
-<span class="gp">In [16]: </span><span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">oven_above_zero</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
-
-<span class="go">(array([  1.6e+04,   1.8e+02,   1.0e+00,   2.0e+00,   2.0e+00,   1.0e+00,</span>
-<span class="go">         0.0e+00,   0.0e+00,   1.0e+00,   0.0e+00,   0.0e+00,   0.0e+00,</span>
-<span class="go">         0.0e+00,   0.0e+00,   0.0e+00,   1.0e+00,   0.0e+00,   0.0e+00,</span>
-<span class="go">         0.0e+00,   0.0e+00,   0.0e+00,   0.0e+00,   0.0e+00,   0.0e+00,</span>
-<span class="go">         0.0e+00,   0.0e+00,   0.0e+00,   0.0e+00,   0.0e+00,   0.0e+00,</span>
-<span class="go">         0.0e+00,   0.0e+00,   0.0e+00,   0.0e+00,   0.0e+00,   0.0e+00,</span>
-<span class="go">         0.0e+00,   0.0e+00,   1.0e+00,   0.0e+00,   0.0e+00,   0.0e+00,</span>
-<span class="go">         0.0e+00,   0.0e+00,   0.0e+00,   0.0e+00,   0.0e+00,   0.0e+00,</span>
-<span class="go">         0.0e+00,   0.0e+00,   0.0e+00,   0.0e+00,   0.0e+00,   0.0e+00,</span>
-<span class="go">         0.0e+00,   0.0e+00,   0.0e+00,   1.0e+00,   0.0e+00,   0.0e+00,</span>
-<span class="go">         0.0e+00,   0.0e+00,   0.0e+00,   0.0e+00,   0.0e+00,   0.0e+00,</span>
-<span class="go">         0.0e+00,   0.0e+00,   0.0e+00,   0.0e+00,   0.0e+00,   0.0e+00,</span>
-<span class="go">         0.0e+00,   0.0e+00,   0.0e+00,   0.0e+00,   0.0e+00,   0.0e+00,</span>
-<span class="go">         0.0e+00,   0.0e+00,   0.0e+00,   0.0e+00,   0.0e+00,   0.0e+00,</span>
-<span class="go">         0.0e+00,   0.0e+00,   0.0e+00,   0.0e+00,   0.0e+00,   0.0e+00,</span>
-<span class="go">         0.0e+00,   1.0e+01,   6.5e+01,   1.8e+02,   5.0e+02,   4.8e+02,</span>
-<span class="go">         5.8e+02,   2.5e+02,   4.1e+01,   8.0e+00]),</span>
-<span class="go"> array([    2.5,    19.7,    37. ,    54.2,    71.4,    88.6,   105.9,</span>
-<span class="go">         123.1,   140.3,   157.5,   174.8,   192. ,   209.2,   226.4,</span>
-<span class="go">         243.7,   260.9,   278.1,   295.3,   312.6,   329.8,   347. ,</span>
-<span class="go">         364.2,   381.5,   398.7,   415.9,   433.1,   450.4,   467.6,</span>
-<span class="go">         484.8,   502. ,   519.2,   536.5,   553.7,   570.9,   588.2,</span>
-<span class="go">         605.4,   622.6,   639.8,   657.1,   674.3,   691.5,   708.7,</span>
-<span class="go">         726. ,   743.2,   760.4,   777.6,   794.9,   812.1,   829.3,</span>
-<span class="go">         846.5,   863.8,   881. ,   898.2,   915.4,   932.7,   949.9,</span>
-<span class="go">         967.1,   984.3,  1001.6,  1018.8,  1036. ,  1053.2,  1070.5,</span>
-<span class="go">        1087.7,  1104.9,  1122.1,  1139.4,  1156.6,  1173.8,  1191. ,</span>
-<span class="go">        1208.2,  1225.5,  1242.7,  1259.9,  1277.2,  1294.4,  1311.6,</span>
-<span class="go">        1328.8,  1346.1,  1363.3,  1380.5,  1397.7,  1415. ,  1432.2,</span>
-<span class="go">        1449.4,  1466.6,  1483.9,  1501.1,  1518.3,  1535.5,  1552.8,</span>
-<span class="go">        1570. ,  1587.2,  1604.4,  1621.7,  1638.9,  1656.1,  1673.3,</span>
-<span class="go">        1690.6,  1707.8,  1725. ]),</span>
-<span class="go"> &lt;a list of 100 Patch objects&gt;)</span>
-</pre></div>
-</div>
-<img alt="_images/oven_power_hist.png" src="_images/oven_power_hist.png" />
 <p>So we now know that the oven spends a lot of its time consuming about
 2-50 Watts but it appears to be properly &#8216;on&#8217; when it&#8217;s consuming over
 1600 watts.  So let&#8217;s use 1000 watts as the on power threshold.</p>
 <p>And some more stats:</p>
-<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [17]: </span><span class="n">nstats</span><span class="o">.</span><span class="n">get_sample_period</span><span class="p">(</span><span class="n">oven</span><span class="p">)</span>
-<span class="go">3.8</span>
-
-<span class="c"># Get the number of hours the oven has been on for:</span>
-<span class="gp">In [18]: </span><span class="n">nstats</span><span class="o">.</span><span class="n">hours_on</span><span class="p">(</span><span class="n">oven</span><span class="p">,</span> <span class="n">on_power_threshold</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
-<span class="go">4.5</span>
-
-<span class="c"># Get the total kWh consumed by the over:</span>
-<span class="gp">In [19]: </span><span class="n">nstats</span><span class="o">.</span><span class="n">energy</span><span class="p">(</span><span class="n">oven</span><span class="p">)</span>
-<span class="go">3.8</span>
-
-<span class="c"># Or the joules consumed:</span>
-<span class="gp">In [20]: </span><span class="n">nstats</span><span class="o">.</span><span class="n">energy</span><span class="p">(</span><span class="n">oven</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s">&#39;joules&#39;</span><span class="p">)</span>
-<span class="go">13717045.0</span>
-
-<span class="c"># Or the usage (hours on and energy used) per day:</span>
-<span class="gp">In [21]: </span><span class="n">nstats</span><span class="o">.</span><span class="n">usage_per_period</span><span class="p">(</span><span class="n">oven</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s">&#39;D&#39;</span><span class="p">,</span> <span class="n">on_power_threshold</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
-
-<span class="go">            hours_on       kwh</span>
-<span class="go">2011-04-18       NaN       NaN</span>
-<span class="go">2011-04-19  0.000000  0.000063</span>
-<span class="go">2011-04-20  0.000000  0.000010</span>
-<span class="go">2011-04-21  0.000000  0.000014</span>
-<span class="go">2011-04-22  0.000000  0.000004</span>
-<span class="go">2011-04-23  0.000000  0.007393</span>
-<span class="go">2011-04-24  0.308056  0.510096</span>
-<span class="go">2011-04-25  0.000000  0.002017</span>
-<span class="go">2011-04-26  0.000000  0.000710</span>
-<span class="go">2011-04-27  0.000000  0.000006</span>
-<span class="go">[10 rows x 2 columns]</span>
-</pre></div>
-</div>
 <p>And we can plot some histograms to get an understanding of the
 behaviour of an appliance. Let&#8217;s see the usage of the appliance
 hour-by-hour over an average day:</p>
-<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [22]: </span><span class="n">dist</span> <span class="o">=</span> <span class="n">nstats</span><span class="o">.</span><span class="n">activity_distribution</span><span class="p">(</span><span class="n">oven</span><span class="p">,</span> <span class="n">bin_size</span><span class="o">=</span><span class="s">&#39;H&#39;</span><span class="p">,</span> <span class="n">timespan</span><span class="o">=</span><span class="s">&#39;D&#39;</span><span class="p">,</span> <span class="n">on_power_threshold</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
-
-<span class="gp">In [23]: </span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">dist</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
-
-<span class="gp">In [24]: </span><span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">&#39;frequency&#39;</span><span class="p">)</span>
-<span class="go">&lt;matplotlib.text.Text at 0x2837c850&gt;</span>
-
-<span class="gp">In [25]: </span><span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">&#39;hour of day&#39;</span><span class="p">)</span>
-<span class="go">&lt;matplotlib.text.Text at 0x28361f10&gt;</span>
-
-<span class="gp">In [26]: </span><span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">24</span><span class="p">])</span>
-<span class="go">(0, 24)</span>
-
-<span class="gp">In [27]: </span><span class="n">plt</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">dist</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
-<span class="go">&lt;Container object of 24 artists&gt;</span>
-</pre></div>
-</div>
-<img alt="_images/activity_dist_day.png" src="_images/activity_dist_day.png" />
 <p>Not surprisingly, the oven is used most often around lunch and dinner times.</p>
 <p>Or the behaviour day-by-day over an average week:</p>
-<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [28]: </span><span class="n">dist</span> <span class="o">=</span> <span class="n">nstats</span><span class="o">.</span><span class="n">activity_distribution</span><span class="p">(</span><span class="n">oven</span><span class="p">,</span> <span class="n">bin_size</span><span class="o">=</span><span class="s">&#39;D&#39;</span><span class="p">,</span> <span class="n">timespan</span><span class="o">=</span><span class="s">&#39;W&#39;</span><span class="p">,</span> <span class="n">on_power_threshold</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
-<span class="go">---------------------------------------------------------------------------</span>
-<span class="go">TooFewSamplesError                        Traceback (most recent call last)</span>
-<span class="go">&lt;ipython-input-28-e5e302ba6f55&gt; in &lt;module&gt;()</span>
-<span class="go">----&gt; 1 dist = nstats.activity_distribution(oven, bin_size=&#39;D&#39;, timespan=&#39;W&#39;, on_power_threshold=1000)</span>
-<span class="go">/home/nipun/git/nilmtk/nilmtk/stats/electricity/single.pyc in activity_distribution(series, on_power_threshold, bin_size, timespan)</span>
-<span class="go">    742     timespans, boundaries = _indicies_of_periods(</span>
-<span class="go">    743         binned_data.index.to_timestamp(),</span>
-<span class="go">--&gt; 744         freq=timespan)</span>
-<span class="go">    745 </span>
-<span class="go">    746     first_timespan = timespans[0]</span>
-<span class="go">/home/nipun/git/nilmtk/nilmtk/stats/electricity/single.pyc in _indicies_of_periods(datetime_index, freq, use_local_time)</span>
-<span class="go">   1005 </span>
-<span class="go">   1006     # Find the minimum sample period.</span>
-<span class="go">-&gt; 1007     MIN_SAMPLE_PERIOD = int(get_sample_period(datetime_index))</span>
-<span class="go">   1008     MAX_SAMPLES_PER_PERIOD = int(</span>
-<span class="go">   1009         secs_per_period_alias(freq) / MIN_SAMPLE_PERIOD)</span>
-<span class="go">/home/nipun/git/nilmtk/nilmtk/stats/electricity/single.pyc in get_sample_period(data)</span>
-<span class="go">     47             name = &#39;&#39;</span>
-<span class="go">     48         raise TooFewSamplesError(&#39;{:d} samples required. Only {:d} in data! {:s}&#39;</span>
-<span class="go">---&gt; 49                                  .format(N_SAMPLES, len(data), name))</span>
-<span class="go">     50     index = _get_index(data)</span>
-<span class="go">     51     time_delta_ns = np.diff(index.values[-N_SAMPLES:]).astype(np.float)</span>
-<span class="go">TooFewSamplesError: 90 samples required. Only 37 in data! None</span>
-
-<span class="gp">In [29]: </span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">dist</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
-
-<span class="gp">In [30]: </span><span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">&#39;frequency&#39;</span><span class="p">)</span>
-<span class="go">&lt;matplotlib.text.Text at 0x62f80d0&gt;</span>
-
-<span class="gp">In [31]: </span><span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">&#39;day of week&#39;</span><span class="p">)</span>
-<span class="go">&lt;matplotlib.text.Text at 0x28dfec50&gt;</span>
-
-<span class="gp">In [32]: </span><span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span><span class="o">+</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">calendar</span><span class="o">.</span><span class="n">day_name</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">7</span><span class="p">])</span>
-
-<span class="go">([&lt;matplotlib.axis.XTick at 0x28deec50&gt;,</span>
-<span class="go">  &lt;matplotlib.axis.XTick at 0x28dfe750&gt;,</span>
-<span class="go">  &lt;matplotlib.axis.XTick at 0x13b11cd0&gt;,</span>
-<span class="go">  &lt;matplotlib.axis.XTick at 0x13b114d0&gt;,</span>
-<span class="go">  &lt;matplotlib.axis.XTick at 0x621d310&gt;,</span>
-<span class="go">  &lt;matplotlib.axis.XTick at 0x13b15ed0&gt;,</span>
-<span class="go">  &lt;matplotlib.axis.XTick at 0x13b153d0&gt;],</span>
-<span class="go"> &lt;a list of 7 Text xticklabel objects&gt;)</span>
-
-<span class="gp">In [33]: </span><span class="n">plt</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">dist</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
-<span class="go">&lt;Container object of 24 artists&gt;</span>
-</pre></div>
-</div>
-<img alt="_images/activity_dist_week.png" src="_images/activity_dist_week.png" />
 <p>We can see that not much cooking was done in the middle of the week.</p>
 <p>Let&#8217;s find out length of time that the oven tends to be active for
 across the dataset.</p>
-<div class="highlight-ipython"><div class="highlight"><pre><span class="c"># Get a Series of booleans indicating when the oven is on:</span>
-<span class="gp">In [34]: </span><span class="n">on_series</span> <span class="o">=</span> <span class="n">nstats</span><span class="o">.</span><span class="n">on</span><span class="p">(</span><span class="n">oven</span><span class="p">,</span> <span class="n">on_power_threshold</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
-
-<span class="c"># Now get the length of every on-duration</span>
-<span class="gp">In [35]: </span><span class="n">on_durations</span> <span class="o">=</span> <span class="n">nstats</span><span class="o">.</span><span class="n">durations</span><span class="p">(</span><span class="n">on_series</span><span class="p">,</span>
-<span class="gp">   ....:</span>                                 <span class="n">on_or_off</span><span class="o">=</span><span class="s">&#39;on&#39;</span><span class="p">,</span>
-<span class="gp">   ....:</span>                                 <span class="n">ignore_n_off_samples</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
-<span class="gp">   ....:</span> 
-
-<span class="gp">In [36]: </span><span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">&#39;minutes on&#39;</span><span class="p">)</span>
-<span class="go">&lt;matplotlib.text.Text at 0x13b15790&gt;</span>
-
-<span class="gp">In [37]: </span><span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">&#39;frequency&#39;</span><span class="p">)</span>
-<span class="go">&lt;matplotlib.text.Text at 0x6c06750&gt;</span>
-
-<span class="gp">In [38]: </span><span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">on_durations</span><span class="o">/</span><span class="mi">60</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
-
-<span class="go">(array([ 36.,   8.,   2.,   0.,   0.,   0.,   0.,   0.,   0.,   1.]),</span>
-<span class="go"> array([  0.9,   3.6,   6.4,   9.2,  11.9,  14.7,  17.4,  20.2,  23. ,</span>
-<span class="go">        25.7,  28.5]),</span>
-<span class="go"> &lt;a list of 10 Patch objects&gt;)</span>
-</pre></div>
-</div>
-<img alt="_images/on_durations.png" src="_images/on_durations.png" />
 </div>
 </div>
 
@@ -468,8 +218,8 @@ across the dataset.</p>
     </p>
     <p>
         &copy; Copyright 2014, nilmtk authors.<br/>
-      Last updated on Mar 26, 2014.<br/>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.<br/>
+      Last updated on May 08, 2014.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.2.<br/>
     </p>
   </div>
 </footer>

@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 
 
@@ -10,13 +9,13 @@
     
     <link rel="stylesheet" href="_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="_static/bootstrap-3.0.0/css/bootstrap.min.css" type="text/css" />
-    <link rel="stylesheet" href="_static/bootstrap-3.0.0/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-3.1.0/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-3.1.0/css/bootstrap-theme.min.css" type="text/css" />
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '',
+        URL_ROOT:    './',
         VERSION:     '0.0.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
@@ -27,9 +26,9 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/javascript" src="_static/js/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="_static/bootstrap-3.0.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-3.1.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
     <link rel="top" title="nilmtk 0.0.1 documentation" href="index.html" />
     <link rel="next" title="nilmtk.dataset package" href="nilmtk.dataset.html" />
@@ -51,7 +50,8 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="index.html">nilmtk</a>
+        <a class="navbar-brand" href="index.html">
+          nilmtk</a>
         <span class="navbar-text navbar-version pull-left"><b>0.0.1</b></span>
       </div>
 
@@ -61,11 +61,14 @@
             
             
               <li class="dropdown globaltoc-container">
-  <a href="index.html"
-     class="dropdown-toggle"
-     data-toggle="dropdown">Site <b class="caret"></b></a>
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="index.html">Site <b class="caret"></b></a>
   <ul class="dropdown-menu globaltoc"
-    ><ul class="current">
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="">nilmtk API Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="userguide.html">User Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contribute.html">Contributing</a></li>
@@ -74,20 +77,20 @@
 </li>
               
                 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Page <b class="caret"></b></a>
-  <ul class="dropdown-menu localtoc"><ul>
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
 <li><a class="reference internal" href="#">nilmtk API Reference</a><ul>
-<li><a class="reference internal" href="#subpackages">Subpackages</a><ul>
-</ul>
-</li>
+<li><a class="reference internal" href="#subpackages">Subpackages</a></li>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
 <li><a class="reference internal" href="#nilmtk-building-module">nilmtk.building module</a></li>
 <li><a class="reference internal" href="#module-nilmtk.cross_validation">nilmtk.cross_validation module</a></li>
-<li><a class="reference internal" href="#module-nilmtk.metrics">nilmtk.metrics module</a><ul>
-<li><a class="reference internal" href="#notation">Notation</a></li>
-<li><a class="reference internal" href="#functions">Functions</a></li>
-</ul>
-</li>
+<li><a class="reference internal" href="#nilmtk-metrics-module">nilmtk.metrics module</a></li>
 <li><a class="reference internal" href="#module-nilmtk.plots">nilmtk.plots module</a></li>
 <li><a class="reference internal" href="#module-nilmtk.utils">nilmtk.utils module</a></li>
 <li><a class="reference internal" href="#module-nilmtk.version">nilmtk.version module</a></li>
@@ -101,15 +104,21 @@
             
             
               
-  <li><a href="index.html"
-         title="Previous Chapter: nilmtk: Non intrusive load monitoring toolkit">&laquo; nilmtk: Non intr...</a></li>
-  <li><a href="nilmtk.dataset.html"
-         title="Next Chapter: nilmtk.dataset package">nilmtk.dataset p... &raquo;</a></li>
+                
+  <li>
+    <a href="index.html" title="Previous Chapter: nilmtk: Non intrusive load monitoring toolkit"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm">&laquo; nilmtk: Non intr...</span>
+    </a>
+  </li>
+  <li>
+    <a href="nilmtk.dataset.html" title="Next Chapter: nilmtk.dataset package"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm">nilmtk.dataset p... &raquo;</span>
+    </a>
+  </li>
+              
             
             
             
             
-              <li>
+              <li class="hidden-sm">
 <div id="sourcelink">
   <a href="_sources/nilmtk.txt"
      rel="nofollow">Source</a>
@@ -150,7 +159,7 @@ uses.</p>
 <li class="toctree-l2"><a class="reference internal" href="nilmtk.dataset.html#module-nilmtk.dataset.ampds">nilmtk.dataset.ampds module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="nilmtk.dataset.html#module-nilmtk.dataset.dataset">nilmtk.dataset.dataset module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="nilmtk.dataset.html#module-nilmtk.dataset.hes">nilmtk.dataset.hes module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="nilmtk.dataset.html#module-nilmtk.dataset.iawe">nilmtk.dataset.iawe module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nilmtk.dataset.html#nilmtk-dataset-iawe-module">nilmtk.dataset.iawe module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="nilmtk.dataset.html#module-nilmtk.dataset.pecan">nilmtk.dataset.pecan module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="nilmtk.dataset.html#notes">NOTES</a></li>
 <li class="toctree-l3"><a class="reference internal" href="nilmtk.dataset.html#todos">TODOS</a></li>
@@ -177,9 +186,9 @@ uses.</p>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="nilmtk.disaggregate.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="nilmtk.disaggregate.html#module-nilmtk.disaggregate.co_1d">nilmtk.disaggregate.co_1d module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nilmtk.disaggregate.html#nilmtk-disaggregate-co-1d-module">nilmtk.disaggregate.co_1d module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="nilmtk.disaggregate.html#module-nilmtk.disaggregate.disaggregator">nilmtk.disaggregate.disaggregator module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="nilmtk.disaggregate.html#module-nilmtk.disaggregate.fhmm_exact">nilmtk.disaggregate.fhmm_exact module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nilmtk.disaggregate.html#nilmtk-disaggregate-fhmm-exact-module">nilmtk.disaggregate.fhmm_exact module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="nilmtk.disaggregate.html#module-nilmtk.disaggregate">Module contents</a></li>
 </ul>
 </li>
@@ -249,7 +258,7 @@ uses.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Attributes :</th><td class="field-body"><p class="first"><strong>utility</strong> :  nilmtk Utility object</p>
+<tr class="field-odd field"><th class="field-name">Attributes:</th><td class="field-body"><p class="first"><strong>utility</strong> :  nilmtk Utility object</p>
 <p><strong>ambient</strong> : dict of nilmtk Ambient objects</p>
 <blockquote>
 <div><p>Keys are pairs of the form
@@ -322,7 +331,7 @@ building.utility.electricity.mains</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>building</strong> : nilmtk.building</p>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>building</strong> : nilmtk.building</p>
 <blockquote>
 <div><p>building must have mains and some submetered information</p>
 </div></blockquote>
@@ -343,7 +352,7 @@ the value is automatically set to the complement of the test size.</p>
 </div></blockquote>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><p class="first last"><strong>splitting</strong> : list of buildings, where size of this list is 2</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>splitting</strong> : list of buildings, where size of this list is 2</p>
 </td>
 </tr>
 </tbody>
@@ -351,348 +360,8 @@ the value is automatically set to the complement of the test size.</p>
 </dd></dl>
 
 </div>
-<div class="section" id="module-nilmtk.metrics">
-<span id="nilmtk-metrics-module"></span><h2>nilmtk.metrics module<a class="headerlink" href="#module-nilmtk.metrics" title="Permalink to this headline">¶</a></h2>
-<p>Metrics to compare disaggregation performance of various algorithms</p>
-<div class="section" id="notation">
-<h3>Notation<a class="headerlink" href="#notation" title="Permalink to this headline">¶</a></h3>
-<p>Below is the notation used to mathematically define each metric.</p>
-<p><span class="math">\(T\)</span> - number of time slices.</p>
-<p><span class="math">\(t\)</span> - a time slice.</p>
-<p><span class="math">\(N\)</span> - number of appliances.</p>
-<p><span class="math">\(n\)</span> - an appliance.</p>
-<p><span class="math">\(y^{(n)}_t\)</span> -  ground truth power of appliance <span class="math">\(n\)</span> in time slice <span class="math">\(t\)</span>.</p>
-<p><span class="math">\(\hat{y}^{(n)}_t\)</span> -  estimated power of appliance <span class="math">\(n\)</span> in time slice <span class="math">\(t\)</span>.</p>
-<p><span class="math">\(x^{(n)}_t\)</span> - ground truth state of appliance <span class="math">\(n\)</span> in time slice <span class="math">\(t\)</span>.</p>
-<p><span class="math">\(\hat{x}^{(n)}_t\)</span> - estimated state of appliance <span class="math">\(n\)</span> in time slice <span class="math">\(t\)</span>.</p>
-</div>
-<div class="section" id="functions">
-<h3>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h3>
-<dl class="function">
-<dt id="nilmtk.metrics.confusion_matrices">
-<tt class="descclassname">nilmtk.metrics.</tt><tt class="descname">confusion_matrices</tt><big>(</big><em>predicted_states</em>, <em>ground_truth_states</em><big>)</big><a class="reference internal" href="_modules/nilmtk/metrics.html#confusion_matrices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.metrics.confusion_matrices" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute confusion matrix between appliance states for each appliance</p>
-<p># TODO: Give a vanilla example</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Attributes :</th><td class="field-body"><p class="first"><strong>predicted_state: Pandas DataFrame of type {appliance :</strong> :</p>
-<blockquote>
-<div><p>[array of predicted states]}</p>
-</div></blockquote>
-<p><strong>ground_truth_state: Pandas DataFrame of type {appliance :</strong> :</p>
-<blockquote>
-<div><p>[array of ground truth states]}</p>
-</div></blockquote>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><p class="first last"><strong>dict of type {appliance</strong> : confusion matrix}</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="nilmtk.metrics.error_energy">
-<tt class="descclassname">nilmtk.metrics.</tt><tt class="descname">error_energy</tt><big>(</big><em>predicted_power</em>, <em>df_appliances_ground_truth</em><big>)</big><a class="reference internal" href="_modules/nilmtk/metrics.html#error_energy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.metrics.error_energy" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute error in assigned energy</p>
-<p># TODO: Give a vanilla example</p>
-<div class="math">
-\[error^{(n)} = 
-\left | \sum_t y^{(n)}_t - \sum_t \hat{y}^{(n)}_t \right |\]</div>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Attributes :</th><td class="field-body"><p class="first"><strong>predicted_power: Pandas DataFrame of type {appliance :</strong> :</p>
-<blockquote>
-<div><p>[array of predictd power]}</p>
-</div></blockquote>
-<p><strong>df_appliances_ground_truth: Pandas DataFrame of type {appliance :</strong> :</p>
-<blockquote>
-<div><p>[array of ground truth power]}</p>
-</div></blockquote>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><p class="first last"><strong>error: dict of type {appliance</strong> : error in assigned energy}</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="nilmtk.metrics.f_score">
-<tt class="descclassname">nilmtk.metrics.</tt><tt class="descname">f_score</tt><big>(</big><em>predicted_power</em>, <em>ground_truth_power</em><big>)</big><a class="reference internal" href="_modules/nilmtk/metrics.html#f_score"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.metrics.f_score" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute F1 score</p>
-<p># TODO: Give a vanilla example</p>
-<div class="math">
-\[F_score^{(n)} = \frac
-    {2 * Precision * Recall}
-    {Precision + Recall}\]</div>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Attributes :</th><td class="field-body"><p class="first"><strong>predicted_state: Pandas DataFrame of type {appliance :</strong> :</p>
-<blockquote>
-<div><p>[array of predicted states]}</p>
-</div></blockquote>
-<p><strong>ground_truth_state: Pandas DataFrame of type {appliance :</strong> :</p>
-<blockquote>
-<div><p>[array of ground truth states]}</p>
-</div></blockquote>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><p class="first last"><strong>numpy array where columns represent appliances and rows represent F score</strong> :</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="nilmtk.metrics.fraction_energy_assigned_correctly">
-<tt class="descclassname">nilmtk.metrics.</tt><tt class="descname">fraction_energy_assigned_correctly</tt><big>(</big><em>predicted_power</em>, <em>df_appliances_ground_truth</em><big>)</big><a class="reference internal" href="_modules/nilmtk/metrics.html#fraction_energy_assigned_correctly"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.metrics.fraction_energy_assigned_correctly" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute fraction of energy assigned correctly</p>
-<p># TODO: Give a vanilla example</p>
-<div class="math">
-\[fraction = 
-\sum_n min \left ( 
-\frac{\sum_n y}{\sum_{n,t} y}, 
-\frac{\sum_n \hat{y}}{\sum_{n,t} \hat{y}} 
-\right )\]</div>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Attributes :</th><td class="field-body"><p class="first"><strong>predicted_power: Pandas DataFrame of type {appliance :</strong> :</p>
-<blockquote>
-<div><p>[array of predictd power]}</p>
-</div></blockquote>
-<p><strong>df_appliances_ground_truth: Pandas DataFrame of type {appliance :</strong> :</p>
-<blockquote>
-<div><p>[array of ground truth power]}</p>
-</div></blockquote>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><p class="first last"><strong>re: float representing Fraction of Energy Correctly Assigned</strong> :</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="nilmtk.metrics.hamming_loss">
-<tt class="descclassname">nilmtk.metrics.</tt><tt class="descname">hamming_loss</tt><big>(</big><em>predicted_state</em>, <em>ground_truth_state</em><big>)</big><a class="reference internal" href="_modules/nilmtk/metrics.html#hamming_loss"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.metrics.hamming_loss" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute Hamming loss</p>
-<p># TODO: Give a vanilla example</p>
-<div class="math">
-\[HammingLoss = 
-\frac{1}{T} \sum_{t}
-\frac{1}{N} \sum_{n}
-xor \left ( x^{(n)}_t, \hat{x}^{(n)}_t \right )\]</div>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Attributes :</th><td class="field-body"><p class="first"><strong>predicted_state: Pandas DataFrame of type {appliance :</strong> :</p>
-<blockquote>
-<div><p>[array of predicted states]}</p>
-</div></blockquote>
-<p><strong>ground_truth_state: Pandas DataFrame of type {appliance :</strong> :</p>
-<blockquote>
-<div><p>[array of ground truth states]}</p>
-</div></blockquote>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><p class="first last"><strong>float of hamming_loss</strong> :</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="nilmtk.metrics.mean_normalized_error_power">
-<tt class="descclassname">nilmtk.metrics.</tt><tt class="descname">mean_normalized_error_power</tt><big>(</big><em>predicted_power</em>, <em>df_appliances_ground_truth</em><big>)</big><a class="reference internal" href="_modules/nilmtk/metrics.html#mean_normalized_error_power"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.metrics.mean_normalized_error_power" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute mean normalized error in assigned power</p>
-<p># TODO: Give a vanilla example</p>
-<div class="math">
-\[error^{(n)} = 
-\frac
-{ \sum_t {\left | y_t^{(n)} - \hat{y}_t^{(n)} \right |} }
-{ \sum_t y_t^{(n)} }\]</div>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Attributes :</th><td class="field-body"><p class="first"><strong>predicted_power: Pandas DataFrame of type {appliance :</strong> :</p>
-<blockquote>
-<div><p>[array of predicted power]}</p>
-</div></blockquote>
-<p><strong>df_appliances_ground_truth: Pandas DataFrame of type {appliance :</strong> :</p>
-<blockquote>
-<div><p>[array of ground truth power]}</p>
-</div></blockquote>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><p class="first last"><strong>mne: dict of type {appliance</strong> : MNE error}</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="nilmtk.metrics.powers_to_states">
-<tt class="descclassname">nilmtk.metrics.</tt><tt class="descname">powers_to_states</tt><big>(</big><em>powers</em><big>)</big><a class="reference internal" href="_modules/nilmtk/metrics.html#powers_to_states"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.metrics.powers_to_states" title="Permalink to this definition">¶</a></dt>
-<dd><p>Converts power demands into binary states</p>
-<p># TODO: Give a vanilla example</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Attributes :</th><td class="field-body"><p class="first"><strong>powers: Pandas DataFrame of type {appliance :</strong> :</p>
-<blockquote>
-<div><p>[array of power]}</p>
-</div></blockquote>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><p class="first"><strong>states: Pandas DataFrame of type {appliance :</strong> :</p>
-<blockquote class="last">
-<div><p>[array of states]}</p>
-</div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="nilmtk.metrics.precision_recall">
-<tt class="descclassname">nilmtk.metrics.</tt><tt class="descname">precision_recall</tt><big>(</big><em>predicted_states</em>, <em>ground_truth_states</em><big>)</big><a class="reference internal" href="_modules/nilmtk/metrics.html#precision_recall"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.metrics.precision_recall" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute Precision and Recall</p>
-<p># TODO: Give a vanilla example</p>
-<div class="math">
-\[Precision^{(n)} = \frac{TP}{\left ( TP + FP \right )}\]\[Recall^{(n)} = \frac{TP}{\left ( TP + FN \right )}\]</div>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Attributes :</th><td class="field-body"><p class="first"><strong>predicted_state: Pandas DataFrame of type {appliance :</strong> :</p>
-<blockquote>
-<div><p>[array of predicted states]}</p>
-</div></blockquote>
-<p><strong>ground_truth_state: Pandas DataFrame of type {appliance :</strong> :</p>
-<blockquote>
-<div><p>[array of ground truth states]}</p>
-</div></blockquote>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><p class="first last"><strong>numpy array where columns represent appliances and rows represent: [Precision, Recall]</strong> :</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="nilmtk.metrics.rms_error_power">
-<tt class="descclassname">nilmtk.metrics.</tt><tt class="descname">rms_error_power</tt><big>(</big><em>predicted_power</em>, <em>df_appliances_ground_truth</em><big>)</big><a class="reference internal" href="_modules/nilmtk/metrics.html#rms_error_power"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.metrics.rms_error_power" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute RMS error in assigned power</p>
-<p># TODO: Give a vanilla example</p>
-<div class="math">
-\[error^{(n)} = \sqrt{ \frac{1}{T} \sum_t{ \left ( y_t - \hat{y}_t \right )^2 } }\]</div>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Attributes :</th><td class="field-body"><p class="first"><strong>predicted_power: Pandas DataFrame of type {appliance :</strong> :</p>
-<blockquote>
-<div><p>[array of predicted power]}</p>
-</div></blockquote>
-<p><strong>df_appliances_ground_truth: Pandas DataFrame of type {appliance :</strong> :</p>
-<blockquote>
-<div><p>[array of ground truth power]}</p>
-</div></blockquote>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><p class="first last"><strong>re: dict of type {appliance</strong> : RMS error in predicted power}</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="nilmtk.metrics.tp_fp_fn_tn">
-<tt class="descclassname">nilmtk.metrics.</tt><tt class="descname">tp_fp_fn_tn</tt><big>(</big><em>predicted_states</em>, <em>ground_truth_states</em><big>)</big><a class="reference internal" href="_modules/nilmtk/metrics.html#tp_fp_fn_tn"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.metrics.tp_fp_fn_tn" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute counts of True Positives, False Positives, False Negatives, True Negatives</p>
-<p># TODO: Give a vanilla example</p>
-<div class="math">
-\[TP^{(n)} = 
-\sum_{t}
-and \left ( x^{(n)}_t = on, \hat{x}^{(n)}_t = on \right )\]\[FP^{(n)} = 
-\sum_{t}
-and \left ( x^{(n)}_t = off, \hat{x}^{(n)}_t = on \right )\]\[FN^{(n)} = 
-\sum_{t}
-and \left ( x^{(n)}_t = on, \hat{x}^{(n)}_t = off \right )\]\[TN^{(n)} = 
-\sum_{t}
-and \left ( x^{(n)}_t = off, \hat{x}^{(n)}_t = off \right )\]</div>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Attributes :</th><td class="field-body"><p class="first"><strong>predicted_state: Pandas DataFrame of type {appliance :</strong> :</p>
-<blockquote>
-<div><p>[array of predicted states]}</p>
-</div></blockquote>
-<p><strong>ground_truth_state: Pandas DataFrame of type {appliance :</strong> :</p>
-<blockquote>
-<div><p>[array of ground truth states]}</p>
-</div></blockquote>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><p class="first last"><strong>numpy array where columns represent appliances and rows represent: [TP, FP, FN, TN]</strong> :</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="nilmtk.metrics.tpr_fpr">
-<tt class="descclassname">nilmtk.metrics.</tt><tt class="descname">tpr_fpr</tt><big>(</big><em>predicted_states</em>, <em>ground_truth_states</em><big>)</big><a class="reference internal" href="_modules/nilmtk/metrics.html#tpr_fpr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.metrics.tpr_fpr" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute True Positive Rate and False Negative Rate</p>
-<p># TODO: Give a vanilla example</p>
-<div class="math">
-\[TPR^{(n)} = \frac{TP}{\left ( TP + FN \right )}\]\[FPR^{(n)} = \frac{FP}{\left ( FP + TN \right )}\]</div>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Attributes :</th><td class="field-body"><p class="first"><strong>predicted_state: Pandas DataFrame of type {appliance :</strong> :</p>
-<blockquote>
-<div><p>[array of predicted states]}</p>
-</div></blockquote>
-<p><strong>ground_truth_state: Pandas DataFrame of type {appliance :</strong> :</p>
-<blockquote>
-<div><p>[array of ground truth states]}</p>
-</div></blockquote>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><p class="first last"><strong>numpy array where columns represent appliances and rows represent: [TPR, FPR]</strong> :</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-</div>
+<div class="section" id="nilmtk-metrics-module">
+<h2>nilmtk.metrics module<a class="headerlink" href="#nilmtk-metrics-module" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="module-nilmtk.plots">
 <span id="nilmtk-plots-module"></span><h2>nilmtk.plots module<a class="headerlink" href="#module-nilmtk.plots" title="Permalink to this headline">¶</a></h2>
@@ -710,7 +379,7 @@ Call this before plotting a figure.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>fig_width</strong> : float, optional, inches</p>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>fig_width</strong> : float, optional, inches</p>
 <p><strong>fig_height</strong> : float,  optional, inches</p>
 <p class="last"><strong>columns</strong> : {1, 2}</p>
 </td>
@@ -728,7 +397,7 @@ pd.Series.plot().</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>ax</strong> : matplotlib Axes, optional</p>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>ax</strong> : matplotlib Axes, optional</p>
 <blockquote>
 <div><p>If not provided then will generate our own axes.</p>
 </div></blockquote>
@@ -753,7 +422,7 @@ each of which is an attribute of an arbitrary object <cite>obj</cite>.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>obj</strong> : object</p>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>obj</strong> : object</p>
 <blockquote>
 <div><p>any object which has one or more dicts as attributes</p>
 </div></blockquote>
@@ -767,7 +436,7 @@ each of which is an attribute of an arbitrary object <cite>obj</cite>.</p>
 </div></blockquote>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><p class="first last"><strong>obj_copy</strong> : a deepcopy of <cite>obj</cite> with <cite>func</cite> applied to all <cite>obj.&lt;dict_names&gt;</cite></p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>obj_copy</strong> : a deepcopy of <cite>obj</cite> with <cite>func</cite> applied to all <cite>obj.&lt;dict_names&gt;</cite></p>
 </td>
 </tr>
 </tbody>
@@ -829,14 +498,14 @@ which may have periods e.g. <cite>utility.electric.appliances</cite>.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>obj</strong> : object</p>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>obj</strong> : object</p>
 <p><strong>dict_name</strong> : string</p>
 <blockquote>
 <div><p>e.g. &#8216;utility.electric.appliances&#8217;</p>
 </div></blockquote>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><p class="first last"><strong>obj.dict_name</strong> :</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>obj.dict_name</strong> :</p>
 </td>
 </tr>
 </tbody>
@@ -867,9 +536,9 @@ which may have periods e.g. <cite>utility.electric.appliances</cite>.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters :</th><td class="field-body"><strong>timedelta</strong> : np.timedelta64</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>timedelta</strong> : np.timedelta64</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><strong>float</strong> : seconds</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>float</strong> : seconds</td>
 </tr>
 </tbody>
 </table>
@@ -897,8 +566,8 @@ which may have periods e.g. <cite>utility.electric.appliances</cite>.</p>
     </p>
     <p>
         &copy; Copyright 2014, nilmtk authors.<br/>
-      Last updated on Mar 26, 2014.<br/>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.<br/>
+      Last updated on May 08, 2014.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.2.<br/>
     </p>
   </div>
 </footer>
