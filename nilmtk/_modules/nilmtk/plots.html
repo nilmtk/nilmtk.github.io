@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>nilmtk.plots &mdash; nilmtk 0.0.1 documentation</title>
+    <title>nilmtk.plots &mdash; nilmtk 0.1.0 documentation</title>
     
     <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '0.0.1',
+        VERSION:     '0.1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -30,7 +30,7 @@
     <script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../../_static/bootstrap-3.1.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="nilmtk 0.0.1 documentation" href="../../index.html" />
+    <link rel="top" title="nilmtk 0.1.0 documentation" href="../../index.html" />
     <link rel="up" title="Module code" href="../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -51,7 +51,7 @@
         </button>
         <a class="navbar-brand" href="../../index.html">
           nilmtk</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.0.1</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.1.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -135,18 +135,20 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
+<span class="sd">    series : pd.Series</span>
 <span class="sd">    ax : matplotlib Axes, optional</span>
 <span class="sd">        If not provided then will generate our own axes.</span>
-
-<span class="sd">    fig</span>
-
+<span class="sd">    fig : matplotlib Figure</span>
 <span class="sd">    date_format : str, optional, default=&#39;%d/%m/%y %H:%M:%S&#39;</span>
+<span class="sd">    tz_localize : boolean, optional, default is True</span>
+<span class="sd">        if False then display UTC times.</span>
 
 <span class="sd">    Can also use all **kwargs expected by `ax.plot`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">ax</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s">&#39;ax&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
     <span class="n">fig</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s">&#39;fig&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
     <span class="n">date_format</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s">&#39;date_format&#39;</span><span class="p">,</span> <span class="s">&#39;</span><span class="si">%d</span><span class="s">/%m/%y %H:%M:%S&#39;</span><span class="p">)</span>
+    <span class="n">tz_localize</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s">&#39;tz_localize&#39;</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
         <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
@@ -156,8 +158,9 @@
 
     <span class="n">x</span> <span class="o">=</span> <span class="n">_to_ordinalf_np_vectorized</span><span class="p">(</span><span class="n">series</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">to_pydatetime</span><span class="p">())</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">series</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">tz</span> <span class="o">=</span> <span class="n">series</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tzinfo</span> <span class="k">if</span> <span class="n">tz_localize</span> <span class="k">else</span> <span class="bp">None</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_major_formatter</span><span class="p">(</span><span class="n">mdates</span><span class="o">.</span><span class="n">DateFormatter</span><span class="p">(</span><span class="n">date_format</span><span class="p">,</span> 
-                                                      <span class="n">tz</span><span class="o">=</span><span class="n">series</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tzinfo</span><span class="p">))</span>
+                                                      <span class="n">tz</span><span class="o">=</span><span class="n">tz</span><span class="p">))</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s">&#39;watts&#39;</span><span class="p">)</span>
     <span class="n">fig</span><span class="o">.</span><span class="n">autofmt_xdate</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">ax</span>
@@ -242,7 +245,7 @@
     </p>
     <p>
         &copy; Copyright 2014, nilmtk authors.<br/>
-      Last updated on May 08, 2014.<br/>
+      Last updated on Jul 10, 2014.<br/>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.2.<br/>
     </p>
   </div>

@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>nilmtk.disaggregate.fhmm_exact &mdash; nilmtk 0.1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/bootstrap-3.1.0/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/bootstrap-3.1.0/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../../../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../../_static/bootstrap-3.1.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../../_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="nilmtk 0.1.0 documentation" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../index.html">
+          nilmtk</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.1.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            <li class="divider-vertical"></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../nilmtk.html">nilmtk API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../userguide.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute.html">Contributing</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      
+  <h1>Source code for nilmtk.disaggregate.fhmm_exact</h1><div class="highlight"><pre>
+<span class="kn">from</span> <span class="nn">nilmtk.utils</span> <span class="kn">import</span> <span class="n">find_nearest</span>
+<span class="kn">from</span> <span class="nn">nilmtk.utils</span> <span class="kn">import</span> <span class="n">find_nearest_vectorized</span>
+<span class="kn">from</span> <span class="nn">nilmtk.disaggregate.disaggregator</span> <span class="kn">import</span> <span class="n">Disaggregator</span>
+<span class="kn">from</span> <span class="nn">nilmtk.sensors.electricity</span> <span class="kn">import</span> <span class="n">Measurement</span>
+<span class="kn">from</span> <span class="nn">nilmtk.preprocessing.electricity.single</span> <span class="kn">import</span> <span class="n">contiguous_blocks</span>
+<span class="kn">from</span> <span class="nn">nilmtk.stats.electricity.single</span> <span class="kn">import</span> <span class="n">get_sample_period</span>
+
+
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">itertools</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">metrics</span>
+<span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">hmm</span>
+
+<span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
+
+<span class="n">SEED</span> <span class="o">=</span> <span class="mi">42</span>
+
+<span class="c"># Fix the seed for repeatibility of experiments</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">SEED</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="sort_startprob"><a class="viewcode-back" href="../../../nilmtk.disaggregate.html#nilmtk.disaggregate.fhmm_exact.sort_startprob">[docs]</a><span class="k">def</span> <span class="nf">sort_startprob</span><span class="p">(</span><span class="n">mapping</span><span class="p">,</span> <span class="n">startprob</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Sort the startprob according to power means; as returned by mapping</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">num_elements</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">startprob</span><span class="p">)</span>
+    <span class="n">new_startprob</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">num_elements</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">startprob</span><span class="p">)):</span>
+        <span class="n">new_startprob</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">startprob</span><span class="p">[</span><span class="n">mapping</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+    <span class="k">return</span> <span class="n">new_startprob</span>
+
+</div>
+<div class="viewcode-block" id="sort_covars"><a class="viewcode-back" href="../../../nilmtk.disaggregate.html#nilmtk.disaggregate.fhmm_exact.sort_covars">[docs]</a><span class="k">def</span> <span class="nf">sort_covars</span><span class="p">(</span><span class="n">mapping</span><span class="p">,</span> <span class="n">covars</span><span class="p">):</span>
+    <span class="n">num_elements</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">covars</span><span class="p">)</span>
+    <span class="n">new_covars</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">covars</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">covars</span><span class="p">)):</span>
+        <span class="n">new_covars</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">covars</span><span class="p">[</span><span class="n">mapping</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+    <span class="k">return</span> <span class="n">new_covars</span>
+
+</div>
+<div class="viewcode-block" id="sort_transition_matrix"><a class="viewcode-back" href="../../../nilmtk.disaggregate.html#nilmtk.disaggregate.fhmm_exact.sort_transition_matrix">[docs]</a><span class="k">def</span> <span class="nf">sort_transition_matrix</span><span class="p">(</span><span class="n">mapping</span><span class="p">,</span> <span class="n">A</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Sorts the transition matrix according to increasing order of </span>
+<span class="sd">    power means; as returned by mapping</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    mapping : </span>
+<span class="sd">    A : numpy.array of shape (k, k)</span>
+<span class="sd">        transition matrix</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">num_elements</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+    <span class="n">A_new</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">num_elements</span><span class="p">,</span> <span class="n">num_elements</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_elements</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_elements</span><span class="p">):</span>
+            <span class="n">A_new</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">A</span><span class="p">[</span><span class="n">mapping</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">mapping</span><span class="p">[</span><span class="n">j</span><span class="p">]]</span>
+    <span class="k">return</span> <span class="n">A_new</span>
+
+</div>
+<div class="viewcode-block" id="sort_learnt_parameters"><a class="viewcode-back" href="../../../nilmtk.disaggregate.html#nilmtk.disaggregate.fhmm_exact.sort_learnt_parameters">[docs]</a><span class="k">def</span> <span class="nf">sort_learnt_parameters</span><span class="p">(</span><span class="n">startprob</span><span class="p">,</span> <span class="n">means</span><span class="p">,</span> <span class="n">covars</span><span class="p">,</span> <span class="n">transmat</span><span class="p">):</span>
+    <span class="n">mapping</span> <span class="o">=</span> <span class="n">return_sorting_mapping</span><span class="p">(</span><span class="n">means</span><span class="p">)</span>
+    <span class="n">means_new</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">means</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">startprob_new</span> <span class="o">=</span> <span class="n">sort_startprob</span><span class="p">(</span><span class="n">mapping</span><span class="p">,</span> <span class="n">startprob</span><span class="p">)</span>
+    <span class="n">covars_new</span> <span class="o">=</span> <span class="n">sort_covars</span><span class="p">(</span><span class="n">mapping</span><span class="p">,</span> <span class="n">covars</span><span class="p">)</span>
+    <span class="n">transmat_new</span> <span class="o">=</span> <span class="n">sort_transition_matrix</span><span class="p">(</span><span class="n">mapping</span><span class="p">,</span> <span class="n">transmat</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">means_new</span><span class="p">)</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">means</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">startprob_new</span><span class="p">)</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">startprob</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">transmat_new</span><span class="p">)</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">transmat</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">[</span><span class="n">startprob_new</span><span class="p">,</span> <span class="n">means_new</span><span class="p">,</span> <span class="n">covars_new</span><span class="p">,</span> <span class="n">transmat_new</span><span class="p">]</span>
+
+</div>
+<div class="viewcode-block" id="compute_A_fhmm"><a class="viewcode-back" href="../../../nilmtk.disaggregate.html#nilmtk.disaggregate.fhmm_exact.compute_A_fhmm">[docs]</a><span class="k">def</span> <span class="nf">compute_A_fhmm</span><span class="p">(</span><span class="n">list_A</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    -----------</span>
+<span class="sd">    list_pi : List of PI&#39;s of individual learnt HMMs</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    --------</span>
+<span class="sd">    result : Combined Pi for the FHMM</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">list_A</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">list_A</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">kron</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">list_A</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">result</span>
+
+</div>
+<div class="viewcode-block" id="compute_means_fhmm"><a class="viewcode-back" href="../../../nilmtk.disaggregate.html#nilmtk.disaggregate.fhmm_exact.compute_means_fhmm">[docs]</a><span class="k">def</span> <span class="nf">compute_means_fhmm</span><span class="p">(</span><span class="n">list_means</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns </span>
+<span class="sd">    -------</span>
+<span class="sd">    [mu, cov]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c">#list_of_appliances_centroids=[ [appliance[i][0] for i in range(len(appliance))] for appliance in list_B]</span>
+    <span class="n">states_combination</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="o">*</span><span class="n">list_means</span><span class="p">))</span>
+    <span class="n">num_combinations</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">states_combination</span><span class="p">)</span>
+    <span class="n">means_stacked</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="nb">sum</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">states_combination</span><span class="p">])</span>
+    <span class="n">means</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">means_stacked</span><span class="p">,</span> <span class="p">(</span><span class="n">num_combinations</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="n">cov</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="mi">5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="n">num_combinations</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">means</span><span class="p">,</span> <span class="n">cov</span><span class="p">]</span>
+
+</div>
+<div class="viewcode-block" id="compute_pi_fhmm"><a class="viewcode-back" href="../../../nilmtk.disaggregate.html#nilmtk.disaggregate.fhmm_exact.compute_pi_fhmm">[docs]</a><span class="k">def</span> <span class="nf">compute_pi_fhmm</span><span class="p">(</span><span class="n">list_pi</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    -----------</span>
+<span class="sd">    list_pi : List of PI&#39;s of individual learnt HMMs</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    result : Combined Pi for the FHMM</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">list_pi</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">list_pi</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">kron</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">list_pi</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">result</span>
+
+</div>
+<div class="viewcode-block" id="create_combined_hmm"><a class="viewcode-back" href="../../../nilmtk.disaggregate.html#nilmtk.disaggregate.fhmm_exact.create_combined_hmm">[docs]</a><span class="k">def</span> <span class="nf">create_combined_hmm</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
+
+    <span class="n">list_pi</span> <span class="o">=</span> <span class="p">[</span><span class="n">model</span><span class="p">[</span><span class="n">appliance</span><span class="p">]</span><span class="o">.</span><span class="n">startprob_</span> <span class="k">for</span> <span class="n">appliance</span> <span class="ow">in</span> <span class="n">model</span><span class="p">]</span>
+    <span class="n">list_A</span> <span class="o">=</span> <span class="p">[</span><span class="n">model</span><span class="p">[</span><span class="n">appliance</span><span class="p">]</span><span class="o">.</span><span class="n">transmat_</span> <span class="k">for</span> <span class="n">appliance</span> <span class="ow">in</span> <span class="n">model</span><span class="p">]</span>
+    <span class="n">list_means</span> <span class="o">=</span> <span class="p">[</span><span class="n">model</span><span class="p">[</span><span class="n">appliance</span><span class="p">]</span><span class="o">.</span><span class="n">means_</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+                  <span class="k">for</span> <span class="n">appliance</span> <span class="ow">in</span> <span class="n">model</span><span class="p">]</span>
+
+    <span class="n">pi_combined</span> <span class="o">=</span> <span class="n">compute_pi_fhmm</span><span class="p">(</span><span class="n">list_pi</span><span class="p">)</span>
+    <span class="n">A_combined</span> <span class="o">=</span> <span class="n">compute_A_fhmm</span><span class="p">(</span><span class="n">list_A</span><span class="p">)</span>
+    <span class="p">[</span><span class="n">mean_combined</span><span class="p">,</span> <span class="n">cov_combined</span><span class="p">]</span> <span class="o">=</span> <span class="n">compute_means_fhmm</span><span class="p">(</span><span class="n">list_means</span><span class="p">)</span>
+    <span class="c">#model_fhmm=create_combined_hmm(len(pi_combined),pi_combined, A_combined, mean_combined, cov_combined)</span>
+    <span class="n">combined_model</span> <span class="o">=</span> <span class="n">hmm</span><span class="o">.</span><span class="n">GaussianHMM</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span>
+        <span class="n">pi_combined</span><span class="p">),</span> <span class="n">covariance_type</span><span class="o">=</span><span class="s">&#39;full&#39;</span><span class="p">,</span> <span class="n">startprob</span><span class="o">=</span><span class="n">pi_combined</span><span class="p">,</span> <span class="n">transmat</span><span class="o">=</span><span class="n">A_combined</span><span class="p">)</span>
+    <span class="n">combined_model</span><span class="o">.</span><span class="n">covars_</span> <span class="o">=</span> <span class="n">cov_combined</span>
+    <span class="n">combined_model</span><span class="o">.</span><span class="n">means_</span> <span class="o">=</span> <span class="n">mean_combined</span>
+    <span class="k">return</span> <span class="n">combined_model</span>
+
+</div>
+<div class="viewcode-block" id="return_sorting_mapping"><a class="viewcode-back" href="../../../nilmtk.disaggregate.html#nilmtk.disaggregate.fhmm_exact.return_sorting_mapping">[docs]</a><span class="k">def</span> <span class="nf">return_sorting_mapping</span><span class="p">(</span><span class="n">means</span><span class="p">):</span>
+    <span class="n">means_copy</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">means</span><span class="p">)</span>
+    <span class="c"># Sorting</span>
+    <span class="n">means_copy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">means_copy</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="c"># Finding mapping</span>
+    <span class="n">mapping</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">means_copy</span><span class="p">):</span>
+        <span class="c">#assert val == means[np.where(val == means)[0]]</span>
+        <span class="n">mapping</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">val</span> <span class="o">==</span> <span class="n">means</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">mapping</span>
+
+</div>
+<div class="viewcode-block" id="decode_hmm"><a class="viewcode-back" href="../../../nilmtk.disaggregate.html#nilmtk.disaggregate.fhmm_exact.decode_hmm">[docs]</a><span class="k">def</span> <span class="nf">decode_hmm</span><span class="p">(</span><span class="n">length_sequence</span><span class="p">,</span> <span class="n">centroids</span><span class="p">,</span> <span class="n">appliance_list</span><span class="p">,</span> <span class="n">states</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Decodes the HMM state sequence</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">power_states_dict</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">hmm_states</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">hmm_power</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">total_num_combinations</span> <span class="o">=</span> <span class="mi">1</span>
+
+    <span class="k">for</span> <span class="n">appliance</span> <span class="ow">in</span> <span class="n">appliance_list</span><span class="p">:</span>
+
+        <span class="n">total_num_combinations</span> <span class="o">*=</span> <span class="nb">len</span><span class="p">(</span><span class="n">centroids</span><span class="p">[</span><span class="n">appliance</span><span class="p">])</span>
+
+    <span class="k">for</span> <span class="n">appliance</span> <span class="ow">in</span> <span class="n">appliance_list</span><span class="p">:</span>
+        <span class="n">hmm_states</span><span class="p">[</span><span class="n">appliance</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">length_sequence</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">)</span>
+        <span class="n">hmm_power</span><span class="p">[</span><span class="n">appliance</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">length_sequence</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">length_sequence</span><span class="p">):</span>
+
+        <span class="n">factor</span> <span class="o">=</span> <span class="n">total_num_combinations</span>
+        <span class="k">for</span> <span class="n">appliance</span> <span class="ow">in</span> <span class="n">appliance_list</span><span class="p">:</span>
+
+            <span class="c"># assuming integer division (will cause errors in Python 3x)</span>
+            <span class="n">factor</span> <span class="o">=</span> <span class="n">factor</span> <span class="o">//</span> <span class="nb">len</span><span class="p">(</span><span class="n">centroids</span><span class="p">[</span><span class="n">appliance</span><span class="p">])</span>
+
+            <span class="n">temp</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">states</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">/</span> <span class="n">factor</span>
+            <span class="n">hmm_states</span><span class="p">[</span><span class="n">appliance</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">centroids</span><span class="p">[</span><span class="n">appliance</span><span class="p">])</span>
+            <span class="n">hmm_power</span><span class="p">[</span><span class="n">appliance</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">centroids</span><span class="p">[</span>
+                <span class="n">appliance</span><span class="p">][</span><span class="n">hmm_states</span><span class="p">[</span><span class="n">appliance</span><span class="p">][</span><span class="n">i</span><span class="p">]]</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">hmm_states</span><span class="p">,</span> <span class="n">hmm_power</span><span class="p">]</span>
+
+</div>
+<div class="viewcode-block" id="FHMM"><a class="viewcode-back" href="../../../nilmtk.disaggregate.html#nilmtk.disaggregate.fhmm_exact.FHMM">[docs]</a><span class="k">class</span> <span class="nc">FHMM</span><span class="p">(</span><span class="n">Disaggregator</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">predictions</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+
+<div class="viewcode-block" id="FHMM.train"><a class="viewcode-back" href="../../../nilmtk.disaggregate.html#nilmtk.disaggregate.fhmm_exact.FHMM.train">[docs]</a>    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">building</span><span class="p">,</span> <span class="n">aggregate</span><span class="o">=</span><span class="s">&#39;mains&#39;</span><span class="p">,</span> <span class="n">submetered</span><span class="o">=</span><span class="s">&#39;appliances&#39;</span><span class="p">,</span>
+              <span class="n">disagg_features</span><span class="o">=</span><span class="p">[</span><span class="n">Measurement</span><span class="p">(</span><span class="s">&#39;power&#39;</span><span class="p">,</span> <span class="s">&#39;active&#39;</span><span class="p">)],</span>
+              <span class="n">environmental</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Train using 1d FHMM. Places the learnt model in `model` attribute</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+         <span class="c"># Get a dataframe of appliances; Since the algorithm is 1D, we need</span>
+        <span class="c"># only the first Measurement</span>
+        <span class="n">train_appliances</span> <span class="o">=</span> <span class="n">building</span><span class="o">.</span><span class="n">utility</span><span class="o">.</span><span class="n">electric</span><span class="o">.</span><span class="n">get_dataframe_of_appliances</span><span class="p">(</span>
+            <span class="n">measurement</span><span class="o">=</span><span class="n">disagg_features</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+        <span class="n">train_mains</span> <span class="o">=</span> <span class="n">building</span><span class="o">.</span><span class="n">utility</span><span class="o">.</span><span class="n">electric</span><span class="o">.</span><span class="n">get_dataframe_of_mains</span><span class="p">(</span>
+            <span class="n">measurement</span><span class="o">=</span><span class="n">disagg_features</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+        <span class="c"># Setting frequency</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">freq</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">get_sample_period</span><span class="p">(</span><span class="n">train_mains</span><span class="o">.</span><span class="n">index</span><span class="p">)))</span> <span class="o">+</span> <span class="s">&#39;s&#39;</span>
+
+        <span class="n">learnt_model</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">appliance</span> <span class="ow">in</span> <span class="n">train_appliances</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="n">appliance</span><span class="p">)</span>
+            <span class="n">learnt_model</span><span class="p">[</span><span class="n">appliance</span><span class="p">]</span> <span class="o">=</span> <span class="n">hmm</span><span class="o">.</span><span class="n">GaussianHMM</span><span class="p">(</span>
+                <span class="mi">2</span><span class="p">,</span> <span class="s">&quot;full&quot;</span><span class="p">)</span>
+
+            <span class="c"># Data to fit</span>
+            <span class="n">X</span> <span class="o">=</span> <span class="p">[]</span>
+
+            <span class="c"># Breaking data into contiguous blocks</span>
+            <span class="k">for</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="ow">in</span> <span class="n">contiguous_blocks</span><span class="p">(</span><span class="n">train_mains</span><span class="o">.</span><span class="n">index</span><span class="p">):</span>
+                <span class="c">#print(start, end)</span>
+                <span class="n">length</span> <span class="o">=</span> <span class="n">train_appliances</span><span class="p">[</span><span class="n">appliance</span><span class="p">][</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">size</span>
+                <span class="c"># print(length)</span>
+                <span class="c"># Ignore small sequences</span>
+                <span class="k">if</span> <span class="n">length</span> <span class="o">&gt;</span> <span class="mi">50</span><span class="p">:</span>
+                    <span class="n">temp</span> <span class="o">=</span> <span class="n">train_appliances</span><span class="p">[</span><span class="n">appliance</span><span class="p">][</span>
+                        <span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+                    <span class="n">X</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">temp</span><span class="p">)</span>
+            <span class="c"># print(X)</span>
+            <span class="c"># Fit</span>
+            <span class="n">learnt_model</span><span class="p">[</span><span class="n">appliance</span><span class="p">]</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+        <span class="c"># Combining to make a AFHMM</span>
+        <span class="n">new_learnt_models</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">appliance</span> <span class="ow">in</span> <span class="n">learnt_model</span><span class="p">:</span>
+            <span class="n">startprob</span><span class="p">,</span> <span class="n">means</span><span class="p">,</span> <span class="n">covars</span><span class="p">,</span> <span class="n">transmat</span> <span class="o">=</span> <span class="n">sort_learnt_parameters</span><span class="p">(</span>
+                <span class="n">learnt_model</span><span class="p">[</span><span class="n">appliance</span><span class="p">]</span><span class="o">.</span><span class="n">startprob_</span><span class="p">,</span> <span class="n">learnt_model</span><span class="p">[</span><span class="n">appliance</span><span class="p">]</span><span class="o">.</span><span class="n">means_</span><span class="p">,</span> <span class="n">learnt_model</span><span class="p">[</span><span class="n">appliance</span><span class="p">]</span><span class="o">.</span><span class="n">covars_</span><span class="p">,</span> <span class="n">learnt_model</span><span class="p">[</span><span class="n">appliance</span><span class="p">]</span><span class="o">.</span><span class="n">transmat_</span><span class="p">)</span>
+            <span class="n">new_learnt_models</span><span class="p">[</span><span class="n">appliance</span><span class="p">]</span> <span class="o">=</span> <span class="n">hmm</span><span class="o">.</span><span class="n">GaussianHMM</span><span class="p">(</span>
+                <span class="n">startprob</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="s">&quot;full&quot;</span><span class="p">,</span> <span class="n">startprob</span><span class="p">,</span> <span class="n">transmat</span><span class="p">)</span>
+            <span class="n">new_learnt_models</span><span class="p">[</span><span class="n">appliance</span><span class="p">]</span><span class="o">.</span><span class="n">means_</span> <span class="o">=</span> <span class="n">means</span>
+            <span class="n">new_learnt_models</span><span class="p">[</span><span class="n">appliance</span><span class="p">]</span><span class="o">.</span><span class="n">covars_</span> <span class="o">=</span> <span class="n">covars</span>
+
+        <span class="n">learnt_model_combined</span> <span class="o">=</span> <span class="n">create_combined_hmm</span><span class="p">(</span><span class="n">new_learnt_models</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">individual</span> <span class="o">=</span> <span class="n">new_learnt_models</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">learnt_model_combined</span>
+</div>
+<div class="viewcode-block" id="FHMM.disaggregate"><a class="viewcode-back" href="../../../nilmtk.disaggregate.html#nilmtk.disaggregate.fhmm_exact.FHMM.disaggregate">[docs]</a>    <span class="k">def</span> <span class="nf">disaggregate</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">building</span><span class="p">,</span> <span class="n">disagg_features</span><span class="o">=</span><span class="p">[</span><span class="n">Measurement</span><span class="p">(</span><span class="s">&#39;power&#39;</span><span class="p">,</span> <span class="s">&#39;active&#39;</span><span class="p">)],</span>
+            <span class="n">environmental</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Disaggregate the test data according to the model learnt previously</span>
+<span class="sd">        Performs 1D FHMM disaggregation        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">test_mains</span> <span class="o">=</span> <span class="n">building</span><span class="o">.</span><span class="n">utility</span><span class="o">.</span><span class="n">electric</span><span class="o">.</span><span class="n">get_dataframe_of_mains</span><span class="p">(</span>
+            <span class="n">measurement</span><span class="o">=</span><span class="n">disagg_features</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+        <span class="c"># Array of learnt states</span>
+        <span class="n">learnt_states_array</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c"># Break down test_data into chunks and disaggregate separately on them</span>
+        <span class="k">for</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="ow">in</span> <span class="n">contiguous_blocks</span><span class="p">(</span><span class="n">test_mains</span><span class="o">.</span><span class="n">index</span><span class="p">):</span>
+            <span class="n">length</span> <span class="o">=</span> <span class="n">test_mains</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">size</span>
+            <span class="n">temp</span> <span class="o">=</span> <span class="n">test_mains</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">learnt_states_array</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">temp</span><span class="p">))</span>
+
+        <span class="c"># Model</span>
+        <span class="n">means</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">appliance</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">individual</span><span class="p">:</span>
+            <span class="n">means</span><span class="p">[</span><span class="n">appliance</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">individual</span><span class="p">[</span><span class="n">appliance</span><span class="p">]</span><span class="o">.</span><span class="n">means_</span>
+        <span class="n">means_copy</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">means</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">appliance</span> <span class="ow">in</span> <span class="n">means</span><span class="p">:</span>
+            <span class="n">means_copy</span><span class="p">[</span><span class="n">appliance</span><span class="p">]</span> <span class="o">=</span> <span class="n">means</span><span class="p">[</span>
+                <span class="n">appliance</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+            <span class="n">means_copy</span><span class="p">[</span><span class="n">appliance</span><span class="p">]</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+
+        <span class="n">decoded_power_array</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">decoded_states_array</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">learnt_states</span> <span class="ow">in</span> <span class="n">learnt_states_array</span><span class="p">:</span>
+            <span class="p">[</span><span class="n">decoded_states</span><span class="p">,</span> <span class="n">decoded_power</span><span class="p">]</span> <span class="o">=</span> <span class="n">decode_hmm</span><span class="p">(</span>
+                <span class="nb">len</span><span class="p">(</span><span class="n">learnt_states</span><span class="p">),</span> <span class="n">means_copy</span><span class="p">,</span> <span class="n">means_copy</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="n">learnt_states</span><span class="p">)</span>
+            <span class="n">decoded_states_array</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">decoded_states</span><span class="p">)</span>
+            <span class="n">decoded_power_array</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">decoded_power</span><span class="p">)</span>
+
+        <span class="c"># Combining to make a DataFrame with correct index, based on the start,</span>
+        <span class="c"># end time and the frequency of the data</span>
+        <span class="n">dfs_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">cont_blocks</span> <span class="o">=</span> <span class="n">contiguous_blocks</span><span class="p">(</span><span class="n">test_mains</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">contiguous_blocks</span><span class="p">(</span><span class="n">test_mains</span><span class="o">.</span><span class="n">index</span><span class="p">)):</span>
+            <span class="n">index</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DatetimeIndex</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="n">end</span><span class="p">,</span>
+                                     <span class="n">freq</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">freq</span><span class="p">)</span>
+
+            <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">decoded_power_array</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">)</span>
+            <span class="n">dfs_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">predictions</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">dfs_list</span><span class="p">)</span><span class="o">.</span><span class="n">sort_index</span><span class="p">()</span></div></div>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2014, nilmtk authors.<br/>
+      Last updated on Jul 10, 2014.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>
