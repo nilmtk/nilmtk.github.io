@@ -1,0 +1,503 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>nilmtk.metrics &mdash; NILMTK 0.2-beta documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.2-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="NILMTK 0.2-beta documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">NILMTK 0.2-beta documentation</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for nilmtk.metrics</h1><div class="highlight"><pre>
+<span class="sd">&#39;&#39;&#39;Metrics to compare disaggregation performance against ground truth</span>
+<span class="sd">data.</span>
+
+<span class="sd">All metrics functions have the same interface.  Each function takes</span>
+<span class="sd">`predictions` and `ground_truth` parameters.  Both of which are</span>
+<span class="sd">nilmtk.MeterGroup objects.  Each function returns one of two types:</span>
+<span class="sd">either a pd.Series or a single float.  Most functions return a</span>
+<span class="sd">pd.Series where each index element is a meter instance int or a tuple</span>
+<span class="sd">of ints for MeterGroups.</span>
+
+<span class="sd">Notation</span>
+<span class="sd">--------</span>
+
+<span class="sd">Below is the notation used to mathematically define each metric. </span>
+
+<span class="sd">:math:`T` - number of time slices.</span>
+
+<span class="sd">:math:`t` - a time slice.</span>
+
+<span class="sd">:math:`N` - number of appliances.</span>
+
+<span class="sd">:math:`n` - an appliance.</span>
+
+<span class="sd">:math:`y^{(n)}_t` -  ground truth power of appliance :math:`n` in time slice :math:`t`.</span>
+
+<span class="sd">:math:`\\hat{y}^{(n)}_t` -  estimated power of appliance :math:`n` in time slice :math:`t`.</span>
+
+<span class="sd">:math:`x^{(n)}_t` - ground truth state of appliance :math:`n` in time slice :math:`t`.</span>
+
+<span class="sd">:math:`\\hat{x}^{(n)}_t` - estimated state of appliance :math:`n` in time slice :math:`t`.</span>
+
+<span class="sd">Functions</span>
+<span class="sd">---------</span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">division</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">from</span> <span class="nn">.metergroup</span> <span class="kn">import</span> <span class="n">MeterGroup</span><span class="p">,</span> <span class="n">iterate_through_submeters_of_two_metergroups</span>
+<span class="kn">from</span> <span class="nn">.electric</span> <span class="kn">import</span> <span class="n">align_two_meters</span>
+
+<div class="viewcode-block" id="error_in_assigned_energy"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.metrics.error_in_assigned_energy">[docs]</a><span class="k">def</span> <span class="nf">error_in_assigned_energy</span><span class="p">(</span><span class="n">predictions</span><span class="p">,</span> <span class="n">ground_truth</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Compute error in assigned energy.</span>
+<span class="sd">    </span>
+<span class="sd">    .. math::</span>
+<span class="sd">        error^{(n)} = </span>
+<span class="sd">        \\left | \\sum_t y^{(n)}_t - \\sum_t \\hat{y}^{(n)}_t \\right |</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    predictions, ground_truth : nilmtk.MeterGroup</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    errors : pd.Series</span>
+<span class="sd">        Each index is an meter instance int (or tuple for MeterGroups).</span>
+<span class="sd">        Each value is the absolute error in assigned energy for that appliance,</span>
+<span class="sd">        in kWh.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">errors</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">both_sets_of_meters</span> <span class="o">=</span> <span class="n">iterate_through_submeters_of_two_metergroups</span><span class="p">(</span>
+        <span class="n">predictions</span><span class="p">,</span> <span class="n">ground_truth</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">pred_meter</span><span class="p">,</span> <span class="n">ground_truth_meter</span> <span class="ow">in</span> <span class="n">both_sets_of_meters</span><span class="p">:</span>
+        <span class="n">sections</span> <span class="o">=</span> <span class="n">pred_meter</span><span class="o">.</span><span class="n">good_sections</span><span class="p">()</span>
+        <span class="n">ground_truth_energy</span> <span class="o">=</span> <span class="n">ground_truth_meter</span><span class="o">.</span><span class="n">total_energy</span><span class="p">(</span><span class="n">periods</span><span class="o">=</span><span class="n">sections</span><span class="p">)</span>
+        <span class="n">predicted_energy</span> <span class="o">=</span> <span class="n">pred_meter</span><span class="o">.</span><span class="n">total_energy</span><span class="p">(</span><span class="n">periods</span><span class="o">=</span><span class="n">sections</span><span class="p">)</span>
+        <span class="n">errors</span><span class="p">[</span><span class="n">pred_meter</span><span class="o">.</span><span class="n">instance</span><span class="p">()]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">ground_truth_energy</span> <span class="o">-</span> <span class="n">predicted_energy</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">errors</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="fraction_energy_assigned_correctly"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.metrics.fraction_energy_assigned_correctly">[docs]</a><span class="k">def</span> <span class="nf">fraction_energy_assigned_correctly</span><span class="p">(</span><span class="n">predictions</span><span class="p">,</span> <span class="n">ground_truth</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Compute fraction of energy assigned correctly</span>
+<span class="sd">    </span>
+<span class="sd">    .. math::</span>
+<span class="sd">        fraction = </span>
+<span class="sd">        \\sum_n min \\left ( </span>
+<span class="sd">        \\frac{\\sum_n y}{\\sum_{n,t} y}, </span>
+<span class="sd">        \\frac{\\sum_n \\hat{y}}{\\sum_{n,t} \\hat{y}} </span>
+<span class="sd">        \\right )</span>
+
+<span class="sd">    Ignores distinction between different AC types, instead if there are </span>
+<span class="sd">    multiple AC types for each meter then we just take the max value across</span>
+<span class="sd">    the AC types.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    predictions, ground_truth : nilmtk.MeterGroup</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    fraction : float in the range [0,1]</span>
+<span class="sd">        Fraction of Energy Correctly Assigned.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">predictions_submeters</span> <span class="o">=</span> <span class="n">MeterGroup</span><span class="p">(</span><span class="n">meters</span><span class="o">=</span><span class="n">predictions</span><span class="o">.</span><span class="n">submeters</span><span class="p">())</span>
+    <span class="n">ground_truth_submeters</span> <span class="o">=</span> <span class="n">MeterGroup</span><span class="p">(</span><span class="n">meters</span><span class="o">=</span><span class="n">ground_truth</span><span class="o">.</span><span class="n">submeters</span><span class="p">())</span>
+
+    <span class="n">fraction_per_meter_predictions</span> <span class="o">=</span> <span class="n">predictions_submeters</span><span class="o">.</span><span class="n">fraction_per_meter</span><span class="p">()</span>
+    <span class="n">fraction_per_meter_ground_truth</span> <span class="o">=</span> <span class="n">ground_truth_submeters</span><span class="o">.</span><span class="n">fraction_per_meter</span><span class="p">()</span>
+
+    <span class="n">fraction</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">meter_instance</span> <span class="ow">in</span> <span class="n">predictions_submeters</span><span class="o">.</span><span class="n">instance</span><span class="p">():</span>
+        <span class="n">fraction</span> <span class="o">+=</span> <span class="nb">min</span><span class="p">(</span><span class="n">fraction_per_meter_ground_truth</span><span class="p">[</span><span class="n">meter_instance</span><span class="p">],</span>
+                        <span class="n">fraction_per_meter_predictions</span><span class="p">[</span><span class="n">meter_instance</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">fraction</span>
+
+</div>
+<div class="viewcode-block" id="mean_normalized_error_power"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.metrics.mean_normalized_error_power">[docs]</a><span class="k">def</span> <span class="nf">mean_normalized_error_power</span><span class="p">(</span><span class="n">predictions</span><span class="p">,</span> <span class="n">ground_truth</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Compute mean normalized error in assigned power</span>
+<span class="sd">        </span>
+<span class="sd">    .. math::</span>
+<span class="sd">        error^{(n)} = </span>
+<span class="sd">        \\frac</span>
+<span class="sd">        { \\sum_t {\\left | y_t^{(n)} - \\hat{y}_t^{(n)} \\right |} }</span>
+<span class="sd">        { \\sum_t y_t^{(n)} }</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    predictions, ground_truth : nilmtk.MeterGroup</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    mne : pd.Series</span>
+<span class="sd">        Each index is an meter instance int (or tuple for MeterGroups).</span>
+<span class="sd">        Each value is the MNE for that appliance.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">mne</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">both_sets_of_meters</span> <span class="o">=</span> <span class="n">iterate_through_submeters_of_two_metergroups</span><span class="p">(</span>
+        <span class="n">predictions</span><span class="p">,</span> <span class="n">ground_truth</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">pred_meter</span><span class="p">,</span> <span class="n">ground_truth_meter</span> <span class="ow">in</span> <span class="n">both_sets_of_meters</span><span class="p">:</span>
+        <span class="n">total_abs_diff</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">sum_of_ground_truth_power</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="k">for</span> <span class="n">aligned_meters_chunk</span> <span class="ow">in</span> <span class="n">align_two_meters</span><span class="p">(</span><span class="n">pred_meter</span><span class="p">,</span> 
+                                                     <span class="n">ground_truth_meter</span><span class="p">):</span>
+            <span class="n">diff</span> <span class="o">=</span> <span class="n">aligned_meters_chunk</span><span class="o">.</span><span class="n">icol</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">-</span> <span class="n">aligned_meters_chunk</span><span class="o">.</span><span class="n">icol</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">total_abs_diff</span> <span class="o">+=</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">diff</span><span class="o">.</span><span class="n">dropna</span><span class="p">()))</span>
+            <span class="n">sum_of_ground_truth_power</span> <span class="o">+=</span> <span class="n">aligned_meters_chunk</span><span class="o">.</span><span class="n">icol</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+        <span class="n">mne</span><span class="p">[</span><span class="n">pred_meter</span><span class="o">.</span><span class="n">instance</span><span class="p">()]</span> <span class="o">=</span> <span class="n">total_abs_diff</span> <span class="o">/</span> <span class="n">sum_of_ground_truth_power</span>
+
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">mne</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="rms_error_power"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.metrics.rms_error_power">[docs]</a><span class="k">def</span> <span class="nf">rms_error_power</span><span class="p">(</span><span class="n">predictions</span><span class="p">,</span> <span class="n">ground_truth</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Compute RMS error in assigned power</span>
+<span class="sd">    </span>
+<span class="sd">    .. math::</span>
+<span class="sd">            error^{(n)} = \\sqrt{ \\frac{1}{T} \\sum_t{ \\left ( y_t - \\hat{y}_t \\right )^2 } }</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    predictions, ground_truth : nilmtk.MeterGroup</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    error : pd.Series</span>
+<span class="sd">        Each index is an meter instance int (or tuple for MeterGroups).</span>
+<span class="sd">        Each value is the RMS error in predicted power for that appliance.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">error</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="n">both_sets_of_meters</span> <span class="o">=</span> <span class="n">iterate_through_submeters_of_two_metergroups</span><span class="p">(</span>
+        <span class="n">predictions</span><span class="p">,</span> <span class="n">ground_truth</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">pred_meter</span><span class="p">,</span> <span class="n">ground_truth_meter</span> <span class="ow">in</span> <span class="n">both_sets_of_meters</span><span class="p">:</span>
+        <span class="n">sum_of_squared_diff</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">n_samples</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">aligned_meters_chunk</span> <span class="ow">in</span> <span class="n">align_two_meters</span><span class="p">(</span><span class="n">pred_meter</span><span class="p">,</span> 
+                                                     <span class="n">ground_truth_meter</span><span class="p">):</span>
+            <span class="n">diff</span> <span class="o">=</span> <span class="n">aligned_meters_chunk</span><span class="o">.</span><span class="n">icol</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">-</span> <span class="n">aligned_meters_chunk</span><span class="o">.</span><span class="n">icol</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">diff</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+            <span class="n">sum_of_squared_diff</span> <span class="o">+=</span> <span class="p">(</span><span class="n">diff</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+            <span class="n">n_samples</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">diff</span><span class="p">)</span>
+
+        <span class="n">error</span><span class="p">[</span><span class="n">pred_meter</span><span class="o">.</span><span class="n">instance</span><span class="p">()]</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">sum_of_squared_diff</span> <span class="o">/</span> <span class="n">n_samples</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="f1_score"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.metrics.f1_score">[docs]</a><span class="k">def</span> <span class="nf">f1_score</span><span class="p">(</span><span class="n">predictions</span><span class="p">,</span> <span class="n">ground_truth</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Compute F1 scores.</span>
+<span class="sd">    </span>
+<span class="sd">    .. math::</span>
+<span class="sd">        F_{score}^{(n)} = \\frac</span>
+<span class="sd">            {2 * Precision * Recall}</span>
+<span class="sd">            {Precision + Recall}</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    predictions, ground_truth : nilmtk.MeterGroup</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    f1_scores : pd.Series</span>
+<span class="sd">        Each index is an meter instance int (or tuple for MeterGroups).</span>
+<span class="sd">        Each value is the F1 score for that appliance.  If there are multiple</span>
+<span class="sd">        chunks then the value is the weighted mean of the F1 score for </span>
+<span class="sd">        each chunk.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="c"># If we import sklearn at top of file then sphinx breaks.</span>
+    <span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">f1_score</span> <span class="k">as</span> <span class="n">sklearn_f1_score</span>
+
+    <span class="c"># sklearn produces lots of DepreciationWarnings with PyTables</span>
+    <span class="kn">import</span> <span class="nn">warnings</span>
+    <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">DeprecationWarning</span><span class="p">)</span> 
+
+    <span class="n">f1_scores</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">both_sets_of_meters</span> <span class="o">=</span> <span class="n">iterate_through_submeters_of_two_metergroups</span><span class="p">(</span>
+        <span class="n">predictions</span><span class="p">,</span> <span class="n">ground_truth</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">pred_meter</span><span class="p">,</span> <span class="n">ground_truth_meter</span> <span class="ow">in</span> <span class="n">both_sets_of_meters</span><span class="p">:</span>
+        <span class="n">scores_for_meter</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;score&#39;</span><span class="p">,</span> <span class="s">&#39;n_samples&#39;</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">aligned_states_chunk</span> <span class="ow">in</span> <span class="n">align_two_meters</span><span class="p">(</span><span class="n">pred_meter</span><span class="p">,</span> 
+                                                     <span class="n">ground_truth_meter</span><span class="p">,</span>
+                                                     <span class="s">&#39;when_on&#39;</span><span class="p">):</span>
+            <span class="n">aligned_states_chunk</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+            <span class="n">aligned_states_chunk</span> <span class="o">=</span> <span class="n">aligned_states_chunk</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+            <span class="n">score</span> <span class="o">=</span> <span class="n">sklearn_f1_score</span><span class="p">(</span><span class="n">aligned_states_chunk</span><span class="o">.</span><span class="n">icol</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>
+                                     <span class="n">aligned_states_chunk</span><span class="o">.</span><span class="n">icol</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+            <span class="n">scores_for_meter</span> <span class="o">=</span> <span class="n">scores_for_meter</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="p">{</span><span class="s">&#39;score&#39;</span><span class="p">:</span> <span class="n">score</span><span class="p">,</span> <span class="s">&#39;n_samples&#39;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">aligned_states_chunk</span><span class="p">)},</span>
+                <span class="n">ignore_index</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+        <span class="c"># Calculate weighted mean</span>
+        <span class="n">tot_samples</span> <span class="o">=</span> <span class="n">scores_for_meter</span><span class="p">[</span><span class="s">&#39;n_samples&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+        <span class="n">scores_for_meter</span><span class="p">[</span><span class="s">&#39;proportion&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">scores_for_meter</span><span class="p">[</span><span class="s">&#39;n_samples&#39;</span><span class="p">]</span> <span class="o">/</span> 
+                                          <span class="n">tot_samples</span><span class="p">)</span>
+        <span class="n">avg_score</span> <span class="o">=</span> <span class="p">(</span><span class="n">scores_for_meter</span><span class="p">[</span><span class="s">&#39;score&#39;</span><span class="p">]</span> <span class="o">*</span> 
+                     <span class="n">scores_for_meter</span><span class="p">[</span><span class="s">&#39;proportion&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+        <span class="n">f1_scores</span><span class="p">[</span><span class="n">pred_meter</span><span class="o">.</span><span class="n">instance</span><span class="p">()]</span> <span class="o">=</span> <span class="n">avg_score</span>
+
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">f1_scores</span><span class="p">)</span>
+
+
+<span class="c">##### FUNCTIONS BELOW THIS LINE HAVE NOT YET BEEN CONVERTED TO NILMTK v0.2 #####</span>
+
+</div>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">def confusion_matrices(predicted_states, ground_truth_states):</span>
+<span class="sd">    &#39;&#39;&#39;Compute confusion matrix between appliance states for each appliance</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    predicted_state: Pandas DataFrame of type {appliance :</span>
+<span class="sd">         [array of predicted states]}</span>
+
+<span class="sd">    ground_truth_state: Pandas DataFrame of type {appliance :</span>
+<span class="sd">        [array of ground truth states]}</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dict of type {appliance : confusion matrix}</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+<span class="sd">    re = {}</span>
+
+<span class="sd">    for appliance in predicted_states:</span>
+<span class="sd">        matrix = np.zeros([np.max(ground_truth_states[appliance]) + 1,</span>
+<span class="sd">                           np.max(ground_truth_states[appliance]) + 1])</span>
+<span class="sd">        for time in predicted_states[appliance]:</span>
+<span class="sd">            matrix[predicted_states.values[time, appliance],</span>
+<span class="sd">                   ground_truth_states.values[time, appliance]] += 1</span>
+<span class="sd">        re[appliance] = matrix</span>
+
+<span class="sd">    return re</span>
+
+
+<span class="sd">def tp_fp_fn_tn(predicted_states, ground_truth_states):</span>
+<span class="sd">    &#39;&#39;&#39;Compute counts of True Positives, False Positives, False Negatives, True Negatives</span>
+<span class="sd">    </span>
+<span class="sd">    .. math::</span>
+<span class="sd">        TP^{(n)} = </span>
+<span class="sd">        \\sum_{t}</span>
+<span class="sd">        and \\left ( x^{(n)}_t = on, \\hat{x}^{(n)}_t = on \\right )</span>
+<span class="sd">        </span>
+<span class="sd">        FP^{(n)} = </span>
+<span class="sd">        \\sum_{t}</span>
+<span class="sd">        and \\left ( x^{(n)}_t = off, \\hat{x}^{(n)}_t = on \\right )</span>
+<span class="sd">        </span>
+<span class="sd">        FN^{(n)} = </span>
+<span class="sd">        \\sum_{t}</span>
+<span class="sd">        and \\left ( x^{(n)}_t = on, \\hat{x}^{(n)}_t = off \\right )</span>
+<span class="sd">        </span>
+<span class="sd">        TN^{(n)} = </span>
+<span class="sd">        \\sum_{t}</span>
+<span class="sd">        and \\left ( x^{(n)}_t = off, \\hat{x}^{(n)}_t = off \\right )</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    predicted_state: Pandas DataFrame of type {appliance :</span>
+<span class="sd">         [array of predicted states]}</span>
+
+<span class="sd">    ground_truth_state: Pandas DataFrame of type {appliance :</span>
+<span class="sd">        [array of ground truth states]}</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    numpy array where columns represent appliances and rows represent: [TP, FP, FN, TN]</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+<span class="sd">    # assumes state 0 = off, all other states = on</span>
+<span class="sd">    predicted_states_on = predicted_states &gt; 0</span>
+<span class="sd">    ground_truth_states_on = ground_truth_states &gt; 0</span>
+
+<span class="sd">    tp = np.sum(np.logical_and(predicted_states_on.values == True,</span>
+<span class="sd">                ground_truth_states_on.values == True), axis=0)</span>
+<span class="sd">    fp = np.sum(np.logical_and(predicted_states_on.values == True,</span>
+<span class="sd">                ground_truth_states_on.values == False), axis=0)</span>
+<span class="sd">    fn = np.sum(np.logical_and(predicted_states_on.values == False,</span>
+<span class="sd">                ground_truth_states_on.values == True), axis=0)</span>
+<span class="sd">    tn = np.sum(np.logical_and(predicted_states_on.values == False,</span>
+<span class="sd">                ground_truth_states_on.values == False), axis=0)</span>
+
+<span class="sd">    return np.array([tp, fp, fn, tn]).astype(float)</span>
+
+
+<span class="sd">def tpr_fpr(predicted_states, ground_truth_states):</span>
+<span class="sd">    &#39;&#39;&#39;Compute True Positive Rate and False Negative Rate</span>
+<span class="sd">    </span>
+<span class="sd">    .. math::</span>
+<span class="sd">        TPR^{(n)} = \\frac{TP}{\\left ( TP + FN \\right )}</span>
+<span class="sd">        </span>
+<span class="sd">        FPR^{(n)} = \\frac{FP}{\\left ( FP + TN \\right )}</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    predicted_state: Pandas DataFrame of type {appliance :</span>
+<span class="sd">         [array of predicted states]}</span>
+
+<span class="sd">    ground_truth_state: Pandas DataFrame of type {appliance :</span>
+<span class="sd">        [array of ground truth states]}</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    numpy array where columns represent appliances and rows represent: [TPR, FPR]</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+<span class="sd">    tfpn = tp_fp_fn_tn(predicted_states, ground_truth_states)</span>
+
+<span class="sd">    tpr = tfpn[0, :] / (tfpn[0, :] + tfpn[2, :])</span>
+<span class="sd">    fpr = tfpn[1, :] / (tfpn[1, :] + tfpn[3, :])</span>
+
+<span class="sd">    return np.array([tpr, fpr])</span>
+
+
+<span class="sd">def precision_recall(predicted_states, ground_truth_states):</span>
+<span class="sd">    &#39;&#39;&#39;Compute Precision and Recall</span>
+<span class="sd">    </span>
+<span class="sd">    .. math::</span>
+<span class="sd">        Precision^{(n)} = \\frac{TP}{\\left ( TP + FP \\right )}</span>
+<span class="sd">        </span>
+<span class="sd">        Recall^{(n)} = \\frac{TP}{\\left ( TP + FN \\right )}</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    predicted_state: Pandas DataFrame of type {appliance :</span>
+<span class="sd">         [array of predicted states]}</span>
+
+<span class="sd">    ground_truth_state: Pandas DataFrame of type {appliance :</span>
+<span class="sd">        [array of ground truth states]}</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    numpy array where columns represent appliances and rows represent: [Precision, Recall]</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+<span class="sd">    tfpn = tp_fp_fn_tn(predicted_states, ground_truth_states)</span>
+
+<span class="sd">    prec = tfpn[0, :] / (tfpn[0, :] + tfpn[1, :])</span>
+<span class="sd">    rec = tfpn[0, :] / (tfpn[0, :] + tfpn[2, :])</span>
+
+<span class="sd">    return np.array([prec, rec])</span>
+
+
+<span class="sd">def hamming_loss(predicted_state, ground_truth_state):</span>
+<span class="sd">    &#39;&#39;&#39;Compute Hamming loss</span>
+<span class="sd">    </span>
+<span class="sd">    .. math::</span>
+<span class="sd">        HammingLoss = </span>
+<span class="sd">        \\frac{1}{T} \\sum_{t}</span>
+<span class="sd">        \\frac{1}{N} \\sum_{n}</span>
+<span class="sd">        xor \\left ( x^{(n)}_t, \\hat{x}^{(n)}_t \\right )</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    predicted_state: Pandas DataFrame of type {appliance :</span>
+<span class="sd">         [array of predicted states]}</span>
+
+<span class="sd">    ground_truth_state: Pandas DataFrame of type {appliance :</span>
+<span class="sd">        [array of ground truth states]}</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    float of hamming_loss</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+<span class="sd">    num_appliances = np.size(ground_truth_state.values, axis=1)</span>
+
+<span class="sd">    xors = np.sum((predicted_state.values != ground_truth_state.values),</span>
+<span class="sd">                  axis=1) / num_appliances</span>
+
+<span class="sd">    return np.mean(xors)</span>
+<span class="sd">&quot;&quot;&quot;</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">NILMTK 0.2-beta documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, NILMTK Authors.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.1.
+    </div>
+  </body>
+</html>

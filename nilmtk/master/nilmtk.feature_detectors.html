@@ -1,0 +1,152 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>nilmtk.feature_detectors package &mdash; NILMTK 0.2-beta documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.2-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="NILMTK 0.2-beta documentation" href="index.html" />
+    <link rel="up" title="nilmtk package" href="nilmtk.html" />
+    <link rel="next" title="nilmtk.preprocessing package" href="nilmtk.preprocessing.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="nilmtk.preprocessing.html" title="nilmtk.preprocessing package"
+             accesskey="N">next</a> |</li>
+        <li><a href="index.html">NILMTK 0.2-beta documentation</a> &raquo;</li>
+          <li><a href="nilmtk.html" accesskey="U">nilmtk package</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="nilmtk-feature-detectors-package">
+<h1>nilmtk.feature_detectors package<a class="headerlink" href="#nilmtk-feature-detectors-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-nilmtk.feature_detectors.cluster">
+<span id="nilmtk-feature-detectors-cluster-module"></span><h2>nilmtk.feature_detectors.cluster module<a class="headerlink" href="#module-nilmtk.feature_detectors.cluster" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="nilmtk.feature_detectors.cluster.cluster">
+<tt class="descclassname">nilmtk.feature_detectors.cluster.</tt><tt class="descname">cluster</tt><big>(</big><em>X</em>, <em>max_num_clusters=3</em><big>)</big><a class="reference internal" href="_modules/nilmtk/feature_detectors/cluster.html#cluster"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.feature_detectors.cluster.cluster" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applies clustering on reduced data, 
+i.e. data where power is greater than threshold.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>X</strong> : pd.Series or single-column pd.DataFrame</p>
+<p><strong>max_num_clusters</strong> : int</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>centroids</strong> : ndarray of int32s</p>
+<blockquote class="last">
+<div><p>Power in different states of an appliance, sorted</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-nilmtk.feature_detectors">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-nilmtk.feature_detectors" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">nilmtk.feature_detectors package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-nilmtk.feature_detectors.cluster">nilmtk.feature_detectors.cluster module</a></li>
+<li><a class="reference internal" href="#module-nilmtk.feature_detectors">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Next topic</h4>
+  <p class="topless"><a href="nilmtk.preprocessing.html"
+                        title="next chapter">nilmtk.preprocessing package</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/nilmtk.feature_detectors.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="nilmtk.preprocessing.html" title="nilmtk.preprocessing package"
+             >next</a> |</li>
+        <li><a href="index.html">NILMTK 0.2-beta documentation</a> &raquo;</li>
+          <li><a href="nilmtk.html" >nilmtk package</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, NILMTK Authors.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.1.
+    </div>
+  </body>
+</html>

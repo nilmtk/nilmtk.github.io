@@ -1,0 +1,311 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>nilmtk.disaggregate.combinatorial_optimisation &mdash; NILMTK 0.2-beta documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.2-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="NILMTK 0.2-beta documentation" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">NILMTK 0.2-beta documentation</a> &raquo;</li>
+          <li><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for nilmtk.disaggregate.combinatorial_optimisation</h1><div class="highlight"><pre>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">division</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">..appliance</span> <span class="kn">import</span> <span class="n">ApplianceID</span>
+<span class="kn">from</span> <span class="nn">..utils</span> <span class="kn">import</span> <span class="n">find_nearest</span><span class="p">,</span> <span class="n">container_to_string</span>
+<span class="kn">from</span> <span class="nn">..feature_detectors</span> <span class="kn">import</span> <span class="n">cluster</span>
+<span class="kn">from</span> <span class="nn">..timeframe</span> <span class="kn">import</span> <span class="n">merge_timeframes</span><span class="p">,</span> <span class="n">list_of_timeframe_dicts</span><span class="p">,</span> <span class="n">TimeFrame</span>
+
+
+<span class="c"># Fix the seed for repeatability of experiments</span>
+<span class="n">SEED</span> <span class="o">=</span> <span class="mi">42</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">SEED</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="CombinatorialOptimisation"><a class="viewcode-back" href="../../../nilmtk.disaggregate.html#nilmtk.disaggregate.combinatorial_optimisation.CombinatorialOptimisation">[docs]</a><span class="k">class</span> <span class="nc">CombinatorialOptimisation</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;1 dimensional combinatorial optimisation NILM algorithm.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    model : dict</span>
+<span class="sd">        Each key is either the instance integer for an ElecMeter, </span>
+<span class="sd">        or a tuple of instances for a MeterGroup.</span>
+<span class="sd">        Each value is a sorted list of power in different states.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="p">{}</span>
+
+<div class="viewcode-block" id="CombinatorialOptimisation.train"><a class="viewcode-back" href="../../../nilmtk.disaggregate.html#nilmtk.disaggregate.combinatorial_optimisation.CombinatorialOptimisation.train">[docs]</a>    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metergroup</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Train using 1D CO. Places the learnt model in `model` attribute.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        metergroup : a nilmtk.MeterGroup object</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        * only uses first chunk for each meter (TODO: handle all chunks).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">num_meters</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">metergroup</span><span class="o">.</span><span class="n">meters</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">num_meters</span> <span class="o">&gt;</span> <span class="mi">12</span><span class="p">:</span>
+            <span class="n">max_num_clusters</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">max_num_clusters</span> <span class="o">=</span> <span class="mi">3</span>
+
+        <span class="c"># TODO: Preprocessing!</span>
+        <span class="n">preprocessing</span> <span class="o">=</span> <span class="p">[]</span> <span class="c"># TODO</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">meter</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">metergroup</span><span class="o">.</span><span class="n">submeters</span><span class="p">()):</span>
+            <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">meter</span><span class="o">.</span><span class="n">power_series</span><span class="p">(</span><span class="n">preprocessing</span><span class="o">=</span><span class="n">preprocessing</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">[</span><span class="n">meter</span><span class="o">.</span><span class="n">instance</span><span class="p">()]</span> <span class="o">=</span> <span class="n">cluster</span><span class="p">(</span><span class="n">chunk</span><span class="p">,</span> <span class="n">max_num_clusters</span><span class="p">)</span>
+                <span class="k">break</span> <span class="c"># TODO handle multiple chunks per appliance</span>
+</div>
+<div class="viewcode-block" id="CombinatorialOptimisation.disaggregate"><a class="viewcode-back" href="../../../nilmtk.disaggregate.html#nilmtk.disaggregate.combinatorial_optimisation.CombinatorialOptimisation.disaggregate">[docs]</a>    <span class="k">def</span> <span class="nf">disaggregate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mains</span><span class="p">,</span> <span class="n">output_datastore</span><span class="p">,</span> <span class="o">**</span><span class="n">load_kwargs</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Disaggregate mains according to the model learnt previously.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        mains : nilmtk.ElecMeter or nilmtk.MeterGroup</span>
+<span class="sd">        output_datastore : instance of nilmtk.DataStore subclass</span>
+<span class="sd">            For storing power predictions from disaggregation algorithm.</span>
+<span class="sd">        output_name : string, optional</span>
+<span class="sd">            The `name` to use in the metadata for the `output_datastore`.</span>
+<span class="sd">            e.g. some sort of name for this experiment.  Defaults to </span>
+<span class="sd">            &quot;NILMTK_CO_&lt;date&gt;&quot;</span>
+<span class="sd">        **load_kwargs : key word arguments</span>
+<span class="sd">            Passed to `mains.power_series(**kwargs)`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="c"># If we import sklearn at the top of the file then it makes autodoc fail</span>
+        <span class="kn">from</span> <span class="nn">sklearn.utils.extmath</span> <span class="kn">import</span> <span class="n">cartesian</span>
+
+        <span class="c"># Extract output_name from load_kwargs</span>
+        <span class="n">date_now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">output_name</span> <span class="o">=</span> <span class="n">load_kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s">&#39;output_name&#39;</span><span class="p">,</span> <span class="s">&#39;NILMTK_CO_&#39;</span> <span class="o">+</span> <span class="n">date_now</span><span class="p">)</span>
+
+        <span class="n">centroids</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+        <span class="n">state_combinations</span> <span class="o">=</span> <span class="n">cartesian</span><span class="p">(</span><span class="n">centroids</span><span class="p">)</span>
+        <span class="c"># state_combinations is a 2D array</span>
+        <span class="c"># each column is a chan</span>
+        <span class="c"># each row is a possible combination of power demand values e.g.</span>
+        <span class="c"># [[0, 0, 0, 0], [0, 0, 0, 100], [0, 0, 50, 0], [0, 0, 50, 100], ...]</span>
+
+        <span class="n">summed_power_of_each_combination</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">state_combinations</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="c"># summed_power_of_each_combination is now an array where each </span>
+        <span class="c"># value is the total power demand for each combination of states.</span>
+
+        <span class="c"># TODO preprocessing??</span>
+        <span class="n">RESAMPLE_SECONDS</span> <span class="o">=</span> <span class="mi">60</span> <span class="c"># TODO</span>
+        <span class="n">timeframes</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">building_path</span> <span class="o">=</span> <span class="s">&#39;/building{}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mains</span><span class="o">.</span><span class="n">building</span><span class="p">())</span>
+        <span class="n">mains_data_location</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;{}/elec/meter{}&#39;</span>
+                               <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">building_path</span><span class="p">,</span> 
+                                       <span class="n">container_to_string</span><span class="p">(</span><span class="n">mains</span><span class="o">.</span><span class="n">instance</span><span class="p">())))</span>
+        <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">mains</span><span class="o">.</span><span class="n">power_series</span><span class="p">(</span><span class="o">**</span><span class="n">load_kwargs</span><span class="p">):</span>
+
+            <span class="c"># Start disaggregation</span>
+            <span class="n">indices_of_state_combinations</span><span class="p">,</span> <span class="n">residual_power</span> <span class="o">=</span> <span class="n">find_nearest</span><span class="p">(</span>
+                <span class="n">summed_power_of_each_combination</span><span class="p">,</span> <span class="n">chunk</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">chan</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+                <span class="n">predicted_power</span> <span class="o">=</span> <span class="n">state_combinations</span><span class="p">[</span>
+                    <span class="n">indices_of_state_combinations</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+                <span class="n">chan_str</span> <span class="o">=</span> <span class="n">container_to_string</span><span class="p">(</span><span class="n">chan</span><span class="p">)</span>
+                <span class="n">output_datastore</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&#39;{}/elec/meter{}&#39;</span>
+                                        <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">building_path</span><span class="p">,</span> <span class="n">chan_str</span><span class="p">),</span>
+                                        <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">predicted_power</span><span class="p">,</span>
+                                                     <span class="n">index</span><span class="o">=</span><span class="n">chunk</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
+                                                     <span class="n">columns</span><span class="o">=</span><span class="n">chunk</span><span class="o">.</span><span class="n">columns</span><span class="p">))</span>
+            <span class="c"># Record metadata</span>
+            <span class="n">timeframes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">chunk</span><span class="o">.</span><span class="n">timeframe</span><span class="p">)</span>
+            <span class="n">measurement</span> <span class="o">=</span> <span class="n">chunk</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+            <span class="c"># Copy mains data to disag output</span>
+            <span class="n">output_datastore</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mains_data_location</span><span class="p">,</span> <span class="n">chunk</span><span class="p">)</span>
+
+        <span class="c">##################################</span>
+        <span class="c"># Add metadata to output_datastore</span>
+
+        <span class="c"># TODO: `preprocessing_applied` for all meters</span>
+        <span class="c"># TODO: appliance metadata</span>
+        <span class="c"># TODO: split this metadata code into a separate function</span>
+        <span class="c"># TODO: submeter measurement should probably be the mains</span>
+        <span class="c">#       measurement we used to train on, not the mains measurement.</span>
+
+        <span class="c"># DataSet and MeterDevice metadata:</span>
+        <span class="n">meter_devices</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s">&#39;CO&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s">&#39;model&#39;</span><span class="p">:</span> <span class="s">&#39;CO&#39;</span><span class="p">,</span>
+                <span class="s">&#39;sample_period&#39;</span><span class="p">:</span> <span class="n">RESAMPLE_SECONDS</span><span class="p">,</span>
+                <span class="s">&#39;max_sample_period&#39;</span><span class="p">:</span> <span class="n">RESAMPLE_SECONDS</span><span class="p">,</span>
+                <span class="s">&#39;measurements&#39;</span><span class="p">:</span> <span class="p">[{</span>
+                    <span class="s">&#39;physical_quantity&#39;</span><span class="p">:</span> <span class="n">measurement</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                    <span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="n">measurement</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> 
+                <span class="p">}]</span>
+            <span class="p">},</span>
+            <span class="s">&#39;mains&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s">&#39;model&#39;</span><span class="p">:</span> <span class="s">&#39;mains&#39;</span><span class="p">,</span>
+                <span class="s">&#39;sample_period&#39;</span><span class="p">:</span> <span class="n">RESAMPLE_SECONDS</span><span class="p">,</span>
+                <span class="s">&#39;max_sample_period&#39;</span><span class="p">:</span> <span class="n">RESAMPLE_SECONDS</span><span class="p">,</span>
+                <span class="s">&#39;measurements&#39;</span><span class="p">:</span> <span class="p">[{</span>
+                    <span class="s">&#39;physical_quantity&#39;</span><span class="p">:</span> <span class="n">measurement</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                    <span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="n">measurement</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> 
+                <span class="p">}]</span>                
+            <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="n">merged_timeframes</span> <span class="o">=</span> <span class="n">merge_timeframes</span><span class="p">(</span><span class="n">timeframes</span><span class="p">,</span> <span class="n">gap</span><span class="o">=</span><span class="n">RESAMPLE_SECONDS</span><span class="p">)</span>
+        <span class="n">total_timeframe</span> <span class="o">=</span> <span class="n">TimeFrame</span><span class="p">(</span><span class="n">merged_timeframes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> 
+                                    <span class="n">merged_timeframes</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">end</span><span class="p">)</span>
+
+        <span class="n">dataset_metadata</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;name&#39;</span><span class="p">:</span> <span class="n">output_name</span><span class="p">,</span> <span class="s">&#39;date&#39;</span><span class="p">:</span> <span class="n">date_now</span><span class="p">,</span> 
+                            <span class="s">&#39;meter_devices&#39;</span><span class="p">:</span> <span class="n">meter_devices</span><span class="p">,</span>
+                            <span class="s">&#39;timeframe&#39;</span><span class="p">:</span> <span class="n">total_timeframe</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()}</span>
+        <span class="n">output_datastore</span><span class="o">.</span><span class="n">save_metadata</span><span class="p">(</span><span class="s">&#39;/&#39;</span><span class="p">,</span> <span class="n">dataset_metadata</span><span class="p">)</span>
+
+        <span class="c"># Building metadata</span>
+        
+        <span class="c"># Mains meter:</span>
+        <span class="n">elec_meters</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">mains</span><span class="o">.</span><span class="n">instance</span><span class="p">():</span> <span class="p">{</span>
+                <span class="s">&#39;device_model&#39;</span><span class="p">:</span> <span class="s">&#39;mains&#39;</span><span class="p">,</span> 
+                <span class="s">&#39;site_meter&#39;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span> 
+                <span class="s">&#39;data_location&#39;</span><span class="p">:</span> <span class="n">mains_data_location</span><span class="p">,</span>
+                <span class="s">&#39;preprocessing_applied&#39;</span><span class="p">:</span> <span class="p">{},</span> <span class="c"># TODO</span>
+                <span class="s">&#39;statistics&#39;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s">&#39;timeframe&#39;</span><span class="p">:</span> <span class="n">total_timeframe</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(),</span>
+                    <span class="s">&#39;good_sections&#39;</span><span class="p">:</span> <span class="n">list_of_timeframe_dicts</span><span class="p">(</span><span class="n">merged_timeframes</span><span class="p">)</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="c"># Submeters:</span>
+        <span class="k">for</span> <span class="n">chan</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">elec_meters</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
+                <span class="n">chan</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s">&#39;device_model&#39;</span><span class="p">:</span> <span class="s">&#39;CO&#39;</span><span class="p">,</span>
+                    <span class="s">&#39;submeter_of&#39;</span><span class="p">:</span> <span class="n">mains</span><span class="o">.</span><span class="n">instance</span><span class="p">(),</span>
+                    <span class="s">&#39;data_location&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;{}/elec/meter{}&#39;</span>
+                                      <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">building_path</span><span class="p">,</span>
+                                              <span class="n">container_to_string</span><span class="p">(</span><span class="n">chan</span><span class="p">))),</span>
+                    <span class="s">&#39;preprocessing_applied&#39;</span><span class="p">:</span> <span class="p">{},</span> <span class="c"># TODO</span>
+                    <span class="s">&#39;statistics&#39;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s">&#39;timeframe&#39;</span><span class="p">:</span> <span class="n">total_timeframe</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(),</span>
+                        <span class="s">&#39;good_sections&#39;</span><span class="p">:</span> <span class="n">list_of_timeframe_dicts</span><span class="p">(</span><span class="n">merged_timeframes</span><span class="p">)</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+            <span class="p">})</span>
+
+        <span class="c"># Appliances:</span>
+        <span class="n">appliances</span> <span class="o">=</span> <span class="p">[]</span> <span class="c"># TODO</span>
+
+        <span class="n">building_metadata</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s">&#39;instance&#39;</span><span class="p">:</span> <span class="n">mains</span><span class="o">.</span><span class="n">building</span><span class="p">(),</span>
+            <span class="s">&#39;elec_meters&#39;</span><span class="p">:</span> <span class="n">elec_meters</span><span class="p">,</span>
+            <span class="s">&#39;appliances&#39;</span><span class="p">:</span> <span class="n">appliances</span>
+        <span class="p">}</span>
+        <span class="n">output_datastore</span><span class="o">.</span><span class="n">save_metadata</span><span class="p">(</span><span class="n">building_path</span><span class="p">,</span> <span class="n">building_metadata</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="CombinatorialOptimisation.export_model"><a class="viewcode-back" href="../../../nilmtk.disaggregate.html#nilmtk.disaggregate.combinatorial_optimisation.CombinatorialOptimisation.export_model">[docs]</a>    <span class="k">def</span> <span class="nf">export_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+        <span class="n">model_copy</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">appliance</span><span class="p">,</span> <span class="n">appliance_states</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+            <span class="n">model_copy</span><span class="p">[</span>
+                <span class="s">&quot;{}_{}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">appliance</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">appliance</span><span class="o">.</span><span class="n">instance</span><span class="p">)]</span> <span class="o">=</span> <span class="n">appliance_states</span>
+        <span class="n">j</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">model_copy</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s">&#39;w+&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">j</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="CombinatorialOptimisation.import_model"><a class="viewcode-back" href="../../../nilmtk.disaggregate.html#nilmtk.disaggregate.combinatorial_optimisation.CombinatorialOptimisation.import_model">[docs]</a>    <span class="k">def</span> <span class="nf">import_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">temp</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+        <span class="k">for</span> <span class="n">appliance</span><span class="p">,</span> <span class="n">centroids</span> <span class="ow">in</span> <span class="n">temp</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+            <span class="n">appliance_name</span> <span class="o">=</span> <span class="n">appliance</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&quot;_&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s">&quot;ascii&quot;</span><span class="p">)</span>
+            <span class="n">appliance_instance</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">appliance</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&quot;_&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">appliance_name_instance</span> <span class="o">=</span> <span class="n">ApplianceID</span><span class="p">(</span>
+                <span class="n">appliance_name</span><span class="p">,</span> <span class="n">appliance_instance</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">[</span><span class="n">appliance_name_instance</span><span class="p">]</span> <span class="o">=</span> <span class="n">centroids</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">NILMTK 0.2-beta documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, NILMTK Authors.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.1.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,202 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>nilmtk.tests.test_metergroup &mdash; NILMTK 0.2-beta documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.2-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="NILMTK 0.2-beta documentation" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">NILMTK 0.2-beta documentation</a> &raquo;</li>
+          <li><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for nilmtk.tests.test_metergroup</h1><div class="highlight"><pre>
+<span class="c">#!/usr/bin/python</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">division</span>
+<span class="kn">import</span> <span class="nn">unittest</span>
+<span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">join</span>
+<span class="kn">from</span> <span class="nn">nilmtk.tests.testingtools</span> <span class="kn">import</span> <span class="n">data_dir</span>
+<span class="kn">from</span> <span class="nn">nilmtk</span> <span class="kn">import</span> <span class="n">Appliance</span><span class="p">,</span> <span class="n">MeterGroup</span><span class="p">,</span> <span class="n">ElecMeter</span><span class="p">,</span> <span class="n">HDFDataStore</span>
+<span class="kn">from</span> <span class="nn">nilmtk.utils</span> <span class="kn">import</span> <span class="n">tree_root</span><span class="p">,</span> <span class="n">nodes_adjacent_to_root</span>
+<span class="kn">from</span> <span class="nn">nilmtk.elecmeter</span> <span class="kn">import</span> <span class="n">ElecMeterID</span>
+<span class="kn">from</span> <span class="nn">nilmtk.building</span> <span class="kn">import</span> <span class="n">BuildingID</span>
+
+<div class="viewcode-block" id="TestMeterGroup"><a class="viewcode-back" href="../../../nilmtk.tests.html#nilmtk.tests.test_metergroup.TestMeterGroup">[docs]</a><span class="k">class</span> <span class="nc">TestMeterGroup</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="TestMeterGroup.setUpClass"><a class="viewcode-back" href="../../../nilmtk.tests.html#nilmtk.tests.test_metergroup.TestMeterGroup.setUpClass">[docs]</a>    <span class="k">def</span> <span class="nf">setUpClass</span><span class="p">(</span><span class="n">cls</span><span class="p">):</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="n">data_dir</span><span class="p">(),</span> <span class="s">&#39;energy.h5&#39;</span><span class="p">)</span>
+        <span class="n">cls</span><span class="o">.</span><span class="n">datastore</span> <span class="o">=</span> <span class="n">HDFDataStore</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="n">ElecMeter</span><span class="o">.</span><span class="n">load_meter_devices</span><span class="p">(</span><span class="n">cls</span><span class="o">.</span><span class="n">datastore</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="TestMeterGroup.test_getitem"><a class="viewcode-back" href="../../../nilmtk.tests.html#nilmtk.tests.test_metergroup.TestMeterGroup.test_getitem">[docs]</a>    <span class="k">def</span> <span class="nf">test_getitem</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">fridge_meter</span> <span class="o">=</span> <span class="n">ElecMeter</span><span class="p">()</span>
+        <span class="n">fridge</span> <span class="o">=</span> <span class="n">Appliance</span><span class="p">({</span><span class="s">&#39;type&#39;</span><span class="p">:</span><span class="s">&#39;fridge&#39;</span><span class="p">,</span> <span class="s">&#39;instance&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">})</span>
+        <span class="n">fridge_meter</span><span class="o">.</span><span class="n">appliances</span> <span class="o">=</span> <span class="p">[</span><span class="n">fridge</span><span class="p">]</span>
+        <span class="n">mg</span> <span class="o">=</span> <span class="n">MeterGroup</span><span class="p">([</span><span class="n">fridge_meter</span><span class="p">])</span>
+
+        <span class="c"># test good keys</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s">&#39;fridge&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;fridge&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span><span class="s">&#39;fridge&#39;</span><span class="p">},</span> 
+                    <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span><span class="s">&#39;fridge&#39;</span><span class="p">,</span> <span class="s">&#39;instance&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">mg</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="n">fridge_meter</span><span class="p">)</span>
+        
+        <span class="c"># test bad key values</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s">&#39;foo&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;foo&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;fridge&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> 
+                    <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span><span class="s">&#39;fridge&#39;</span><span class="p">,</span> <span class="s">&#39;instance&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">12</span><span class="p">}]:</span>
+            <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertRaises</span><span class="p">(</span><span class="ne">KeyError</span><span class="p">):</span>
+                <span class="n">mg</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+
+        <span class="c"># test bad key types</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="bp">True</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> <span class="p">[</span><span class="s">&#39;fridge&#39;</span><span class="p">]]:</span>
+            <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertRaises</span><span class="p">(</span><span class="ne">TypeError</span><span class="p">):</span>
+                <span class="n">mg</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+</div>
+<div class="viewcode-block" id="TestMeterGroup.test_select"><a class="viewcode-back" href="../../../nilmtk.tests.html#nilmtk.tests.test_metergroup.TestMeterGroup.test_select">[docs]</a>    <span class="k">def</span> <span class="nf">test_select</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">fridge_meter</span> <span class="o">=</span> <span class="n">ElecMeter</span><span class="p">()</span>
+        <span class="n">fridge</span> <span class="o">=</span> <span class="n">Appliance</span><span class="p">({</span><span class="s">&#39;type&#39;</span><span class="p">:</span><span class="s">&#39;fridge&#39;</span><span class="p">,</span> <span class="s">&#39;instance&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">})</span>
+        <span class="n">fridge_meter</span><span class="o">.</span><span class="n">appliances</span> <span class="o">=</span> <span class="p">[</span><span class="n">fridge</span><span class="p">]</span>
+        <span class="n">mg</span> <span class="o">=</span> <span class="n">MeterGroup</span><span class="p">([</span><span class="n">fridge_meter</span><span class="p">])</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">mg</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">category</span><span class="o">=</span><span class="s">&#39;cold&#39;</span><span class="p">),</span> <span class="n">mg</span><span class="p">)</span>
+        <span class="c"># TODO: make this test more rigorous!</span>
+        </div>
+<div class="viewcode-block" id="TestMeterGroup.test_wiring_graph"><a class="viewcode-back" href="../../../nilmtk.tests.html#nilmtk.tests.test_metergroup.TestMeterGroup.test_wiring_graph">[docs]</a>    <span class="k">def</span> <span class="nf">test_wiring_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">meter1</span> <span class="o">=</span> <span class="n">ElecMeter</span><span class="p">(</span><span class="n">metadata</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;site_meter&#39;</span><span class="p">:</span> <span class="bp">True</span><span class="p">},</span> 
+                           <span class="n">meter_id</span><span class="o">=</span><span class="n">ElecMeterID</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="s">&#39;REDD&#39;</span><span class="p">))</span>
+        <span class="n">meter2</span> <span class="o">=</span> <span class="n">ElecMeter</span><span class="p">(</span><span class="n">metadata</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;submeter_of&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span> 
+                           <span class="n">meter_id</span><span class="o">=</span><span class="n">ElecMeterID</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="s">&#39;REDD&#39;</span><span class="p">))</span>
+        <span class="n">meter3</span> <span class="o">=</span> <span class="n">ElecMeter</span><span class="p">(</span><span class="n">metadata</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;submeter_of&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">},</span>
+                           <span class="n">meter_id</span><span class="o">=</span><span class="n">ElecMeterID</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="s">&#39;REDD&#39;</span><span class="p">))</span>
+        <span class="n">mg</span> <span class="o">=</span> <span class="n">MeterGroup</span><span class="p">([</span><span class="n">meter1</span><span class="p">,</span> <span class="n">meter2</span><span class="p">,</span> <span class="n">meter3</span><span class="p">])</span>
+        <span class="n">wiring_graph</span> <span class="o">=</span> <span class="n">mg</span><span class="o">.</span><span class="n">wiring_graph</span><span class="p">()</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIs</span><span class="p">(</span><span class="n">mg</span><span class="o">.</span><span class="n">mains</span><span class="p">(),</span> <span class="n">meter1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">mg</span><span class="o">.</span><span class="n">meters_directly_downstream_of_mains</span><span class="p">(),</span> <span class="p">[</span><span class="n">meter2</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">wiring_graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">(),</span> <span class="p">[</span><span class="n">meter2</span><span class="p">,</span> <span class="n">meter3</span><span class="p">,</span> <span class="n">meter1</span><span class="p">])</span>
+</div>
+<div class="viewcode-block" id="TestMeterGroup.test_proportion_of_energy_submetered"><a class="viewcode-back" href="../../../nilmtk.tests.html#nilmtk.tests.test_metergroup.TestMeterGroup.test_proportion_of_energy_submetered">[docs]</a>    <span class="k">def</span> <span class="nf">test_proportion_of_energy_submetered</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">meters</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]:</span>
+            <span class="n">meter_meta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">datastore</span><span class="o">.</span><span class="n">load_metadata</span><span class="p">(</span><span class="s">&#39;building1&#39;</span><span class="p">)[</span><span class="s">&#39;elec_meters&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">meter_id</span> <span class="o">=</span> <span class="n">ElecMeterID</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s">&#39;REDD&#39;</span><span class="p">)</span>
+            <span class="n">meter</span> <span class="o">=</span> <span class="n">ElecMeter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">datastore</span><span class="p">,</span> <span class="n">meter_meta</span><span class="p">,</span> <span class="n">meter_id</span><span class="p">)</span>
+            <span class="n">meters</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">meter</span><span class="p">)</span>
+
+        <span class="n">mains</span> <span class="o">=</span> <span class="n">meters</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">mg</span> <span class="o">=</span> <span class="n">MeterGroup</span><span class="p">(</span><span class="n">meters</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">mg</span><span class="o">.</span><span class="n">proportion_of_energy_submetered</span><span class="p">(),</span> <span class="mf">1.0</span><span class="p">)</span> 
+</div>
+<div class="viewcode-block" id="TestMeterGroup.test_dual_supply"><a class="viewcode-back" href="../../../nilmtk.tests.html#nilmtk.tests.test_metergroup.TestMeterGroup.test_dual_supply">[docs]</a>    <span class="k">def</span> <span class="nf">test_dual_supply</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">elec_meters</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;data_location&#39;</span><span class="p">:</span> <span class="s">&#39;/building1/elec/meter1&#39;</span><span class="p">,</span>
+                           <span class="s">&#39;device_model&#39;</span><span class="p">:</span> <span class="s">&#39;Energy Meter&#39;</span><span class="p">},</span>
+                       <span class="mi">2</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;data_location&#39;</span><span class="p">:</span> <span class="s">&#39;/building1/elec/meter1&#39;</span><span class="p">,</span>
+                           <span class="s">&#39;device_model&#39;</span><span class="p">:</span> <span class="s">&#39;Energy Meter&#39;</span><span class="p">},</span>
+                       <span class="mi">3</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;data_location&#39;</span><span class="p">:</span> <span class="s">&#39;/building1/elec/meter1&#39;</span><span class="p">,</span>
+                           <span class="s">&#39;device_model&#39;</span><span class="p">:</span> <span class="s">&#39;Energy Meter&#39;</span><span class="p">}}</span>
+
+        <span class="n">appliances</span> <span class="o">=</span> <span class="p">[{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;washer dryer&#39;</span><span class="p">,</span> <span class="s">&#39;instance&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s">&#39;meters&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]},</span>
+                      <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;fridge&#39;</span><span class="p">,</span> <span class="s">&#39;instance&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s">&#39;meters&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">3</span><span class="p">]}]</span>
+        <span class="n">mg</span> <span class="o">=</span> <span class="n">MeterGroup</span><span class="p">()</span>
+        <span class="n">mg</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">datastore</span><span class="p">,</span> <span class="n">elec_meters</span><span class="p">,</span> <span class="n">appliances</span><span class="p">,</span> <span class="n">BuildingID</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s">&#39;REDD&#39;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">mg</span><span class="p">[</span><span class="s">&#39;washer dryer&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">total_energy</span><span class="p">()[</span><span class="s">&#39;active&#39;</span><span class="p">],</span> 
+                         <span class="n">mg</span><span class="p">[</span><span class="s">&#39;fridge&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">total_energy</span><span class="p">()[</span><span class="s">&#39;active&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsInstance</span><span class="p">(</span><span class="n">mg</span><span class="p">[</span><span class="s">&#39;washer dryer&#39;</span><span class="p">],</span> <span class="n">MeterGroup</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsInstance</span><span class="p">(</span><span class="n">mg</span><span class="p">[</span><span class="s">&#39;fridge&#39;</span><span class="p">],</span> <span class="n">ElecMeter</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="TestMeterGroup.test_from_all_meters_in_dataset"><a class="viewcode-back" href="../../../nilmtk.tests.html#nilmtk.tests.test_metergroup.TestMeterGroup.test_from_all_meters_in_dataset">[docs]</a>    <span class="k">def</span> <span class="nf">test_from_all_meters_in_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">meters</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">6</span><span class="p">):</span>
+            <span class="n">meters</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ElecMeter</span><span class="p">(</span><span class="n">meter_id</span><span class="o">=</span><span class="n">ElecMeterID</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">None</span><span class="p">)))</span>
+            
+        <span class="n">mg</span> <span class="o">=</span> <span class="n">MeterGroup</span><span class="o">.</span><span class="n">from_all_meters_in_dataset</span><span class="p">([</span>
+            <span class="n">ElecMeterID</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="bp">None</span><span class="p">),</span>
+            <span class="p">(</span><span class="n">ElecMeterID</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="bp">None</span><span class="p">),</span> 
+             <span class="p">(</span><span class="n">ElecMeterID</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="bp">None</span><span class="p">),</span> <span class="n">ElecMeterID</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="bp">None</span><span class="p">),</span> <span class="n">ElecMeterID</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="bp">None</span><span class="p">)))</span>
+        <span class="p">])</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIs</span><span class="p">(</span><span class="n">mg</span><span class="o">.</span><span class="n">meters</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">meters</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIs</span><span class="p">(</span><span class="n">mg</span><span class="o">.</span><span class="n">meters</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">meters</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">meters</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">mg</span><span class="o">.</span><span class="n">meters</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">meters</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">meters</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">mg</span><span class="o">.</span><span class="n">meters</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
+</div></div>
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">unittest</span><span class="o">.</span><span class="n">main</span><span class="p">()</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">NILMTK 0.2-beta documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, NILMTK Authors.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.1.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,322 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>nilmtk.dataset_converters.wikienergy &mdash; NILMTK 0.2-beta documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.2-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="NILMTK 0.2-beta documentation" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">NILMTK 0.2-beta documentation</a> &raquo;</li>
+          <li><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for nilmtk.dataset_converters.wikienergy</h1><div class="highlight"><pre>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">division</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">pandas</span> <span class="kn">import</span> <span class="n">HDFStore</span>
+<span class="kn">import</span> <span class="nn">psycopg2</span> <span class="kn">as</span> <span class="nn">db</span>
+<span class="kn">from</span> <span class="nn">nilmtk.measurement</span> <span class="kn">import</span> <span class="n">measurement_columns</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">MANUAL:</span>
+
+<span class="sd">WikiEnergy is a large dataset hosted in a remote SQL database. This</span>
+<span class="sd">file provides a function to download the dataset and save it to disk</span>
+<span class="sd">as NILMTK-DF. Since downloading the entire dataset will likely take &gt;</span>
+<span class="sd">24 hours, this function provides some options to allow you to download</span>
+<span class="sd">only a subset of the data.</span>
+
+<span class="sd">For example, to only load house 26 for April 2014:</span>
+
+<span class="sd">wikienergy.download_dataset(</span>
+<span class="sd">           &#39;username&#39;,</span>
+<span class="sd">           &#39;password&#39;,</span>
+<span class="sd">           &#39;/path/output_filename.h5&#39;</span>
+<span class="sd">           periods_to_load = {26: (&#39;2014-04-01&#39;, &#39;2014-05-01&#39;)}</span>
+<span class="sd">           )</span>
+
+<span class="sd">REQUIREMENTS:</span>
+
+<span class="sd">On Ubuntu:</span>
+<span class="sd">* sudo apt-get install libpq-dev</span>
+<span class="sd">* sudo pip install psycopg2</span>
+
+<span class="sd">TODO:</span>
+<span class="sd">* intelligently handle queries that fail due to network</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<span class="k">def</span> <span class="nf">_wikienergy_dataframe_to_hdf</span><span class="p">(</span><span class="n">wikienergy_dataframe</span><span class="p">,</span> <span class="n">hdf5_store</span><span class="p">):</span>
+    <span class="n">local_dataframe</span> <span class="o">=</span> <span class="n">wikienergy_dataframe</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    
+    <span class="c"># remove timezone information to avoid append errors</span>
+    <span class="n">local_dataframe</span><span class="p">[</span><span class="s">&#39;localminute&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DatetimeIndex</span><span class="p">([</span><span class="n">i</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">tzinfo</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span> 
+                                                       <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">local_dataframe</span><span class="p">[</span><span class="s">&#39;localminute&#39;</span><span class="p">]])</span>
+    <span class="c"># set timestamp as frame index</span>
+    <span class="n">local_dataframe</span> <span class="o">=</span> <span class="n">local_dataframe</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s">&#39;localminute&#39;</span><span class="p">)</span>
+
+    <span class="c"># Column names for dataframe</span>
+    <span class="n">columns</span> <span class="o">=</span> <span class="n">measurement_columns</span><span class="p">([(</span><span class="s">&#39;power&#39;</span><span class="p">,</span> <span class="s">&#39;active&#39;</span><span class="p">)])</span>
+    
+    <span class="k">for</span> <span class="n">building_id</span> <span class="ow">in</span> <span class="n">local_dataframe</span><span class="p">[</span><span class="s">&#39;dataid&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+        <span class="c"># remove building id column</span>
+        <span class="n">feeds_dataframe</span> <span class="o">=</span> <span class="n">local_dataframe</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s">&#39;dataid&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="c"># convert from kW to W</span>
+        <span class="n">feeds_dataframe</span> <span class="o">=</span> <span class="n">feeds_dataframe</span><span class="o">.</span><span class="n">mul</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
+        <span class="n">meter_id</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">feeds_dataframe</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">feeds_dataframe</span><span class="p">[</span><span class="n">column</span><span class="p">]</span><span class="o">.</span><span class="n">notnull</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="c"># convert timeseries into dataframe</span>
+                <span class="n">feed_dataframe</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">feeds_dataframe</span><span class="p">[</span><span class="n">column</span><span class="p">],</span>
+                                              <span class="n">columns</span><span class="o">=</span><span class="n">columns</span><span class="p">)</span>
+                
+                <span class="n">key</span> <span class="o">=</span> <span class="s">&#39;building{:d}/elec/meter{:d}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">building_id</span><span class="p">,</span> <span class="n">meter_id</span><span class="p">)</span>
+                <span class="n">hdf5_store</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">feed_dataframe</span><span class="p">)</span>
+            <span class="n">meter_id</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="mi">0</span>
+
+
+<div class="viewcode-block" id="download_dataset"><a class="viewcode-back" href="../../../nilmtk.dataset_converters.html#nilmtk.dataset_converters.wikienergy.download_dataset">[docs]</a><span class="k">def</span> <span class="nf">download_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">database_username</span><span class="p">,</span> <span class="n">database_password</span><span class="p">,</span> 
+                     <span class="n">output_filename</span><span class="p">,</span> <span class="n">periods_to_load</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Downloads data from WikiEnergy database into an HDF5 file.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    output_filename : str</span>
+<span class="sd">        Output HDF filename.  If file exists already then will be deleted.</span>
+<span class="sd">    database_username, database_password : str</span>
+<span class="sd">    periods_to_load : dict of tuples, optional</span>
+<span class="sd">       Key of dict is the building number (int).</span>
+<span class="sd">       Values are (&lt;start date&gt;, &lt;end date&gt;)</span>
+<span class="sd">       e.g. (&quot;2013-04-01&quot;, None) or (&quot;2013-04-01&quot;, &quot;2013-08-01&quot;)</span>
+<span class="sd">       defaults to all buildings and all date ranges</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c"># wiki-energy database settings</span>
+    <span class="n">database_host</span> <span class="o">=</span> <span class="s">&#39;db.wiki-energy.org&#39;</span>
+    <span class="n">database_name</span> <span class="o">=</span> <span class="s">&#39;postgres&#39;</span>
+    <span class="n">database_schema</span> <span class="o">=</span> <span class="s">&#39;PecanStreet_SharedData&#39;</span>
+
+    <span class="c"># try to connect to database</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">conn</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">&#39;host=&#39;</span> <span class="o">+</span> <span class="n">database_host</span> <span class="o">+</span> 
+                          <span class="s">&#39; dbname=&#39;</span> <span class="o">+</span> <span class="n">database_name</span> <span class="o">+</span> 
+                          <span class="s">&#39; user=&#39;</span> <span class="o">+</span> <span class="n">database_username</span> <span class="o">+</span> 
+                          <span class="s">&#39; password=&#39;</span> <span class="o">+</span> <span class="n">database_password</span><span class="p">)</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&#39;Could not connect to remote database&#39;</span><span class="p">)</span>
+        <span class="k">raise</span>
+
+    <span class="c"># set up a new HDF5 datastore</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">output_filename</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">output_filename</span><span class="p">)</span>
+    <span class="n">hdf5_store</span> <span class="o">=</span> <span class="n">HDFStore</span><span class="p">(</span><span class="n">output_filename</span><span class="p">)</span>
+
+    <span class="c"># get tables in database schema</span>
+    <span class="n">sql_query</span> <span class="o">=</span> <span class="p">(</span><span class="s">&quot;SELECT TABLE_NAME&quot;</span> <span class="o">+</span> 
+                 <span class="s">&quot; FROM INFORMATION_SCHEMA.TABLES&quot;</span> <span class="o">+</span> 
+                 <span class="s">&quot; WHERE TABLE_TYPE = &#39;BASE TABLE&#39;&quot;</span> <span class="o">+</span> 
+                 <span class="s">&quot; AND TABLE_SCHEMA=&#39;&quot;</span> <span class="o">+</span> <span class="n">database_schema</span> <span class="o">+</span> <span class="s">&quot;&#39;&quot;</span> <span class="o">+</span> 
+                 <span class="s">&quot; ORDER BY TABLE_NAME&quot;</span><span class="p">)</span>
+    <span class="n">database_tables</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql</span><span class="p">(</span><span class="n">sql_query</span><span class="p">,</span> <span class="n">conn</span><span class="p">)[</span><span class="s">&#39;table_name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+    <span class="c"># if user has specified buildings</span>
+    <span class="k">if</span> <span class="n">periods_to_load</span><span class="p">:</span>
+        <span class="n">buildings_to_load</span> <span class="o">=</span> <span class="n">periods_to_load</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c"># get buildings present in all tables</span>
+        <span class="n">sql_query</span> <span class="o">=</span> <span class="s">&#39;&#39;</span>
+        <span class="k">for</span> <span class="n">table</span> <span class="ow">in</span> <span class="n">database_tables</span><span class="p">:</span>
+            <span class="n">sql_query</span> <span class="o">=</span> <span class="p">(</span><span class="n">sql_query</span> <span class="o">+</span> <span class="s">&#39;(SELECT DISTINCT dataid&#39;</span> <span class="o">+</span> 
+                         <span class="s">&#39; FROM &quot;&#39;</span> <span class="o">+</span> <span class="n">database_schema</span> <span class="o">+</span> <span class="s">&#39;&quot;.&#39;</span> <span class="o">+</span> <span class="n">table</span> <span class="o">+</span> 
+                         <span class="s">&#39;) UNION &#39;</span><span class="p">)</span>
+        <span class="n">sql_query</span> <span class="o">=</span> <span class="n">sql_query</span><span class="p">[:</span><span class="o">-</span><span class="mi">7</span><span class="p">]</span>
+        <span class="n">sql_query</span> <span class="o">=</span> <span class="p">(</span><span class="n">sql_query</span> <span class="o">+</span> <span class="s">&#39; ORDER BY dataid&#39;</span><span class="p">)</span> 
+        <span class="n">buildings_to_load</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql</span><span class="p">(</span><span class="n">sql_query</span><span class="p">,</span> <span class="n">conn</span><span class="p">)[</span><span class="s">&#39;dataid&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+    <span class="c"># for each user specified building or all buildings in database</span>
+    <span class="k">for</span> <span class="n">building_id</span> <span class="ow">in</span> <span class="n">buildings_to_load</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&quot;Loading building {:d} @ {}&quot;</span>
+              <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">building_id</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()))</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+
+        <span class="c"># create new list of chunks for concatenating later</span>
+        <span class="n">dataframe_list</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c"># for each table of 1 month data</span>
+        <span class="k">for</span> <span class="n">database_table</span> <span class="ow">in</span> <span class="n">database_tables</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">&quot;  Loading table {:s}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">database_table</span><span class="p">))</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+
+            <span class="c"># get buildings present in this table</span>
+            <span class="n">sql_query</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;SELECT DISTINCT dataid&#39;</span> <span class="o">+</span> 
+                         <span class="s">&#39; FROM &quot;&#39;</span> <span class="o">+</span> <span class="n">database_schema</span> <span class="o">+</span> <span class="s">&#39;&quot;.&#39;</span> <span class="o">+</span> <span class="n">database_table</span> <span class="o">+</span> 
+                         <span class="s">&#39; ORDER BY dataid&#39;</span><span class="p">)</span>
+            <span class="n">buildings_in_table</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql</span><span class="p">(</span><span class="n">sql_query</span><span class="p">,</span> <span class="n">conn</span><span class="p">)[</span><span class="s">&#39;dataid&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="n">building_id</span> <span class="ow">in</span> <span class="n">buildings_in_table</span><span class="p">:</span>
+                <span class="c"># get first and last timestamps for this house in this table</span>
+                <span class="n">sql_query</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;SELECT MIN(localminute) AS minlocalminute,&#39;</span> <span class="o">+</span> 
+                             <span class="s">&#39; MAX(localminute) AS maxlocalminute&#39;</span> <span class="o">+</span> 
+                             <span class="s">&#39; FROM &quot;&#39;</span> <span class="o">+</span> <span class="n">database_schema</span> <span class="o">+</span> <span class="s">&#39;&quot;.&#39;</span> <span class="o">+</span> <span class="n">database_table</span> <span class="o">+</span> 
+                             <span class="s">&#39; WHERE dataid=&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">building_id</span><span class="p">))</span>
+                <span class="nb">range</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql</span><span class="p">(</span><span class="n">sql_query</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+                <span class="n">first_timestamp_in_table</span> <span class="o">=</span> <span class="nb">range</span><span class="p">[</span><span class="s">&#39;minlocalminute&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">last_timestamp_in_table</span> <span class="o">=</span> <span class="nb">range</span><span class="p">[</span><span class="s">&#39;maxlocalminute&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+
+                <span class="c"># get requested start and end and localize them</span>
+                <span class="n">requested_start</span> <span class="o">=</span> <span class="bp">None</span>
+                <span class="n">requested_end</span> <span class="o">=</span> <span class="bp">None</span>
+                <span class="n">database_timezone</span> <span class="o">=</span> <span class="s">&#39;US/Central&#39;</span>
+                <span class="k">if</span> <span class="n">periods_to_load</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">periods_to_load</span><span class="p">[</span><span class="n">building_id</span><span class="p">][</span><span class="mi">0</span><span class="p">]:</span>
+                        <span class="n">requested_start</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="p">(</span><span class="n">periods_to_load</span><span class="p">[</span><span class="n">building_id</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+                        <span class="n">requested_start</span> <span class="o">=</span> <span class="n">requested_start</span><span class="o">.</span><span class="n">tz_localize</span><span class="p">(</span><span class="n">database_timezone</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">periods_to_load</span><span class="p">[</span><span class="n">building_id</span><span class="p">][</span><span class="mi">1</span><span class="p">]:</span>
+                        <span class="n">requested_end</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="p">(</span><span class="n">periods_to_load</span><span class="p">[</span><span class="n">building_id</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span>
+                        <span class="n">requested_end</span> <span class="o">=</span> <span class="n">requested_end</span><span class="o">.</span><span class="n">tz_localize</span><span class="p">(</span><span class="n">database_timezone</span><span class="p">)</span>
+
+                <span class="c"># check user start is not after end</span>
+                <span class="k">if</span> <span class="n">requested_start</span> <span class="o">&gt;</span> <span class="n">requested_end</span><span class="p">:</span>
+                    <span class="k">print</span><span class="p">(</span><span class="s">&#39;requested end is before requested start&#39;</span><span class="p">)</span>
+                    <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+                <span class="k">else</span><span class="p">:</span>                        
+                    <span class="c"># clip data to smallest range</span>
+                    <span class="k">if</span> <span class="n">requested_start</span><span class="p">:</span>
+                        <span class="n">start</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">requested_start</span><span class="p">,</span> <span class="n">first_timestamp_in_table</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">start</span> <span class="o">=</span> <span class="n">first_timestamp_in_table</span>
+                    <span class="k">if</span> <span class="n">requested_end</span><span class="p">:</span>
+                        <span class="n">end</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">requested_end</span><span class="p">,</span> <span class="n">last_timestamp_in_table</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">end</span> <span class="o">=</span> <span class="n">last_timestamp_in_table</span>
+
+                    <span class="c"># download data in chunks</span>
+                    <span class="n">chunk_start</span> <span class="o">=</span> <span class="n">start</span>
+                    <span class="n">chunk_size</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>  <span class="c"># 1 day</span>
+                    <span class="k">while</span> <span class="n">chunk_start</span> <span class="o">&lt;</span> <span class="n">end</span><span class="p">:</span>
+                        <span class="n">chunk_end</span> <span class="o">=</span> <span class="n">chunk_start</span> <span class="o">+</span> <span class="n">chunk_size</span> 
+                        <span class="k">if</span> <span class="n">chunk_end</span> <span class="o">&gt;</span> <span class="n">end</span><span class="p">:</span>
+                            <span class="n">chunk_end</span> <span class="o">=</span> <span class="n">end</span>
+                        <span class="c"># subtract 1 second so end is exclusive</span>
+                        <span class="n">chunk_end</span> <span class="o">=</span> <span class="n">chunk_end</span> <span class="o">-</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+                        <span class="c"># query power data for all channels</span>
+                        <span class="n">format</span> <span class="o">=</span> <span class="s">&#39;%Y-%m-</span><span class="si">%d</span><span class="s"> %H:%M:%S&#39;</span>
+                        <span class="n">sql_query</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;SELECT *&#39;</span> <span class="o">+</span> 
+                                     <span class="s">&#39; FROM &quot;&#39;</span> <span class="o">+</span> <span class="n">database_schema</span> <span class="o">+</span> <span class="s">&#39;&quot;.&#39;</span> <span class="o">+</span> <span class="n">database_table</span> <span class="o">+</span> 
+                                     <span class="s">&#39; WHERE dataid=&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">building_id</span><span class="p">)</span> <span class="o">+</span> 
+                                     <span class="s">&#39;and localminute between &#39;</span> <span class="o">+</span> 
+                                     <span class="s">&quot;&#39;&quot;</span> <span class="o">+</span> <span class="n">chunk_start</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="n">format</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot;&#39;&quot;</span> <span class="o">+</span> 
+                                     <span class="s">&quot; and &quot;</span> <span class="o">+</span> 
+                                     <span class="s">&quot;&#39;&quot;</span> <span class="o">+</span> <span class="n">chunk_end</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="n">format</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot;&#39;&quot;</span> <span class="o">+</span> 
+                                     <span class="s">&#39; LIMIT 2000&#39;</span><span class="p">)</span>
+                        <span class="n">chunk_dataframe</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql</span><span class="p">(</span><span class="n">sql_query</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+
+                        <span class="c"># convert to nilmtk-df and save to disk</span>
+                        <span class="n">nilmtk_dataframe</span> <span class="o">=</span> <span class="n">_wikienergy_dataframe_to_hdf</span><span class="p">(</span><span class="n">chunk_dataframe</span><span class="p">,</span> <span class="n">hdf5_store</span><span class="p">)</span>
+
+                        <span class="c"># print progress</span>
+                        <span class="k">print</span><span class="p">(</span><span class="s">&#39;    &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">chunk_start</span><span class="p">)</span> <span class="o">+</span> <span class="s">&#39; -&gt; &#39;</span> <span class="o">+</span> 
+                              <span class="nb">str</span><span class="p">(</span><span class="n">chunk_end</span><span class="p">)</span> <span class="o">+</span> <span class="s">&#39;: &#39;</span> <span class="o">+</span> 
+                              <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">chunk_dataframe</span><span class="o">.</span><span class="n">index</span><span class="p">))</span> <span class="o">+</span> <span class="s">&#39; rows&#39;</span><span class="p">)</span>
+                        <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+
+                        <span class="c"># append all chunks into list for csv writing</span>
+                        <span class="n">dataframe_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">chunk_dataframe</span><span class="p">)</span>
+
+                        <span class="c"># move on to next chunk</span>
+                        <span class="n">chunk_start</span> <span class="o">=</span> <span class="n">chunk_start</span> <span class="o">+</span> <span class="n">chunk_size</span>
+
+        <span class="c"># saves all chunks</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dataframe_list</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">dataframe_concat</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">dataframe_list</span><span class="p">)</span>
+            <span class="c">#dataframe_concat.to_csv(output_directory + str(building_id) + &#39;.csv&#39;)</span>
+
+    <span class="n">hdf5_store</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">NILMTK 0.2-beta documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, NILMTK Authors.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.1.
+    </div>
+  </body>
+</html>

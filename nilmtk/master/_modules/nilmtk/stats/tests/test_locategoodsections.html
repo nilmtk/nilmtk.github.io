@@ -1,0 +1,183 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>nilmtk.stats.tests.test_locategoodsections &mdash; NILMTK 0.2-beta documentation</title>
+    
+    <link rel="stylesheet" href="../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '0.2-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="NILMTK 0.2-beta documentation" href="../../../../index.html" />
+    <link rel="up" title="Module code" href="../../../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../../index.html">NILMTK 0.2-beta documentation</a> &raquo;</li>
+          <li><a href="../../../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for nilmtk.stats.tests.test_locategoodsections</h1><div class="highlight"><pre>
+<span class="c">#!/usr/bin/python</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">division</span>
+<span class="kn">import</span> <span class="nn">unittest</span>
+<span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">join</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">timedelta</span>
+<span class="kn">from</span> <span class="nn">..</span> <span class="kn">import</span> <span class="n">TotalEnergy</span><span class="p">,</span> <span class="n">GoodSections</span>
+<span class="kn">from</span> <span class="nn">..goodsectionsresults</span> <span class="kn">import</span> <span class="n">GoodSectionsResults</span>
+<span class="kn">from</span> <span class="nn">..totalenergy</span> <span class="kn">import</span> <span class="n">_energy_for_power_series</span>
+<span class="kn">from</span> <span class="nn">...</span> <span class="kn">import</span> <span class="n">TimeFrame</span><span class="p">,</span> <span class="n">ElecMeter</span><span class="p">,</span> <span class="n">HDFDataStore</span>
+<span class="kn">from</span> <span class="nn">...elecmeter</span> <span class="kn">import</span> <span class="n">ElecMeterID</span>
+<span class="kn">from</span> <span class="nn">...consts</span> <span class="kn">import</span> <span class="n">JOULES_PER_KWH</span>
+<span class="kn">from</span> <span class="nn">...tests.testingtools</span> <span class="kn">import</span> <span class="n">data_dir</span>
+
+<span class="n">METER_ID</span> <span class="o">=</span> <span class="n">ElecMeterID</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">building</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dataset</span><span class="o">=</span><span class="s">&#39;REDD&#39;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="TestLocateGaps"><a class="viewcode-back" href="../../../../nilmtk.stats.tests.html#nilmtk.stats.tests.test_locategoodsections.TestLocateGaps">[docs]</a><span class="k">class</span> <span class="nc">TestLocateGaps</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+
+    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="TestLocateGaps.setUpClass"><a class="viewcode-back" href="../../../../nilmtk.stats.tests.html#nilmtk.stats.tests.test_locategoodsections.TestLocateGaps.setUpClass">[docs]</a>    <span class="k">def</span> <span class="nf">setUpClass</span><span class="p">(</span><span class="n">cls</span><span class="p">):</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="n">data_dir</span><span class="p">(),</span> <span class="s">&#39;energy_complex.h5&#39;</span><span class="p">)</span>
+        <span class="n">cls</span><span class="o">.</span><span class="n">datastore</span> <span class="o">=</span> <span class="n">HDFDataStore</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="n">ElecMeter</span><span class="o">.</span><span class="n">load_meter_devices</span><span class="p">(</span><span class="n">cls</span><span class="o">.</span><span class="n">datastore</span><span class="p">)</span>
+        <span class="n">cls</span><span class="o">.</span><span class="n">meter_meta</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">datastore</span><span class="o">.</span><span class="n">load_metadata</span><span class="p">(</span><span class="s">&#39;building1&#39;</span><span class="p">)[</span><span class="s">&#39;elec_meters&#39;</span><span class="p">][</span><span class="n">METER_ID</span><span class="o">.</span><span class="n">instance</span><span class="p">]</span>
+</div>
+<div class="viewcode-block" id="TestLocateGaps.test_pipeline"><a class="viewcode-back" href="../../../../nilmtk.stats.tests.html#nilmtk.stats.tests.test_locategoodsections.TestLocateGaps.test_pipeline">[docs]</a>    <span class="k">def</span> <span class="nf">test_pipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">meter</span> <span class="o">=</span> <span class="n">ElecMeter</span><span class="p">(</span><span class="n">store</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">datastore</span><span class="p">,</span> <span class="n">metadata</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">meter_meta</span><span class="p">,</span> 
+                          <span class="n">meter_id</span><span class="o">=</span><span class="n">METER_ID</span><span class="p">)</span>
+        <span class="n">source_node</span> <span class="o">=</span> <span class="n">meter</span><span class="o">.</span><span class="n">get_source_node</span><span class="p">()</span>
+        <span class="n">good_sections</span> <span class="o">=</span> <span class="n">GoodSections</span><span class="p">(</span><span class="n">source_node</span><span class="p">)</span>
+        <span class="n">good_sections</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="TestLocateGaps.test_process_chunk"><a class="viewcode-back" href="../../../../nilmtk.stats.tests.html#nilmtk.stats.tests.test_locategoodsections.TestLocateGaps.test_process_chunk">[docs]</a>    <span class="k">def</span> <span class="nf">test_process_chunk</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">MAX_SAMPLE_PERIOD</span> <span class="o">=</span> <span class="mi">10</span>
+        <span class="n">metadata</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;device&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;max_sample_period&#39;</span><span class="p">:</span> <span class="n">MAX_SAMPLE_PERIOD</span><span class="p">}}</span>
+        <span class="c">#       0  1  2  3    4  5     6     7</span>
+        <span class="n">secs</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">30</span><span class="p">,</span>  <span class="mi">50</span><span class="p">,</span><span class="mi">60</span><span class="p">,</span>  <span class="mi">100</span><span class="p">,</span>  <span class="mi">200</span><span class="p">,</span> 
+
+        <span class="c">#         8   9  10  11  12  13    14  15  16</span>
+                <span class="mi">250</span><span class="p">,</span><span class="mi">260</span><span class="p">,</span><span class="mi">270</span><span class="p">,</span><span class="mi">280</span><span class="p">,</span><span class="mi">290</span><span class="p">,</span><span class="mi">300</span><span class="p">,</span>  <span class="mi">350</span><span class="p">,</span><span class="mi">360</span><span class="p">,</span><span class="mi">370</span><span class="p">]</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DatetimeIndex</span><span class="p">([</span><span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="p">(</span><span class="s">&#39;2011-01-01 00:00:00&#39;</span><span class="p">)</span> <span class="o">+</span> 
+                                  <span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">sec</span><span class="p">)</span> <span class="k">for</span> <span class="n">sec</span> <span class="ow">in</span> <span class="n">secs</span><span class="p">])</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">index</span><span class="p">),</span> <span class="mi">3</span><span class="p">),</span> <span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">,</span> 
+                          <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;a&#39;</span><span class="p">,</span><span class="s">&#39;b&#39;</span><span class="p">,</span><span class="s">&#39;c&#39;</span><span class="p">])</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">timeframe</span> <span class="o">=</span> <span class="n">TimeFrame</span><span class="p">(</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">look_ahead</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+
+        <span class="n">locate</span> <span class="o">=</span> <span class="n">GoodSections</span><span class="p">()</span>
+        <span class="n">locate</span><span class="o">.</span><span class="n">results</span> <span class="o">=</span> <span class="n">GoodSectionsResults</span><span class="p">(</span><span class="n">MAX_SAMPLE_PERIOD</span><span class="p">)</span>
+        <span class="n">locate</span><span class="o">.</span><span class="n">_process_chunk</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">metadata</span><span class="p">)</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="n">locate</span><span class="o">.</span><span class="n">results</span><span class="o">.</span><span class="n">combined</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="p">),</span> <span class="mi">4</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">timedelta</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">(),</span> <span class="mi">30</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">timedelta</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">(),</span> <span class="mi">10</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">timedelta</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">(),</span> <span class="mi">50</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">timedelta</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">(),</span> <span class="mi">20</span><span class="p">)</span>
+
+        <span class="c"># Now try splitting data into multiple chunks</span>
+        <span class="n">timestamps</span> <span class="o">=</span> <span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="p">(</span><span class="s">&quot;2011-01-01 00:00:00&quot;</span><span class="p">),</span>
+                      <span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="p">(</span><span class="s">&quot;2011-01-01 00:00:40&quot;</span><span class="p">),</span>
+                      <span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="p">(</span><span class="s">&quot;2011-01-01 00:01:20&quot;</span><span class="p">),</span>
+                      <span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="p">(</span><span class="s">&quot;2011-01-01 00:04:20&quot;</span><span class="p">),</span>
+                      <span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="p">(</span><span class="s">&quot;2011-01-01 00:06:20&quot;</span><span class="p">)</span>
+        <span class="p">]</span>
+        <span class="k">for</span> <span class="n">split_point</span> <span class="ow">in</span> <span class="p">[[</span><span class="mi">4</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">9</span><span class="p">,</span><span class="mi">17</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">12</span><span class="p">,</span><span class="mi">17</span><span class="p">]]:</span>
+            <span class="n">locate</span> <span class="o">=</span> <span class="n">GoodSections</span><span class="p">()</span>
+            <span class="n">locate</span><span class="o">.</span><span class="n">results</span> <span class="o">=</span> <span class="n">GoodSectionsResults</span><span class="p">(</span><span class="n">MAX_SAMPLE_PERIOD</span><span class="p">)</span>
+            <span class="n">df</span><span class="o">.</span><span class="n">results</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">prev_i</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">j</span><span class="p">,</span><span class="n">i</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">split_point</span><span class="p">):</span>
+                <span class="n">cropped_df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">prev_i</span><span class="p">:</span><span class="n">i</span><span class="p">]</span>
+                <span class="n">cropped_df</span><span class="o">.</span><span class="n">timeframe</span> <span class="o">=</span> <span class="n">TimeFrame</span><span class="p">(</span><span class="n">timestamps</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">timestamps</span><span class="p">[</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">cropped_df</span><span class="o">.</span><span class="n">look_ahead</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">:]</span>
+                <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
+                    <span class="n">cropped_df</span><span class="o">.</span><span class="n">look_ahead</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+                <span class="n">prev_i</span> <span class="o">=</span> <span class="n">i</span>
+                <span class="n">locate</span><span class="o">.</span><span class="n">_process_chunk</span><span class="p">(</span><span class="n">cropped_df</span><span class="p">,</span> <span class="n">metadata</span><span class="p">)</span>
+
+            <span class="n">results</span> <span class="o">=</span> <span class="n">locate</span><span class="o">.</span><span class="n">results</span><span class="o">.</span><span class="n">combined</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="p">),</span> <span class="mi">4</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">timedelta</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">(),</span> <span class="mi">30</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">timedelta</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">(),</span> <span class="mi">10</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">timedelta</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">(),</span> <span class="mi">50</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">timedelta</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">(),</span> <span class="mi">20</span><span class="p">)</span>
+        
+</div></div>
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">unittest</span><span class="o">.</span><span class="n">main</span><span class="p">()</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../../index.html">NILMTK 0.2-beta documentation</a> &raquo;</li>
+          <li><a href="../../../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, NILMTK Authors.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.1.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,226 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>nilmtk.disaggregate package &mdash; NILMTK 0.2-beta documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.2-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="NILMTK 0.2-beta documentation" href="index.html" />
+    <link rel="up" title="nilmtk package" href="nilmtk.html" />
+    <link rel="prev" title="nilmtk.dataset_converters.redd package" href="nilmtk.dataset_converters.redd.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="nilmtk.dataset_converters.redd.html" title="nilmtk.dataset_converters.redd package"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">NILMTK 0.2-beta documentation</a> &raquo;</li>
+          <li><a href="nilmtk.html" accesskey="U">nilmtk package</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="nilmtk-disaggregate-package">
+<h1>nilmtk.disaggregate package<a class="headerlink" href="#nilmtk-disaggregate-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-nilmtk.disaggregate.combinatorial_optimisation">
+<span id="nilmtk-disaggregate-combinatorial-optimisation-module"></span><h2>nilmtk.disaggregate.combinatorial_optimisation module<a class="headerlink" href="#module-nilmtk.disaggregate.combinatorial_optimisation" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="nilmtk.disaggregate.combinatorial_optimisation.CombinatorialOptimisation">
+<em class="property">class </em><tt class="descclassname">nilmtk.disaggregate.combinatorial_optimisation.</tt><tt class="descname">CombinatorialOptimisation</tt><a class="reference internal" href="_modules/nilmtk/disaggregate/combinatorial_optimisation.html#CombinatorialOptimisation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.disaggregate.combinatorial_optimisation.CombinatorialOptimisation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>1 dimensional combinatorial optimisation NILM algorithm.</p>
+<p class="rubric">Attributes</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="3%" />
+<col width="97%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>model</td>
+<td>(dict) Each key is either the instance integer for an ElecMeter, or a tuple of instances for a MeterGroup. Each value is a sorted list of power in different states.</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#nilmtk.disaggregate.combinatorial_optimisation.CombinatorialOptimisation.disaggregate" title="nilmtk.disaggregate.combinatorial_optimisation.CombinatorialOptimisation.disaggregate"><tt class="xref py py-obj docutils literal"><span class="pre">disaggregate</span></tt></a>(mains,&nbsp;output_datastore,&nbsp;...)</td>
+<td>Disaggregate mains according to the model learnt previously.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#nilmtk.disaggregate.combinatorial_optimisation.CombinatorialOptimisation.export_model" title="nilmtk.disaggregate.combinatorial_optimisation.CombinatorialOptimisation.export_model"><tt class="xref py py-obj docutils literal"><span class="pre">export_model</span></tt></a>(filename)</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#nilmtk.disaggregate.combinatorial_optimisation.CombinatorialOptimisation.import_model" title="nilmtk.disaggregate.combinatorial_optimisation.CombinatorialOptimisation.import_model"><tt class="xref py py-obj docutils literal"><span class="pre">import_model</span></tt></a>(filename)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#nilmtk.disaggregate.combinatorial_optimisation.CombinatorialOptimisation.train" title="nilmtk.disaggregate.combinatorial_optimisation.CombinatorialOptimisation.train"><tt class="xref py py-obj docutils literal"><span class="pre">train</span></tt></a>(metergroup)</td>
+<td>Train using 1D CO.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="nilmtk.disaggregate.combinatorial_optimisation.CombinatorialOptimisation.disaggregate">
+<tt class="descname">disaggregate</tt><big>(</big><em>mains</em>, <em>output_datastore</em>, <em>**load_kwargs</em><big>)</big><a class="reference internal" href="_modules/nilmtk/disaggregate/combinatorial_optimisation.html#CombinatorialOptimisation.disaggregate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.disaggregate.combinatorial_optimisation.CombinatorialOptimisation.disaggregate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Disaggregate mains according to the model learnt previously.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>mains</strong> : nilmtk.ElecMeter or nilmtk.MeterGroup</p>
+<p><strong>output_datastore</strong> : instance of nilmtk.DataStore subclass</p>
+<blockquote>
+<div><p>For storing power predictions from disaggregation algorithm.</p>
+</div></blockquote>
+<p><strong>output_name</strong> : string, optional</p>
+<blockquote>
+<div><p>The <cite>name</cite> to use in the metadata for the <cite>output_datastore</cite>.
+e.g. some sort of name for this experiment.  Defaults to 
+&#8220;NILMTK_CO_&lt;date&gt;&#8221;</p>
+</div></blockquote>
+<p><strong>**load_kwargs</strong> : key word arguments</p>
+<blockquote class="last">
+<div><p>Passed to <cite>mains.power_series(**kwargs)</cite></p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.disaggregate.combinatorial_optimisation.CombinatorialOptimisation.export_model">
+<tt class="descname">export_model</tt><big>(</big><em>filename</em><big>)</big><a class="reference internal" href="_modules/nilmtk/disaggregate/combinatorial_optimisation.html#CombinatorialOptimisation.export_model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.disaggregate.combinatorial_optimisation.CombinatorialOptimisation.export_model" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.disaggregate.combinatorial_optimisation.CombinatorialOptimisation.import_model">
+<tt class="descname">import_model</tt><big>(</big><em>filename</em><big>)</big><a class="reference internal" href="_modules/nilmtk/disaggregate/combinatorial_optimisation.html#CombinatorialOptimisation.import_model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.disaggregate.combinatorial_optimisation.CombinatorialOptimisation.import_model" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.disaggregate.combinatorial_optimisation.CombinatorialOptimisation.train">
+<tt class="descname">train</tt><big>(</big><em>metergroup</em><big>)</big><a class="reference internal" href="_modules/nilmtk/disaggregate/combinatorial_optimisation.html#CombinatorialOptimisation.train"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.disaggregate.combinatorial_optimisation.CombinatorialOptimisation.train" title="Permalink to this definition">¶</a></dt>
+<dd><p>Train using 1D CO. Places the learnt model in <cite>model</cite> attribute.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>metergroup</strong> : a nilmtk.MeterGroup object</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li>only uses first chunk for each meter (TODO: handle all chunks).</li>
+</ul>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-nilmtk.disaggregate">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-nilmtk.disaggregate" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">nilmtk.disaggregate package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-nilmtk.disaggregate.combinatorial_optimisation">nilmtk.disaggregate.combinatorial_optimisation module</a></li>
+<li><a class="reference internal" href="#module-nilmtk.disaggregate">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="nilmtk.dataset_converters.redd.html"
+                        title="previous chapter">nilmtk.dataset_converters.redd package</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/nilmtk.disaggregate.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="nilmtk.dataset_converters.redd.html" title="nilmtk.dataset_converters.redd package"
+             >previous</a> |</li>
+        <li><a href="index.html">NILMTK 0.2-beta documentation</a> &raquo;</li>
+          <li><a href="nilmtk.html" >nilmtk package</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, NILMTK Authors.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.1.
+    </div>
+  </body>
+</html>

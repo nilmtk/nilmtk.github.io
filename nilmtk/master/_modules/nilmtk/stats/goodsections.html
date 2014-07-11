@@ -1,0 +1,256 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>nilmtk.stats.goodsections &mdash; NILMTK 0.2-beta documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.2-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="NILMTK 0.2-beta documentation" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">NILMTK 0.2-beta documentation</a> &raquo;</li>
+          <li><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for nilmtk.stats.goodsections</h1><div class="highlight"><pre>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">division</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">diff</span><span class="p">,</span> <span class="n">concatenate</span>
+<span class="kn">from</span> <span class="nn">.goodsectionsresults</span> <span class="kn">import</span> <span class="n">GoodSectionsResults</span>
+<span class="kn">from</span> <span class="nn">..timeframe</span> <span class="kn">import</span> <span class="n">TimeFrame</span>
+<span class="kn">from</span> <span class="nn">..utils</span> <span class="kn">import</span> <span class="n">timedelta64_to_secs</span>
+<span class="kn">from</span> <span class="nn">..node</span> <span class="kn">import</span> <span class="n">Node</span>
+<span class="kn">from</span> <span class="nn">..timeframe</span> <span class="kn">import</span> <span class="n">list_of_timeframes_from_list_of_dicts</span><span class="p">,</span> <span class="n">timeframe_from_dict</span>
+
+
+<div class="viewcode-block" id="GoodSections"><a class="viewcode-back" href="../../../nilmtk.stats.html#nilmtk.stats.goodsections.GoodSections">[docs]</a><span class="k">class</span> <span class="nc">GoodSections</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Locate sections of data where the sample period is &lt;= max_sample_period.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    previous_chunk_ended_with_open_ended_good_section : bool</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">requirements</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;device&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;max_sample_period&#39;</span><span class="p">:</span> <span class="s">&#39;ANY VALUE&#39;</span><span class="p">}}</span>
+    <span class="n">postconditions</span> <span class="o">=</span>  <span class="p">{</span><span class="s">&#39;statistics&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;good_sections&#39;</span><span class="p">:</span> <span class="p">[]}}</span>
+        
+<div class="viewcode-block" id="GoodSections.reset"><a class="viewcode-back" href="../../../nilmtk.stats.html#nilmtk.stats.goodsections.GoodSections.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">previous_chunk_ended_with_open_ended_good_section</span> <span class="o">=</span> <span class="bp">False</span>
+</div>
+<div class="viewcode-block" id="GoodSections.process"><a class="viewcode-back" href="../../../nilmtk.stats.html#nilmtk.stats.goodsections.GoodSections.process">[docs]</a>    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">metadata</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">upstream</span><span class="o">.</span><span class="n">get_metadata</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">check_requirements</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">results</span> <span class="o">=</span> <span class="n">GoodSectionsResults</span><span class="p">(</span>
+            <span class="n">metadata</span><span class="p">[</span><span class="s">&#39;device&#39;</span><span class="p">][</span><span class="s">&#39;max_sample_period&#39;</span><span class="p">])</span>
+        <span class="n">stats</span> <span class="o">=</span> <span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;statistics&#39;</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="n">previously_calculated_good_sections</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;good_sections&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">previously_calculated_good_sections</span><span class="p">:</span>
+            <span class="c"># TODO: check if temporal coverage of stats is same or larger</span>
+            <span class="c"># than temporal coverage of metadata[&#39;timeframe&#39;]</span>
+            <span class="n">good_sections</span> <span class="o">=</span> <span class="n">list_of_timeframes_from_list_of_dicts</span><span class="p">(</span>
+                <span class="n">previously_calculated_good_sections</span><span class="p">)</span>
+            <span class="n">timeframe</span> <span class="o">=</span> <span class="n">timeframe_from_dict</span><span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="s">&#39;timeframe&#39;</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">timeframe</span><span class="p">,</span> <span class="p">{</span><span class="s">&#39;sections&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">good_sections</span><span class="p">]})</span>
+            <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">upstream</span><span class="o">.</span><span class="n">process</span><span class="p">():</span>
+                <span class="k">yield</span> <span class="n">chunk</span> <span class="c"># pass through</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">upstream</span><span class="o">.</span><span class="n">process</span><span class="p">():</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_process_chunk</span><span class="p">(</span><span class="n">chunk</span><span class="p">,</span> <span class="n">metadata</span><span class="p">)</span>
+                <span class="k">yield</span> <span class="n">chunk</span>
+</div>
+    <span class="k">def</span> <span class="nf">_process_chunk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">metadata</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        df : pd.DataFrame</span>
+<span class="sd">            with attributes:</span>
+<span class="sd">            - look_ahead : pd.DataFrame</span>
+<span class="sd">            - timeframe : nilmtk.TimeFrame</span>
+<span class="sd">        metadata : dict</span>
+<span class="sd">            with [&#39;device&#39;][&#39;max_sample_period&#39;] attribute</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        Updates `self.results`</span>
+<span class="sd">            Each good section in `df` is marked with a TimeFrame.</span>
+<span class="sd">            If this df ends with an open-ended good section (assessed by</span>
+<span class="sd">            examining df.look_ahead) then the last TimeFrame will have</span>
+<span class="sd">            `end=None`. If this df starts with an open-ended good section</span>
+<span class="sd">            then the first TimeFrame will have `start=None`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c"># Retrieve relevant metadata</span>
+        <span class="n">max_sample_period</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="s">&#39;device&#39;</span><span class="p">][</span><span class="s">&#39;max_sample_period&#39;</span><span class="p">]</span>
+        <span class="n">look_ahead</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s">&#39;look_ahead&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+        <span class="n">timeframe</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">timeframe</span>
+
+        <span class="c"># Process dataframe</span>
+        <span class="n">good_sections</span> <span class="o">=</span> <span class="n">get_good_sections</span><span class="p">(</span>
+            <span class="n">df</span><span class="p">,</span> <span class="n">max_sample_period</span><span class="p">,</span> <span class="n">look_ahead</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">previous_chunk_ended_with_open_ended_good_section</span><span class="p">)</span>
+
+        <span class="c"># Set self.previous_chunk_ended_with_open_ended_good_section</span>
+        <span class="k">if</span> <span class="n">good_sections</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">previous_chunk_ended_with_open_ended_good_section</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">good_sections</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">end</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">)</span>
+
+        <span class="c"># Update self.results</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">timeframe</span><span class="p">,</span> <span class="p">{</span><span class="s">&#39;sections&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">good_sections</span><span class="p">]})</span>
+
+</div>
+<div class="viewcode-block" id="get_good_sections"><a class="viewcode-back" href="../../../nilmtk.stats.html#nilmtk.stats.goodsections.get_good_sections">[docs]</a><span class="k">def</span> <span class="nf">get_good_sections</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">max_sample_period</span><span class="p">,</span> <span class="n">look_ahead</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                      <span class="n">previous_chunk_ended_with_open_ended_good_section</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    df : pd.DataFrame</span>
+<span class="sd">    look_ahead : pd.DataFrame</span>
+<span class="sd">    max_sample_period : number</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    sections : list of TimeFrame objects</span>
+<span class="sd">        Each good section in `df` is marked with a TimeFrame.</span>
+<span class="sd">        If this df ends with an open-ended good section (assessed by</span>
+<span class="sd">        examining `look_ahead`) then the last TimeFrame will have</span>
+<span class="sd">        `end=None`.  If this df starts with an open-ended good section</span>
+<span class="sd">        then the first TimeFrame will have `start=None`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">index</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">index</span>
+    <span class="n">timedeltas_sec</span> <span class="o">=</span> <span class="n">timedelta64_to_secs</span><span class="p">(</span><span class="n">diff</span><span class="p">(</span><span class="n">index</span><span class="o">.</span><span class="n">values</span><span class="p">))</span>
+    <span class="n">timedeltas_check</span> <span class="o">=</span> <span class="n">timedeltas_sec</span> <span class="o">&lt;=</span> <span class="n">max_sample_period</span>
+    <span class="n">timedeltas_check</span> <span class="o">=</span> <span class="n">concatenate</span><span class="p">(</span>
+        <span class="p">[[</span><span class="n">previous_chunk_ended_with_open_ended_good_section</span><span class="p">],</span> 
+         <span class="n">timedeltas_check</span><span class="p">])</span>
+    <span class="n">transitions</span> <span class="o">=</span> <span class="n">diff</span><span class="p">(</span><span class="n">timedeltas_check</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">))</span>
+    <span class="n">good_sect_starts</span> <span class="o">=</span> <span class="n">index</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">transitions</span> <span class="o">==</span>  <span class="mi">1</span><span class="p">]</span>
+    <span class="n">good_sect_ends</span>   <span class="o">=</span> <span class="n">index</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">transitions</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">good_sect_ends</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">good_sect_ends</span><span class="p">)</span>
+    <span class="n">good_sect_starts</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">good_sect_starts</span><span class="p">)</span>
+
+    <span class="c"># Use look_ahead to see if we need to append a </span>
+    <span class="c"># good sect start or good sect end.</span>
+    <span class="n">look_ahead_valid</span> <span class="o">=</span> <span class="n">look_ahead</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">df</span><span class="o">.</span><span class="n">look_ahead</span><span class="o">.</span><span class="n">empty</span>
+    <span class="k">if</span> <span class="n">look_ahead_valid</span><span class="p">:</span>
+        <span class="n">look_ahead_timedelta</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">look_ahead</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">look_ahead_gap</span> <span class="o">=</span> <span class="n">look_ahead_timedelta</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">timedeltas_check</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span> <span class="c"># current chunk ends with a good section</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">look_ahead_valid</span> <span class="ow">or</span> <span class="n">look_ahead_gap</span> <span class="o">&gt;</span> <span class="n">max_sample_period</span><span class="p">:</span>
+            <span class="c"># current chunk ends with a good section which needs to </span>
+            <span class="c"># be closed because next chunk either does not exist</span>
+            <span class="c"># or starts with a sample which is more than max_sample_period</span>
+            <span class="c"># away from df.index[-1]</span>
+            <span class="n">good_sect_ends</span> <span class="o">+=</span> <span class="p">[</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
+    <span class="k">elif</span> <span class="n">look_ahead_valid</span> <span class="ow">and</span> <span class="n">look_ahead_gap</span> <span class="o">&lt;=</span> <span class="n">max_sample_period</span><span class="p">:</span>
+        <span class="c"># Current chunk appears to end with a bad section</span>
+        <span class="c"># but last sample is the start of a good section</span>
+        <span class="n">good_sect_starts</span> <span class="o">+=</span> <span class="p">[</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
+
+    <span class="c"># Work out if this chunk ends with an open ended good section</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">good_sect_ends</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">ends_with_open_ended_good_section</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="nb">len</span><span class="p">(</span><span class="n">good_sect_starts</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">or</span> 
+            <span class="n">previous_chunk_ended_with_open_ended_good_section</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">good_sect_starts</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="c"># We have good_sect_ends and good_sect_starts</span>
+        <span class="n">ends_with_open_ended_good_section</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">good_sect_ends</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">good_sect_starts</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c"># We have good_sect_ends but no good_sect_starts</span>
+        <span class="n">ends_with_open_ended_good_section</span> <span class="o">=</span> <span class="bp">False</span>
+
+    <span class="c"># If this chunk starts or ends with an open-ended</span>
+    <span class="c"># good section then the relevant TimeFrame needs to have</span>
+    <span class="c"># a None as the start or end.</span>
+    <span class="k">if</span> <span class="n">previous_chunk_ended_with_open_ended_good_section</span><span class="p">:</span>
+        <span class="n">good_sect_starts</span> <span class="o">=</span> <span class="p">[</span><span class="bp">None</span><span class="p">]</span> <span class="o">+</span> <span class="n">good_sect_starts</span>
+    <span class="k">if</span> <span class="n">ends_with_open_ended_good_section</span><span class="p">:</span>
+        <span class="n">good_sect_ends</span> <span class="o">+=</span> <span class="p">[</span><span class="bp">None</span><span class="p">]</span>
+
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">good_sect_starts</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">good_sect_ends</span><span class="p">)</span>
+
+    <span class="n">sections</span> <span class="o">=</span> <span class="p">[</span><span class="n">TimeFrame</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">)</span> 
+                <span class="k">for</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">good_sect_starts</span><span class="p">,</span> <span class="n">good_sect_ends</span><span class="p">)]</span>
+
+    <span class="k">return</span> <span class="n">sections</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">NILMTK 0.2-beta documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, NILMTK Authors.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.1.
+    </div>
+  </body>
+</html>

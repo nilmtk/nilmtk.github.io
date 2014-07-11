@@ -1,0 +1,193 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Contributing &mdash; NILMTK 0.2-beta documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.2-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="NILMTK 0.2-beta documentation" href="index.html" />
+    <link rel="next" title="HDF5 file format for NILMTK" href="hdf5_file_format.html" />
+    <link rel="prev" title="Welcome to NILMTK’s documentation!" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="hdf5_file_format.html" title="HDF5 file format for NILMTK"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to NILMTK’s documentation!"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">NILMTK 0.2-beta documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="contributing">
+<h1>Contributing<a class="headerlink" href="#contributing" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="contributing-documentation">
+<h2>Contributing documentation<a class="headerlink" href="#contributing-documentation" title="Permalink to this headline">¶</a></h2>
+<p>Firstly, we clone the main <cite>nilmtk</cite> repository:</p>
+<div class="highlight-python"><div class="highlight"><pre>cd ~
+git clone https://github.com/nilmtk/nilmtk/
+</pre></div>
+</div>
+<p>Next, we create a folder named <cite>nilmtkdocs</cite>:</p>
+<div class="highlight-python"><div class="highlight"><pre>cd ~
+mkdir nilmtkdocs
+</pre></div>
+</div>
+<p>Inside <cite>nilmtkdocs</cite>, we create a <cite>html</cite> folder, within which we clone the <cite>nilmtk</cite> repository:</p>
+<div class="highlight-python"><div class="highlight"><pre>cd nilmtkdocs
+git clone https://github.com/nilmtk/nilmtk/ html
+</pre></div>
+</div>
+<p>Setting up remote for <cite>gh-pages</cite> branch inside <cite>html</cite> folder:</p>
+<div class="highlight-python"><div class="highlight"><pre>cd html
+git checkout -b gh-pages remotes/origin/gh-pages
+</pre></div>
+</div>
+<p>Now, move back to the main repository:</p>
+<div class="highlight-python"><div class="highlight"><pre>cd ~/nilmtk
+</pre></div>
+</div>
+<p>As usual make changes to .rst files in <cite>~/nilmtk/docs/source</cite> to contribute to documentation.</p>
+<p>Build your documentation:</p>
+<div class="highlight-python"><div class="highlight"><pre>cd ~/nilmtk/docs
+make html
+</pre></div>
+</div>
+<p>Now, built documentation should lie in <cite>~/nilmtkdocs</cite> directory. You may use your browser to check if everything got built properly.</p>
+<p>Commit your changes and push. These changes are reflected in the master
+branch of <cite>nilmtk</cite> a these are changes to the source.</p>
+<div class="highlight-python"><div class="highlight"><pre>git commit -m &quot;your message&quot;
+git push
+</pre></div>
+</div>
+<p>Next, move to the <cite>nilmtkdocs/html</cite> folder:</p>
+<div class="highlight-python"><div class="highlight"><pre>cd ~/nilmtkdocs/html
+</pre></div>
+</div>
+<p>Check branch:</p>
+<div class="highlight-python"><div class="highlight"><pre>git branch
+</pre></div>
+</div>
+<p>It should be <cite>gh-pages</cite>. Now, this <cite>gh-pages</cite> branch should contain your newly built docs. Push these to <cite>gh-pages</cite> branch and see them appear magically on the
+official documentation site:</p>
+<div class="highlight-python"><div class="highlight"><pre>git commit -a -m &quot;rebuilt docs&quot;
+git push origin gh-pages
+</pre></div>
+</div>
+<p>Thats all! Please allow a time upto 10 minutes for your new docs to appear on the official documentation site.
+Thanks to the wonderful tutorial <a class="reference external" href="https://github.com/daler/sphinxdoc-test">here</a>.</p>
+<div class="section" id="sphinx-apidoc">
+<h3>sphinx-apidoc<a class="headerlink" href="#sphinx-apidoc" title="Permalink to this headline">¶</a></h3>
+<p>We use <a class="reference external" href="http://sphinx-doc.org/man/sphinx-apidoc.html">sphinx-apidoc</a>
+to automatically generate out API pages from the code.  Run this code
+from the root nilmtk directory to regenerate the docs:</p>
+<div class="highlight-python"><div class="highlight"><pre>sphinx-apidoc -f -o docs nilmtk
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Contributing</a><ul>
+<li><a class="reference internal" href="#contributing-documentation">Contributing documentation</a><ul>
+<li><a class="reference internal" href="#sphinx-apidoc">sphinx-apidoc</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Welcome to NILMTK&#8217;s documentation!</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="hdf5_file_format.html"
+                        title="next chapter">HDF5 file format for NILMTK</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/contribute.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="hdf5_file_format.html" title="HDF5 file format for NILMTK"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to NILMTK’s documentation!"
+             >previous</a> |</li>
+        <li><a href="index.html">NILMTK 0.2-beta documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, NILMTK Authors.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.1.
+    </div>
+  </body>
+</html>

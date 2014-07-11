@@ -1,0 +1,208 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>nilmtk.feature_detectors.cluster &mdash; NILMTK 0.2-beta documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.2-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="NILMTK 0.2-beta documentation" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">NILMTK 0.2-beta documentation</a> &raquo;</li>
+          <li><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for nilmtk.feature_detectors.cluster</h1><div class="highlight"><pre>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">division</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+
+<span class="c"># Fix the seed for repeatability of experiments</span>
+<span class="n">SEED</span> <span class="o">=</span> <span class="mi">42</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">SEED</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="cluster"><a class="viewcode-back" href="../../../nilmtk.feature_detectors.html#nilmtk.feature_detectors.cluster.cluster">[docs]</a><span class="k">def</span> <span class="nf">cluster</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">max_num_clusters</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Applies clustering on reduced data, </span>
+<span class="sd">    i.e. data where power is greater than threshold.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    X : pd.Series or single-column pd.DataFrame</span>
+<span class="sd">    max_num_clusters : int</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    centroids : ndarray of int32s</span>
+<span class="sd">        Power in different states of an appliance, sorted</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="c"># Find where power consumption is greater than 10</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">_transform_data</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+    <span class="c"># Find clusters</span>
+    <span class="n">centroids</span> <span class="o">=</span> <span class="n">_apply_clustering</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">max_num_clusters</span><span class="p">)</span>
+    <span class="n">centroids</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">centroids</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="c"># add &#39;off&#39; state</span>
+    <span class="n">centroids</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">centroids</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+    <span class="n">centroids</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">centroids</span><span class="p">)</span> <span class="c"># np.unique also sorts</span>
+    <span class="c"># TODO: Merge similar clusters</span>
+    <span class="k">return</span> <span class="n">centroids</span>
+
+</div>
+<span class="k">def</span> <span class="nf">_transform_data</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Subsamples if needed and converts to column vector (which is what</span>
+<span class="sd">    scikit-learn requires).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    data : pd.Series or single column pd.DataFrame</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    data_above_thresh : ndarray</span>
+<span class="sd">        column vector</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">MAX_NUMBER_OF_SAMPLES</span> <span class="o">=</span> <span class="mi">2000</span>
+    <span class="n">MIN_NUMBER_OF_SAMPLES</span> <span class="o">=</span> <span class="mi">20</span>
+    <span class="n">DATA_THRESHOLD</span> <span class="o">=</span> <span class="mi">10</span>
+
+    <span class="n">data_above_thresh</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">data</span> <span class="o">&gt;</span> <span class="n">DATA_THRESHOLD</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">n_samples</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data_above_thresh</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">n_samples</span> <span class="o">&lt;</span> <span class="n">MIN_NUMBER_OF_SAMPLES</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">MAX_NUMBER_OF_SAMPLES</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="k">elif</span> <span class="n">n_samples</span> <span class="o">&gt;</span> <span class="n">MAX_NUMBER_OF_SAMPLES</span><span class="p">:</span>
+        <span class="c"># Randomly subsample (we don&#39;t want to smoothly downsample</span>
+        <span class="c"># because that is likely to change the values)</span>
+        <span class="n">random_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">,</span> <span class="n">MAX_NUMBER_OF_SAMPLES</span><span class="p">)</span>
+        <span class="n">resampled</span> <span class="o">=</span> <span class="n">data_above_thresh</span><span class="p">[</span><span class="n">random_indices</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">resampled</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">MAX_NUMBER_OF_SAMPLES</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">data_above_thresh</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">n_samples</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_apply_clustering</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">max_num_clusters</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    X : ndarray</span>
+<span class="sd">    max_num_clusters : int</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    centroids : list of numbers</span>
+<span class="sd">        List of power in different states of an appliance</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="c"># If we import sklearn at the top of the file then it makes autodoc fail</span>
+    <span class="kn">from</span> <span class="nn">sklearn.cluster</span> <span class="kn">import</span> <span class="n">KMeans</span>
+    <span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">metrics</span>
+
+    <span class="c"># Finds whether 2 or 3 gives better Silhouellete coefficient</span>
+    <span class="c"># Whichever is higher serves as the number of clusters for that</span>
+    <span class="c"># appliance</span>
+    <span class="n">num_clus</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="n">sh</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="n">k_means_labels</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">k_means_cluster_centers</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">k_means_labels_unique</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">n_clusters</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_num_clusters</span><span class="p">):</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">k_means</span> <span class="o">=</span> <span class="n">KMeans</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="s">&#39;k-means++&#39;</span><span class="p">,</span> <span class="n">n_clusters</span><span class="o">=</span><span class="n">n_clusters</span><span class="p">)</span>
+            <span class="n">k_means</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+            <span class="n">k_means_labels</span><span class="p">[</span><span class="n">n_clusters</span><span class="p">]</span> <span class="o">=</span> <span class="n">k_means</span><span class="o">.</span><span class="n">labels_</span>
+            <span class="n">k_means_cluster_centers</span><span class="p">[</span><span class="n">n_clusters</span><span class="p">]</span> <span class="o">=</span> <span class="n">k_means</span><span class="o">.</span><span class="n">cluster_centers_</span>
+            <span class="n">k_means_labels_unique</span><span class="p">[</span><span class="n">n_clusters</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">k_means_labels</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">sh_n</span> <span class="o">=</span> <span class="n">metrics</span><span class="o">.</span><span class="n">silhouette_score</span><span class="p">(</span>
+                    <span class="n">X</span><span class="p">,</span> <span class="n">k_means_labels</span><span class="p">[</span><span class="n">n_clusters</span><span class="p">],</span> <span class="n">metric</span><span class="o">=</span><span class="s">&#39;euclidean&#39;</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">sh_n</span> <span class="o">&gt;</span> <span class="n">sh</span><span class="p">:</span>
+                    <span class="n">sh</span> <span class="o">=</span> <span class="n">sh_n</span>
+                    <span class="n">num_clus</span> <span class="o">=</span> <span class="n">n_clusters</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="n">num_clus</span> <span class="o">=</span> <span class="n">n_clusters</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">num_clus</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">k_means_cluster_centers</span><span class="p">[</span><span class="n">num_clus</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">k_means_cluster_centers</span><span class="p">[</span><span class="n">num_clus</span><span class="p">]</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">NILMTK 0.2-beta documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, NILMTK Authors.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.1.
+    </div>
+  </body>
+</html>
