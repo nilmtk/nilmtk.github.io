@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Convert data to NILMTK format and load into NILMTK &mdash; NILMTK 0.2-beta documentation</title>
+    
+    <link rel="stylesheet" href="_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-3.1.0/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-3.1.0/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.2-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-3.1.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="NILMTK 0.2-beta documentation" href="index.html" />
+    <link rel="next" title="Contributing" href="contribute.html" />
+    <link rel="prev" title="Welcome to NILMTK’s documentation!" href="index.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="index.html">
+          NILMTK</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.2</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            <li class="divider-vertical"></li>
+            
+                <li><a href="https://github.com/nilmtk/nilmtk">github</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="">Convert data to NILMTK format and load into NILMTK</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="contribute.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="writing_a_dataset_converter.html">Writing a dataset converter</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="nilmtk.html">nilmtk package</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">Convert data to NILMTK format and load into NILMTK</a><ul>
+<li><a class="reference internal" href="#redd">REDD</a></li>
+<li><a class="reference internal" href="#other-datasets">Other datasets</a></li>
+<li><a class="reference internal" href="#open-hdf5-in-nilmtk">Open HDF5 in NILMTK</a><ul>
+<li><a class="reference internal" href="#exploring-the-dataset-object">Exploring the <tt class="docutils literal"><span class="pre">DataSet</span></tt> object</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="index.html" title="Previous Chapter: Welcome to NILMTK’s documentation!"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm">&laquo; Welcome to NILMT...</span>
+    </a>
+  </li>
+  <li>
+    <a href="contribute.html" title="Next Chapter: Contributing"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm">Contributing &raquo;</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="_sources/convert_data_to_NILMTK_format.txt"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      
+  <div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">ipython_utils</span> <span class="kn">import</span> <span class="n">print_dict</span>
+</pre></div>
+</div>
+<div class="section" id="convert-data-to-nilmtk-format-and-load-into-nilmtk">
+<h1>Convert data to NILMTK format and load into NILMTK<a class="headerlink" href="#convert-data-to-nilmtk-format-and-load-into-nilmtk" title="Permalink to this headline">¶</a></h1>
+<p>NILMTK uses an open file format based on the HDF5 binary file format to
+store both the power data and the metadata. The very first step when
+using NILMTK is to convert your dataset to the NILMTK HDF5 file format.</p>
+<div class="section" id="redd">
+<h2>REDD<a class="headerlink" href="#redd" title="Permalink to this headline">¶</a></h2>
+<p>Converting the REDD dataset is easy because NILMTK v0.2 ships with a
+<tt class="docutils literal"><span class="pre">convert_redd</span></tt> function:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">nilmtk.dataset_converters</span> <span class="kn">import</span> <span class="n">convert_redd</span>
+<span class="n">convert_redd</span><span class="p">(</span><span class="s">&#39;/data/REDD/low_freq&#39;</span><span class="p">,</span> <span class="s">&#39;/data/REDD/redd.h5&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre>Loading house 1... 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20
+Loading house 2... 1 2 3 4 5 6 7 8 9 10 11
+Loading house 3... 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22
+Loading house 4... 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20
+Loading house 5... 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26
+Loading house 6... 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17
+Done converting YAML metadata to HDF5!
+Done converting REDD to HDF5!
+</pre></div>
+</div>
+<p>Now <tt class="docutils literal"><span class="pre">redd.h5</span></tt> holds all the REDD power data and all the relevant
+metadata. In NILMTK v0.2 this conversion only uses a tiny fraction of
+the system memory (unlike NILMTK v0.1 which would guzzle ~1 GByte of RAM
+just to do the dataset conversion!).</p>
+</div>
+<div class="section" id="other-datasets">
+<h2>Other datasets<a class="headerlink" href="#other-datasets" title="Permalink to this headline">¶</a></h2>
+<p>A converter for the Pecan Street <a class="reference external" href="http://wiki-energy.org/datasets/">WikiEnergy
+dataset</a> (&gt;200 homes at 1 minute
+resolution) is almost ready.</p>
+<p>Contributing a new converter is easy and highly encouraged! <a class="reference external" href="writing_a_dataset_converter.html">Learn how
+to write a dataset converter</a>.</p>
+</div>
+<div class="section" id="open-hdf5-in-nilmtk">
+<h2>Open HDF5 in NILMTK<a class="headerlink" href="#open-hdf5-in-nilmtk" title="Permalink to this headline">¶</a></h2>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">nilmtk</span> <span class="kn">import</span> <span class="n">DataSet</span>
+
+<span class="n">redd</span> <span class="o">=</span> <span class="n">DataSet</span><span class="p">(</span><span class="s">&#39;/data/REDD/redd.h5&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>At this point, all the metadata has been loaded into memory but none of
+the power data has been loaded. This is our first encounter with a
+fundamental difference between NILMTK v0.1 and v0.2: NILMTK v0.1 used to
+eagerly load the entire dataset into memory before you did any actual
+work on the data. NILMTK v0.2 is lazy! It won&#8217;t load data into memory
+until you tell it what you want to do with the data (and, even then,
+large dataset will be loaded in chunks that fit into memory). This
+allows NILMTK v0.2 to work with arbitrarily large datasets (datasets too
+large to fit into memory) without choking your system.</p>
+<div class="section" id="exploring-the-dataset-object">
+<h3>Exploring the <tt class="docutils literal"><span class="pre">DataSet</span></tt> object<a class="headerlink" href="#exploring-the-dataset-object" title="Permalink to this headline">¶</a></h3>
+<p>Let&#8217;s have a quick poke around to see what&#8217;s in this <tt class="docutils literal"><span class="pre">redd</span></tt> object...</p>
+<p>There is a lot of metadata associated with the dataset, including
+information about the two models of meter device the authors used to
+record REDD:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">print_dict</span><span class="p">(</span><span class="n">redd</span><span class="o">.</span><span class="n">metadata</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul><li><strong>meter_devices</strong>: <ul><li><strong>eMonitor</strong>: <ul><li><strong>max_sample_period</strong>: 50</li><li><strong>description</strong>: Measures circuit-level power demand.  Comes with 24 CTs. This FAQ page suggests the eMonitor measures real (active) power: http://www.energycircle.com/node/14103  although the REDD readme.txt says all channels record apparent power.
+</li><li><strong>manufacturer_url</strong>: http://powerhousedynamics.com</li><li><strong>measurements</strong>: <ul><li>{'type': 'active', 'upper_limit': 5000, 'lower_limit': 0, 'physical_quantity': 'power'}</li></ul></li><li><strong>sample_period</strong>: 3</li><li><strong>wireless</strong>: False</li><li><strong>model</strong>: eMonitor</li><li><strong>manufacturer</strong>: Powerhouse Dynamics</li></ul></li><li><strong>REDD_whole_house</strong>: <ul><li><strong>max_sample_period</strong>: 30</li><li><strong>wireless</strong>: False</li><li><strong>measurements</strong>: <ul><li>{'type': 'apparent', 'upper_limit': 50000, 'lower_limit': 0, 'physical_quantity': 'power'}</li></ul></li><li><strong>description</strong>: </li><li><strong>sample_period</strong>: 1</li></ul></li></ul></li><li><strong>creators</strong>: <ul><li>Kolter, Zico</li><li>Johnson, Matthew</li></ul></li><li><strong>name</strong>: REDD</li><li><strong>description</strong>: Several weeks of power data for 6 different homes.</li><li><strong>number_of_buildings</strong>: 6</li><li><strong>related_documents</strong>: <ul><li>http://redd.csail.mit.edu</li><li>J. Zico Kolter and Matthew J. Johnson. REDD: A public data set for energy disaggregation research. In proceedings of the SustKDD workshop on Data Mining Applications in Sustainability, 2011. http://redd.csail.mit.edu/kolter-kddsust11.pdf
+</li></ul></li><li><strong>long_name</strong>: The Reference Energy Disaggregation Data set</li><li><strong>contact</strong>: zkolter@cs.cmu.edu</li><li><strong>geo_location</strong>: <ul><li><strong>latitude</strong>: 42.360091</li><li><strong>country</strong>: US</li><li><strong>longitude</strong>: -71.09416</li><li><strong>locality</strong>: Massachusetts</li></ul></li><li><strong>publication_date</strong>: 2011</li><li><strong>timezone</strong>: US/Eastern</li><li><strong>schema</strong>: https://github.com/nilmtk/nilm_metadata/tree/v0.2</li><li><strong>institution</strong>: Massachusetts Institute of Technology (MIT)</li><li><strong>subject</strong>: Disaggregated power demand from domestic buildings.</li></ul><p>We also have all the buildings available as an
+<a class="reference external" href="https://docs.python.org/2/library/collections.html#collections.OrderedDict">OrderedDict</a>
+(indexed from 1 not 0 because every dataset we are aware of starts
+numbering buildings from 1 not 0)</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">print_dict</span><span class="p">(</span><span class="n">redd</span><span class="o">.</span><span class="n">buildings</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul><li><strong>1</strong>: Building(instance=1, dataset='REDD')</li><li><strong>3</strong>: Building(instance=3, dataset='REDD')</li><li><strong>2</strong>: Building(instance=2, dataset='REDD')</li><li><strong>5</strong>: Building(instance=5, dataset='REDD')</li><li><strong>4</strong>: Building(instance=4, dataset='REDD')</li><li><strong>6</strong>: Building(instance=6, dataset='REDD')</li></ul><p>Each building has a little bit of metadata associated with it (there
+isn&#8217;t much building-specific metadata in REDD):</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">print_dict</span><span class="p">(</span><span class="n">redd</span><span class="o">.</span><span class="n">buildings</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">metadata</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul><li><strong>instance</strong>: 1</li><li><strong>dataset</strong>: REDD</li><li><strong>original_name</strong>: house_1</li></ul><p>Each building has an <tt class="docutils literal"><span class="pre">elec</span></tt> attribute which is a <tt class="docutils literal"><span class="pre">MeterGroup</span></tt> object
+(much more about those soon!)</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">redd</span><span class="o">.</span><span class="n">buildings</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">elec</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre>MeterGroup(meters=
+  ElecMeter(instance=1, building=1, dataset=&#39;REDD&#39;, site_meter, appliances=[])
+  ElecMeter(instance=2, building=1, dataset=&#39;REDD&#39;, site_meter, appliances=[])
+  ElecMeter(instance=5, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;fridge&#39;, instance=1)])
+  ElecMeter(instance=6, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;dish washer&#39;, instance=1)])
+  ElecMeter(instance=7, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;sockets&#39;, instance=1)])
+  ElecMeter(instance=8, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;sockets&#39;, instance=2)])
+  ElecMeter(instance=9, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;light&#39;, instance=1)])
+  ElecMeter(instance=11, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;microwave&#39;, instance=1)])
+  ElecMeter(instance=12, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;unknown&#39;, instance=1)])
+  ElecMeter(instance=13, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;electric space heater&#39;, instance=1)])
+  ElecMeter(instance=14, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;electric stove&#39;, instance=1)])
+  ElecMeter(instance=15, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;sockets&#39;, instance=3)])
+  ElecMeter(instance=16, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;sockets&#39;, instance=4)])
+  ElecMeter(instance=17, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;light&#39;, instance=2)])
+  ElecMeter(instance=18, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;light&#39;, instance=3)])
+  ElecMeter(instance=19, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;unknown&#39;, instance=2)])
+  MeterGroup(meters=
+    ElecMeter(instance=3, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;electric oven&#39;, instance=1)])
+    ElecMeter(instance=4, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;electric oven&#39;, instance=1)])
+  )
+  MeterGroup(meters=
+    ElecMeter(instance=10, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;washer dryer&#39;, instance=1)])
+    ElecMeter(instance=20, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;washer dryer&#39;, instance=1)])
+  )
+)
+</pre></div>
+</div>
+<p>Yup, that&#8217;s where all the meat lies!</p>
+<p>And here&#8217;s a wiring diagram of the meter hierarchy:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">redd</span><span class="o">.</span><span class="n">buildings</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">elec</span><span class="o">.</span><span class="n">draw_wiring_graph</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="_images/convert_data_to_NILMTK_format_23_0.png" src="_images/convert_data_to_NILMTK_format_23_0.png" />
+<p>It isn&#8217;t very pretty but it shows that all the submeters are immediately
+downstream of the two mains meters.</p>
+<p>Let&#8217;s dive in a little deeper and tinker with <tt class="docutils literal"><span class="pre">ElecMeter</span></tt> objects...</p>
+</div>
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2014, NILMTK Authors.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.1.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

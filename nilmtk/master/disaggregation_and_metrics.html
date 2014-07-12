@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Disaggregation and Metrics &mdash; NILMTK 0.2-beta documentation</title>
+    
+    <link rel="stylesheet" href="_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-3.1.0/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-3.1.0/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.2-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-3.1.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="NILMTK 0.2-beta documentation" href="index.html" />
+    <link rel="next" title="Contributing" href="contribute.html" />
+    <link rel="prev" title="Processing pipeline, preprocessing and more stats" href="pipeline_preprocessing_more_stats.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="index.html">
+          NILMTK</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.2</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            <li class="divider-vertical"></li>
+            
+                <li><a href="https://github.com/nilmtk/nilmtk">github</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="convert_data_to_NILMTK_format.html">Convert data to NILMTK format and load into NILMTK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="elecmeter_and_metergroup.html">MeterGroup, ElecMeter, selection and basic statistics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pipeline_preprocessing_more_stats.html">Processing pipeline, preprocessing and more stats</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">Disaggregation and Metrics</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="contribute.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="writing_a_dataset_converter.html">Writing a dataset converter</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="nilmtk.html">nilmtk package</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">Disaggregation and Metrics</a><ul>
+<li><a class="reference internal" href="#metrics">Metrics</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="pipeline_preprocessing_more_stats.html" title="Previous Chapter: Processing pipeline, preprocessing and more stats"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm">&laquo; Processing pipel...</span>
+    </a>
+  </li>
+  <li>
+    <a href="contribute.html" title="Next Chapter: Contributing"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm">Contributing &raquo;</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="_sources/disaggregation_and_metrics.txt"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      
+  <div class="section" id="disaggregation-and-metrics">
+<h1>Disaggregation and Metrics<a class="headerlink" href="#disaggregation-and-metrics" title="Permalink to this headline">¶</a></h1>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">nilmtk</span> <span class="kn">import</span> <span class="n">DataSet</span><span class="p">,</span> <span class="n">TimeFrame</span>
+<span class="kn">from</span> <span class="nn">nilmtk.disaggregate</span> <span class="kn">import</span> <span class="n">CombinatorialOptimisation</span>
+
+<span class="c"># Open data</span>
+<span class="n">redd</span> <span class="o">=</span> <span class="n">DataSet</span><span class="p">(</span><span class="s">&#39;/data/REDD/redd.h5&#39;</span><span class="p">)</span>
+
+<span class="c"># Select only the first half of the dataset for training</span>
+<span class="n">redd</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">window</span> <span class="o">=</span> <span class="n">TimeFrame</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s">&#39;2011-05-01 00:00:00-04:00&#39;</span><span class="p">)</span>
+
+<span class="c"># Select house</span>
+<span class="n">elec</span> <span class="o">=</span> <span class="n">redd</span><span class="o">.</span><span class="n">buildings</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">elec</span>
+
+<span class="c"># Train!</span>
+<span class="c"># (the co object does the appropriate preprocessing)</span>
+<span class="c"># (here we are training on every appliance in the dataset; normally we</span>
+<span class="c">#  would probably want to filter out appliances which don&#39;t consume much energy,</span>
+<span class="c">#  see previously in the user manual for how to do this.)</span>
+<span class="n">co</span> <span class="o">=</span> <span class="n">CombinatorialOptimisation</span><span class="p">()</span>
+<span class="n">co</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">elec</span><span class="p">)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s">&quot;Model =&quot;</span><span class="p">,</span> <span class="n">co</span><span class="o">.</span><span class="n">model</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>To allow disaggregation to be done on any arbitrarily large dataset,
+disaggregation output is dumped to disk chunk-by-chunk:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">nilmtk</span> <span class="kn">import</span> <span class="n">HDFDataStore</span>
+
+<span class="c"># Select second half of dataset for testing:</span>
+<span class="n">redd</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">window</span> <span class="o">=</span> <span class="n">TimeFrame</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="s">&#39;2011-05-01 00:00:00-04:00&#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span>
+
+<span class="n">mains</span> <span class="o">=</span> <span class="n">elec</span><span class="o">.</span><span class="n">mains</span><span class="p">()</span>
+<span class="n">output</span> <span class="o">=</span> <span class="n">HDFDataStore</span><span class="p">(</span><span class="s">&#39;output.h5&#39;</span><span class="p">,</span> <span class="s">&#39;w&#39;</span><span class="p">)</span>
+
+<span class="n">co</span><span class="o">.</span><span class="n">disaggregate</span><span class="p">(</span><span class="n">mains</span><span class="p">,</span> <span class="n">output</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">output</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;/building1/elec/meter9&#39;</span><span class="p">)[:</span><span class="mi">10</span><span class="p">]</span>
+</pre></div>
+</div>
+<div style="max-height:1000px;max-width:1500px;overflow:auto;">
+<table border="1" class="dataframe">
+  <thead>
+    <tr>
+      <th></th>
+      <th>power</th>
+    </tr>
+    <tr>
+      <th></th>
+      <th>apparent</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2011-05-01 00:00:00-04:00</th>
+      <td> 87</td>
+    </tr>
+    <tr>
+      <th>2011-05-01 00:01:00-04:00</th>
+      <td>  0</td>
+    </tr>
+    <tr>
+      <th>2011-05-01 00:02:00-04:00</th>
+      <td> 87</td>
+    </tr>
+    <tr>
+      <th>2011-05-01 00:03:00-04:00</th>
+      <td>  0</td>
+    </tr>
+    <tr>
+      <th>2011-05-01 00:04:00-04:00</th>
+      <td>  0</td>
+    </tr>
+    <tr>
+      <th>2011-05-01 00:05:00-04:00</th>
+      <td> 87</td>
+    </tr>
+    <tr>
+      <th>2011-05-01 00:06:00-04:00</th>
+      <td> 87</td>
+    </tr>
+    <tr>
+      <th>2011-05-01 00:07:00-04:00</th>
+      <td>  0</td>
+    </tr>
+    <tr>
+      <th>2011-05-01 00:08:00-04:00</th>
+      <td> 87</td>
+    </tr>
+    <tr>
+      <th>2011-05-01 00:09:00-04:00</th>
+      <td> 87</td>
+    </tr>
+  </tbody>
+</table>
+</div><div class="code python highlight-python"><div class="highlight"><pre><span class="n">output</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="section" id="metrics">
+<h2>Metrics<a class="headerlink" href="#metrics" title="Permalink to this headline">¶</a></h2>
+<p>First we load the disag output exactly as if it were a normal dataset:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">disag</span> <span class="o">=</span> <span class="n">DataSet</span><span class="p">(</span><span class="s">&#39;output.h5&#39;</span><span class="p">)</span>
+<span class="n">disag_elec</span> <span class="o">=</span> <span class="n">disag</span><span class="o">.</span><span class="n">buildings</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">elec</span>
+
+<span class="kn">from</span> <span class="nn">nilmtk.metrics</span> <span class="kn">import</span> <span class="n">f1_score</span>
+
+<span class="c"># all metrics take the same arguments:</span>
+<span class="n">f1_score</span><span class="p">(</span><span class="n">disag_elec</span><span class="p">,</span> <span class="n">elec</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre>/usr/local/lib/python2.7/dist-packages/sklearn/metrics/metrics.py:1249: UserWarning: The sum of true positives and false positives are equal to zero for some labels. Precision is ill defined for those labels [1]. The precision and recall are equal to zero for some labels. fbeta_score is ill defined for those labels [1].
+  average=average)
+/usr/local/lib/python2.7/dist-packages/sklearn/metrics/metrics.py:1249: UserWarning: The sum of true positives and false positives are equal to zero for some labels. Precision is ill defined for those labels [0]. The precision and recall are equal to zero for some labels. fbeta_score is ill defined for those labels [0].
+  average=average)
+/usr/local/lib/python2.7/dist-packages/sklearn/metrics/metrics.py:1249: UserWarning: The precision and recall are equal to zero for some labels. fbeta_score is ill defined for those labels [0].
+  average=average)
+/usr/local/lib/python2.7/dist-packages/sklearn/metrics/metrics.py:1249: UserWarning: The sum of true positives and false negatives are equal to zero for some labels. Recall is ill defined for those labels [1]. The precision and recall are equal to zero for some labels. fbeta_score is ill defined for those labels [1].
+  average=average)
+/usr/local/lib/python2.7/dist-packages/sklearn/metrics/metrics.py:1249: UserWarning: The precision and recall are equal to zero for some labels. fbeta_score is ill defined for those labels [1].
+  average=average)
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre>5           0.662997
+6           0.107531
+7           0.624899
+8           0.712745
+9           0.610921
+11          0.168045
+12          0.057047
+13          0.002481
+14          0.000000
+15          0.137996
+16          0.011372
+17          0.310047
+18          0.232466
+19          0.000000
+(3, 4)      0.096890
+(10, 20)    0.162121
+dtype: float64
+</pre></div>
+</div>
+<p>those are the F1 scores for each meter instance</p>
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2014, NILMTK Authors.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.1.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

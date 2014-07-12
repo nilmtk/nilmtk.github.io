@@ -1,5 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
 
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -8,8 +7,11 @@
     
     <title>nilmtk.elecmeter &mdash; NILMTK 0.2-beta documentation</title>
     
-    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/bootstrap-3.1.0/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/bootstrap-3.1.0/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
@@ -24,42 +26,126 @@
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-3.1.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
     <link rel="top" title="NILMTK 0.2-beta documentation" href="../../index.html" />
-    <link rel="up" title="Module code" href="../index.html" /> 
+    <link rel="up" title="Module code" href="../index.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
   </head>
   <body>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="../../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li><a href="../../index.html">NILMTK 0.2-beta documentation</a> &raquo;</li>
-          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
-      </ul>
-    </div>  
 
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          <div class="body">
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../index.html">
+          NILMTK</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.2</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            <li class="divider-vertical"></li>
             
+                <li><a href="https://github.com/nilmtk/nilmtk">github</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../intro_nilmtk_v0_2.html">Introducing NILMTK v0.2</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../convert_data_to_NILMTK_format.html">Convert data to NILMTK format and load into NILMTK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../elecmeter_and_metergroup.html">MeterGroup, ElecMeter, selection and basic statistics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../pipeline_preprocessing_more_stats.html">Processing pipeline, preprocessing and more stats</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../disaggregation_and_metrics.html">Disaggregation and Metrics</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../writing_a_dataset_converter.html">Writing a dataset converter</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../nilmtk.html">nilmtk package</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      
   <h1>Source code for nilmtk.elecmeter</h1><div class="highlight"><pre>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">division</span>
 <span class="kn">from</span> <span class="nn">warnings</span> <span class="kn">import</span> <span class="n">warn</span>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">namedtuple</span>
 <span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
 <span class="kn">from</span> <span class="nn">.preprocessing</span> <span class="kn">import</span> <span class="n">Clip</span>
-<span class="kn">from</span> <span class="nn">.stats</span> <span class="kn">import</span> <span class="n">TotalEnergy</span><span class="p">,</span> <span class="n">GoodSections</span>
+<span class="kn">from</span> <span class="nn">.stats</span> <span class="kn">import</span> <span class="n">TotalEnergy</span><span class="p">,</span> <span class="n">GoodSections</span><span class="p">,</span> <span class="n">DropoutRate</span>
 <span class="kn">from</span> <span class="nn">.hashable</span> <span class="kn">import</span> <span class="n">Hashable</span>
 <span class="kn">from</span> <span class="nn">.appliance</span> <span class="kn">import</span> <span class="n">Appliance</span>
 <span class="kn">from</span> <span class="nn">.datastore</span> <span class="kn">import</span> <span class="n">Key</span>
 <span class="kn">from</span> <span class="nn">.measurement</span> <span class="kn">import</span> <span class="n">select_best_ac_type</span>
 <span class="kn">from</span> <span class="nn">.node</span> <span class="kn">import</span> <span class="n">Node</span>
 <span class="kn">from</span> <span class="nn">.electric</span> <span class="kn">import</span> <span class="n">Electric</span>
+<span class="kn">import</span> <span class="nn">nilmtk</span>
 
 <span class="n">ElecMeterID</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s">&#39;ElecMeterID&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s">&#39;instance&#39;</span><span class="p">,</span> <span class="s">&#39;building&#39;</span><span class="p">,</span> <span class="s">&#39;dataset&#39;</span><span class="p">])</span>
 
@@ -85,17 +171,9 @@
 
 <span class="sd">    meter_devices : dict, static class attribute</span>
 <span class="sd">        See http://nilm-metadata.readthedocs.org/en/latest/dataset_metadata.html#meterdevice</span>
-
-<span class="sd">    all_meters : dict, static class attribute:</span>
-<span class="sd">        Required for resolving `upstream_of` to an ElecMeter object.</span>
-<span class="sd">        Keys are ElecMeterID objects.</span>
-<span class="sd">        Values are ElecMeter objects or, where ElecMeterID(instance=0), </span>
-<span class="sd">        value is a MeterGroup object.</span>
-
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">meter_devices</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="n">all_meters</span> <span class="o">=</span> <span class="p">{}</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">store</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">metadata</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">meter_id</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="c"># Store and check parameters</span>
@@ -105,20 +183,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">store</span> <span class="o">=</span> <span class="n">store</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">identifier</span> <span class="o">=</span> <span class="n">meter_id</span>
 
-        <span class="c"># Insert self into ElecMeters.meters</span>
+        <span class="c"># Insert self into nilmtk.global_meter_group</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">identifier</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
             <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">identifier</span><span class="p">,</span> <span class="n">ElecMeterID</span><span class="p">)</span>
-            <span class="n">ElecMeter</span><span class="o">.</span><span class="n">all_meters</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">identifier</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_site_meter</span><span class="p">():</span>
-                <span class="c"># Add to self to mains meter group</span>
-                <span class="kn">from</span> <span class="nn">.metergroup</span> <span class="kn">import</span> <span class="n">MeterGroup</span>
-                <span class="n">mainsID</span> <span class="o">=</span> <span class="n">ElecMeterID</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-                                      <span class="n">building</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">identifier</span><span class="o">.</span><span class="n">building</span><span class="p">,</span>
-                                      <span class="n">dataset</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">identifier</span><span class="o">.</span><span class="n">dataset</span><span class="p">)</span>
-                <span class="n">mains_group</span> <span class="o">=</span> <span class="n">ElecMeter</span><span class="o">.</span><span class="n">all_meters</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">mainsID</span><span class="p">,</span> 
-                                                              <span class="n">MeterGroup</span><span class="p">())</span>
-                <span class="k">if</span> <span class="bp">self</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">mains_group</span><span class="o">.</span><span class="n">meters</span><span class="p">:</span>
-                    <span class="n">mains_group</span><span class="o">.</span><span class="n">meters</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">nilmtk</span><span class="o">.</span><span class="n">global_meter_group</span><span class="o">.</span><span class="n">meters</span><span class="p">:</span>
+                <span class="n">nilmtk</span><span class="o">.</span><span class="n">global_meter_group</span><span class="o">.</span><span class="n">meters</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
     <span class="nd">@property</span>
 <div class="viewcode-block" id="ElecMeter.key"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.elecmeter.ElecMeter.key">[docs]</a>    <span class="k">def</span> <span class="nf">key</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -139,6 +208,10 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">identifier</span><span class="p">,</span> <span class="n">attr</span><span class="p">)</span>
 
+<div class="viewcode-block" id="ElecMeter.get_timeframe"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.elecmeter.ElecMeter.get_timeframe">[docs]</a>    <span class="k">def</span> <span class="nf">get_timeframe</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">get_timeframe</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">key</span><span class="p">)</span>
+        
+</div>
 <div class="viewcode-block" id="ElecMeter.upstream_meter"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.elecmeter.ElecMeter.upstream_meter">[docs]</a>    <span class="k">def</span> <span class="nf">upstream_meter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns</span>
@@ -165,7 +238,7 @@
                                      <span class="n">building</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">identifier</span><span class="o">.</span><span class="n">building</span><span class="p">,</span>
                                      <span class="n">dataset</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">identifier</span><span class="o">.</span><span class="n">dataset</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">ElecMeter</span><span class="o">.</span><span class="n">all_meters</span><span class="p">[</span><span class="n">id_of_upstream</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">nilmtk</span><span class="o">.</span><span class="n">global_meter_group</span><span class="p">[</span><span class="n">id_of_upstream</span><span class="p">]</span>
 </div>
     <span class="nd">@classmethod</span>
 <div class="viewcode-block" id="ElecMeter.load_meter_devices"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.elecmeter.ElecMeter.load_meter_devices">[docs]</a>    <span class="k">def</span> <span class="nf">load_meter_devices</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">store</span><span class="p">):</span>
@@ -281,13 +354,38 @@
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        True if all key:value pairs in `key` match any appliance</span>
-<span class="sd">        in `self.appliances`.</span>
+<span class="sd">        Bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">for</span> <span class="n">appliance</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">appliances</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">appliance</span><span class="o">.</span><span class="n">matches</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">True</span>
-        <span class="k">return</span> <span class="bp">False</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">key</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">True</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">()</span>
+
+        <span class="n">match</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">key</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">identifier</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
+                <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">identifier</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span> <span class="o">!=</span> <span class="n">v</span><span class="p">:</span>
+                    <span class="n">match</span> <span class="o">=</span> <span class="bp">False</span>
+
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">has_key</span><span class="p">(</span><span class="n">k</span><span class="p">):</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">!=</span> <span class="n">v</span><span class="p">:</span>
+                    <span class="n">match</span> <span class="o">=</span> <span class="bp">False</span>
+
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">has_key</span><span class="p">(</span><span class="n">k</span><span class="p">):</span>
+                <span class="n">metadata_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+                <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">metadata_value</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">and</span> 
+                    <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">list</span><span class="p">)):</span>
+                    <span class="k">if</span> <span class="n">v</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">metadata_value</span><span class="p">:</span>
+                        <span class="n">match</span> <span class="o">=</span> <span class="bp">False</span>
+                <span class="k">elif</span> <span class="n">metadata_value</span> <span class="o">!=</span> <span class="n">v</span><span class="p">:</span>
+                    <span class="n">match</span> <span class="o">=</span> <span class="bp">False</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s">&quot;&#39;{}&#39; not a valid key.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">k</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">match</span>
 </div>
 <div class="viewcode-block" id="ElecMeter.power_series"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.elecmeter.ElecMeter.power_series">[docs]</a>    <span class="k">def</span> <span class="nf">power_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get power Series.</span>
@@ -333,8 +431,8 @@
             <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;cols&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[(</span><span class="s">&#39;power&#39;</span><span class="p">,</span> <span class="n">best_ac_type</span><span class="p">)]</span>
 
         <span class="c"># Get source node</span>
-        <span class="n">generator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">key</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="n">last_node</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">generator</span><span class="o">=</span><span class="n">generator</span><span class="p">)</span>
+        <span class="n">last_node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_source_node</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">generator</span> <span class="o">=</span> <span class="n">last_node</span><span class="o">.</span><span class="n">generator</span>
 
         <span class="c"># Connect together all preprocessing nodes</span>
         <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">preprocessing</span><span class="p">:</span>
@@ -348,10 +446,6 @@
             <span class="n">series</span><span class="o">.</span><span class="n">timeframe</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">chunk</span><span class="p">,</span> <span class="s">&#39;timeframe&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
             <span class="n">series</span><span class="o">.</span><span class="n">look_ahead</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">chunk</span><span class="p">,</span> <span class="s">&#39;look_ahead&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
             <span class="k">yield</span> <span class="n">series</span>
-</div>
-<div class="viewcode-block" id="ElecMeter.voltage_series"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.elecmeter.ElecMeter.voltage_series">[docs]</a>    <span class="k">def</span> <span class="nf">voltage_series</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns a generator of pd.Series of voltage, if available.&quot;&quot;&quot;</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
 </div>
 <div class="viewcode-block" id="ElecMeter.dry_run_metadata"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.elecmeter.ElecMeter.dry_run_metadata">[docs]</a>    <span class="k">def</span> <span class="nf">dry_run_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span>
@@ -389,7 +483,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">total_energy</span><span class="o">.</span><span class="n">results</span><span class="o">.</span><span class="n">simple</span><span class="p">()</span>
         </div>
-<div class="viewcode-block" id="ElecMeter.dropout_rate"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.elecmeter.ElecMeter.dropout_rate">[docs]</a>    <span class="k">def</span> <span class="nf">dropout_rate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ElecMeter.dropout_rate"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.elecmeter.ElecMeter.dropout_rate">[docs]</a>    <span class="k">def</span> <span class="nf">dropout_rate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">loader_kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -398,9 +492,17 @@
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        DropoutRateResults object.</span>
+<span class="sd">        DropoutRateResults object if `full_results` is True, </span>
+<span class="sd">        else float</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+        <span class="n">full_results</span> <span class="o">=</span> <span class="n">loader_kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s">&#39;full_results&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
+        <span class="n">source_node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_source_node</span><span class="p">(</span><span class="o">**</span><span class="n">loader_kwargs</span><span class="p">)</span>
+        <span class="n">dropout_rate</span> <span class="o">=</span> <span class="n">DropoutRate</span><span class="p">(</span><span class="n">source_node</span><span class="p">)</span>
+        <span class="n">dropout_rate</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">full_results</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">dropout_rate</span><span class="o">.</span><span class="n">results</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">dropout_rate</span><span class="o">.</span><span class="n">results</span><span class="o">.</span><span class="n">simple</span><span class="p">()</span>
         </div>
 <div class="viewcode-block" id="ElecMeter.good_sections"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.elecmeter.ElecMeter.good_sections">[docs]</a>    <span class="k">def</span> <span class="nf">good_sections</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">loader_kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -422,89 +524,66 @@
             <span class="k">return</span> <span class="n">good_sections</span><span class="o">.</span><span class="n">results</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">good_sections</span><span class="o">.</span><span class="n">results</span><span class="o">.</span><span class="n">simple</span><span class="p">()</span>
-</div>
-<div class="viewcode-block" id="ElecMeter.total_on_duration"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.elecmeter.ElecMeter.total_on_duration">[docs]</a>    <span class="k">def</span> <span class="nf">total_on_duration</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return timedelta&quot;&quot;&quot;</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
-    </div>
-<div class="viewcode-block" id="ElecMeter.on_durations"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.elecmeter.ElecMeter.on_durations">[docs]</a>    <span class="k">def</span> <span class="nf">on_durations</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
-    </div>
-<div class="viewcode-block" id="ElecMeter.activity_distribution"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.elecmeter.ElecMeter.activity_distribution">[docs]</a>    <span class="k">def</span> <span class="nf">activity_distribution</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bin_size</span><span class="p">,</span> <span class="n">timespan</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
-    </div>
-<div class="viewcode-block" id="ElecMeter.on_off_events"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.elecmeter.ElecMeter.on_off_events">[docs]</a>    <span class="k">def</span> <span class="nf">on_off_events</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c"># use self.metadata.minimum_[off|on]_duration</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
-    </div>
-<div class="viewcode-block" id="ElecMeter.discrete_appliance_activations"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.elecmeter.ElecMeter.discrete_appliance_activations">[docs]</a>    <span class="k">def</span> <span class="nf">discrete_appliance_activations</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Return a Mask defining the start and end times of each appliance</span>
-<span class="sd">        activation.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
-    </div>
-<div class="viewcode-block" id="ElecMeter.proportion_of_energy"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.elecmeter.ElecMeter.proportion_of_energy">[docs]</a>    <span class="k">def</span> <span class="nf">proportion_of_energy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mains</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        mains : nilmtk.ElecMeter or MeterGroup</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">mains_good_sects</span> <span class="o">=</span> <span class="n">mains</span><span class="o">.</span><span class="n">good_sections</span><span class="p">()</span>
-        <span class="n">proportion_of_energy</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">total_energy</span><span class="p">(</span><span class="n">timeframes</span><span class="o">=</span><span class="n">mains_good_sects</span><span class="p">)</span> <span class="o">/</span>
-                                <span class="n">mains</span><span class="o">.</span><span class="n">total_energy</span><span class="p">(</span><span class="n">timeframes</span><span class="o">=</span><span class="n">mains_good_sects</span><span class="p">))</span>
-        <span class="k">return</span> <span class="n">proportion_of_energy</span> 
-</div>
-<div class="viewcode-block" id="ElecMeter.contiguous_sections"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.elecmeter.ElecMeter.contiguous_sections">[docs]</a>    <span class="k">def</span> <span class="nf">contiguous_sections</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;retuns Mask object&quot;&quot;&quot;</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
-        </div>
-<div class="viewcode-block" id="ElecMeter.clean_and_export"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.elecmeter.ElecMeter.clean_and_export">[docs]</a>    <span class="k">def</span> <span class="nf">clean_and_export</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">destination_datastore</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Apply all cleaning configured in meter.cleaning and then export.  Also identifies</span>
-<span class="sd">        and records the locations of gaps.  Also records metadata about exactly which</span>
-<span class="sd">        cleaning steps have been executed and some summary results (e.g. the number of</span>
-<span class="sd">        implausible values removed)&quot;&quot;&quot;</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div></div>
+
+    <span class="c"># def total_on_duration(self):</span>
+    <span class="c">#     &quot;&quot;&quot;Return timedelta&quot;&quot;&quot;</span>
+    <span class="c">#     raise NotImplementedError</span>
+    
+    <span class="c"># def on_durations(self):</span>
+    <span class="c">#     raise NotImplementedError</span>
+    
+    <span class="c"># def activity_distribution(self, bin_size, timespan):</span>
+    <span class="c">#     raise NotImplementedError</span>
+    
+    <span class="c"># def on_off_events(self):</span>
+    <span class="c">#     # use self.metadata.minimum_[off|on]_duration</span>
+    <span class="c">#     raise NotImplementedError</span>
+    
+    <span class="c"># def discrete_appliance_activations(self):</span>
+    <span class="c">#     &quot;&quot;&quot;</span>
+    <span class="c">#     Return a Mask defining the start and end times of each appliance</span>
+    <span class="c">#     activation.</span>
+    <span class="c">#     &quot;&quot;&quot;</span>
+    <span class="c">#     raise NotImplementedError</span>
+    
+    <span class="c"># def proportion_of_energy(self, mains):</span>
+    <span class="c">#     &quot;&quot;&quot;</span>
+    <span class="c">#     Parameters</span>
+    <span class="c">#     ----------</span>
+    <span class="c">#     mains : nilmtk.ElecMeter or MeterGroup</span>
+    <span class="c">#     &quot;&quot;&quot;</span>
+    <span class="c">#     mains_good_sects = mains.good_sections()</span>
+    <span class="c">#     proportion_of_energy = (self.total_energy(timeframes=mains_good_sects) /</span>
+    <span class="c">#                             mains.total_energy(timeframes=mains_good_sects))</span>
+    <span class="c">#     return proportion_of_energy </span>
+
+    <span class="c"># def contiguous_sections(self):</span>
+    <span class="c">#     &quot;&quot;&quot;retuns Mask object&quot;&quot;&quot;</span>
+    <span class="c">#     raise NotImplementedError</span>
+        
+    <span class="c"># def clean_and_export(self, destination_datastore):</span>
+    <span class="c">#     &quot;&quot;&quot;Apply all cleaning configured in meter.cleaning and then export.  Also identifies</span>
+    <span class="c">#     and records the locations of gaps.  Also records metadata about exactly which</span>
+    <span class="c">#     cleaning steps have been executed and some summary results (e.g. the number of</span>
+    <span class="c">#     implausible values removed)&quot;&quot;&quot;</span>
+    <span class="c">#     raise NotImplementedError</span></div></div>
 </pre></div>
 
-          </div>
-        </div>
-      </div>
-      <div class="sphinxsidebar">
-        <div class="sphinxsidebarwrapper">
-<div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
-    <form class="search" action="../../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
+    </div>
+      
+  </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
-        </div>
-      </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="../../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li><a href="../../index.html">NILMTK 0.2-beta documentation</a> &raquo;</li>
-          <li><a href="../index.html" >Module code</a> &raquo;</li> 
-      </ul>
-    </div>
-    <div class="footer">
-        &copy; Copyright 2014, NILMTK Authors.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.1.
-    </div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2014, NILMTK Authors.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.1.<br/>
+    </p>
+  </div>
+</footer>
   </body>
 </html>

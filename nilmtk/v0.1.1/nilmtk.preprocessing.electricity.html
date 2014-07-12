@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>nilmtk.preprocessing.electricity package &mdash; nilmtk 0.1.0 documentation</title>
+    <title>nilmtk.preprocessing.electricity package &mdash; nilmtk 0.1.1 documentation</title>
     
     <link rel="stylesheet" href="_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '0.1.0',
+        VERSION:     '0.1.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -30,7 +30,7 @@
     <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="_static/bootstrap-3.1.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="nilmtk 0.1.0 documentation" href="index.html" />
+    <link rel="top" title="nilmtk 0.1.1 documentation" href="index.html" />
     <link rel="up" title="nilmtk.preprocessing package" href="nilmtk.preprocessing.html" />
     <link rel="next" title="nilmtk.sensors package" href="nilmtk.sensors.html" />
     <link rel="prev" title="nilmtk.preprocessing package" href="nilmtk.preprocessing.html" />
@@ -53,7 +53,7 @@
         </button>
         <a class="navbar-brand" href="index.html">
           nilmtk</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.1.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.1</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -70,7 +70,7 @@
   <ul class="dropdown-menu globaltoc"
       role="menu"
       aria-labelledby="dLabelGlobalToc"><ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="nilmtk.html">nilmtk API Reference</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="nilmtk.html">nilmtk package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="userguide.html">User Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contribute.html">Contributing</a></li>
 </ul>
@@ -88,9 +88,9 @@
       aria-labelledby="dLabelLocalToc"><ul>
 <li><a class="reference internal" href="#">nilmtk.preprocessing.electricity package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#module-nilmtk.preprocessing.electricity.building">nilmtk.preprocessing.electricity.building module</a></li>
-<li><a class="reference internal" href="#module-nilmtk.preprocessing.electricity.single">nilmtk.preprocessing.electricity.single module</a></li>
-<li><a class="reference internal" href="#module-nilmtk.preprocessing.electricity">Module contents</a></li>
+<li><a class="reference internal" href="#nilmtk-preprocessing-electricity-building-module">nilmtk.preprocessing.electricity.building module</a></li>
+<li><a class="reference internal" href="#nilmtk-preprocessing-electricity-single-module">nilmtk.preprocessing.electricity.single module</a></li>
+<li><a class="reference internal" href="#module-contents">Module contents</a></li>
 </ul>
 </li>
 </ul>
@@ -145,414 +145,14 @@
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="module-nilmtk.preprocessing.electricity.building">
-<span id="nilmtk-preprocessing-electricity-building-module"></span><h2>nilmtk.preprocessing.electricity.building module<a class="headerlink" href="#module-nilmtk.preprocessing.electricity.building" title="Permalink to this headline">¶</a></h2>
-<p>Contains preprocessing functions.</p>
-<dl class="function">
-<dt id="nilmtk.preprocessing.electricity.building.downsample">
-<tt class="descclassname">nilmtk.preprocessing.electricity.building.</tt><tt class="descname">downsample</tt><big>(</big><em>building</em>, <em>rule='1T'</em>, <em>how='mean'</em>, <em>dropna=False</em><big>)</big><a class="reference internal" href="_modules/nilmtk/preprocessing/electricity/building.html#downsample"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.preprocessing.electricity.building.downsample" title="Permalink to this definition">¶</a></dt>
-<dd><p>Downsample all electrical data</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>building</strong> : nilmtk.Building</p>
-<p><strong>rule</strong> : string</p>
-<blockquote>
-<div><p>refer to pandas.resample docs for rules; default &#8216;1T&#8217; or 1 minute</p>
-</div></blockquote>
-<p><strong>how</strong> : string</p>
-<blockquote>
-<div><p>refer to pandas.resample docs for how; default &#8216;mean&#8217;</p>
-</div></blockquote>
-<p><strong>dropna</strong> : boolean, optional</p>
-<blockquote>
-<div><p>default = False.  Whether to drop NaNs after resampling.</p>
-</div></blockquote>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>building_copy: nilmtk.Building</strong> :</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="nilmtk.preprocessing.electricity.building.drop_missing_mains">
-<tt class="descclassname">nilmtk.preprocessing.electricity.building.</tt><tt class="descname">drop_missing_mains</tt><big>(</big><em>building</em><big>)</big><a class="reference internal" href="_modules/nilmtk/preprocessing/electricity/building.html#drop_missing_mains"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.preprocessing.electricity.building.drop_missing_mains" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="function">
-<dt id="nilmtk.preprocessing.electricity.building.fill_appliance_gaps">
-<tt class="descclassname">nilmtk.preprocessing.electricity.building.</tt><tt class="descname">fill_appliance_gaps</tt><big>(</big><em>building</em>, <em>sample_period_multiplier=4</em><big>)</big><a class="reference internal" href="_modules/nilmtk/preprocessing/electricity/building.html#fill_appliance_gaps"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.preprocessing.electricity.building.fill_appliance_gaps" title="Permalink to this definition">¶</a></dt>
-<dd><p>Book-ends all large gaps with zeros using
-<cite>nilmtk.preprocessing.electric.single.insert_zeros</cite>
-on all appliances in <cite>building</cite> and then forward fills any remaining NaNs.
-This will result in forward-filling small gaps with
-the recorded value which precedes the gap, and forward-filling zeros
-in large gaps.</p>
-<p>NOTE: This function assumes that any gaps in the appliance data is the
-result of the appliance monitor and the appliance being off.  Do not
-use this function if gaps in appliance data are the result of the
-IAM being broken (and hence the state of the appliance is unknown).</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>building</strong> : nilmtk.Building</p>
-<p><strong>sample_period_multiplier</strong> : float or int, optional</p>
-<blockquote>
-<div><p>The permissible  maximum sample period expressed as a multiple
-of each dataframe&#8217;s sample period. Any gap longer
-than the max sample period is assumed to imply that the IAM
-and appliance are off.  If None then will default to
-4 x the sample period of each dataframe.</p>
-</div></blockquote>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>building_copy</strong> : nilmtk.Building</p>
-</td>
-</tr>
-</tbody>
-</table>
-<div class="admonition seealso">
-<p class="first admonition-title">See also</p>
-<p class="last"><tt class="xref py py-obj docutils literal"><span class="pre">nilmtk.preprocessing.electric.single.insert_zeros</span></tt></p>
+<div class="section" id="nilmtk-preprocessing-electricity-building-module">
+<h2>nilmtk.preprocessing.electricity.building module<a class="headerlink" href="#nilmtk-preprocessing-electricity-building-module" title="Permalink to this headline">¶</a></h2>
 </div>
-</dd></dl>
-
-<dl class="function">
-<dt id="nilmtk.preprocessing.electricity.building.filter_channels_with_less_than_x_samples">
-<tt class="descclassname">nilmtk.preprocessing.electricity.building.</tt><tt class="descname">filter_channels_with_less_than_x_samples</tt><big>(</big><em>building</em>, <em>threshold=100</em><big>)</big><a class="reference internal" href="_modules/nilmtk/preprocessing/electricity/building.html#filter_channels_with_less_than_x_samples"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.preprocessing.electricity.building.filter_channels_with_less_than_x_samples" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="function">
-<dt id="nilmtk.preprocessing.electricity.building.filter_contribution_less_than_x">
-<tt class="descclassname">nilmtk.preprocessing.electricity.building.</tt><tt class="descname">filter_contribution_less_than_x</tt><big>(</big><em>building</em>, <em>x=5</em><big>)</big><a class="reference internal" href="_modules/nilmtk/preprocessing/electricity/building.html#filter_contribution_less_than_x"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.preprocessing.electricity.building.filter_contribution_less_than_x" title="Permalink to this definition">¶</a></dt>
-<dd><p>Filters out appliances which contribute less than x%</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>building</strong> : nilmtk.Building</p>
-<p><strong>x</strong> : float [0,100], default :5</p>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>building_copy</strong> : nilmtk.Building</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="nilmtk.preprocessing.electricity.building.filter_datetime">
-<tt class="descclassname">nilmtk.preprocessing.electricity.building.</tt><tt class="descname">filter_datetime</tt><big>(</big><em>building</em>, <em>start_datetime=None</em>, <em>end_datetime=None</em>, <em>copy=False</em><big>)</big><a class="reference internal" href="_modules/nilmtk/preprocessing/electricity/building.html#filter_datetime"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.preprocessing.electricity.building.filter_datetime" title="Permalink to this definition">¶</a></dt>
-<dd><p>Filters out all data falling outside the start and the end date</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>building</strong> : nilmtk.Building</p>
-<p><strong>start_datetime :string, &#8216;mm-dd-yyyy hh:mm:ss&#8217;</strong> :</p>
-<p><strong>end_datetime</strong> : string, &#8216;mm-mdd-yyyy hh:mm:ss&#8217;</p>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>building_copy</strong> : nilmtk.Building</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="nilmtk.preprocessing.electricity.building.filter_out_implausible_values">
-<tt class="descclassname">nilmtk.preprocessing.electricity.building.</tt><tt class="descname">filter_out_implausible_values</tt><big>(</big><em>building</em>, <em>measurement</em>, <em>min_threshold=None</em>, <em>max_threshold=None</em><big>)</big><a class="reference internal" href="_modules/nilmtk/preprocessing/electricity/building.html#filter_out_implausible_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.preprocessing.electricity.building.filter_out_implausible_values" title="Permalink to this definition">¶</a></dt>
-<dd><p>Filters out values in appliances, circuits and mains which have measurement
-as one of the attribute. Filtering is done by min and max threshold for a
-measurement</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>building :nilmtk.Building</strong> :</p>
-<p><strong>measurement :nilmtk.sensor.electricity.Measurement</strong> :</p>
-<p><strong>min_threshold</strong> : float, default=None</p>
-<p><strong>max_threshold :float, deafult=None</strong> :</p>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>building_copy</strong> : nilmtk.Building</p>
-</td>
-</tr>
-</tbody>
-</table>
-<div class="admonition seealso">
-<p class="first admonition-title">See also</p>
-<p class="last"><a class="reference internal" href="#nilmtk.preprocessing.electricity.single.remove_implausible_entries" title="nilmtk.preprocessing.electricity.single.remove_implausible_entries"><tt class="xref py py-obj docutils literal"><span class="pre">nilmtk.preprocessing.electricity.single.remove_implausible_entries</span></tt></a></p>
+<div class="section" id="nilmtk-preprocessing-electricity-single-module">
+<h2>nilmtk.preprocessing.electricity.single module<a class="headerlink" href="#nilmtk-preprocessing-electricity-single-module" title="Permalink to this headline">¶</a></h2>
 </div>
-</dd></dl>
-
-<dl class="function">
-<dt id="nilmtk.preprocessing.electricity.building.filter_top_k_appliances">
-<tt class="descclassname">nilmtk.preprocessing.electricity.building.</tt><tt class="descname">filter_top_k_appliances</tt><big>(</big><em>building</em>, <em>k=5</em><big>)</big><a class="reference internal" href="_modules/nilmtk/preprocessing/electricity/building.html#filter_top_k_appliances"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.preprocessing.electricity.building.filter_top_k_appliances" title="Permalink to this definition">¶</a></dt>
-<dd><p>Filters and keeps only the top k appliance data</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>building</strong> : nilmtk.Building</p>
-<p><strong>k</strong> : int, default: 5</p>
-<blockquote>
-<div><p>Top &#8216;k&#8217; appliances to keep</p>
-</div></blockquote>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>building_copy</strong> : nilmtk.Building</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="nilmtk.preprocessing.electricity.building.make_common_index">
-<tt class="descclassname">nilmtk.preprocessing.electricity.building.</tt><tt class="descname">make_common_index</tt><big>(</big><em>building</em><big>)</big><a class="reference internal" href="_modules/nilmtk/preprocessing/electricity/building.html#make_common_index"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.preprocessing.electricity.building.make_common_index" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="function">
-<dt id="nilmtk.preprocessing.electricity.building.mask_appliances_with_mains">
-<tt class="descclassname">nilmtk.preprocessing.electricity.building.</tt><tt class="descname">mask_appliances_with_mains</tt><big>(</big><em>electricity</em>, <em>sample_period_multiplier=4</em><big>)</big><a class="reference internal" href="_modules/nilmtk/preprocessing/electricity/building.html#mask_appliances_with_mains"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.preprocessing.electricity.building.mask_appliances_with_mains" title="Permalink to this definition">¶</a></dt>
-<dd><p>Finds gaps in first mains channel and then removes 
-these gaps from all appliance data.</p>
-<p>The assumption is that if the mains channel is dead for any
-timeslice then we should ignore this timeslice for all appliance
-channels too.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>electricity</strong> : Electricity object</p>
-<p><strong>sample_period_multiplier</strong> : int, optional</p>
-<blockquote>
-<div><p>Default = 4
-max_sample_period = sample_period x sample_period_multiplier
-max_sample_period defines a &#8216;gap&#8217;.</p>
-</div></blockquote>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>copy of electricity</strong> :</p>
-<p><strong>.. warning:: currently only uses gaps from first mains dataframe and ignores</strong> :</p>
-<blockquote class="last">
-<div><p>all other mains dataframes.</p>
-</div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="nilmtk.preprocessing.electricity.building.prepend_append_zeros">
-<tt class="descclassname">nilmtk.preprocessing.electricity.building.</tt><tt class="descname">prepend_append_zeros</tt><big>(</big><em>building</em>, <em>start_datetime</em>, <em>end_datetime</em>, <em>freq</em>, <em>timezone</em><big>)</big><a class="reference internal" href="_modules/nilmtk/preprocessing/electricity/building.html#prepend_append_zeros"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.preprocessing.electricity.building.prepend_append_zeros" title="Permalink to this definition">¶</a></dt>
-<dd><p>Fill zeros from <cite>start</cite> to <cite>appliance</cite>.index[0] and from 
-<cite>appliance</cite>.index[-1] to end at <cite>frequency</cite></p>
-</dd></dl>
-
-</div>
-<div class="section" id="module-nilmtk.preprocessing.electricity.single">
-<span id="nilmtk-preprocessing-electricity-single-module"></span><h2>nilmtk.preprocessing.electricity.single module<a class="headerlink" href="#module-nilmtk.preprocessing.electricity.single" title="Permalink to this headline">¶</a></h2>
-<p>Preprocessing functions for a single appliance / mains / circuit DataFrame</p>
-<dl class="function">
-<dt id="nilmtk.preprocessing.electricity.single.contiguous_blocks">
-<tt class="descclassname">nilmtk.preprocessing.electricity.single.</tt><tt class="descname">contiguous_blocks</tt><big>(</big><em>datetimeindex</em><big>)</big><a class="reference internal" href="_modules/nilmtk/preprocessing/electricity/single.html#contiguous_blocks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.preprocessing.electricity.single.contiguous_blocks" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="function">
-<dt id="nilmtk.preprocessing.electricity.single.filter_datetime_single">
-<tt class="descclassname">nilmtk.preprocessing.electricity.single.</tt><tt class="descname">filter_datetime_single</tt><big>(</big><em>channel_df</em>, <em>start_datetime=None</em>, <em>end_datetime=None</em><big>)</big><a class="reference internal" href="_modules/nilmtk/preprocessing/electricity/single.html#filter_datetime_single"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.preprocessing.electricity.single.filter_datetime_single" title="Permalink to this definition">¶</a></dt>
-<dd><p>Filtering out a channel outside certain datetimes</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>channel_df</strong> : pandas.DataFrame</p>
-<blockquote>
-<div><p>Corresponds to either an appliance or mains or circuit</p>
-</div></blockquote>
-<p><strong>start_datetime :string, &#8216;mm-dd-yyyy hh:mm:ss&#8217;</strong> :</p>
-<p><strong>end_datetime</strong> : string, &#8216;mm-dd-yyyy hh:mm:ss&#8217;</p>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>pandas.DataFrame</strong> :</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="nilmtk.preprocessing.electricity.single.insert_zeros">
-<tt class="descclassname">nilmtk.preprocessing.electricity.single.</tt><tt class="descname">insert_zeros</tt><big>(</big><em>single_appliance_dataframe</em>, <em>sample_period_multiplier=4</em>, <em>round_sample_period=True</em><big>)</big><a class="reference internal" href="_modules/nilmtk/preprocessing/electricity/single.html#insert_zeros"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.preprocessing.electricity.single.insert_zeros" title="Permalink to this definition">¶</a></dt>
-<dd><p>Find all gaps in <cite>single_appliance_dataframe</cite> longer than
-<cite>max_sample_period</cite> and insert a zero 1 sample period after
-the start of the gap and insert a second zero 1 sample period
-before the end of the gap.</p>
-<p>In other words: &#8220;book-end&#8221; the gap with a zero at each end.</p>
-<p>Zeros are only inserted at the start of the gap if the gap
-starts with a reading above zero; and likewise for insertion
-of zeros at the end of the gap.</p>
-<p>Note that this function does not fill the entire gap with zeros,
-if you want that then try pandas.DataFrame.fillna</p>
-<p>What is <cite>insert_zeros</cite> useful for?</p>
-<p>There are two possible reasons for lost samples in individual
-appliance data:</p>
-<ol class="arabic simple">
-<li>a broken IAM (hence we do not have any information about the appliance)</li>
-<li>the IAM and appliance have been unplugged (hence we can infer that the
-appliance is off)</li>
-</ol>
-<p>Only the user who can decide which of these two assumptions best
-fits their data.  insert_zeros is applicable only in case 2.</p>
-<p>For example, say a hoover&#8217;s IAM is permanently attached to the
-hoover&#8217;s power cord, even when the hoover is unplugged and put
-away in the cupboard.</p>
-<p>Say the hoover was switched on when both the hoover and the
-hoover&#8217;s IAM were unplugged.  This would result in the dataset
-having a gap immediately after an on-segment.  This combination of
-an on-segment followed (without any zeros) by a gap might confuse
-downstream statistics and disaggregation functions which assume
-that the power drawn by an appliance between reading[i] and
-reading[i+1] is held constant at reading[i] watts.</p>
-<p>TODO: a smarter version of this function might use information from
-the aggregate data to do a better job of estimating exactly when
-the appliance was turned off.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>single_appliance_dataframe</strong> : pandas.DataFrame</p>
-<blockquote>
-<div><p>Data from a single appliance.</p>
-</div></blockquote>
-<p><strong>max_sample_period</strong> : float or int, optional</p>
-<p><strong>sample_period_multiplier</strong> : float or int, optional</p>
-<blockquote>
-<div><p>default = 4.  Must be 4 or larger (to ensure we do not add zeros
-less than sample_period seconds apart).
-max_sample_period = sample_period x sample_period_multiplier.
-max_sample_period is the maximum permissible sample period (in
-seconds). Any gap longer than <cite>max_sample_period</cite> is assumed
-to imply that the IAM and appliance are off.</p>
-</div></blockquote>
-<p><strong>round_sample_period</strong> : bool, optional</p>
-<blockquote>
-<div><p>default = True. Whether or not to round sample_period to the 
-nearest int.</p>
-</div></blockquote>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>df_with_zeros</strong> : pandas.DataFrame</p>
-<blockquote class="last">
-<div><p>A copy of <cite>single_appliance_dataframe</cite> with zeros inserted 
-<cite>max_sample_period</cite> seconds after the last sample of each on-segment.</p>
-</div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="nilmtk.preprocessing.electricity.single.normalise_power">
-<tt class="descclassname">nilmtk.preprocessing.electricity.single.</tt><tt class="descname">normalise_power</tt><big>(</big><em>power</em>, <em>voltage</em>, <em>nominal_voltage</em><big>)</big><a class="reference internal" href="_modules/nilmtk/preprocessing/electricity/single.html#normalise_power"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.preprocessing.electricity.single.normalise_power" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="docutils">
-<dt>Uses Hart&#8217;s formula to calculate:</dt>
-<dd>&#8220;admittance in the guise of &#8216;normalized power&#8217;:</dd>
-</dl>
-<p>P_{Norm}(t) = 230 ^ 2 x Y(t) = (230 / V(t)) ^ 2 x P(t)</p>
-<p>This is just the admittance adjusted by a constant scale
-factor, resulting in the power normalized to 120 V, i.e.,
-what the power would be if the utility provided a steady
-120 V and the load obeyed a linear model. It is a far more
-consistent signature than power... All of our prototype
-NALMs use step changes in the normalized power as the
-signature.&#8221;
-(equation 4, page 8 of Hart 1992)</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>power</strong> : pd.Series</p>
-<p><strong>voltage</strong> : pd.Series</p>
-<p><strong>nominal_voltage :float</strong> :</p>
-<blockquote>
-<div><p>Rated voltage supply in the country</p>
-</div></blockquote>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>power_normalized</strong> : pd.Series</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="nilmtk.preprocessing.electricity.single.reframe_index">
-<tt class="descclassname">nilmtk.preprocessing.electricity.single.</tt><tt class="descname">reframe_index</tt><big>(</big><em>index</em>, <em>window_start=None</em>, <em>window_end=None</em><big>)</big><a class="reference internal" href="_modules/nilmtk/preprocessing/electricity/single.html#reframe_index"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.preprocessing.electricity.single.reframe_index" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>index</strong> : pd.DatetimeIndex</p>
-<p><strong>window_start, window_end</strong> : pd.Timestamp</p>
-<blockquote>
-<div><p>The start and end of the window of interest.  If this window
-is larger than the duration of <cite>data</cite> then a single zero will be
-inserted at <cite>window_start</cite> or <cite>window_end</cite> as necessary.  If this window
-is shorter than the duration of <cite>data</cite> data will be cropped.</p>
-</div></blockquote>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>index</strong> : pd.DatetimeIndex</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="nilmtk.preprocessing.electricity.single.remove_implausible_entries">
-<tt class="descclassname">nilmtk.preprocessing.electricity.single.</tt><tt class="descname">remove_implausible_entries</tt><big>(</big><em>channel_df</em>, <em>measurement</em>, <em>min_threshold=None</em>, <em>max_threshold=None</em><big>)</big><a class="reference internal" href="_modules/nilmtk/preprocessing/electricity/single.html#remove_implausible_entries"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.preprocessing.electricity.single.remove_implausible_entries" title="Permalink to this definition">¶</a></dt>
-<dd><p>It is sometimes observed that sometimes sensors may give implausible
-entries. eg. Voltage of 0.0 makes no sense or power of an appliance 
-to be 1MW makes no sense. These records must be filtered out. This
-method filters out values outside a given range.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>channel_df</strong> : pandas.DataFrame</p>
-<blockquote>
-<div><p>Corresponds to either an appliance or mains or circuit which 
-contains <cite>measurement</cite> as one of the columns</p>
-</div></blockquote>
-<p><strong>measurement</strong> : nilmtk.sensors.electricity.Measurement</p>
-<p><strong>min_threshold: float</strong> :</p>
-<p><strong>max_threshold: float</strong> :</p>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>implausible_entries_dropped</strong> : pandas.DataFrame</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-</div>
-<div class="section" id="module-nilmtk.preprocessing.electricity">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-nilmtk.preprocessing.electricity" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-contents">
+<h2>Module contents<a class="headerlink" href="#module-contents" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 
@@ -569,8 +169,8 @@ contains <cite>measurement</cite> as one of the columns</p>
     </p>
     <p>
         &copy; Copyright 2014, nilmtk authors.<br/>
-      Last updated on Jul 10, 2014.<br/>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.2.<br/>
+      Last updated on Jul 11, 2014.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.1.<br/>
     </p>
   </div>
 </footer>

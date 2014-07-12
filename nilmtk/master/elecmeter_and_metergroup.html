@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>MeterGroup, ElecMeter, selection and basic statistics &mdash; NILMTK 0.2-beta documentation</title>
+    
+    <link rel="stylesheet" href="_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-3.1.0/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-3.1.0/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.2-beta',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-3.1.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="NILMTK 0.2-beta documentation" href="index.html" />
+    <link rel="next" title="Processing pipeline, preprocessing and more stats" href="pipeline_preprocessing_more_stats.html" />
+    <link rel="prev" title="Convert data to NILMTK format and load into NILMTK" href="convert_data_to_NILMTK_format.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="index.html">
+          NILMTK</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.2</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            <li class="divider-vertical"></li>
+            
+                <li><a href="https://github.com/nilmtk/nilmtk">github</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="convert_data_to_NILMTK_format.html">Convert data to NILMTK format and load into NILMTK</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">MeterGroup, ElecMeter, selection and basic statistics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pipeline_preprocessing_more_stats.html">Processing pipeline, preprocessing and more stats</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="contribute.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="writing_a_dataset_converter.html">Writing a dataset converter</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="nilmtk.html">nilmtk package</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">MeterGroup, ElecMeter, selection and basic statistics</a><ul>
+<li><a class="reference internal" href="#stats-for-metergroups">Stats for MeterGroups</a><ul>
+<li><a class="reference internal" href="#proportion-of-energy-submetered">Proportion of energy submetered</a></li>
+<li><a class="reference internal" href="#active-apparent-and-reactive-power">Active, apparent and reactive power</a></li>
+<li><a class="reference internal" href="#get-raw-data">Get raw data</a></li>
+<li><a class="reference internal" href="#total-energy">Total Energy</a></li>
+<li><a class="reference internal" href="#energy-per-submeter">Energy per submeter</a></li>
+<li><a class="reference internal" href="#select-meters-on-the-basis-of-their-energy-consumption">Select meters on the basis of their energy consumption</a></li>
+<li><a class="reference internal" href="#draw-wiring-diagram">Draw wiring diagram</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#stats-and-info-for-individual-meters">Stats and info for individual meters</a><ul>
+<li><a class="reference internal" href="#get-upstream-meter">Get upstream meter</a></li>
+<li><a class="reference internal" href="#metadata-about-the-class-of-meter">Metadata about the class of meter</a></li>
+<li><a class="reference internal" href="#dominant-appliance">Dominant appliance</a></li>
+<li><a class="reference internal" href="#id1">Total energy</a></li>
+<li><a class="reference internal" href="#get-good-sections">Get good sections</a></li>
+<li><a class="reference internal" href="#dropout-rate">Dropout rate</a></li>
+<li><a class="reference internal" href="#only-load-data-from-good-sections">Only load data from good sections</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#select-subgroups-of-meters">Select subgroups of meters</a><ul>
+<li><a class="reference internal" href="#select-a-group-of-meters-from-properties-of-the-meters-not-the-appliances">Select a group of meters from properties of the meters (not the appliances)</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#select-a-single-meter-from-a-metergroup">Select a single meter from a MeterGroup</a><ul>
+<li><a class="reference internal" href="#search-for-a-meter-using-appliances-connected-to-each-meter">Search for a meter using appliances connected to each meter</a></li>
+<li><a class="reference internal" href="#search-for-a-meter-using-details-of-the-elecmeter">Search for a meter using details of the ElecMeter</a></li>
+<li><a class="reference internal" href="#instance-numbering">Instance numbering</a></li>
+<li><a class="reference internal" href="#select-nested-metergroup">Select nested MeterGroup</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="convert_data_to_NILMTK_format.html" title="Previous Chapter: Convert data to NILMTK format and load into NILMTK"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm">&laquo; Convert data to ...</span>
+    </a>
+  </li>
+  <li>
+    <a href="pipeline_preprocessing_more_stats.html" title="Next Chapter: Processing pipeline, preprocessing and more stats"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm">Processing pipel... &raquo;</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="_sources/elecmeter_and_metergroup.txt"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      
+  <div class="section" id="metergroup-elecmeter-selection-and-basic-statistics">
+<h1>MeterGroup, ElecMeter, selection and basic statistics<a class="headerlink" href="#metergroup-elecmeter-selection-and-basic-statistics" title="Permalink to this headline">¶</a></h1>
+<p>All NILM datasets consists of various groupings of electricity meters.
+We can group the meters by house. Or by the type of appliance they are
+directly connected to. Or by sample rate. Or by whether the meter is a
+whole-house &#8220;site meter&#8221; or an appliance-level submeter, or a
+circuit-level submeter.</p>
+<p>In NILMTK v0.2, one of the key classes is <tt class="docutils literal"><span class="pre">MeterGroup</span></tt> which stores a
+list of <tt class="docutils literal"><span class="pre">meters</span></tt> and allows us to select a subset of meters, aggregate
+power from all meters and many other functions.</p>
+<p>When we first open a <tt class="docutils literal"><span class="pre">DataSet</span></tt>, NILMTK creates several <tt class="docutils literal"><span class="pre">MeterGroup</span></tt>
+objects. There&#8217;s <tt class="docutils literal"><span class="pre">nilmtk.global_meter_group</span></tt> which holds every meter
+currently loaded (including from multiple datasets if you have opened
+more than one dataset). There is also one <tt class="docutils literal"><span class="pre">MeterGroup</span></tt> per building
+(which live in the <tt class="docutils literal"><span class="pre">Building.elec</span></tt> attribute). We also nested
+<tt class="docutils literal"><span class="pre">MeterGroups</span></tt> for aggregating together split-phase mains, 3-phase
+mains and dual-supply (240 volt) appliances in North American and
+Canadan datasets. For example, here is the <tt class="docutils literal"><span class="pre">MeterGroup</span></tt> for building 1
+in REDD:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">nilmtk</span> <span class="kn">import</span> <span class="n">DataSet</span>
+
+<span class="n">redd</span> <span class="o">=</span> <span class="n">DataSet</span><span class="p">(</span><span class="s">&#39;/data/REDD/redd.h5&#39;</span><span class="p">)</span>
+<span class="n">elec</span> <span class="o">=</span> <span class="n">redd</span><span class="o">.</span><span class="n">buildings</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">elec</span>
+<span class="n">elec</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre>MeterGroup(meters=
+  ElecMeter(instance=1, building=1, dataset=&#39;REDD&#39;, site_meter, appliances=[])
+  ElecMeter(instance=2, building=1, dataset=&#39;REDD&#39;, site_meter, appliances=[])
+  ElecMeter(instance=5, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;fridge&#39;, instance=1)])
+  ElecMeter(instance=6, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;dish washer&#39;, instance=1)])
+  ElecMeter(instance=7, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;sockets&#39;, instance=1)])
+  ElecMeter(instance=8, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;sockets&#39;, instance=2)])
+  ElecMeter(instance=9, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;light&#39;, instance=1)])
+  ElecMeter(instance=11, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;microwave&#39;, instance=1)])
+  ElecMeter(instance=12, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;unknown&#39;, instance=1)])
+  ElecMeter(instance=13, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;electric space heater&#39;, instance=1)])
+  ElecMeter(instance=14, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;electric stove&#39;, instance=1)])
+  ElecMeter(instance=15, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;sockets&#39;, instance=3)])
+  ElecMeter(instance=16, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;sockets&#39;, instance=4)])
+  ElecMeter(instance=17, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;light&#39;, instance=2)])
+  ElecMeter(instance=18, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;light&#39;, instance=3)])
+  ElecMeter(instance=19, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;unknown&#39;, instance=2)])
+  MeterGroup(meters=
+    ElecMeter(instance=3, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;electric oven&#39;, instance=1)])
+    ElecMeter(instance=4, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;electric oven&#39;, instance=1)])
+  )
+  MeterGroup(meters=
+    ElecMeter(instance=10, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;washer dryer&#39;, instance=1)])
+    ElecMeter(instance=20, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;washer dryer&#39;, instance=1)])
+  )
+)
+</pre></div>
+</div>
+<p>Note that there are two nested <tt class="docutils literal"><span class="pre">MeterGroups</span></tt>: one for the electric
+oven, and one for the washer dryer (both of which are 240 volt
+appliances and have two meters per appliance):</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">elec</span><span class="o">.</span><span class="n">nested_metergroups</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre>[MeterGroup(meters=
+   ElecMeter(instance=3, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;electric oven&#39;, instance=1)])
+   ElecMeter(instance=4, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;electric oven&#39;, instance=1)])
+ ), MeterGroup(meters=
+   ElecMeter(instance=10, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;washer dryer&#39;, instance=1)])
+   ElecMeter(instance=20, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;washer dryer&#39;, instance=1)])
+ )]
+</pre></div>
+</div>
+<p>Putting these meters into a <tt class="docutils literal"><span class="pre">MeterGroup</span></tt> allows us to easily sum
+together the power demand recorded by both meters to get the total power
+demand for the entire appliance (but it&#8217;s also very easy to see the
+individual meter power demand too).</p>
+<p>We can easily get a MeterGroup of either the submeters or the mains:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">elec</span><span class="o">.</span><span class="n">mains</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre>MeterGroup(meters=
+  ElecMeter(instance=1, building=1, dataset=&#39;REDD&#39;, site_meter, appliances=[])
+  ElecMeter(instance=2, building=1, dataset=&#39;REDD&#39;, site_meter, appliances=[])
+)
+</pre></div>
+</div>
+<p>We can easily get the power data for both mains meters summed together:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">elec</span><span class="o">.</span><span class="n">mains</span><span class="p">()</span><span class="o">.</span><span class="n">power_series_all_data</span><span class="p">()</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre>2011-04-18 09:22:09-04:00    342.820007
+2011-04-18 09:22:10-04:00    344.559998
+2011-04-18 09:22:11-04:00    345.140015
+2011-04-18 09:22:12-04:00    341.679993
+2011-04-18 09:22:13-04:00    341.029999
+Name: (power, apparent), dtype: float32
+</pre></div>
+</div>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">elec</span><span class="o">.</span><span class="n">submeters</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre>MeterGroup(meters=
+  ElecMeter(instance=5, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;fridge&#39;, instance=1)])
+  ElecMeter(instance=6, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;dish washer&#39;, instance=1)])
+  ElecMeter(instance=7, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;sockets&#39;, instance=1)])
+  ElecMeter(instance=8, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;sockets&#39;, instance=2)])
+  ElecMeter(instance=9, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;light&#39;, instance=1)])
+  ElecMeter(instance=11, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;microwave&#39;, instance=1)])
+  ElecMeter(instance=12, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;unknown&#39;, instance=1)])
+  ElecMeter(instance=13, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;electric space heater&#39;, instance=1)])
+  ElecMeter(instance=14, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;electric stove&#39;, instance=1)])
+  ElecMeter(instance=15, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;sockets&#39;, instance=3)])
+  ElecMeter(instance=16, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;sockets&#39;, instance=4)])
+  ElecMeter(instance=17, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;light&#39;, instance=2)])
+  ElecMeter(instance=18, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;light&#39;, instance=3)])
+  ElecMeter(instance=19, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;unknown&#39;, instance=2)])
+  MeterGroup(meters=
+    ElecMeter(instance=3, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;electric oven&#39;, instance=1)])
+    ElecMeter(instance=4, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;electric oven&#39;, instance=1)])
+  )
+  MeterGroup(meters=
+    ElecMeter(instance=10, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;washer dryer&#39;, instance=1)])
+    ElecMeter(instance=20, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;washer dryer&#39;, instance=1)])
+  )
+)
+</pre></div>
+</div>
+<div class="section" id="stats-for-metergroups">
+<h2>Stats for MeterGroups<a class="headerlink" href="#stats-for-metergroups" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="proportion-of-energy-submetered">
+<h3>Proportion of energy submetered<a class="headerlink" href="#proportion-of-energy-submetered" title="Permalink to this headline">¶</a></h3>
+<p>Let&#8217;s work out the proportion of energy submetered in REDD building 1:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">elec</span><span class="o">.</span><span class="n">proportion_of_energy_submetered</span><span class="p">()</span>
+</pre></div>
+</div>
+<pre class="literal-block">
+/home/jack/workspace/python/nilmtk/nilmtk/measurement.py:56: RuntimeWarning: None of the AC types recorded by Mains are present in <cite>available_ac_types</cite>. Will use try using one of ['active', 'apparent', 'reactive'].
+  &quot; Will use try using one of {}.&quot;.format(AC_TYPES), RuntimeWarning)
+</pre>
+<div class="highlight-python"><div class="highlight"><pre><span class="mf">0.75962890625021773</span>
+</pre></div>
+</div>
+<p>Note that NILMTK has raised a warning that Mains uses a different type
+of power measurement than all the submeters, so it&#8217;s not an entirely
+accurate comparison. Which raises the question: which type of power
+measurements are used for the mains and submeters? Let&#8217;s find out...</p>
+</div>
+<div class="section" id="active-apparent-and-reactive-power">
+<h3>Active, apparent and reactive power<a class="headerlink" href="#active-apparent-and-reactive-power" title="Permalink to this headline">¶</a></h3>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">elec</span><span class="o">.</span><span class="n">mains</span><span class="p">()</span><span class="o">.</span><span class="n">available_power_ac_types</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span><span class="s">&#39;apparent&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">elec</span><span class="o">.</span><span class="n">submeters</span><span class="p">()</span><span class="o">.</span><span class="n">available_power_ac_types</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span><span class="s">&#39;active&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="get-raw-data">
+<h3>Get raw data<a class="headerlink" href="#get-raw-data" title="Permalink to this headline">¶</a></h3>
+<p>There are two main ways to get at the raw power data. Either using
+<tt class="docutils literal"><span class="pre">power_series()</span></tt> which returns a Python generator or use
+<tt class="docutils literal"><span class="pre">power_series_all_data()</span></tt> which eagerly loads all data into a single
+<tt class="docutils literal"><span class="pre">pandas.Series</span></tt> vector. <tt class="docutils literal"><span class="pre">MeterGroup.power_series</span></tt> and
+<tt class="docutils literal"><span class="pre">MeterGroup.power_series_all_data()</span></tt> sums together the power demand
+from all meters in the MeterGroup.</p>
+</div>
+<div class="section" id="total-energy">
+<h3>Total Energy<a class="headerlink" href="#total-energy" title="Permalink to this headline">¶</a></h3>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">elec</span><span class="o">.</span><span class="n">mains</span><span class="p">()</span><span class="o">.</span><span class="n">total_energy</span><span class="p">()</span> <span class="c"># returns kWh</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="mf">167.76623618641219</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="energy-per-submeter">
+<h3>Energy per submeter<a class="headerlink" href="#energy-per-submeter" title="Permalink to this headline">¶</a></h3>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">energy_per_meter</span> <span class="o">=</span> <span class="n">elec</span><span class="o">.</span><span class="n">submeters</span><span class="p">()</span><span class="o">.</span><span class="n">energy_per_meter</span><span class="p">()</span> <span class="c"># kWh, again</span>
+<span class="n">energy_per_meter</span>
+</pre></div>
+</div>
+<div style="max-height:1000px;max-width:1500px;overflow:auto;">
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>5</th>
+      <th>6</th>
+      <th>7</th>
+      <th>8</th>
+      <th>9</th>
+      <th>11</th>
+      <th>12</th>
+      <th>13</th>
+      <th>14</th>
+      <th>15</th>
+      <th>16</th>
+      <th>17</th>
+      <th>18</th>
+      <th>19</th>
+      <th>(3, 4)</th>
+      <th>(10, 20)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>active</th>
+      <td> 44.750925</td>
+      <td> 19.920875</td>
+      <td> 16.786282</td>
+      <td> 22.939649</td>
+      <td> 30.734511</td>
+      <td> 16.890262</td>
+      <td> 5.221226</td>
+      <td> 0.096302</td>
+      <td> 0.411592</td>
+      <td> 4.507334</td>
+      <td> 2.256583</td>
+      <td> 18.288595</td>
+      <td> 11.811224</td>
+      <td> 0.000085</td>
+      <td> 8.81796</td>
+      <td> 32.614809</td>
+    </tr>
+  </tbody>
+</table>
+</div><p>column headings are the ElecMeter instance numbers.</p>
+<p>The function <tt class="docutils literal"><span class="pre">fraction_per_meter</span></tt> does the same thing as
+<tt class="docutils literal"><span class="pre">energy_per_submeter</span></tt> but returns the fraction of energy per meter.</p>
+</div>
+<div class="section" id="select-meters-on-the-basis-of-their-energy-consumption">
+<h3>Select meters on the basis of their energy consumption<a class="headerlink" href="#select-meters-on-the-basis-of-their-energy-consumption" title="Permalink to this headline">¶</a></h3>
+<p>Let&#8217;s make a new MeterGroup which only contains the ElecMeters which
+used more than 20 kWh:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="c"># energy_per_meter is a DataFrame where each row is a</span>
+<span class="c"># power type (&#39;active&#39;, &#39;reactive&#39; or &#39;apparent&#39;).</span>
+<span class="c"># All appliance meters in REDD are record &#39;active&#39; so just select</span>
+<span class="c"># the &#39;active&#39; row:</span>
+<span class="n">energy_per_meter</span> <span class="o">=</span> <span class="n">energy_per_meter</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s">&#39;active&#39;</span><span class="p">]</span>
+<span class="n">more_than_20</span> <span class="o">=</span> <span class="n">energy_per_meter</span><span class="p">[</span><span class="n">energy_per_meter</span> <span class="o">&gt;</span> <span class="mi">20</span><span class="p">]</span>
+<span class="n">more_than_20</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre>5           44.750925
+8           22.939649
+9           30.734511
+(10, 20)    32.614809
+Name: active, dtype: float64
+</pre></div>
+</div>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">instances</span> <span class="o">=</span> <span class="n">more_than_20</span><span class="o">.</span><span class="n">index</span>
+<span class="n">instances</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">Index</span><span class="p">([</span><span class="mi">5</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">)],</span> <span class="n">dtype</span><span class="o">=</span><span class="s">&#39;object&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Now we use <tt class="docutils literal"><span class="pre">from_list</span></tt> to create a new MeterGroup from a list of
+<tt class="docutils literal"><span class="pre">ElecMeterIDs</span></tt>:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">nilmtk.elecmeter</span> <span class="kn">import</span> <span class="n">ElecMeterID</span>
+<span class="n">elec</span><span class="o">.</span><span class="n">from_list</span><span class="p">([</span><span class="n">ElecMeterID</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="n">instance</span><span class="p">,</span> <span class="n">building</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dataset</span><span class="o">=</span><span class="s">&#39;REDD&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">instance</span> <span class="ow">in</span> <span class="n">instances</span><span class="p">])</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre>MeterGroup(meters=
+  ElecMeter(instance=5, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;fridge&#39;, instance=1)])
+  MeterGroup(meters=
+    ElecMeter(instance=10, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;washer dryer&#39;, instance=1)])
+    ElecMeter(instance=20, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;washer dryer&#39;, instance=1)])
+  )
+  ElecMeter(instance=8, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;sockets&#39;, instance=2)])
+  ElecMeter(instance=9, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;light&#39;, instance=1)])
+)
+</pre></div>
+</div>
+</div>
+<div class="section" id="draw-wiring-diagram">
+<h3>Draw wiring diagram<a class="headerlink" href="#draw-wiring-diagram" title="Permalink to this headline">¶</a></h3>
+<p>We can get the wiring diagram for the MeterGroup:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">elec</span><span class="o">.</span><span class="n">draw_wiring_graph</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="_images/elecmeter_and_metergroup_35_0.png" src="_images/elecmeter_and_metergroup_35_0.png" />
+<p>It&#8217;s not very pretty but it shows that meters (1,2) (the site meters)
+are upstream of all other meters.</p>
+<p>Buildings in REDD have only two levels in their meter hierarchy (mains
+and submeters). If there were more than two levels then it might be
+useful to get only the meters immediately downstream of mains:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">elec</span><span class="o">.</span><span class="n">meters_directly_downstream_of_mains</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">[</span><span class="n">ElecMeter</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="mi">18</span><span class="p">,</span> <span class="n">building</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dataset</span><span class="o">=</span><span class="s">&#39;REDD&#39;</span><span class="p">,</span> <span class="n">appliances</span><span class="o">=</span><span class="p">[</span><span class="n">Appliance</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s">&#39;light&#39;</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="mi">3</span><span class="p">)]),</span>
+ <span class="n">ElecMeter</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="mi">11</span><span class="p">,</span> <span class="n">building</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dataset</span><span class="o">=</span><span class="s">&#39;REDD&#39;</span><span class="p">,</span> <span class="n">appliances</span><span class="o">=</span><span class="p">[</span><span class="n">Appliance</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s">&#39;microwave&#39;</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="mi">1</span><span class="p">)]),</span>
+ <span class="n">ElecMeter</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="mi">17</span><span class="p">,</span> <span class="n">building</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dataset</span><span class="o">=</span><span class="s">&#39;REDD&#39;</span><span class="p">,</span> <span class="n">appliances</span><span class="o">=</span><span class="p">[</span><span class="n">Appliance</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s">&#39;light&#39;</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="mi">2</span><span class="p">)]),</span>
+ <span class="n">ElecMeter</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">building</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dataset</span><span class="o">=</span><span class="s">&#39;REDD&#39;</span><span class="p">,</span> <span class="n">appliances</span><span class="o">=</span><span class="p">[</span><span class="n">Appliance</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s">&#39;washer dryer&#39;</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="mi">1</span><span class="p">)]),</span>
+ <span class="n">ElecMeter</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="mi">13</span><span class="p">,</span> <span class="n">building</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dataset</span><span class="o">=</span><span class="s">&#39;REDD&#39;</span><span class="p">,</span> <span class="n">appliances</span><span class="o">=</span><span class="p">[</span><span class="n">Appliance</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s">&#39;electric space heater&#39;</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="mi">1</span><span class="p">)]),</span>
+ <span class="n">ElecMeter</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">building</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dataset</span><span class="o">=</span><span class="s">&#39;REDD&#39;</span><span class="p">,</span> <span class="n">appliances</span><span class="o">=</span><span class="p">[</span><span class="n">Appliance</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s">&#39;washer dryer&#39;</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="mi">1</span><span class="p">)]),</span>
+ <span class="n">ElecMeter</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">building</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dataset</span><span class="o">=</span><span class="s">&#39;REDD&#39;</span><span class="p">,</span> <span class="n">appliances</span><span class="o">=</span><span class="p">[</span><span class="n">Appliance</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s">&#39;electric oven&#39;</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="mi">1</span><span class="p">)]),</span>
+ <span class="n">ElecMeter</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">building</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dataset</span><span class="o">=</span><span class="s">&#39;REDD&#39;</span><span class="p">,</span> <span class="n">appliances</span><span class="o">=</span><span class="p">[</span><span class="n">Appliance</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s">&#39;sockets&#39;</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="mi">4</span><span class="p">)]),</span>
+ <span class="n">ElecMeter</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span> <span class="n">building</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dataset</span><span class="o">=</span><span class="s">&#39;REDD&#39;</span><span class="p">,</span> <span class="n">appliances</span><span class="o">=</span><span class="p">[</span><span class="n">Appliance</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s">&#39;light&#39;</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="mi">1</span><span class="p">)]),</span>
+ <span class="n">ElecMeter</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">building</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dataset</span><span class="o">=</span><span class="s">&#39;REDD&#39;</span><span class="p">,</span> <span class="n">appliances</span><span class="o">=</span><span class="p">[</span><span class="n">Appliance</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s">&#39;sockets&#39;</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="mi">3</span><span class="p">)]),</span>
+ <span class="n">ElecMeter</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">building</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dataset</span><span class="o">=</span><span class="s">&#39;REDD&#39;</span><span class="p">,</span> <span class="n">appliances</span><span class="o">=</span><span class="p">[</span><span class="n">Appliance</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s">&#39;unknown&#39;</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="mi">1</span><span class="p">)]),</span>
+ <span class="n">ElecMeter</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">building</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dataset</span><span class="o">=</span><span class="s">&#39;REDD&#39;</span><span class="p">,</span> <span class="n">appliances</span><span class="o">=</span><span class="p">[</span><span class="n">Appliance</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s">&#39;fridge&#39;</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="mi">1</span><span class="p">)]),</span>
+ <span class="n">ElecMeter</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">building</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dataset</span><span class="o">=</span><span class="s">&#39;REDD&#39;</span><span class="p">,</span> <span class="n">appliances</span><span class="o">=</span><span class="p">[</span><span class="n">Appliance</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s">&#39;sockets&#39;</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="mi">2</span><span class="p">)]),</span>
+ <span class="n">ElecMeter</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="mi">14</span><span class="p">,</span> <span class="n">building</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dataset</span><span class="o">=</span><span class="s">&#39;REDD&#39;</span><span class="p">,</span> <span class="n">appliances</span><span class="o">=</span><span class="p">[</span><span class="n">Appliance</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s">&#39;electric stove&#39;</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="mi">1</span><span class="p">)]),</span>
+ <span class="n">ElecMeter</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">building</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dataset</span><span class="o">=</span><span class="s">&#39;REDD&#39;</span><span class="p">,</span> <span class="n">appliances</span><span class="o">=</span><span class="p">[</span><span class="n">Appliance</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s">&#39;sockets&#39;</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="mi">1</span><span class="p">)]),</span>
+ <span class="n">ElecMeter</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">building</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dataset</span><span class="o">=</span><span class="s">&#39;REDD&#39;</span><span class="p">,</span> <span class="n">appliances</span><span class="o">=</span><span class="p">[</span><span class="n">Appliance</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s">&#39;electric oven&#39;</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="mi">1</span><span class="p">)]),</span>
+ <span class="n">ElecMeter</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="mi">19</span><span class="p">,</span> <span class="n">building</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dataset</span><span class="o">=</span><span class="s">&#39;REDD&#39;</span><span class="p">,</span> <span class="n">appliances</span><span class="o">=</span><span class="p">[</span><span class="n">Appliance</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s">&#39;unknown&#39;</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="mi">2</span><span class="p">)]),</span>
+ <span class="n">ElecMeter</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">building</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dataset</span><span class="o">=</span><span class="s">&#39;REDD&#39;</span><span class="p">,</span> <span class="n">appliances</span><span class="o">=</span><span class="p">[</span><span class="n">Appliance</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s">&#39;dish washer&#39;</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="mi">1</span><span class="p">)])]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="stats-and-info-for-individual-meters">
+<h2>Stats and info for individual meters<a class="headerlink" href="#stats-and-info-for-individual-meters" title="Permalink to this headline">¶</a></h2>
+<p>The <tt class="docutils literal"><span class="pre">ElecMeter</span></tt> class represents a single electricity meter. Each
+<tt class="docutils literal"><span class="pre">ElecMeter</span></tt> has a list of associated <tt class="docutils literal"><span class="pre">Appliance</span></tt> objects.
+<tt class="docutils literal"><span class="pre">ElecMeter</span></tt> has many of the same stats methods as <tt class="docutils literal"><span class="pre">MeterGroup</span></tt> such
+as <tt class="docutils literal"><span class="pre">total_energy</span></tt> and <tt class="docutils literal"><span class="pre">available_power_ac_types</span></tt> and
+<tt class="docutils literal"><span class="pre">power_series</span></tt> and <tt class="docutils literal"><span class="pre">power_series_all_data</span></tt>. We will now explore some
+more stats functions (many of which are also available on
+<tt class="docutils literal"><span class="pre">MeterGroup</span></tt>)...</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">fridge_meter</span> <span class="o">=</span> <span class="n">elec</span><span class="p">[</span><span class="s">&#39;fridge&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="section" id="get-upstream-meter">
+<h3>Get upstream meter<a class="headerlink" href="#get-upstream-meter" title="Permalink to this headline">¶</a></h3>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">fridge_meter</span><span class="o">.</span><span class="n">upstream_meter</span><span class="p">()</span> <span class="c"># happens to be the mains meter group!</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre>MeterGroup(meters=
+  ElecMeter(instance=1, building=1, dataset=&#39;REDD&#39;, site_meter, appliances=[])
+  ElecMeter(instance=2, building=1, dataset=&#39;REDD&#39;, site_meter, appliances=[])
+)
+</pre></div>
+</div>
+</div>
+<div class="section" id="metadata-about-the-class-of-meter">
+<h3>Metadata about the class of meter<a class="headerlink" href="#metadata-about-the-class-of-meter" title="Permalink to this headline">¶</a></h3>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">fridge_meter</span><span class="o">.</span><span class="n">device</span>
+</pre></div>
+</div>
+<pre class="literal-block">
+{'description': 'Measures circuit-level power demand.  Comes with 24 CTs. This FAQ page suggests the eMonitor measures real (active) power: <a class="reference external" href="http://www.energycircle.com/node/14103">http://www.energycircle.com/node/14103</a>  although the REDD readme.txt says all channels record apparent power.n',
+ 'manufacturer': 'Powerhouse Dynamics',
+ 'manufacturer_url': '<a class="reference external" href="http://powerhousedynamics.com">http://powerhousedynamics.com</a>',
+ 'max_sample_period': 50,
+ 'measurements': [{'lower_limit': 0,
+   'physical_quantity': 'power',
+   'type': 'active',
+   'upper_limit': 5000}],
+ 'model': 'eMonitor',
+ 'sample_period': 3,
+ 'wireless': False}
+</pre>
+</div>
+<div class="section" id="dominant-appliance">
+<h3>Dominant appliance<a class="headerlink" href="#dominant-appliance" title="Permalink to this headline">¶</a></h3>
+<p>If the metadata specifies that a meter has multiple meters connected to
+it then one of those can be specified as the &#8216;dominant&#8217; appliance, and
+this appliance can be retrieved with this method:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">fridge_meter</span><span class="o">.</span><span class="n">dominant_appliance</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">Appliance</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s">&#39;fridge&#39;</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id1">
+<h3>Total energy<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">fridge_meter</span><span class="o">.</span><span class="n">total_energy</span><span class="p">()</span> <span class="c"># kWh</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="mf">44.750925277777775</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="get-good-sections">
+<h3>Get good sections<a class="headerlink" href="#get-good-sections" title="Permalink to this headline">¶</a></h3>
+<p>If we plot the raw power data then we see there is one large gap where,
+supposedly, the metering system was not working. (if we were to zoom in
+then we&#8217;d see lots of smaller gaps too):</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">fridge_meter</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="_images/elecmeter_and_metergroup_53_0.png" src="_images/elecmeter_and_metergroup_53_0.png" />
+<p>We can automatically identify the &#8216;good sections&#8217; (i.e. the sections
+where every pair of consecutive samples is less than
+<tt class="docutils literal"><span class="pre">max_sample_period</span></tt> specified in the dataset metadata):</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">good_sections</span> <span class="o">=</span> <span class="n">fridge_meter</span><span class="o">.</span><span class="n">good_sections</span><span class="p">(</span><span class="n">full_results</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="c"># specifying full_results=False would give us a simple list of</span>
+<span class="c"># TimeFrames.  But we want the full GoodSectionsResults object so we can</span>
+<span class="c"># plot the good sections...</span>
+</pre></div>
+</div>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">good_sections</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="_images/elecmeter_and_metergroup_56_0.png" src="_images/elecmeter_and_metergroup_56_0.png" />
+<p>The blue chunks show where the data is good. The white gap is the large
+gap seen in the raw power data. There are lots of smaller gaps that we
+cannot see at this zoom level.</p>
+<p>We can also see the exact sections identified:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">good_sections</span><span class="o">.</span><span class="n">combined</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">[</span><span class="n">TimeFrame</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="s">&#39;2011-04-18 09:22:13-04:00&#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s">&#39;2011-04-18 14:00:33-04:00&#39;</span><span class="p">,</span> <span class="n">empty</span><span class="o">=</span><span class="bp">False</span><span class="p">),</span>
+ <span class="n">TimeFrame</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="s">&#39;2011-04-18 14:03:11-04:00&#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s">&#39;2011-04-19 18:45:09-04:00&#39;</span><span class="p">,</span> <span class="n">empty</span><span class="o">=</span><span class="bp">False</span><span class="p">),</span>
+ <span class="n">TimeFrame</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="s">&#39;2011-04-19 20:20:05-04:00&#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s">&#39;2011-04-20 01:54:26-04:00&#39;</span><span class="p">,</span> <span class="n">empty</span><span class="o">=</span><span class="bp">False</span><span class="p">),</span>
+ <span class="n">TimeFrame</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="s">&#39;2011-04-20 01:55:33-04:00&#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s">&#39;2011-04-21 06:14:43-04:00&#39;</span><span class="p">,</span> <span class="n">empty</span><span class="o">=</span><span class="bp">False</span><span class="p">),</span>
+ <span class="n">TimeFrame</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="s">&#39;2011-04-21 06:17:22-04:00&#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s">&#39;2011-04-21 17:45:02-04:00&#39;</span><span class="p">,</span> <span class="n">empty</span><span class="o">=</span><span class="bp">False</span><span class="p">),</span>
+ <span class="n">TimeFrame</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="s">&#39;2011-04-21 19:41:23-04:00&#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s">&#39;2011-04-22 22:46:53-04:00&#39;</span><span class="p">,</span> <span class="n">empty</span><span class="o">=</span><span class="bp">False</span><span class="p">),</span>
+ <span class="n">TimeFrame</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="s">&#39;2011-04-22 22:48:31-04:00&#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s">&#39;2011-04-24 03:48:44-04:00&#39;</span><span class="p">,</span> <span class="n">empty</span><span class="o">=</span><span class="bp">False</span><span class="p">),</span>
+ <span class="n">TimeFrame</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="s">&#39;2011-04-24 03:52:28-04:00&#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s">&#39;2011-04-27 02:50:14-04:00&#39;</span><span class="p">,</span> <span class="n">empty</span><span class="o">=</span><span class="bp">False</span><span class="p">),</span>
+ <span class="n">TimeFrame</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="s">&#39;2011-04-27 02:51:25-04:00&#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s">&#39;2011-04-27 03:17:31-04:00&#39;</span><span class="p">,</span> <span class="n">empty</span><span class="o">=</span><span class="bp">False</span><span class="p">),</span>
+ <span class="n">TimeFrame</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="s">&#39;2011-04-27 03:21:19-04:00&#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s">&#39;2011-04-29 23:07:52-04:00&#39;</span><span class="p">,</span> <span class="n">empty</span><span class="o">=</span><span class="bp">False</span><span class="p">),</span>
+ <span class="n">TimeFrame</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="s">&#39;2011-04-29 23:10:38-04:00&#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s">&#39;2011-05-01 09:44:36-04:00&#39;</span><span class="p">,</span> <span class="n">empty</span><span class="o">=</span><span class="bp">False</span><span class="p">),</span>
+ <span class="n">TimeFrame</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="s">&#39;2011-05-01 09:47:22-04:00&#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s">&#39;2011-05-02 17:04:54-04:00&#39;</span><span class="p">,</span> <span class="n">empty</span><span class="o">=</span><span class="bp">False</span><span class="p">),</span>
+ <span class="n">TimeFrame</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="s">&#39;2011-05-02 17:07:31-04:00&#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s">&#39;2011-05-03 17:30:12-04:00&#39;</span><span class="p">,</span> <span class="n">empty</span><span class="o">=</span><span class="bp">False</span><span class="p">),</span>
+ <span class="n">TimeFrame</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="s">&#39;2011-05-03 17:32:53-04:00&#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s">&#39;2011-05-03 17:33:17-04:00&#39;</span><span class="p">,</span> <span class="n">empty</span><span class="o">=</span><span class="bp">False</span><span class="p">),</span>
+ <span class="n">TimeFrame</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="s">&#39;2011-05-06 10:51:50-04:00&#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s">&#39;2011-05-07 02:38:12-04:00&#39;</span><span class="p">,</span> <span class="n">empty</span><span class="o">=</span><span class="bp">False</span><span class="p">),</span>
+ <span class="n">TimeFrame</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="s">&#39;2011-05-07 02:40:47-04:00&#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s">&#39;2011-05-08 13:32:42-04:00&#39;</span><span class="p">,</span> <span class="n">empty</span><span class="o">=</span><span class="bp">False</span><span class="p">),</span>
+ <span class="n">TimeFrame</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="s">&#39;2011-05-08 13:33:34-04:00&#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s">&#39;2011-05-11 03:16:14-04:00&#39;</span><span class="p">,</span> <span class="n">empty</span><span class="o">=</span><span class="bp">False</span><span class="p">),</span>
+ <span class="n">TimeFrame</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="s">&#39;2011-05-11 03:19:47-04:00&#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s">&#39;2011-05-12 17:48:31-04:00&#39;</span><span class="p">,</span> <span class="n">empty</span><span class="o">=</span><span class="bp">False</span><span class="p">),</span>
+ <span class="n">TimeFrame</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="s">&#39;2011-05-12 20:14:27-04:00&#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s">&#39;2011-05-22 01:00:03-04:00&#39;</span><span class="p">,</span> <span class="n">empty</span><span class="o">=</span><span class="bp">False</span><span class="p">),</span>
+ <span class="n">TimeFrame</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="s">&#39;2011-05-22 01:01:01-04:00&#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s">&#39;2011-05-22 16:03:54-04:00&#39;</span><span class="p">,</span> <span class="n">empty</span><span class="o">=</span><span class="bp">False</span><span class="p">),</span>
+ <span class="n">TimeFrame</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="s">&#39;2011-05-22 16:04:50-04:00&#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s">&#39;2011-05-22 23:38:54-04:00&#39;</span><span class="p">,</span> <span class="n">empty</span><span class="o">=</span><span class="bp">False</span><span class="p">),</span>
+ <span class="n">TimeFrame</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="s">&#39;2011-05-22 23:41:39-04:00&#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s">&#39;2011-05-23 09:22:00-04:00&#39;</span><span class="p">,</span> <span class="n">empty</span><span class="o">=</span><span class="bp">False</span><span class="p">),</span>
+ <span class="n">TimeFrame</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="s">&#39;2011-05-23 10:31:31-04:00&#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s">&#39;2011-05-24 14:32:01-04:00&#39;</span><span class="p">,</span> <span class="n">empty</span><span class="o">=</span><span class="bp">False</span><span class="p">),</span>
+ <span class="n">TimeFrame</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="s">&#39;2011-05-24 15:55:38-04:00&#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s">&#39;2011-05-24 15:56:34-04:00&#39;</span><span class="p">,</span> <span class="n">empty</span><span class="o">=</span><span class="bp">False</span><span class="p">)]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="dropout-rate">
+<h3>Dropout rate<a class="headerlink" href="#dropout-rate" title="Permalink to this headline">¶</a></h3>
+<p>As well as large gaps appearing because the entire system is down, we
+also get frequent small gaps from wireless sensors dropping data. This
+is sometimes called &#8216;dropout&#8217;. The dropout rate is a number between 0
+and 1 which specifies the proportion of missing samples. A dropout rate
+of 0 means no samples are missing. A value of 1 would mean all samples
+are missing:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">fridge_meter</span><span class="o">.</span><span class="n">dropout_rate</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="mf">0.28602798156004472</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="only-load-data-from-good-sections">
+<h3>Only load data from good sections<a class="headerlink" href="#only-load-data-from-good-sections" title="Permalink to this headline">¶</a></h3>
+<p>That dropout number above is an average for the entire timeperiod of the
+dataset. What about if we want the dropout rate ignoring the large gap
+that we identified with <tt class="docutils literal"><span class="pre">good_sections()</span></tt>? We can pass a <tt class="docutils literal"><span class="pre">sections</span></tt>
+parameter to all stats functions. This tells NILMTK to only load the
+sections we specify (and hence only calculate stats on those sections):</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">fridge_meter</span><span class="o">.</span><span class="n">dropout_rate</span><span class="p">(</span><span class="n">sections</span><span class="o">=</span><span class="n">good_sections</span><span class="o">.</span><span class="n">combined</span><span class="p">())</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="mf">0.21922786156570628</span>
+</pre></div>
+</div>
+<p>Note that the dropout rate has gone down (which is good!) now that we
+are ignoring the gaps. This value is probably more representative of the
+performance of the wireless system.</p>
+</div>
+</div>
+<div class="section" id="select-subgroups-of-meters">
+<h2>Select subgroups of meters<a class="headerlink" href="#select-subgroups-of-meters" title="Permalink to this headline">¶</a></h2>
+<p>We use <tt class="docutils literal"><span class="pre">ElecMeter.select_using_appliances()</span></tt> to select a new
+MeterGroup using an metadata field. For example, to get all the washer
+dryers in the whole of the REDD dataset:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">nilmtk</span>
+<span class="n">nilmtk</span><span class="o">.</span><span class="n">global_meter_group</span><span class="o">.</span><span class="n">select_using_appliances</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s">&#39;washer dryer&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre>MeterGroup(meters=
+  ElecMeter(instance=10, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;washer dryer&#39;, instance=1)])
+  ElecMeter(instance=20, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;washer dryer&#39;, instance=1)])
+  ElecMeter(instance=13, building=3, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;washer dryer&#39;, instance=1)])
+  ElecMeter(instance=14, building=3, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;washer dryer&#39;, instance=1)])
+  ElecMeter(instance=7, building=2, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;washer dryer&#39;, instance=1)])
+  ElecMeter(instance=8, building=5, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;washer dryer&#39;, instance=1)])
+  ElecMeter(instance=9, building=5, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;washer dryer&#39;, instance=1)])
+  ElecMeter(instance=7, building=4, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;washer dryer&#39;, instance=1)])
+  ElecMeter(instance=4, building=6, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;washer dryer&#39;, instance=1)])
+)
+</pre></div>
+</div>
+<p>Or all appliances in the &#8216;heating&#8217; category:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">nilmtk</span><span class="o">.</span><span class="n">global_meter_group</span><span class="o">.</span><span class="n">select_using_appliances</span><span class="p">(</span><span class="n">category</span><span class="o">=</span><span class="s">&#39;heating&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre>MeterGroup(meters=
+  ElecMeter(instance=13, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;electric space heater&#39;, instance=1)])
+  ElecMeter(instance=10, building=3, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;electric furnace&#39;, instance=1)])
+  ElecMeter(instance=6, building=5, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;electric furnace&#39;, instance=1)])
+  ElecMeter(instance=12, building=5, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;electric space heater&#39;, instance=1)])
+  ElecMeter(instance=13, building=5, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;electric space heater&#39;, instance=1)])
+  ElecMeter(instance=4, building=4, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;electric furnace&#39;, instance=1)])
+  ElecMeter(instance=9, building=4, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;air conditioner&#39;, instance=1)])
+  ElecMeter(instance=10, building=4, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;air conditioner&#39;, instance=1)])
+  ElecMeter(instance=20, building=4, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;air conditioner&#39;, instance=2)])
+  ElecMeter(instance=12, building=6, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;electric space heater&#39;, instance=1)])
+  ElecMeter(instance=16, building=6, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;air conditioner&#39;, instance=1)])
+  ElecMeter(instance=17, building=6, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;air conditioner&#39;, instance=1)])
+)
+</pre></div>
+</div>
+<p>Or all appliances in building 1 with a single-phase induction motor(!):</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">nilmtk</span><span class="o">.</span><span class="n">global_meter_group</span><span class="o">.</span><span class="n">select_using_appliances</span><span class="p">(</span><span class="n">building</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="s">&#39;single-phase induction motor&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre>MeterGroup(meters=
+  ElecMeter(instance=5, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;fridge&#39;, instance=1)])
+  ElecMeter(instance=6, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;dish washer&#39;, instance=1)])
+  ElecMeter(instance=10, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;washer dryer&#39;, instance=1)])
+  ElecMeter(instance=20, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;washer dryer&#39;, instance=1)])
+)
+</pre></div>
+</div>
+<p>(NILMTK imports the &#8216;common metadata&#8217; from the NILM Metadata project,
+which includes a wide range of different <a class="reference external" href="http://nilm-metadata.readthedocs.org/en/latest/central_metadata.html#appliancetype">category
+taxonomies</a>)</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">nilmtk</span><span class="o">.</span><span class="n">global_meter_group</span><span class="o">.</span><span class="n">select_using_appliances</span><span class="p">(</span><span class="n">building</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="s">&#39;laundry appliances&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre>MeterGroup(meters=
+  ElecMeter(instance=7, building=2, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;washer dryer&#39;, instance=1)])
+  ElecMeter(instance=10, building=2, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;dish washer&#39;, instance=1)])
+  ElecMeter(instance=11, building=2, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;waste disposal unit&#39;, instance=1)])
+)
+</pre></div>
+</div>
+<div class="section" id="select-a-group-of-meters-from-properties-of-the-meters-not-the-appliances">
+<h3>Select a group of meters from properties of the meters (not the appliances)<a class="headerlink" href="#select-a-group-of-meters-from-properties-of-the-meters-not-the-appliances" title="Permalink to this headline">¶</a></h3>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">elec</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">device_model</span><span class="o">=</span><span class="s">&#39;REDD_whole_house&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre>MeterGroup(meters=
+  ElecMeter(instance=1, building=1, dataset=&#39;REDD&#39;, site_meter, appliances=[])
+  ElecMeter(instance=2, building=1, dataset=&#39;REDD&#39;, site_meter, appliances=[])
+)
+</pre></div>
+</div>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">elec</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">sample_period</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre>MeterGroup(meters=
+  ElecMeter(instance=5, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;fridge&#39;, instance=1)])
+  ElecMeter(instance=6, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;dish washer&#39;, instance=1)])
+  ElecMeter(instance=7, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;sockets&#39;, instance=1)])
+  ElecMeter(instance=8, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;sockets&#39;, instance=2)])
+  ElecMeter(instance=9, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;light&#39;, instance=1)])
+  ElecMeter(instance=11, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;microwave&#39;, instance=1)])
+  ElecMeter(instance=12, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;unknown&#39;, instance=1)])
+  ElecMeter(instance=13, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;electric space heater&#39;, instance=1)])
+  ElecMeter(instance=14, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;electric stove&#39;, instance=1)])
+  ElecMeter(instance=15, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;sockets&#39;, instance=3)])
+  ElecMeter(instance=16, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;sockets&#39;, instance=4)])
+  ElecMeter(instance=17, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;light&#39;, instance=2)])
+  ElecMeter(instance=18, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;light&#39;, instance=3)])
+  ElecMeter(instance=19, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;unknown&#39;, instance=2)])
+  MeterGroup(meters=
+    ElecMeter(instance=3, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;electric oven&#39;, instance=1)])
+    ElecMeter(instance=4, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;electric oven&#39;, instance=1)])
+  )
+  MeterGroup(meters=
+    ElecMeter(instance=10, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;washer dryer&#39;, instance=1)])
+    ElecMeter(instance=20, building=1, dataset=&#39;REDD&#39;, appliances=[Appliance(type=&#39;washer dryer&#39;, instance=1)])
+  )
+)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="select-a-single-meter-from-a-metergroup">
+<h2>Select a single meter from a MeterGroup<a class="headerlink" href="#select-a-single-meter-from-a-metergroup" title="Permalink to this headline">¶</a></h2>
+<p>We use <tt class="docutils literal"><span class="pre">[]</span></tt> to retrive a single <tt class="docutils literal"><span class="pre">ElecMeter</span></tt> from a <tt class="docutils literal"><span class="pre">MeterGroup</span></tt>.</p>
+<div class="section" id="search-for-a-meter-using-appliances-connected-to-each-meter">
+<h3>Search for a meter using appliances connected to each meter<a class="headerlink" href="#search-for-a-meter-using-appliances-connected-to-each-meter" title="Permalink to this headline">¶</a></h3>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">elec</span><span class="p">[</span><span class="s">&#39;fridge&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Appliances are uniquely identified within a building by a <tt class="docutils literal"><span class="pre">type</span></tt>
+(fridge, kettle, television, etc.) and an <tt class="docutils literal"><span class="pre">instance</span></tt> number. If we do
+not specify an instance number then <tt class="docutils literal"><span class="pre">ElecMeter</span></tt> retrieves instance 1
+(instance numbering starts from 1). If you want a different instance
+then just do this:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">elec</span><span class="p">[</span><span class="s">&#39;light&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>To uniquely identify an appliance in <tt class="docutils literal"><span class="pre">nilmtk.global_meter_group</span></tt> then
+we must specify the dataset name, building instance number, appliance
+type and appliance instance in a dict:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">nilmtk</span>
+<span class="n">nilmtk</span><span class="o">.</span><span class="n">global_meter_group</span><span class="p">[{</span><span class="s">&#39;dataset&#39;</span><span class="p">:</span> <span class="s">&#39;REDD&#39;</span><span class="p">,</span> <span class="s">&#39;building&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;fridge&#39;</span><span class="p">,</span> <span class="s">&#39;instance&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="search-for-a-meter-using-details-of-the-elecmeter">
+<h3>Search for a meter using details of the ElecMeter<a class="headerlink" href="#search-for-a-meter-using-details-of-the-elecmeter" title="Permalink to this headline">¶</a></h3>
+<p>get ElecMeter with instance = 1:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">elec</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="instance-numbering">
+<h3>Instance numbering<a class="headerlink" href="#instance-numbering" title="Permalink to this headline">¶</a></h3>
+<p>ElecMeter and Appliance instance numbers uniquely identify the meter or
+appliance type within the <em>building</em>, not globally. To uniquely identify
+a meter globally, we need three keys:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">nilmtk.elecmeter</span> <span class="kn">import</span> <span class="n">ElecMeterID</span>
+<span class="c"># ElecMeterID is a namedtuple for uniquely identifying each ElecMeter</span>
+
+<span class="n">nilmtk</span><span class="o">.</span><span class="n">global_meter_group</span><span class="p">[</span><span class="n">ElecMeterID</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">building</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dataset</span><span class="o">=</span><span class="s">&#39;REDD&#39;</span><span class="p">)]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="select-nested-metergroup">
+<h3>Select nested MeterGroup<a class="headerlink" href="#select-nested-metergroup" title="Permalink to this headline">¶</a></h3>
+<p>We can also select a single, existing nested MeterGroup. There are two
+ways to specify a nested MeterGroup:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">elec</span><span class="p">[[</span><span class="n">ElecMeterID</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">building</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dataset</span><span class="o">=</span><span class="s">&#39;REDD&#39;</span><span class="p">),</span>
+      <span class="n">ElecMeterID</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">building</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dataset</span><span class="o">=</span><span class="s">&#39;REDD&#39;</span><span class="p">)]]</span>
+</pre></div>
+</div>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">elec</span><span class="p">[</span><span class="n">ElecMeterID</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">),</span> <span class="n">building</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dataset</span><span class="o">=</span><span class="s">&#39;REDD&#39;</span><span class="p">)]</span>
+</pre></div>
+</div>
+<p>We can also specify the mains by asking for meter instance 0:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">elec</span><span class="p">[</span><span class="n">ElecMeterID</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">building</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dataset</span><span class="o">=</span><span class="s">&#39;REDD&#39;</span><span class="p">)]</span>
+</pre></div>
+</div>
+<p>which is equivalent to elec.mains():</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">elec</span><span class="o">.</span><span class="n">mains</span><span class="p">()</span> <span class="o">==</span> <span class="n">elec</span><span class="p">[</span><span class="n">ElecMeterID</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">building</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dataset</span><span class="o">=</span><span class="s">&#39;REDD&#39;</span><span class="p">)]</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2014, NILMTK Authors.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.1.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

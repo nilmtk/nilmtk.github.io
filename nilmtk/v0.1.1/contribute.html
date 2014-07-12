@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Contributing &mdash; nilmtk 0.1.0 documentation</title>
+    <title>Contributing &mdash; nilmtk 0.1.1 documentation</title>
     
     <link rel="stylesheet" href="_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '0.1.0',
+        VERSION:     '0.1.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -30,7 +30,7 @@
     <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="_static/bootstrap-3.1.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="nilmtk 0.1.0 documentation" href="index.html" />
+    <link rel="top" title="nilmtk 0.1.1 documentation" href="index.html" />
     <link rel="prev" title="Demo IPython notebook" href="redd_1d_clustering.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -51,7 +51,7 @@
         </button>
         <a class="navbar-brand" href="index.html">
           nilmtk</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.1.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.1</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -68,7 +68,7 @@
   <ul class="dropdown-menu globaltoc"
       role="menu"
       aria-labelledby="dLabelGlobalToc"><ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="nilmtk.html">nilmtk API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nilmtk.html">nilmtk package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="userguide.html">User Guide</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="">Contributing</a></li>
 </ul>
@@ -86,7 +86,6 @@
       aria-labelledby="dLabelLocalToc"><ul>
 <li><a class="reference internal" href="#">Contributing</a><ul>
 <li><a class="reference internal" href="#contributing-documentation">Contributing documentation</a></li>
-<li><a class="reference internal" href="#using-ipython-notebooks">Using IPython notebooks</a></li>
 </ul>
 </li>
 </ul>
@@ -141,14 +140,19 @@
 git clone https://github.com/nilmtk/nilmtk/
 </pre></div>
 </div>
-<p>Next, we create a folder named <cite>nilmtksite</cite>:</p>
+<p>Next, we create a folder named <cite>nilmtkdocs</cite>:</p>
 <div class="highlight-python"><div class="highlight"><pre>cd ~
-mkdir nilmtksite
+mkdir nilmtkdocs
 </pre></div>
 </div>
-<p><cite>nilmtksite</cite> would contain all the content which gets uploaded to nilmtk.github.io, including sphinx content.:</p>
-<div class="highlight-python"><div class="highlight"><pre>cd nilmtksite
-    git clone https://github.com/nilmtk/nilmtk.github.io
+<p>Inside <cite>nilmtkdocs</cite>, we create a <cite>html</cite> folder, within which we clone the <cite>nilmtk</cite> repository:</p>
+<div class="highlight-python"><div class="highlight"><pre>cd nilmtkdocs
+git clone https://github.com/nilmtk/nilmtk/ html
+</pre></div>
+</div>
+<p>Setting up remote for <cite>gh-pages</cite> branch inside <cite>html</cite> folder:</p>
+<div class="highlight-python"><div class="highlight"><pre>cd html
+git checkout -b gh-pages remotes/origin/gh-pages
 </pre></div>
 </div>
 <p>Now, move back to the main repository:</p>
@@ -161,12 +165,29 @@ mkdir nilmtksite
 make html
 </pre></div>
 </div>
-<p>Now, built documentation should lie in <cite>~/nilmtksite/html</cite> directory. You may use your browser to check if everything got built properly.</p>
-<p>Commit your changes and push to nilmtk. And then commit all your changes to nilmtksite. Thats all!</p>
+<p>Now, built documentation should lie in <cite>~/nilmtkdocs</cite> directory. You may use your browser to check if everything got built properly.</p>
+<p>Commit your changes and push. These changes are reflected in the master
+branch of <cite>nilmtk</cite> a these are changes to the source.</p>
+<div class="highlight-python"><div class="highlight"><pre>git commit -m &quot;your message&quot;
+git push
+</pre></div>
 </div>
-<div class="section" id="using-ipython-notebooks">
-<h2>Using IPython notebooks<a class="headerlink" href="#using-ipython-notebooks" title="Permalink to this headline">¶</a></h2>
-<p>Follow [this](<a class="reference external" href="http://sphinx-ipynb.readthedocs.org/en/latest/howto.html">http://sphinx-ipynb.readthedocs.org/en/latest/howto.html</a>) guide!</p>
+<p>Next, move to the <cite>nilmtkdocs/html</cite> folder:</p>
+<div class="highlight-python"><div class="highlight"><pre>cd ~/nilmtkdocs/html
+</pre></div>
+</div>
+<p>Check branch:</p>
+<div class="highlight-python"><div class="highlight"><pre>git branch
+</pre></div>
+</div>
+<p>It should be <cite>gh-pages</cite>. Now, this <cite>gh-pages</cite> branch should contain your newly built docs. Push these to <cite>gh-pages</cite> branch and see them appear magically on the
+official documentation site:</p>
+<div class="highlight-python"><div class="highlight"><pre>git commit -a -m &quot;rebuilt docs&quot;
+git push origin gh-pages
+</pre></div>
+</div>
+<p>Thats all! Please allow a time upto 10 minutes for your new docs to appear on the official documentation site.
+Thanks to the wonderful tutorial <a class="reference external" href="https://github.com/daler/sphinxdoc-test">here</a>.</p>
 </div>
 </div>
 
@@ -183,8 +204,8 @@ make html
     </p>
     <p>
         &copy; Copyright 2014, nilmtk authors.<br/>
-      Last updated on Jul 10, 2014.<br/>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.2.<br/>
+      Last updated on Jul 11, 2014.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.1.<br/>
     </p>
   </div>
 </footer>

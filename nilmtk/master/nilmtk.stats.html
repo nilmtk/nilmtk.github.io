@@ -1,5 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
 
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -8,8 +7,11 @@
     
     <title>nilmtk.stats package &mdash; NILMTK 0.2-beta documentation</title>
     
-    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-3.1.0/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-3.1.0/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
@@ -24,33 +26,138 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-3.1.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
     <link rel="top" title="NILMTK 0.2-beta documentation" href="index.html" />
     <link rel="up" title="nilmtk package" href="nilmtk.html" />
-    <link rel="next" title="nilmtk.stats.tests package" href="nilmtk.stats.tests.html" /> 
+    <link rel="next" title="nilmtk.stats.tests package" href="nilmtk.stats.tests.html" />
+    <link rel="prev" title="nilmtk.preprocessing package" href="nilmtk.preprocessing.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
   </head>
   <body>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="nilmtk.stats.tests.html" title="nilmtk.stats.tests package"
-             accesskey="N">next</a> |</li>
-        <li><a href="index.html">NILMTK 0.2-beta documentation</a> &raquo;</li>
-          <li><a href="nilmtk.html" accesskey="U">nilmtk package</a> &raquo;</li> 
-      </ul>
-    </div>  
 
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          <div class="body">
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="index.html">
+          NILMTK</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.2</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            <li class="divider-vertical"></li>
             
+                <li><a href="https://github.com/nilmtk/nilmtk">github</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="intro_nilmtk_v0_2.html">Introducing NILMTK v0.2</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="convert_data_to_NILMTK_format.html">Convert data to NILMTK format and load into NILMTK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="elecmeter_and_metergroup.html">MeterGroup, ElecMeter, selection and basic statistics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pipeline_preprocessing_more_stats.html">Processing pipeline, preprocessing and more stats</a></li>
+<li class="toctree-l1"><a class="reference internal" href="disaggregation_and_metrics.html">Disaggregation and Metrics</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="contribute.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="writing_a_dataset_converter.html">Writing a dataset converter</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="nilmtk.html">nilmtk package</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">nilmtk.stats package</a><ul>
+<li><a class="reference internal" href="#subpackages">Subpackages</a></li>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-nilmtk.stats.dropoutrate">nilmtk.stats.dropoutrate module</a></li>
+<li><a class="reference internal" href="#module-nilmtk.stats.dropoutrateresults">nilmtk.stats.dropoutrateresults module</a></li>
+<li><a class="reference internal" href="#module-nilmtk.stats.goodsections">nilmtk.stats.goodsections module</a></li>
+<li><a class="reference internal" href="#module-nilmtk.stats.goodsectionsresults">nilmtk.stats.goodsectionsresults module</a></li>
+<li><a class="reference internal" href="#module-nilmtk.stats.totalenergy">nilmtk.stats.totalenergy module</a></li>
+<li><a class="reference internal" href="#module-nilmtk.stats.totalenergyresults">nilmtk.stats.totalenergyresults module</a></li>
+<li><a class="reference internal" href="#module-nilmtk.stats">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="nilmtk.preprocessing.html" title="Previous Chapter: nilmtk.preprocessing package"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm">&laquo; nilmtk.preproces...</span>
+    </a>
+  </li>
+  <li>
+    <a href="nilmtk.stats.tests.html" title="Next Chapter: nilmtk.stats.tests package"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm">nilmtk.stats.tes... &raquo;</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="_sources/nilmtk.stats.txt"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      
   <div class="section" id="nilmtk-stats-package">
 <h1>nilmtk.stats package<a class="headerlink" href="#nilmtk-stats-package" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="subpackages">
@@ -59,15 +166,9 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="nilmtk.stats.tests.html">nilmtk.stats.tests package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="nilmtk.stats.tests.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="nilmtk.stats.tests.html#module-nilmtk.stats.tests.test_locategoodsections">nilmtk.stats.tests.test_locategoodsections module</a><ul class="simple">
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="nilmtk.stats.tests.html#module-nilmtk.stats.tests.test_totalenergy">nilmtk.stats.tests.test_totalenergy module</a><ul class="simple">
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="nilmtk.stats.tests.html#module-nilmtk.stats.tests.test_totalenergyresults">nilmtk.stats.tests.test_totalenergyresults module</a><ul class="simple">
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="nilmtk.stats.tests.html#module-nilmtk.stats.tests.test_locategoodsections">nilmtk.stats.tests.test_locategoodsections module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nilmtk.stats.tests.html#module-nilmtk.stats.tests.test_totalenergy">nilmtk.stats.tests.test_totalenergy module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nilmtk.stats.tests.html#module-nilmtk.stats.tests.test_totalenergyresults">nilmtk.stats.tests.test_totalenergyresults module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="nilmtk.stats.tests.html#module-nilmtk.stats.tests">Module contents</a></li>
 </ul>
 </li>
@@ -76,6 +177,106 @@
 </div>
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-nilmtk.stats.dropoutrate">
+<span id="nilmtk-stats-dropoutrate-module"></span><h2>nilmtk.stats.dropoutrate module<a class="headerlink" href="#module-nilmtk.stats.dropoutrate" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="nilmtk.stats.dropoutrate.DropoutRate">
+<em class="property">class </em><tt class="descclassname">nilmtk.stats.dropoutrate.</tt><tt class="descname">DropoutRate</tt><big>(</big><em>upstream=None</em>, <em>generator=None</em><big>)</big><a class="reference internal" href="_modules/nilmtk/stats/dropoutrate.html#DropoutRate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.stats.dropoutrate.DropoutRate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="nilmtk.html#nilmtk.node.Node" title="nilmtk.node.Node"><tt class="xref py py-class docutils literal"><span class="pre">nilmtk.node.Node</span></tt></a></p>
+<dl class="attribute">
+<dt id="nilmtk.stats.dropoutrate.DropoutRate.postconditions">
+<tt class="descname">postconditions</tt><em class="property"> = {'statistics': {'dropout_rate': None}}</em><a class="headerlink" href="#nilmtk.stats.dropoutrate.DropoutRate.postconditions" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.stats.dropoutrate.DropoutRate.process">
+<tt class="descname">process</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/stats/dropoutrate.html#DropoutRate.process"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.stats.dropoutrate.DropoutRate.process" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="nilmtk.stats.dropoutrate.DropoutRate.requirements">
+<tt class="descname">requirements</tt><em class="property"> = {'device': {'sample_period': 'ANY VALUE'}}</em><a class="headerlink" href="#nilmtk.stats.dropoutrate.DropoutRate.requirements" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="nilmtk.stats.dropoutrate.get_dropout_rate">
+<tt class="descclassname">nilmtk.stats.dropoutrate.</tt><tt class="descname">get_dropout_rate</tt><big>(</big><em>data</em>, <em>sample_period</em><big>)</big><a class="reference internal" href="_modules/nilmtk/stats/dropoutrate.html#get_dropout_rate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.stats.dropoutrate.get_dropout_rate" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>data</strong> : pd.DataFrame or pd.Series</p>
+<p><strong>sample_period</strong> : number, seconds</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>dropout_rate</strong> : float [0,1]</p>
+<blockquote>
+<div><p>The proportion of samples that have been lost; where 
+1 means that all samples have been lost and 
+0 means that no samples have been lost.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><strong>TooFewSamplesError</strong></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-nilmtk.stats.dropoutrateresults">
+<span id="nilmtk-stats-dropoutrateresults-module"></span><h2>nilmtk.stats.dropoutrateresults module<a class="headerlink" href="#module-nilmtk.stats.dropoutrateresults" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="nilmtk.stats.dropoutrateresults.DropoutRateResults">
+<em class="property">class </em><tt class="descclassname">nilmtk.stats.dropoutrateresults.</tt><tt class="descname">DropoutRateResults</tt><a class="reference internal" href="_modules/nilmtk/stats/dropoutrateresults.html#DropoutRateResults"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.stats.dropoutrateresults.DropoutRateResults" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="nilmtk.html#nilmtk.results.Results" title="nilmtk.results.Results"><tt class="xref py py-class docutils literal"><span class="pre">nilmtk.results.Results</span></tt></a></p>
+<p class="rubric">Attributes</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="3%" />
+<col width="97%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>_data</td>
+<td>(pd.DataFrame) index is start date for the whole chunk <cite>end</cite> is end date for the whole chunk <cite>dropout_rate</cite> is float [0,1] <cite>n_samples</cite> is int, used for calculating weighted mean</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="nilmtk.stats.dropoutrateresults.DropoutRateResults.combined">
+<tt class="descname">combined</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/stats/dropoutrateresults.html#DropoutRateResults.combined"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.stats.dropoutrateresults.DropoutRateResults.combined" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates weighted average.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>dropout_rate</strong> : float, [0,1]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.stats.dropoutrateresults.DropoutRateResults.plot">
+<tt class="descname">plot</tt><big>(</big><em>ax=None</em><big>)</big><a class="reference internal" href="_modules/nilmtk/stats/dropoutrateresults.html#DropoutRateResults.plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.stats.dropoutrateresults.DropoutRateResults.plot" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.stats.dropoutrateresults.DropoutRateResults.to_dict">
+<tt class="descname">to_dict</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/stats/dropoutrateresults.html#DropoutRateResults.to_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.stats.dropoutrateresults.DropoutRateResults.to_dict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.stats.dropoutrateresults.DropoutRateResults.unify">
+<tt class="descname">unify</tt><big>(</big><em>other</em><big>)</big><a class="reference internal" href="_modules/nilmtk/stats/dropoutrateresults.html#DropoutRateResults.unify"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.stats.dropoutrateresults.DropoutRateResults.unify" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </div>
 <div class="section" id="module-nilmtk.stats.goodsections">
 <span id="nilmtk-stats-goodsections-module"></span><h2>nilmtk.stats.goodsections module<a class="headerlink" href="#module-nilmtk.stats.goodsections" title="Permalink to this headline">¶</a></h2>
@@ -93,44 +294,6 @@
 <tbody valign="top">
 <tr class="row-odd"><td>previous_chunk_ended_with_open_ended_good_section</td>
 <td>(bool)</td>
-</tr>
-</tbody>
-</table>
-<p class="rubric">Methods</p>
-<table border="1" class="longtable docutils">
-<colgroup>
-<col width="10%" />
-<col width="90%" />
-</colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">check_requirements</span></tt>()</td>
-<td>Checks that <cite>self.upstream.dry_run_metadata</cite> satisfies <cite>self.requirements</cite>.</td>
-</tr>
-<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">dry_run_metadata</span></tt>()</td>
-<td>Does a &#8216;dry run&#8217; so we can validate the full pipeline before loading any data.</td>
-</tr>
-<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">get_metadata</span></tt>()</td>
-<td></td>
-</tr>
-<tr class="row-even"><td><a class="reference internal" href="#nilmtk.stats.goodsections.GoodSections.process" title="nilmtk.stats.goodsections.GoodSections.process"><tt class="xref py py-obj docutils literal"><span class="pre">process</span></tt></a>()</td>
-<td></td>
-</tr>
-<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">required_measurements</span></tt>(state)</td>
-<td><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"></td>
-</tr>
-</tbody>
-</table>
-</td>
-</tr>
-<tr class="row-even"><td><a class="reference internal" href="#nilmtk.stats.goodsections.GoodSections.reset" title="nilmtk.stats.goodsections.GoodSections.reset"><tt class="xref py py-obj docutils literal"><span class="pre">reset</span></tt></a>()</td>
-<td></td>
-</tr>
-<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">run</span></tt>()</td>
-<td>Pulls data through the pipeline.</td>
 </tr>
 </tbody>
 </table>
@@ -204,39 +367,6 @@ then the first TimeFrame will have <cite>start=None</cite>.</p>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Methods</p>
-<table border="1" class="longtable docutils">
-<colgroup>
-<col width="10%" />
-<col width="90%" />
-</colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="#nilmtk.stats.goodsectionsresults.GoodSectionsResults.append" title="nilmtk.stats.goodsectionsresults.GoodSectionsResults.append"><tt class="xref py py-obj docutils literal"><span class="pre">append</span></tt></a>(timeframe,&nbsp;new_results)</td>
-<td>Append a single result.</td>
-</tr>
-<tr class="row-even"><td><a class="reference internal" href="#nilmtk.stats.goodsectionsresults.GoodSectionsResults.combined" title="nilmtk.stats.goodsectionsresults.GoodSectionsResults.combined"><tt class="xref py py-obj docutils literal"><span class="pre">combined</span></tt></a>()</td>
-<td>Merges together any good sections which span multiple segments, as long as those segments are adjacent  (previous.end - max_sample_period &lt;= next.start &lt;= previous.end).</td>
-</tr>
-<tr class="row-odd"><td><a class="reference internal" href="#nilmtk.stats.goodsectionsresults.GoodSectionsResults.last_results" title="nilmtk.stats.goodsectionsresults.GoodSectionsResults.last_results"><tt class="xref py py-obj docutils literal"><span class="pre">last_results</span></tt></a>()</td>
-<td></td>
-</tr>
-<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">per_period</span></tt>()</td>
-<td>return a DataFrame.  Index is period start.</td>
-</tr>
-<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">simple</span></tt>()</td>
-<td>Returns the simplest representation of the results.</td>
-</tr>
-<tr class="row-even"><td><a class="reference internal" href="#nilmtk.stats.goodsectionsresults.GoodSectionsResults.to_dict" title="nilmtk.stats.goodsectionsresults.GoodSectionsResults.to_dict"><tt class="xref py py-obj docutils literal"><span class="pre">to_dict</span></tt></a>()</td>
-<td></td>
-</tr>
-<tr class="row-odd"><td><a class="reference internal" href="#nilmtk.stats.goodsectionsresults.GoodSectionsResults.unify" title="nilmtk.stats.goodsectionsresults.GoodSectionsResults.unify"><tt class="xref py py-obj docutils literal"><span class="pre">unify</span></tt></a>(other)</td>
-<td></td>
-</tr>
-<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">update</span></tt>(new_result)</td>
-<td>Add results from a new chunk.</td>
-</tr>
-</tbody>
-</table>
 <dl class="method">
 <dt id="nilmtk.stats.goodsectionsresults.GoodSectionsResults.append">
 <tt class="descname">append</tt><big>(</big><em>timeframe</em>, <em>new_results</em><big>)</big><a class="reference internal" href="_modules/nilmtk/stats/goodsectionsresults.html#GoodSectionsResults.append"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.stats.goodsectionsresults.GoodSectionsResults.append" title="Permalink to this definition">¶</a></dt>
@@ -275,6 +405,11 @@ as long as those segments are adjacent
 <dd></dd></dl>
 
 <dl class="method">
+<dt id="nilmtk.stats.goodsectionsresults.GoodSectionsResults.plot">
+<tt class="descname">plot</tt><big>(</big><em>ax=None</em><big>)</big><a class="reference internal" href="_modules/nilmtk/stats/goodsectionsresults.html#GoodSectionsResults.plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.stats.goodsectionsresults.GoodSectionsResults.plot" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
 <dt id="nilmtk.stats.goodsectionsresults.GoodSectionsResults.to_dict">
 <tt class="descname">to_dict</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/stats/goodsectionsresults.html#GoodSectionsResults.to_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.stats.goodsectionsresults.GoodSectionsResults.to_dict" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -293,36 +428,6 @@ as long as those segments are adjacent
 <dt id="nilmtk.stats.totalenergy.TotalEnergy">
 <em class="property">class </em><tt class="descclassname">nilmtk.stats.totalenergy.</tt><tt class="descname">TotalEnergy</tt><big>(</big><em>upstream=None</em>, <em>generator=None</em><big>)</big><a class="reference internal" href="_modules/nilmtk/stats/totalenergy.html#TotalEnergy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.stats.totalenergy.TotalEnergy" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="nilmtk.html#nilmtk.node.Node" title="nilmtk.node.Node"><tt class="xref py py-class docutils literal"><span class="pre">nilmtk.node.Node</span></tt></a></p>
-<p class="rubric">Methods</p>
-<table border="1" class="longtable docutils">
-<colgroup>
-<col width="10%" />
-<col width="90%" />
-</colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">check_requirements</span></tt>()</td>
-<td>Checks that <cite>self.upstream.dry_run_metadata</cite> satisfies <cite>self.requirements</cite>.</td>
-</tr>
-<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">dry_run_metadata</span></tt>()</td>
-<td>Does a &#8216;dry run&#8217; so we can validate the full pipeline before loading any data.</td>
-</tr>
-<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">get_metadata</span></tt>()</td>
-<td></td>
-</tr>
-<tr class="row-even"><td><a class="reference internal" href="#nilmtk.stats.totalenergy.TotalEnergy.process" title="nilmtk.stats.totalenergy.TotalEnergy.process"><tt class="xref py py-obj docutils literal"><span class="pre">process</span></tt></a>()</td>
-<td>Preference: Cumulative energy &gt; Energy &gt; Power</td>
-</tr>
-<tr class="row-odd"><td><a class="reference internal" href="#nilmtk.stats.totalenergy.TotalEnergy.required_measurements" title="nilmtk.stats.totalenergy.TotalEnergy.required_measurements"><tt class="xref py py-obj docutils literal"><span class="pre">required_measurements</span></tt></a>(state)</td>
-<td>TotalEnergy needs all power and energy measurements.</td>
-</tr>
-<tr class="row-even"><td><a class="reference internal" href="#nilmtk.stats.totalenergy.TotalEnergy.reset" title="nilmtk.stats.totalenergy.TotalEnergy.reset"><tt class="xref py py-obj docutils literal"><span class="pre">reset</span></tt></a>()</td>
-<td></td>
-</tr>
-<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">run</span></tt>()</td>
-<td>Pulls data through the pipeline.</td>
-</tr>
-</tbody>
-</table>
 <dl class="attribute">
 <dt id="nilmtk.stats.totalenergy.TotalEnergy.postconditions">
 <tt class="descname">postconditions</tt><em class="property"> = {'statistics': {'energy': {}}}</em><a class="headerlink" href="#nilmtk.stats.totalenergy.TotalEnergy.postconditions" title="Permalink to this definition">¶</a></dt>
@@ -394,36 +499,6 @@ Values are energy in kWh (or equivalent for reactive and apparent power).</p>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Methods</p>
-<table border="1" class="longtable docutils">
-<colgroup>
-<col width="10%" />
-<col width="90%" />
-</colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="#nilmtk.stats.totalenergyresults.TotalEnergyResults.append" title="nilmtk.stats.totalenergyresults.TotalEnergyResults.append"><tt class="xref py py-obj docutils literal"><span class="pre">append</span></tt></a>(timeframe,&nbsp;new_results)</td>
-<td>Append a single result.</td>
-</tr>
-<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">combined</span></tt>()</td>
-<td>Return all results from each chunk combined.</td>
-</tr>
-<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">per_period</span></tt>()</td>
-<td>return a DataFrame.  Index is period start.</td>
-</tr>
-<tr class="row-even"><td><a class="reference internal" href="#nilmtk.stats.totalenergyresults.TotalEnergyResults.simple" title="nilmtk.stats.totalenergyresults.TotalEnergyResults.simple"><tt class="xref py py-obj docutils literal"><span class="pre">simple</span></tt></a>()</td>
-<td></td>
-</tr>
-<tr class="row-odd"><td><a class="reference internal" href="#nilmtk.stats.totalenergyresults.TotalEnergyResults.to_dict" title="nilmtk.stats.totalenergyresults.TotalEnergyResults.to_dict"><tt class="xref py py-obj docutils literal"><span class="pre">to_dict</span></tt></a>()</td>
-<td></td>
-</tr>
-<tr class="row-even"><td><a class="reference internal" href="#nilmtk.stats.totalenergyresults.TotalEnergyResults.unify" title="nilmtk.stats.totalenergyresults.TotalEnergyResults.unify"><tt class="xref py py-obj docutils literal"><span class="pre">unify</span></tt></a>(other)</td>
-<td></td>
-</tr>
-<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">update</span></tt>(new_result)</td>
-<td>Add results from a new chunk.</td>
-</tr>
-</tbody>
-</table>
 <dl class="method">
 <dt id="nilmtk.stats.totalenergyresults.TotalEnergyResults.append">
 <tt class="descname">append</tt><big>(</big><em>timeframe</em>, <em>new_results</em><big>)</big><a class="reference internal" href="_modules/nilmtk/stats/totalenergyresults.html#TotalEnergyResults.append"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.stats.totalenergyresults.TotalEnergyResults.append" title="Permalink to this definition">¶</a></dt>
@@ -455,69 +530,21 @@ e.g. append(TimeFrame(start, end), {&#8216;apparent&#8217;: 34, &#8216;active&#8
 </div>
 
 
-          </div>
-        </div>
-      </div>
-      <div class="sphinxsidebar">
-        <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">nilmtk.stats package</a><ul>
-<li><a class="reference internal" href="#subpackages">Subpackages</a></li>
-<li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#module-nilmtk.stats.goodsections">nilmtk.stats.goodsections module</a></li>
-<li><a class="reference internal" href="#module-nilmtk.stats.goodsectionsresults">nilmtk.stats.goodsectionsresults module</a></li>
-<li><a class="reference internal" href="#module-nilmtk.stats.totalenergy">nilmtk.stats.totalenergy module</a></li>
-<li><a class="reference internal" href="#module-nilmtk.stats.totalenergyresults">nilmtk.stats.totalenergyresults module</a></li>
-<li><a class="reference internal" href="#module-nilmtk.stats">Module contents</a></li>
-</ul>
-</li>
-</ul>
-
-  <h4>Next topic</h4>
-  <p class="topless"><a href="nilmtk.stats.tests.html"
-                        title="next chapter">nilmtk.stats.tests package</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="_sources/nilmtk.stats.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
+    </div>
+      
+  </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
-        </div>
-      </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="nilmtk.stats.tests.html" title="nilmtk.stats.tests package"
-             >next</a> |</li>
-        <li><a href="index.html">NILMTK 0.2-beta documentation</a> &raquo;</li>
-          <li><a href="nilmtk.html" >nilmtk package</a> &raquo;</li> 
-      </ul>
-    </div>
-    <div class="footer">
-        &copy; Copyright 2014, NILMTK Authors.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.1.
-    </div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2014, NILMTK Authors.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.1.<br/>
+    </p>
+  </div>
+</footer>
   </body>
 </html>

@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>nilmtk.utils &mdash; nilmtk 0.1.0 documentation</title>
+    <title>nilmtk.utils &mdash; nilmtk 0.1.1 documentation</title>
     
     <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '0.1.0',
+        VERSION:     '0.1.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -30,7 +30,7 @@
     <script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../../_static/bootstrap-3.1.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="nilmtk 0.1.0 documentation" href="../../index.html" />
+    <link rel="top" title="nilmtk 0.1.1 documentation" href="../../index.html" />
     <link rel="up" title="Module code" href="../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -51,7 +51,7 @@
         </button>
         <a class="navbar-brand" href="../../index.html">
           nilmtk</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.1.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.1</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -68,7 +68,7 @@
   <ul class="dropdown-menu globaltoc"
       role="menu"
       aria-labelledby="dLabelGlobalToc"><ul>
-<li class="toctree-l1"><a class="reference internal" href="../../nilmtk.html">nilmtk API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../nilmtk.html">nilmtk package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../userguide.html">User Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contribute.html">Contributing</a></li>
 </ul>
@@ -119,166 +119,12 @@
       
   <h1>Source code for nilmtk.utils</h1><div class="highlight"><pre>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">division</span>
-<span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">copy</span><span class="o">,</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
-<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">stats</span>
-
-<div class="viewcode-block" id="get_immediate_subdirectories"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.utils.get_immediate_subdirectories">[docs]</a><span class="k">def</span> <span class="nf">get_immediate_subdirectories</span><span class="p">(</span><span class="nb">dir</span><span class="p">):</span>
-    <span class="c"># From Richie Hindle&#39;s StackOverflow answer:</span>
-    <span class="c"># http://stackoverflow.com/a/800201/732596</span>
-    <span class="k">if</span> <span class="nb">dir</span><span class="p">:</span>
-        <span class="n">subdirs</span> <span class="o">=</span> <span class="p">[</span><span class="n">name</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="nb">dir</span><span class="p">)</span>
-                   <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">dir</span><span class="p">,</span> <span class="n">name</span><span class="p">))]</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">subdirs</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">return</span> <span class="n">subdirs</span>
-
-</div>
-<div class="viewcode-block" id="find_nearest_index"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.utils.find_nearest_index">[docs]</a><span class="k">def</span> <span class="nf">find_nearest_index</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-    <span class="n">idx</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">array</span> <span class="o">-</span> <span class="n">value</span><span class="p">))</span><span class="o">.</span><span class="n">argmin</span><span class="p">()</span>
-    <span class="k">return</span> <span class="n">idx</span>
-
-</div>
-<div class="viewcode-block" id="find_nearest"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.utils.find_nearest">[docs]</a><span class="k">def</span> <span class="nf">find_nearest</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-    <span class="n">idx</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">array</span> <span class="o">-</span> <span class="n">value</span><span class="p">))</span><span class="o">.</span><span class="n">argmin</span><span class="p">()</span>
-    <span class="n">diff</span> <span class="o">=</span> <span class="n">array</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">-</span> <span class="n">value</span>
-    <span class="k">return</span> <span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="o">-</span><span class="n">diff</span><span class="p">]</span>
-
-</div>
-<div class="viewcode-block" id="find_nearest_non_vectorized"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.utils.find_nearest_non_vectorized">[docs]</a><span class="k">def</span> <span class="nf">find_nearest_non_vectorized</span><span class="p">(</span><span class="n">known_array</span><span class="p">,</span> <span class="n">test_array</span><span class="p">):</span>
-    <span class="n">indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">test_array</span><span class="p">))</span>
-    <span class="n">residual</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">test_array</span><span class="p">))</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">test_array</span><span class="p">)):</span>
-        <span class="p">[</span><span class="n">indices</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">residual</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="n">find_nearest</span><span class="p">(</span><span class="n">known_array</span><span class="p">,</span> <span class="n">test_array</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
-    <span class="k">return</span> <span class="p">[</span><span class="n">indices</span><span class="p">,</span> <span class="n">residual</span><span class="p">]</span>
-
-</div>
-<div class="viewcode-block" id="find_nearest_vectorized"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.utils.find_nearest_vectorized">[docs]</a><span class="k">def</span> <span class="nf">find_nearest_vectorized</span><span class="p">(</span><span class="n">known_array</span><span class="p">,</span> <span class="n">test_array</span><span class="p">):</span>
-
-    <span class="c"># Recipe borrowed from</span>
-    <span class="c"># http://stackoverflow.com/questions/20780017/numpy-vectorize-finding-closest-value-in-an-array-for-each-element-in-another-a</span>
-
-    <span class="n">differences</span> <span class="o">=</span> <span class="p">(</span><span class="n">test_array</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">-</span> <span class="n">known_array</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
-    <span class="n">indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">differences</span><span class="p">)</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-    <span class="n">residual</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diagonal</span><span class="p">(</span><span class="n">differences</span><span class="p">[</span><span class="n">indices</span><span class="p">,</span> <span class="p">])</span>
-    <span class="k">return</span> <span class="p">[</span><span class="n">indices</span><span class="p">,</span> <span class="n">residual</span><span class="p">]</span>
-
-</div>
-<div class="viewcode-block" id="find_nearest_searchsorted"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.utils.find_nearest_searchsorted">[docs]</a><span class="k">def</span> <span class="nf">find_nearest_searchsorted</span><span class="p">(</span><span class="n">known_array</span><span class="p">,</span> <span class="n">test_array</span><span class="p">):</span>
-    <span class="n">index_sorted</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">known_array</span><span class="p">)</span>
-    <span class="n">known_array_sorted</span> <span class="o">=</span> <span class="n">known_array</span><span class="p">[</span><span class="n">index_sorted</span><span class="p">]</span>
-
-    <span class="n">idx1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">searchsorted</span><span class="p">(</span><span class="n">known_array_sorted</span><span class="p">,</span> <span class="n">test_array</span><span class="p">)</span>
-    <span class="n">idx2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">idx1</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">known_array_sorted</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
-
-    <span class="n">diff1</span> <span class="o">=</span> <span class="n">known_array_sorted</span><span class="p">[</span><span class="n">idx1</span><span class="p">]</span> <span class="o">-</span> <span class="n">test_array</span>
-    <span class="n">diff2</span> <span class="o">=</span> <span class="n">test_array</span> <span class="o">-</span> <span class="n">known_array_sorted</span><span class="p">[</span><span class="n">idx2</span><span class="p">]</span>
-
-    <span class="n">indices</span> <span class="o">=</span> <span class="n">index_sorted</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">diff1</span> <span class="o">&lt;=</span> <span class="n">diff2</span><span class="p">,</span> <span class="n">idx1</span><span class="p">,</span> <span class="n">idx2</span><span class="p">)]</span>
-    <span class="n">residual</span> <span class="o">=</span> <span class="n">test_array</span> <span class="o">-</span> <span class="n">known_array</span><span class="p">[</span><span class="n">indices</span><span class="p">]</span>
-
-    <span class="k">return</span> <span class="p">[</span><span class="n">indices</span><span class="p">,</span> <span class="n">residual</span><span class="p">]</span>
-
-</div>
-<div class="viewcode-block" id="secs_per_period_alias"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.utils.secs_per_period_alias">[docs]</a><span class="k">def</span> <span class="nf">secs_per_period_alias</span><span class="p">(</span><span class="n">alias</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Seconds for each Pandas period alias.&quot;&quot;&quot;</span>
-    <span class="n">dr</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">date_range</span><span class="p">(</span><span class="s">&#39;00:00&#39;</span><span class="p">,</span> <span class="n">periods</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="n">alias</span><span class="p">)</span>
-    <span class="k">return</span> <span class="p">(</span><span class="n">dr</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">dr</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span>
-
-</div>
-<div class="viewcode-block" id="is_namedtuple"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.utils.is_namedtuple">[docs]</a><span class="k">def</span> <span class="nf">is_namedtuple</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">nt</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Returns true if obj is a namedtuple of type nt.</span>
-
-<span class="sd">    Does what you might expect `isinstance(obj, nt)` to do, but doesn&#39;t.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c"># we can&#39;t use isinstance on NamedTuples like isinstance(col_name, DualSupply)</span>
-    <span class="c"># see http://bugs.python.org/issue7796</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">nt</span><span class="o">.</span><span class="n">_fields</span><span class="p">:</span>
-            <span class="n">obj</span><span class="o">.</span><span class="n">__dict__</span><span class="p">[</span><span class="n">field</span><span class="p">]</span>
-    <span class="k">except</span> <span class="p">(</span><span class="ne">AttributeError</span><span class="p">,</span> <span class="ne">KeyError</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">False</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="bp">True</span>
-
-</div>
-<div class="viewcode-block" id="recursive_resolve"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.utils.recursive_resolve">[docs]</a><span class="k">def</span> <span class="nf">recursive_resolve</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">dict_name</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Returns `obj.dict_name` where `dict_name` is a string</span>
-<span class="sd">    which may have periods e.g. `utility.electric.appliances`.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    obj : object</span>
-<span class="sd">        </span>
-<span class="sd">    dict_name : string</span>
-<span class="sd">        e.g. &#39;utility.electric.appliances&#39;</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    obj.dict_name</span>
-
-<span class="sd">    Examples</span>
-<span class="sd">    --------</span>
-<span class="sd">    To get buildling.utility.electric.appliances:</span>
-
-<span class="sd">    &gt;&gt;&gt; appliances = recursive_resolve(building, &#39;utility.electric.appliances&#39;)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">partitions</span> <span class="o">=</span> <span class="n">dict_name</span><span class="o">.</span><span class="n">partition</span><span class="p">(</span><span class="s">&#39;.&#39;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">partitions</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
-        <span class="k">return</span>
-    <span class="k">elif</span> <span class="ow">not</span> <span class="n">partitions</span><span class="p">[</span><span class="mi">2</span><span class="p">]:</span>
-        <span class="c"># e.g. partitions = (&#39;electric&#39;, &#39;&#39;, &#39;&#39;)</span>
-        <span class="k">return</span> <span class="n">obj</span><span class="o">.</span><span class="n">__dict__</span><span class="p">[</span><span class="n">dict_name</span><span class="p">]</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">recursive_resolve</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">__dict__</span><span class="p">[</span><span class="n">partitions</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">partitions</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+<span class="kn">import</span> <span class="nn">networkx</span> <span class="kn">as</span> <span class="nn">nx</span>
+<span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
 
 
-</div>
-<div class="viewcode-block" id="apply_func_to_values_of_dicts"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.utils.apply_func_to_values_of_dicts">[docs]</a><span class="k">def</span> <span class="nf">apply_func_to_values_of_dicts</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">dict_names</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Apply a generic function `func` to all values of a set dicts, </span>
-<span class="sd">    each of which is an attribute of an arbitrary object `obj`.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    obj : object</span>
-<span class="sd">        any object which has one or more dicts as attributes</span>
-<span class="sd">    func : function</span>
-<span class="sd">        the function to apply to each dict value</span>
-<span class="sd">    dict_names : list of strings</span>
-<span class="sd">        the attribute names of the dicts in `obj`</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    obj_copy : a deepcopy of `obj` with `func` applied to all `obj.&lt;dict_names&gt;`</span>
-
-<span class="sd">    Examples</span>
-<span class="sd">    --------</span>
-<span class="sd">    For example, to apply `resample` to the `circuits` and `mains` dicts of</span>
-<span class="sd">    an Electricity object:</span>
-
-<span class="sd">    &gt;&gt;&gt; resample = lambda df : pd.DataFrame.resample(df, rule=&#39;T&#39;)</span>
-<span class="sd">    &gt;&gt;&gt; electric = apply_func_to_values_of_dicts(electric, </span>
-<span class="sd">                                                 resample,</span>
-<span class="sd">                                                 [&#39;circuits&#39;, &#39;mains&#39;])</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="c"># TODO: a lot of functions in nilmtk.preprocessing.electricity.buildling</span>
-    <span class="c"># could be simplified using `apply_to_values_of_dicts`</span>
-
-    <span class="n">obj_copy</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">attribute</span> <span class="ow">in</span> <span class="n">dict_names</span><span class="p">:</span>
-        <span class="n">dict_</span> <span class="o">=</span> <span class="n">recursive_resolve</span><span class="p">(</span><span class="n">obj_copy</span><span class="p">,</span> <span class="n">attribute</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">dict_</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="n">dict_</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-            <span class="k">except</span><span class="p">:</span>
-                <span class="k">print</span><span class="p">(</span><span class="s">&quot;Exception occurred while processing attribute={}, key={}&quot;</span>
-                      <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">attribute</span><span class="p">,</span> <span class="n">key</span><span class="p">),</span> <span class="nb">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
-                <span class="k">raise</span>
-    <span class="k">return</span> <span class="n">obj_copy</span>
-
-</div>
 <div class="viewcode-block" id="timedelta64_to_secs"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.utils.timedelta64_to_secs">[docs]</a><span class="k">def</span> <span class="nf">timedelta64_to_secs</span><span class="p">(</span><span class="n">timedelta</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Convert `timedelta` to seconds.</span>
 
@@ -290,38 +136,126 @@
 <span class="sd">    -------</span>
 <span class="sd">    float : seconds</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">timedelta</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">timedelta64</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s">&#39;s&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">timedelta</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">timedelta</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">timedelta64</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s">&#39;s&#39;</span><span class="p">)</span>
 
 </div>
-<div class="viewcode-block" id="summary_stats_string"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.utils.summary_stats_string">[docs]</a><span class="k">def</span> <span class="nf">summary_stats_string</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s">&#39;{:&gt;6.2f}&#39;</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">,</span> <span class="n">stat_strings</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
-                         <span class="n">minimal</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-    <span class="n">s</span> <span class="o">=</span> <span class="s">&#39;&#39;</span>
-    <span class="c"># use eval, use loop</span>
-    <span class="c"># numpy stat_strings</span>
-    <span class="k">if</span> <span class="n">stat_strings</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-        <span class="n">stat_strings</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;min&#39;</span><span class="p">,</span> <span class="s">&#39;mean&#39;</span><span class="p">,</span> <span class="s">&#39;mode&#39;</span><span class="p">,</span> <span class="s">&#39;max&#39;</span><span class="p">,</span> <span class="s">&#39;std&#39;</span><span class="p">]</span>
-    <span class="n">scipy_stats</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;mode&#39;</span><span class="p">]</span>
-    <span class="n">numpy_stats</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;median&#39;</span><span class="p">]</span> <span class="c"># stats which aren&#39;t methods of np.Array</span>
-    <span class="k">for</span> <span class="n">stat_str</span> <span class="ow">in</span> <span class="n">stat_strings</span><span class="p">:</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">minimal</span><span class="p">:</span>
-            <span class="n">s</span> <span class="o">+=</span> <span class="s">&#39;  {:5s}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">stat_str</span><span class="p">)</span> <span class="o">+</span> <span class="s">&#39;=&#39;</span>
+<div class="viewcode-block" id="tree_root"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.utils.tree_root">[docs]</a><span class="k">def</span> <span class="nf">tree_root</span><span class="p">(</span><span class="n">graph</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns the object that is the root of the tree.</span>
 
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    graph : networkx.Graph</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c"># from http://stackoverflow.com/a/4123177/732596</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">)</span>
+    <span class="n">roots</span> <span class="o">=</span> <span class="p">[</span><span class="n">node</span> <span class="k">for</span> <span class="n">node</span><span class="p">,</span><span class="n">in_degree</span> <span class="ow">in</span> <span class="n">graph</span><span class="o">.</span><span class="n">in_degree_iter</span><span class="p">()</span> <span class="k">if</span> <span class="n">in_degree</span><span class="o">==</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">n_roots</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">roots</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">n_roots</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span> 
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s">&#39;Tree has more than one root!&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">n_roots</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span> 
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s">&#39;Tree has no root!&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">roots</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+</div>
+<div class="viewcode-block" id="nodes_adjacent_to_root"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.utils.nodes_adjacent_to_root">[docs]</a><span class="k">def</span> <span class="nf">nodes_adjacent_to_root</span><span class="p">(</span><span class="n">graph</span><span class="p">):</span>
+    <span class="n">root</span> <span class="o">=</span> <span class="n">tree_root</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">graph</span><span class="o">.</span><span class="n">successors</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="index_of_column_name"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.utils.index_of_column_name">[docs]</a><span class="k">def</span> <span class="nf">index_of_column_name</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">col_name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">col_name</span> <span class="o">==</span> <span class="n">name</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">i</span>
+    <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="find_nearest"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.utils.find_nearest">[docs]</a><span class="k">def</span> <span class="nf">find_nearest</span><span class="p">(</span><span class="n">known_array</span><span class="p">,</span> <span class="n">test_array</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Find closest value in `known_array` for each element in `test_array`.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    known_array : numpy array</span>
+<span class="sd">        consisting of scalar values only; shape: (m, 1)</span>
+<span class="sd">    test_array : numpy array</span>
+<span class="sd">        consisting of scalar values only; shape: (n, 1)</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    indices : numpy array; shape: (n, 1)</span>
+<span class="sd">        For each value in `test_array` finds the index of the closest value</span>
+<span class="sd">        in `known_array`.</span>
+<span class="sd">    residuals : numpy array; shape: (n, 1)</span>
+<span class="sd">        For each value in `test_array` finds the difference from the closest</span>
+<span class="sd">        value in `known_array`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c"># from http://stackoverflow.com/a/20785149/732596</span>
+
+    <span class="n">index_sorted</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">known_array</span><span class="p">)</span>
+    <span class="n">known_array_sorted</span> <span class="o">=</span> <span class="n">known_array</span><span class="p">[</span><span class="n">index_sorted</span><span class="p">]</span>
+
+    <span class="n">idx1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">searchsorted</span><span class="p">(</span><span class="n">known_array_sorted</span><span class="p">,</span> <span class="n">test_array</span><span class="p">)</span>
+    <span class="n">idx2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">idx1</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">known_array_sorted</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">idx3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">idx1</span><span class="p">,</span>     <span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">known_array_sorted</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">diff1</span> <span class="o">=</span> <span class="n">known_array_sorted</span><span class="p">[</span><span class="n">idx3</span><span class="p">]</span> <span class="o">-</span> <span class="n">test_array</span>
+    <span class="n">diff2</span> <span class="o">=</span> <span class="n">test_array</span> <span class="o">-</span> <span class="n">known_array_sorted</span><span class="p">[</span><span class="n">idx2</span><span class="p">]</span>
+
+    <span class="n">indices</span> <span class="o">=</span> <span class="n">index_sorted</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">diff1</span> <span class="o">&lt;=</span> <span class="n">diff2</span><span class="p">,</span> <span class="n">idx3</span><span class="p">,</span> <span class="n">idx2</span><span class="p">)]</span>
+    <span class="n">residuals</span> <span class="o">=</span> <span class="n">test_array</span> <span class="o">-</span> <span class="n">known_array</span><span class="p">[</span><span class="n">indices</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">indices</span><span class="p">,</span> <span class="n">residuals</span>
+
+</div>
+<div class="viewcode-block" id="container_to_string"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.utils.container_to_string">[docs]</a><span class="k">def</span> <span class="nf">container_to_string</span><span class="p">(</span><span class="n">container</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s">&#39;_&#39;</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">container</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">string</span> <span class="o">=</span> <span class="n">container</span>
+    <span class="k">else</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">stat_str</span> <span class="ow">in</span> <span class="n">scipy_stats</span><span class="p">:</span>
-                <span class="n">stat</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">__dict__</span><span class="p">[</span><span class="n">stat_str</span><span class="p">](</span><span class="n">data</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-            <span class="k">elif</span> <span class="n">stat_str</span> <span class="ow">in</span> <span class="n">numpy_stats</span><span class="p">:</span>
-                <span class="n">stat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">__dict__</span><span class="p">[</span><span class="n">stat_str</span><span class="p">](</span><span class="n">data</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">stat</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">__getattribute__</span><span class="p">(</span><span class="n">stat_str</span><span class="p">)()</span>
-        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-            <span class="n">s</span> <span class="o">+=</span> <span class="s">&#39;NA&#39;</span>
+            <span class="n">string</span> <span class="o">=</span> <span class="n">sep</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">element</span><span class="p">)</span> <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">container</span><span class="p">])</span>
+        <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+            <span class="n">string</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">container</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">string</span>
+
+</div>
+<div class="viewcode-block" id="simplest_type_for"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.utils.simplest_type_for">[docs]</a><span class="k">def</span> <span class="nf">simplest_type_for</span><span class="p">(</span><span class="n">values</span><span class="p">):</span>
+    <span class="n">n_values</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">n_values</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">values</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="n">n_values</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="flatten_2d_list"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.utils.flatten_2d_list">[docs]</a><span class="k">def</span> <span class="nf">flatten_2d_list</span><span class="p">(</span><span class="n">list2d</span><span class="p">):</span>
+    <span class="n">list1d</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">list2d</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">set</span><span class="p">)):</span>
+            <span class="n">list1d</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">s</span> <span class="o">+=</span> <span class="n">fmt</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">stat</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">stat_str</span> <span class="o">!=</span> <span class="n">stat_strings</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
-            <span class="n">s</span> <span class="o">+=</span> <span class="n">sep</span>
-    
-    <span class="k">return</span> <span class="n">s</span></div>
+            <span class="n">list1d</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">list1d</span>
+
+</div>
+<div class="viewcode-block" id="get_index"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.utils.get_index">[docs]</a><span class="k">def</span> <span class="nf">get_index</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    data : pandas.DataFrame or Series or DatetimeIndex</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    index : the index for the DataFrame or Series</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">)):</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">index</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DatetimeIndex</span><span class="p">):</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="n">data</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s">&#39;wrong type for `data`.&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">index</span></div>
 </pre></div>
 
     </div>
@@ -336,8 +270,8 @@
     </p>
     <p>
         &copy; Copyright 2014, nilmtk authors.<br/>
-      Last updated on Jul 10, 2014.<br/>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.2.<br/>
+      Last updated on Jul 11, 2014.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.1.<br/>
     </p>
   </div>
 </footer>
