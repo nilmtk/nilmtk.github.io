@@ -150,77 +150,39 @@
 <h1>Introducing NILMTK v0.2<a class="headerlink" href="#introducing-nilmtk-v0-2" title="Permalink to this headline">¶</a></h1>
 <p>NILMTK v0.2 is a complete re-write of NILMTK from the ground up.</p>
 <p>Some feature highlights of v0.2:</p>
-<ul>
-<li><p class="first">The entire pipeline (loading, stats, preprocessing, disag, metrics)
+<ul class="simple">
+<li>The entire pipeline (loading, stats, preprocessing, disag, metrics)
 can cope with arbitrarily large datasets whilst being gently on the
-system RAM usage</p>
-</li>
-<li><p class="first">Full metadata support, including for arbitrary wiring hierarchies</p>
-</li>
-<li><dl class="first docutils">
-<dt>MeterGroup allows users to select and aggregate meters in powerful</dt>
-<dd><p class="first last">ways with a single line of code.  e.g. to see the total energy used
+system RAM usage</li>
+<li>Full metadata support, including for arbitrary wiring hierarchies</li>
+<li>MeterGroup allows users to select and aggregate meters in powerful
+ways with a single line of code.  e.g. to see the total energy used
 by all the lights in a house just do
-&#8216;elec.select(category=&#8217;lighting&#8217;).total_energy()&#8217;.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="first docutils">
-<dt>Much more elegant handling of &#8220;dual supply&#8221; and split-phase mains</dt>
-<dd><p class="first last">(using MeterGroup)</p>
-</dd>
-</dl>
-</li>
-<li><p class="first">Experimental support for preconditions checks for some stats
-function.</p>
-</li>
-<li><p class="first">OOP design hides complexity from the user</p>
-</li>
-<li><p class="first">CO works well</p>
-</li>
-<li><p class="first">Most metrics have been converted</p>
-</li>
-<li><p class="first">REDD converter works</p>
-</li>
-<li><p class="first">about 40 unit tests</p>
-</li>
-<li><dl class="first docutils">
-<dt>Disag output is now saved chunk-by-chunk to disk, allowing us to</dt>
-<dd><p class="first last">disag and do metrics on arbitrarily large datasets.  Also lays the
+&#8216;elec.select(category=&#8217;lighting&#8217;).total_energy()&#8217;.</li>
+<li>Much more elegant handling of &#8220;dual supply&#8221; and split-phase mains
+(using MeterGroup)</li>
+<li>Experimental support for preconditions checks for some stats
+function.</li>
+<li>OOP design hides complexity from the user</li>
+<li>CO works well</li>
+<li>Most metrics have been converted</li>
+<li>REDD converter works</li>
+<li>about 40 unit tests</li>
+<li>Disag output is now saved chunk-by-chunk to disk, allowing us to
+disag and do metrics on arbitrarily large datasets.  Also lays the
 foundation for sharing raw disag output and for users to be able to
-ignore all the NILMTK pipeline except the metrics</p>
-</dd>
-</dl>
-</li>
-<li><dl class="first docutils">
-<dt>Automatic selection of the best type of power measurement (reactive,</dt>
-<dd><p class="first last">active or apparent) etc etc...</p>
-</dd>
-</dl>
-</li>
+ignore all the NILMTK pipeline except the metrics</li>
+<li>Automatic selection of the best type of power measurement (reactive,
+active or apparent) etc etc...</li>
 </ul>
 <p>However, there are still some things that are implemented in NILMTK
 v0.1 but are not yet in v0.2.  For example:</p>
-<ul>
-<li><dl class="first docutils">
-<dt>v0.2 only has one dataset importer.  However, Oli is working on a</dt>
-<dd><p class="first last">WikiEnergy converter. And there&#8217;s a details guide in the docs on how to write
-a new converter.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="first docutils">
-<dt>v0.2 only has one disag algo: CO.  It should be fairly simple to</dt>
-<dd><p class="first last">port the FHMM algo from v0.1</p>
-</dd>
-</dl>
-</li>
-<li><dl class="first docutils">
-<dt>There are a few stats functions and metrics which I haven&#8217;t had a</dt>
-<dd><p class="first last">chance to port.</p>
-</dd>
-</dl>
-</li>
+<ul class="simple">
+<li>v0.2 does not yet include all the dataset importers that v0.1 had.</li>
+<li>v0.2 only has one disag algo: CO.  It should be fairly simple to
+port the FHMM algo from v0.1</li>
+<li>There are a few stats functions and metrics which we haven&#8217;t had a
+chance to port.</li>
 </ul>
 </div>
 
