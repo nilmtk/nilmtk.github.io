@@ -139,6 +139,10 @@
 <span class="kn">from</span> <span class="nn">.timeframe</span> <span class="kn">import</span> <span class="n">TimeFrame</span><span class="p">,</span> <span class="n">timeframes_from_periodindex</span>
 <span class="kn">from</span> <span class="nn">.node</span> <span class="kn">import</span> <span class="n">Node</span>
 
+<span class="c"># do not edit! added by PythonBreakpoints</span>
+<span class="kn">from</span> <span class="nn">pdb</span> <span class="kn">import</span> <span class="n">set_trace</span> <span class="k">as</span> <span class="n">_breakpoint</span>
+
+
 <span class="n">MAX_MEM_ALLOWANCE_IN_BYTES</span> <span class="o">=</span> <span class="mf">1E9</span>
 
 <div class="viewcode-block" id="DataStore"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.datastore.DataStore">[docs]</a><span class="k">class</span> <span class="nc">DataStore</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -182,8 +186,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">store</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">HDFStore</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="n">mode</span><span class="p">)</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">HDFDataStore</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
 
-<div class="viewcode-block" id="HDFDataStore.load"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.datastore.HDFDataStore.load">[docs]</a>    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">sections</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">n_look_ahead_rows</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+<div class="viewcode-block" id="HDFDataStore.load"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.datastore.HDFDataStore.load">[docs]</a>    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">sections</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">n_look_ahead_rows</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
              <span class="n">chunksize</span><span class="o">=</span><span class="mi">1000000</span><span class="p">):</span>
+
+        <span class="c">#_breakpoint()  # 9a2a1bb0</span>
+
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -193,23 +200,26 @@
 <span class="sd">            if not provided then will return all columns from the table.</span>
 <span class="sd">        sections : list of nilmtk.TimeFrame objects or a pd.PeriodIndex, optional</span>
 <span class="sd">            defines the time sections to load.  If `self.window` is enabled</span>
-<span class="sd">            then each `period` will be intersected with `self.window`.</span>
-<span class="sd">        n_look_ahead_rows : int, optional, defaults to 10</span>
+<span class="sd">            then each `section` will be intersected with `self.window`.</span>
+<span class="sd">        n_look_ahead_rows : int, optional, defaults to 0</span>
+<span class="sd">            If &gt;0 then each returned DataFrame will have a `look_ahead`</span>
+<span class="sd">            property which will be a DataFrame of length `n_look_ahead_rows`</span>
+<span class="sd">            of the data immediately in front of the data in the main DataFrame.</span>
 <span class="sd">        chunksize : int, optional</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        ------- </span>
 <span class="sd">        generator of DataFrame objects</span>
 <span class="sd">            Each DataFrame is has extra attributes:</span>
-<span class="sd">                - timeframe : TimeFrame of period intersected with self.window</span>
+<span class="sd">                - timeframe : TimeFrame of section intersected with self.window</span>
 <span class="sd">                - look_ahead : pd.DataFrame:</span>
 <span class="sd">                    with `n_look_ahead_rows` rows.  The first row will be for</span>
-<span class="sd">                    `period.end`.  `look_ahead` stores data which appears on </span>
-<span class="sd">                    disk immediately after `period.end`; i.e. it ignores</span>
-<span class="sd">                    the next `period.start`.</span>
+<span class="sd">                    `section.end`.  `look_ahead` stores data which appears on </span>
+<span class="sd">                    disk immediately after `section.end`; i.e. it ignores</span>
+<span class="sd">                    the next `section.start`.</span>
 
 <span class="sd">            Returns an empty DataFrame if no data is available for the</span>
-<span class="sd">            specified period (or if the period.intersect(self.window)</span>
+<span class="sd">            specified section (or if the section.intersect(self.window)</span>
 <span class="sd">            is empty).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c"># TODO: calculate chunksize default based on physical </span>
@@ -221,43 +231,74 @@
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">key</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;/&#39;</span><span class="p">:</span>
             <span class="n">key</span> <span class="o">=</span> <span class="n">key</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 
+
         <span class="n">sections</span> <span class="o">=</span> <span class="p">[</span><span class="n">TimeFrame</span><span class="p">()]</span> <span class="k">if</span> <span class="n">sections</span> <span class="ow">is</span> <span class="bp">None</span> <span class="k">else</span> <span class="n">sections</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sections</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">PeriodIndex</span><span class="p">):</span>
             <span class="n">sections</span> <span class="o">=</span> <span class="n">timeframes_from_periodindex</span><span class="p">(</span><span class="n">sections</span><span class="p">)</span>
 
-        <span class="k">for</span> <span class="n">period</span> <span class="ow">in</span> <span class="n">sections</span><span class="p">:</span>
-            <span class="n">window_intersect</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">intersect</span><span class="p">(</span><span class="n">period</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">all_sections_smaller_than_chunksize</span> <span class="o">=</span> <span class="bp">True</span>
+
+        <span class="k">for</span> <span class="n">section</span> <span class="ow">in</span> <span class="n">sections</span><span class="p">:</span>
+            <span class="n">window_intersect</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">intersect</span><span class="p">(</span><span class="n">section</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">window_intersect</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+                <span class="c"># Trick to make a generator with just a single, empty DataFrame</span>
                 <span class="n">generator</span> <span class="o">=</span> <span class="n">repeat</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(),</span> <span class="mi">1</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">terms</span> <span class="o">=</span> <span class="n">window_intersect</span><span class="o">.</span><span class="n">query_terms</span><span class="p">(</span><span class="s">&#39;window_intersect&#39;</span><span class="p">)</span>
                 <span class="n">generator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="n">cols</span><span class="p">,</span> <span class="n">where</span><span class="o">=</span><span class="n">terms</span><span class="p">,</span>
                                               <span class="n">chunksize</span><span class="o">=</span><span class="n">chunksize</span><span class="p">)</span><span class="o">.</span><span class="n">__iter__</span><span class="p">()</span>
-
+                
+            <span class="n">first_sub_chunk</span> <span class="o">=</span> <span class="bp">True</span>
             <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">generator</span><span class="p">:</span>
-                <span class="c"># Load look ahead</span>
-                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">index</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-                    <span class="n">look_ahead_coords</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">select_as_coordinates</span><span class="p">(</span>
-                        <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span> <span class="n">where</span><span class="o">=</span><span class="s">&quot;index&gt;data.index[-1]&quot;</span><span class="p">)</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">look_ahead_coords</span> <span class="o">=</span> <span class="p">[]</span>
-                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">look_ahead_coords</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-                    <span class="n">look_ahead_start</span> <span class="o">=</span> <span class="n">look_ahead_coords</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-                    <span class="n">look_ahead_iterator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">select</span><span class="p">(</span>
-                        <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span> <span class="n">chunksize</span><span class="o">=</span><span class="n">n_look_ahead_rows</span><span class="p">,</span>
-                        <span class="n">cols</span><span class="o">=</span><span class="n">cols</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="n">look_ahead_start</span><span class="p">)</span><span class="o">.</span><span class="n">__iter__</span><span class="p">()</span>
-                    <span class="n">data</span><span class="o">.</span><span class="n">look_ahead</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">look_ahead_iterator</span><span class="p">)</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">data</span><span class="o">.</span><span class="n">look_ahead</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">2</span><span class="p">:</span>
+                    <span class="k">continue</span>
+
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">first_sub_chunk</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">all_sections_smaller_than_chunksize</span> <span class="o">=</span> <span class="bp">False</span>
+
+                <span class="c"># Load look ahead if necessary</span>
+                <span class="k">if</span> <span class="n">n_look_ahead_rows</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">index</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="n">look_ahead_coords</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">select_as_coordinates</span><span class="p">(</span>
+                            <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span> <span class="n">where</span><span class="o">=</span><span class="s">&quot;index&gt;data.index[-1]&quot;</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">look_ahead_coords</span> <span class="o">=</span> <span class="p">[]</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">look_ahead_coords</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="n">look_ahead_start</span> <span class="o">=</span> <span class="n">look_ahead_coords</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                        <span class="n">look_ahead_iterator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">select</span><span class="p">(</span>
+                            <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span> <span class="n">chunksize</span><span class="o">=</span><span class="n">n_look_ahead_rows</span><span class="p">,</span>
+                            <span class="n">cols</span><span class="o">=</span><span class="n">cols</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="n">look_ahead_start</span><span class="p">)</span><span class="o">.</span><span class="n">__iter__</span><span class="p">()</span>
+                        <span class="n">data</span><span class="o">.</span><span class="n">look_ahead</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">look_ahead_iterator</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">data</span><span class="o">.</span><span class="n">look_ahead</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
 
                 <span class="c"># Set timeframe</span>
-                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-                    <span class="n">data</span><span class="o">.</span><span class="n">timeframe</span> <span class="o">=</span> <span class="n">TimeFrame</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">data</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+                <span class="n">start</span> <span class="o">=</span> <span class="bp">None</span>
+                <span class="n">end</span> <span class="o">=</span> <span class="bp">None</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">==</span> <span class="n">chunksize</span><span class="p">:</span>
+                    <span class="c"># If len(data) == chunksize then we can fairly safely</span>
+                    <span class="c"># assume that the full `section` is larger than the</span>
+                    <span class="c"># chunksize so we&#39;re going to go through several</span>
+                    <span class="c"># &#39;sub chunks&#39;.</span>
+                    <span class="k">if</span> <span class="n">first_sub_chunk</span><span class="p">:</span>
+                        <span class="n">start</span> <span class="o">=</span> <span class="n">window_intersect</span><span class="o">.</span><span class="n">start</span>
+                <span class="k">elif</span> <span class="ow">not</span> <span class="n">first_sub_chunk</span><span class="p">:</span>
+                    <span class="c"># This is the last subchunk</span>
+                    <span class="n">end</span> <span class="o">=</span> <span class="n">window_intersect</span><span class="o">.</span><span class="n">end</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">data</span><span class="o">.</span><span class="n">timeframe</span> <span class="o">=</span> <span class="n">TimeFrame</span><span class="p">()</span>
+                    <span class="c"># Just a single &#39;subchunk&#39;</span>
+                    <span class="n">start</span> <span class="o">=</span> <span class="n">window_intersect</span><span class="o">.</span><span class="n">start</span>
+                    <span class="n">end</span> <span class="o">=</span> <span class="n">window_intersect</span><span class="o">.</span><span class="n">end</span>
 
-                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
-                    <span class="k">yield</span> <span class="n">data</span>
+                <span class="k">if</span> <span class="n">start</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                    <span class="n">start</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">end</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                    <span class="n">end</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+                <span class="n">data</span><span class="o">.</span><span class="n">timeframe</span> <span class="o">=</span> <span class="n">TimeFrame</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">)</span>
+                <span class="n">first_sub_chunk</span> <span class="o">=</span> <span class="bp">False</span>
+
+                <span class="k">yield</span> <span class="n">data</span>
 </div>
 <div class="viewcode-block" id="HDFDataStore.append"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.datastore.HDFDataStore.append">[docs]</a>    <span class="k">def</span> <span class="nf">append</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>

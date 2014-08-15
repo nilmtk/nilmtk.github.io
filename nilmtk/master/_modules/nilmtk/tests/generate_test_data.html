@@ -137,12 +137,14 @@
 <span class="kn">from</span> <span class="nn">nilmtk.tests.testingtools</span> <span class="kn">import</span> <span class="n">data_dir</span>
 <span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">join</span>
 <span class="kn">import</span> <span class="nn">itertools</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">nilmtk.consts</span> <span class="kn">import</span> <span class="n">JOULES_PER_KWH</span>
 <span class="kn">from</span> <span class="nn">nilmtk.measurement</span> <span class="kn">import</span> <span class="n">measurement_columns</span><span class="p">,</span> <span class="n">AC_TYPES</span>
 <span class="kn">from</span> <span class="nn">nilmtk.utils</span> <span class="kn">import</span> <span class="n">flatten_2d_list</span>
 
 <span class="n">MAX_SAMPLE_PERIOD</span> <span class="o">=</span> <span class="mi">15</span>
+
 
 <div class="viewcode-block" id="power_data"><a class="viewcode-back" href="../../../nilmtk.tests.html#nilmtk.tests.generate_test_data.power_data">[docs]</a><span class="k">def</span> <span class="nf">power_data</span><span class="p">(</span><span class="n">simple</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -153,26 +155,32 @@
 
     <span class="k">if</span> <span class="n">simple</span><span class="p">:</span>
         <span class="n">STEP</span> <span class="o">=</span> <span class="mi">10</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">150</span><span class="p">,</span> <span class="mi">150</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span>   <span class="mi">0</span><span class="p">,</span>   <span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">5000</span><span class="p">,</span>    <span class="mi">0</span><span class="p">]</span>
-        <span class="n">secs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">stop</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">*</span><span class="n">STEP</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="n">STEP</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">150</span><span class="p">,</span>
+                <span class="mi">150</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span>   <span class="mi">0</span><span class="p">,</span>   <span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">5000</span><span class="p">,</span>    <span class="mi">0</span><span class="p">]</span>
+        <span class="n">secs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">stop</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">*</span> <span class="n">STEP</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="n">STEP</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">150</span><span class="p">,</span> <span class="mi">150</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span>   <span class="mi">0</span><span class="p">,</span>   <span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">5000</span><span class="p">,</span>    <span class="mi">0</span><span class="p">]</span>
-        <span class="n">secs</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span>  <span class="mi">30</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">210</span><span class="p">,</span> <span class="mi">220</span><span class="p">,</span> <span class="mi">230</span><span class="p">,</span> <span class="mi">240</span><span class="p">,</span> <span class="mi">249</span><span class="p">,</span> <span class="mi">260</span><span class="p">,</span> <span class="mi">270</span><span class="p">,</span>  <span class="mi">290</span><span class="p">,</span> <span class="mi">1000</span><span class="p">]</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">150</span><span class="p">,</span>
+                <span class="mi">150</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span>   <span class="mi">0</span><span class="p">,</span>   <span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">5000</span><span class="p">,</span>    <span class="mi">0</span><span class="p">]</span>
+        <span class="n">secs</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span>  <span class="mi">30</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">210</span><span class="p">,</span> <span class="mi">220</span><span class="p">,</span>
+                <span class="mi">230</span><span class="p">,</span> <span class="mi">240</span><span class="p">,</span> <span class="mi">249</span><span class="p">,</span> <span class="mi">260</span><span class="p">,</span> <span class="mi">270</span><span class="p">,</span>  <span class="mi">290</span><span class="p">,</span> <span class="mi">1000</span><span class="p">]</span>
 
-    <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span> 
+    <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
     <span class="n">active</span> <span class="o">=</span> <span class="n">data</span>
     <span class="n">reactive</span> <span class="o">=</span> <span class="n">data</span> <span class="o">*</span> <span class="mf">0.9</span>
     <span class="n">apparent</span> <span class="o">=</span> <span class="n">data</span> <span class="o">*</span> <span class="mf">1.1</span>
-    
-    <span class="n">index</span> <span class="o">=</span> <span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="p">(</span><span class="s">&#39;2010-01-01&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">sec</span><span class="p">)</span> <span class="k">for</span> <span class="n">sec</span> <span class="ow">in</span> <span class="n">secs</span><span class="p">]</span>
-    <span class="n">column_tuples</span> <span class="o">=</span> <span class="p">[(</span><span class="s">&#39;power&#39;</span><span class="p">,</span> <span class="n">ac_type</span><span class="p">)</span> <span class="k">for</span> <span class="n">ac_type</span> <span class="ow">in</span> <span class="p">[</span><span class="s">&#39;active&#39;</span><span class="p">,</span> <span class="s">&#39;reactive&#39;</span><span class="p">,</span> <span class="s">&#39;apparent&#39;</span><span class="p">]]</span>
+
+    <span class="n">index</span> <span class="o">=</span> <span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="p">(</span><span class="s">&#39;2010-01-01&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">sec</span><span class="p">)</span>
+             <span class="k">for</span> <span class="n">sec</span> <span class="ow">in</span> <span class="n">secs</span><span class="p">]</span>
+    <span class="n">column_tuples</span> <span class="o">=</span> <span class="p">[(</span><span class="s">&#39;power&#39;</span><span class="p">,</span> <span class="n">ac_type</span><span class="p">)</span>
+                     <span class="k">for</span> <span class="n">ac_type</span> <span class="ow">in</span> <span class="p">[</span><span class="s">&#39;active&#39;</span><span class="p">,</span> <span class="s">&#39;reactive&#39;</span><span class="p">,</span> <span class="s">&#39;apparent&#39;</span><span class="p">]]</span>
     <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">active</span><span class="p">,</span> <span class="n">reactive</span><span class="p">,</span> <span class="n">apparent</span><span class="p">])</span><span class="o">.</span><span class="n">transpose</span><span class="p">(),</span>
-                      <span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> 
+                      <span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span>
                       <span class="n">columns</span><span class="o">=</span><span class="n">measurement_columns</span><span class="p">(</span><span class="n">column_tuples</span><span class="p">))</span>
 
     <span class="c"># calculate energy</span>
     <span class="c"># this is not cumulative energy</span>
-    <span class="n">timedelta_secs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">secs</span><span class="p">)</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">MAX_SAMPLE_PERIOD</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+    <span class="n">timedelta_secs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">secs</span><span class="p">)</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span>
+        <span class="mi">0</span><span class="p">,</span> <span class="n">MAX_SAMPLE_PERIOD</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="n">ac_type</span> <span class="ow">in</span> <span class="n">AC_TYPES</span><span class="p">:</span>
         <span class="n">joules</span> <span class="o">=</span> <span class="n">timedelta_secs</span> <span class="o">*</span> <span class="n">df</span><span class="p">[</span><span class="s">&#39;power&#39;</span><span class="p">,</span> <span class="n">ac_type</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
@@ -191,19 +199,19 @@
     <span class="n">N_METERS</span> <span class="o">=</span> <span class="mi">5</span>
     <span class="n">N_MEASUREMENTS_PER_METER</span> <span class="o">=</span> <span class="mi">3</span>
 
-    <span class="n">meters</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;meter{:d}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">N_METERS</span><span class="o">+</span><span class="mi">1</span><span class="p">)]</span>
-    <span class="n">meters</span> <span class="o">=</span> <span class="p">[[</span><span class="n">m</span><span class="p">]</span><span class="o">*</span><span class="n">N_MEASUREMENTS_PER_METER</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">meters</span><span class="p">]</span>
+    <span class="n">meters</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;meter{:d}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">N_METERS</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span>
+    <span class="n">meters</span> <span class="o">=</span> <span class="p">[[</span><span class="n">m</span><span class="p">]</span> <span class="o">*</span> <span class="n">N_MEASUREMENTS_PER_METER</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">meters</span><span class="p">]</span>
     <span class="n">meters</span> <span class="o">=</span> <span class="n">flatten_2d_list</span><span class="p">(</span><span class="n">meters</span><span class="p">)</span>
-    <span class="n">level2</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;power&#39;</span><span class="p">,</span> <span class="s">&#39;power&#39;</span><span class="p">,</span> <span class="s">&#39;voltage&#39;</span><span class="p">][:</span><span class="n">N_MEASUREMENTS_PER_METER</span><span class="p">]</span> <span class="o">*</span> <span class="n">N_METERS</span>
+    <span class="n">level2</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;power&#39;</span><span class="p">,</span> <span class="s">&#39;power&#39;</span><span class="p">,</span> <span class="s">&#39;voltage&#39;</span><span class="p">][</span>
+        <span class="p">:</span><span class="n">N_MEASUREMENTS_PER_METER</span><span class="p">]</span> <span class="o">*</span> <span class="n">N_METERS</span>
     <span class="n">level3</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;active&#39;</span><span class="p">,</span> <span class="s">&#39;reactive&#39;</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">][:</span><span class="n">N_MEASUREMENTS_PER_METER</span><span class="p">]</span> <span class="o">*</span> <span class="n">N_METERS</span>
-
 
     <span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">meters</span><span class="p">,</span> <span class="n">level2</span><span class="p">,</span> <span class="n">level3</span><span class="p">]</span>
     <span class="n">columns</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">MultiIndex</span><span class="o">.</span><span class="n">from_arrays</span><span class="p">(</span><span class="n">columns</span><span class="p">)</span>
     <span class="n">rng</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">date_range</span><span class="p">(</span><span class="s">&#39;2012-01-01&#39;</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s">&#39;S&#39;</span><span class="p">,</span> <span class="n">periods</span><span class="o">=</span><span class="n">N_PERIODS</span><span class="p">)</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">low</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> 
-                             <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">N_PERIODS</span><span class="p">,</span> 
-                                   <span class="n">N_METERS</span><span class="o">*</span><span class="n">N_MEASUREMENTS_PER_METER</span><span class="p">))</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">low</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+                             <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">N_PERIODS</span><span class="p">,</span>
+                                   <span class="n">N_METERS</span> <span class="o">*</span> <span class="n">N_MEASUREMENTS_PER_METER</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">rng</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">columns</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
 </div>
 <span class="n">MEASUREMENTS</span> <span class="o">=</span> <span class="p">[(</span><span class="s">&#39;power&#39;</span><span class="p">,</span> <span class="s">&#39;active&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;energy&#39;</span><span class="p">,</span> <span class="s">&#39;reactive&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;voltage&#39;</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">)]</span>
@@ -212,16 +220,17 @@
 <div class="viewcode-block" id="create_random_df"><a class="viewcode-back" href="../../../nilmtk.tests.html#nilmtk.tests.generate_test_data.create_random_df">[docs]</a><span class="k">def</span> <span class="nf">create_random_df</span><span class="p">():</span>
     <span class="n">N_PERIODS</span> <span class="o">=</span> <span class="mf">1E4</span>
     <span class="n">rng</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">date_range</span><span class="p">(</span><span class="s">&#39;2012-01-01&#39;</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s">&#39;S&#39;</span><span class="p">,</span> <span class="n">periods</span><span class="o">=</span><span class="n">N_PERIODS</span><span class="p">)</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">low</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">N_PERIODS</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">MEASUREMENTS</span><span class="p">)))</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span>
+        <span class="n">low</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">N_PERIODS</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">MEASUREMENTS</span><span class="p">)))</span>
     <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">rng</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span>
                         <span class="n">columns</span><span class="o">=</span><span class="n">measurement_columns</span><span class="p">(</span><span class="n">MEASUREMENTS</span><span class="p">))</span>
 
 </div>
-<span class="n">TEST_METER</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;manufacturer&#39;</span><span class="p">:</span> <span class="s">&#39;Test Manufacturer&#39;</span><span class="p">,</span> 
-              <span class="s">&#39;model&#39;</span><span class="p">:</span> <span class="s">&#39;Random Meter&#39;</span><span class="p">,</span> 
+<span class="n">TEST_METER</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;manufacturer&#39;</span><span class="p">:</span> <span class="s">&#39;Test Manufacturer&#39;</span><span class="p">,</span>
+              <span class="s">&#39;model&#39;</span><span class="p">:</span> <span class="s">&#39;Random Meter&#39;</span><span class="p">,</span>
               <span class="s">&#39;sample_period&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
               <span class="s">&#39;max_sample_period&#39;</span><span class="p">:</span> <span class="n">MAX_SAMPLE_PERIOD</span><span class="p">,</span>
-              <span class="s">&#39;measurements&#39;</span><span class="p">:</span> <span class="p">[]</span> <span class="p">}</span>
+              <span class="s">&#39;measurements&#39;</span><span class="p">:</span> <span class="p">[]}</span>
 
 <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">MEASUREMENTS</span><span class="p">:</span>
     <span class="n">TEST_METER</span><span class="p">[</span><span class="s">&#39;measurements&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
@@ -239,24 +248,78 @@
     <span class="n">node</span><span class="o">.</span><span class="n">_f_setattr</span><span class="p">(</span><span class="s">&#39;metadata&#39;</span><span class="p">,</span> <span class="n">md</span><span class="p">)</span>
 
 </div>
+<div class="viewcode-block" id="create_co_test_hdf5"><a class="viewcode-back" href="../../../nilmtk.tests.html#nilmtk.tests.generate_test_data.create_co_test_hdf5">[docs]</a><span class="k">def</span> <span class="nf">create_co_test_hdf5</span><span class="p">():</span>
+    <span class="n">FILENAME</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="n">data_dir</span><span class="p">(),</span> <span class="s">&#39;co_test.h5&#39;</span><span class="p">)</span>
+    <span class="n">N_METERS</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">chunk</span> <span class="o">=</span> <span class="mi">1000</span>
+    <span class="n">N_PERIODS</span> <span class="o">=</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">chunk</span>
+    <span class="n">rng</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">date_range</span><span class="p">(</span><span class="s">&#39;2012-01-01&#39;</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s">&#39;S&#39;</span><span class="p">,</span> <span class="n">periods</span><span class="o">=</span><span class="n">N_PERIODS</span><span class="p">)</span>
+
+    <span class="n">dfs</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+
+    <span class="c"># mains meter data</span>
+    <span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="mi">1200</span><span class="p">]</span> <span class="o">*</span> <span class="n">chunk</span><span class="p">)</span>
+
+    <span class="c"># appliance 1 data</span>
+    <span class="n">data</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">200</span><span class="p">]</span> <span class="o">*</span> <span class="n">chunk</span><span class="p">)</span>
+
+    <span class="c"># appliance 2 data</span>
+    <span class="n">data</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="mi">1000</span><span class="p">]</span> <span class="o">*</span> <span class="n">chunk</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">):</span>
+        <span class="n">dfs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">index</span><span class="o">=</span><span class="n">rng</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span>
+                              <span class="n">columns</span><span class="o">=</span><span class="n">measurement_columns</span><span class="p">([(</span><span class="s">&#39;power&#39;</span><span class="p">,</span> <span class="s">&#39;active&#39;</span><span class="p">)]))</span>
+
+    <span class="n">store</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">HDFStore</span><span class="p">(</span><span class="n">FILENAME</span><span class="p">,</span> <span class="s">&#39;w&#39;</span><span class="p">,</span> <span class="n">complevel</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span> <span class="n">complib</span><span class="o">=</span><span class="s">&#39;zlib&#39;</span><span class="p">)</span>
+    <span class="n">elec_meter_metadata</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">meter</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">N_METERS</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="s">&#39;building1/elec/meter{:d}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">meter</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&quot;Saving&quot;</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+        <span class="n">store</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">dfs</span><span class="p">[</span><span class="n">meter</span><span class="p">],</span> <span class="n">format</span><span class="o">=</span><span class="s">&#39;table&#39;</span><span class="p">)</span>
+        <span class="n">elec_meter_metadata</span><span class="p">[</span><span class="n">meter</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s">&#39;device_model&#39;</span><span class="p">:</span> <span class="n">TEST_METER</span><span class="p">[</span><span class="s">&#39;model&#39;</span><span class="p">],</span>
+            <span class="s">&#39;submeter_of&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s">&#39;data_location&#39;</span><span class="p">:</span> <span class="n">key</span>
+        <span class="p">}</span>
+
+    <span class="c"># For mains meter, we need to specify that it is a site meter</span>
+    <span class="k">del</span> <span class="n">elec_meter_metadata</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="s">&#39;submeter_of&#39;</span><span class="p">]</span>
+    <span class="n">elec_meter_metadata</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="s">&#39;site_meter&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">True</span>
+
+    <span class="c"># Save dataset-wide metadata</span>
+    <span class="n">store</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">_v_attrs</span><span class="o">.</span><span class="n">metadata</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s">&#39;meter_devices&#39;</span><span class="p">:</span> <span class="p">{</span><span class="n">TEST_METER</span><span class="p">[</span><span class="s">&#39;model&#39;</span><span class="p">]:</span> <span class="n">TEST_METER</span><span class="p">}}</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">store</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">_v_attrs</span><span class="o">.</span><span class="n">metadata</span><span class="p">)</span>
+
+    <span class="c"># Building metadata</span>
+    <span class="n">add_building_metadata</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="n">elec_meter_metadata</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">store</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">store</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+
+    <span class="n">store</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+    <span class="n">store</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+</div>
 <div class="viewcode-block" id="create_random_hdf5"><a class="viewcode-back" href="../../../nilmtk.tests.html#nilmtk.tests.generate_test_data.create_random_hdf5">[docs]</a><span class="k">def</span> <span class="nf">create_random_hdf5</span><span class="p">():</span>
     <span class="n">FILENAME</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="n">data_dir</span><span class="p">(),</span> <span class="s">&#39;random.h5&#39;</span><span class="p">)</span>
     <span class="n">N_METERS</span> <span class="o">=</span> <span class="mi">5</span>
 
     <span class="n">store</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">HDFStore</span><span class="p">(</span><span class="n">FILENAME</span><span class="p">,</span> <span class="s">&#39;w&#39;</span><span class="p">,</span> <span class="n">complevel</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span> <span class="n">complib</span><span class="o">=</span><span class="s">&#39;zlib&#39;</span><span class="p">)</span>
     <span class="n">elec_meter_metadata</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="k">for</span> <span class="n">meter</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">N_METERS</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">meter</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">N_METERS</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
         <span class="n">key</span> <span class="o">=</span> <span class="s">&#39;building1/elec/meter{:d}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">meter</span><span class="p">)</span>
         <span class="k">print</span><span class="p">(</span><span class="s">&quot;Saving&quot;</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
         <span class="n">store</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">create_random_df</span><span class="p">(),</span> <span class="n">format</span><span class="o">=</span><span class="s">&#39;table&#39;</span><span class="p">)</span>
         <span class="n">elec_meter_metadata</span><span class="p">[</span><span class="n">meter</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s">&#39;device_model&#39;</span><span class="p">:</span> <span class="n">TEST_METER</span><span class="p">[</span><span class="s">&#39;model&#39;</span><span class="p">],</span> 
+            <span class="s">&#39;device_model&#39;</span><span class="p">:</span> <span class="n">TEST_METER</span><span class="p">[</span><span class="s">&#39;model&#39;</span><span class="p">],</span>
             <span class="s">&#39;submeter_of&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
             <span class="s">&#39;data_location&#39;</span><span class="p">:</span> <span class="n">key</span>
         <span class="p">}</span>
 
     <span class="c"># Save dataset-wide metadata</span>
-    <span class="n">store</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">_v_attrs</span><span class="o">.</span><span class="n">metadata</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;meter_devices&#39;</span><span class="p">:</span> <span class="p">{</span><span class="n">TEST_METER</span><span class="p">[</span><span class="s">&#39;model&#39;</span><span class="p">]:</span> <span class="n">TEST_METER</span><span class="p">}}</span>
+    <span class="n">store</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">_v_attrs</span><span class="o">.</span><span class="n">metadata</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s">&#39;meter_devices&#39;</span><span class="p">:</span> <span class="p">{</span><span class="n">TEST_METER</span><span class="p">[</span><span class="s">&#39;model&#39;</span><span class="p">]:</span> <span class="n">TEST_METER</span><span class="p">}}</span>
     <span class="k">print</span><span class="p">(</span><span class="n">store</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">_v_attrs</span><span class="o">.</span><span class="n">metadata</span><span class="p">)</span>
 
     <span class="c"># Building metadata</span>
@@ -273,8 +336,8 @@
     <span class="n">df</span> <span class="o">=</span> <span class="n">power_data</span><span class="p">(</span><span class="n">simple</span><span class="o">=</span><span class="n">simple</span><span class="p">)</span>
 
     <span class="n">meter_device</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s">&#39;manufacturer&#39;</span><span class="p">:</span> <span class="s">&#39;Test Manufacturer&#39;</span><span class="p">,</span> 
-        <span class="s">&#39;model&#39;</span><span class="p">:</span> <span class="s">&#39;Energy Meter&#39;</span><span class="p">,</span> 
+        <span class="s">&#39;manufacturer&#39;</span><span class="p">:</span> <span class="s">&#39;Test Manufacturer&#39;</span><span class="p">,</span>
+        <span class="s">&#39;model&#39;</span><span class="p">:</span> <span class="s">&#39;Energy Meter&#39;</span><span class="p">,</span>
         <span class="s">&#39;sample_period&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
         <span class="s">&#39;max_sample_period&#39;</span><span class="p">:</span> <span class="n">MAX_SAMPLE_PERIOD</span><span class="p">,</span>
         <span class="s">&#39;measurements&#39;</span><span class="p">:</span> <span class="p">[]</span>
@@ -290,7 +353,7 @@
     <span class="n">elec_meter_metadata</span> <span class="o">=</span> <span class="p">{}</span>
 
     <span class="c"># Save sensor data</span>
-    <span class="k">for</span> <span class="n">meter_i</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]:</span>
+    <span class="k">for</span> <span class="n">meter_i</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]:</span>
         <span class="n">key</span> <span class="o">=</span> <span class="s">&#39;building1/elec/meter{:d}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">meter_i</span><span class="p">)</span>
         <span class="k">print</span><span class="p">(</span><span class="s">&quot;Saving&quot;</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
         <span class="n">store</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="s">&#39;table&#39;</span><span class="p">)</span>
@@ -307,9 +370,10 @@
         <span class="n">elec_meter_metadata</span><span class="p">[</span><span class="n">meter_i</span><span class="p">]</span> <span class="o">=</span> <span class="n">meta</span>
 
     <span class="c"># Save dataset-wide metadata</span>
-    <span class="n">store</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">_v_attrs</span><span class="o">.</span><span class="n">metadata</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;meter_devices&#39;</span><span class="p">:</span> <span class="p">{</span><span class="n">meter_device</span><span class="p">[</span><span class="s">&#39;model&#39;</span><span class="p">]:</span> <span class="n">meter_device</span><span class="p">}}</span>
+    <span class="n">store</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">_v_attrs</span><span class="o">.</span><span class="n">metadata</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s">&#39;meter_devices&#39;</span><span class="p">:</span> <span class="p">{</span><span class="n">meter_device</span><span class="p">[</span><span class="s">&#39;model&#39;</span><span class="p">]:</span> <span class="n">meter_device</span><span class="p">}}</span>
 
-    <span class="c"># Add building metadata </span>
+    <span class="c"># Add building metadata</span>
     <span class="n">add_building_metadata</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="n">elec_meter_metadata</span><span class="p">)</span>
 
     <span class="n">store</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
@@ -319,7 +383,8 @@
 <div class="viewcode-block" id="create_all"><a class="viewcode-back" href="../../../nilmtk.tests.html#nilmtk.tests.generate_test_data.create_all">[docs]</a><span class="k">def</span> <span class="nf">create_all</span><span class="p">():</span>
     <span class="n">create_energy_hdf5</span><span class="p">()</span>
     <span class="n">create_energy_hdf5</span><span class="p">(</span><span class="n">simple</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
-    <span class="n">create_random_hdf5</span><span class="p">()</span> </div>
+    <span class="n">create_random_hdf5</span><span class="p">()</span>
+    <span class="n">create_co_test_hdf5</span><span class="p">()</span></div>
 </pre></div>
 
     </div>

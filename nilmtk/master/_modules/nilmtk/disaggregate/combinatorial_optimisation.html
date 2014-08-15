@@ -148,6 +148,7 @@
 
 
 <div class="viewcode-block" id="CombinatorialOptimisation"><a class="viewcode-back" href="../../../nilmtk.disaggregate.html#nilmtk.disaggregate.combinatorial_optimisation.CombinatorialOptimisation">[docs]</a><span class="k">class</span> <span class="nc">CombinatorialOptimisation</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
     <span class="sd">&quot;&quot;&quot;1 dimensional combinatorial optimisation NILM algorithm.</span>
 
 <span class="sd">    Attributes</span>
@@ -182,7 +183,7 @@
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">meter</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">metergroup</span><span class="o">.</span><span class="n">submeters</span><span class="p">()</span><span class="o">.</span><span class="n">meters</span><span class="p">):</span>
             <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">meter</span><span class="o">.</span><span class="n">power_series</span><span class="p">(</span><span class="n">preprocessing</span><span class="o">=</span><span class="p">[</span><span class="n">Clip</span><span class="p">()]):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">[</span><span class="n">meter</span><span class="o">.</span><span class="n">instance</span><span class="p">()]</span> <span class="o">=</span> <span class="n">cluster</span><span class="p">(</span><span class="n">chunk</span><span class="p">,</span> <span class="n">max_num_clusters</span><span class="p">)</span>
-                <span class="k">break</span> <span class="c"># TODO handle multiple chunks per appliance</span>
+                <span class="k">break</span>  <span class="c"># TODO handle multiple chunks per appliance</span>
 </div>
 <div class="viewcode-block" id="CombinatorialOptimisation.disaggregate"><a class="viewcode-back" href="../../../nilmtk.disaggregate.html#nilmtk.disaggregate.combinatorial_optimisation.CombinatorialOptimisation.disaggregate">[docs]</a>    <span class="k">def</span> <span class="nf">disaggregate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mains</span><span class="p">,</span> <span class="n">output_datastore</span><span class="p">,</span> <span class="o">**</span><span class="n">load_kwargs</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Disaggregate mains according to the model learnt previously.</span>
@@ -203,12 +204,13 @@
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">MIN_CHUNK_LENGTH</span> <span class="o">=</span> <span class="mi">100</span>
 
-        <span class="c"># If we import sklearn at the top of the file then it makes autodoc fail</span>
+        <span class="c"># If we import sklearn at the top of the file then it makes autodoc</span>
+        <span class="c"># fail</span>
         <span class="kn">from</span> <span class="nn">sklearn.utils.extmath</span> <span class="kn">import</span> <span class="n">cartesian</span>
 
         <span class="c"># sklearn produces lots of DepreciationWarnings with PyTables</span>
         <span class="kn">import</span> <span class="nn">warnings</span>
-        <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">DeprecationWarning</span><span class="p">)</span> 
+        <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">DeprecationWarning</span><span class="p">)</span>
 
         <span class="c"># Extract optional parameters from load_kwargs</span>
         <span class="n">date_now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
@@ -224,21 +226,22 @@
         <span class="c"># [[0, 0, 0, 0], [0, 0, 0, 100], [0, 0, 50, 0], [0, 0, 50, 100], ...]</span>
 
         <span class="n">summed_power_of_each_combination</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">state_combinations</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-        <span class="c"># summed_power_of_each_combination is now an array where each </span>
+        <span class="c"># summed_power_of_each_combination is now an array where each</span>
         <span class="c"># value is the total power demand for each combination of states.</span>
 
-        <span class="n">load_kwargs</span><span class="p">[</span><span class="s">&#39;sections&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">load_kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s">&#39;sections&#39;</span><span class="p">,</span> 
+        <span class="n">load_kwargs</span><span class="p">[</span><span class="s">&#39;sections&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">load_kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s">&#39;sections&#39;</span><span class="p">,</span>
                                                   <span class="n">mains</span><span class="o">.</span><span class="n">good_sections</span><span class="p">())</span>
         <span class="n">resample_rule</span> <span class="o">=</span> <span class="s">&#39;{:d}S&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resample_seconds</span><span class="p">)</span>
         <span class="n">timeframes</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">building_path</span> <span class="o">=</span> <span class="s">&#39;/building{}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mains</span><span class="o">.</span><span class="n">building</span><span class="p">())</span>
         <span class="n">mains_data_location</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;{}/elec/meter{}&#39;</span>
-                               <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">building_path</span><span class="p">,</span> 
+                               <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">building_path</span><span class="p">,</span>
                                        <span class="n">container_to_string</span><span class="p">(</span><span class="n">mains</span><span class="o">.</span><span class="n">instance</span><span class="p">())))</span>
 
         <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">mains</span><span class="o">.</span><span class="n">power_series</span><span class="p">(</span><span class="o">**</span><span class="n">load_kwargs</span><span class="p">):</span>
 
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">MIN_CHUNK_LENGTH</span><span class="p">:</span>
+
                 <span class="k">continue</span>
 
             <span class="c"># Record metadata</span>
@@ -265,7 +268,7 @@
                                                      <span class="n">columns</span><span class="o">=</span><span class="n">cols</span><span class="p">))</span>
 
             <span class="c"># Copy mains data to disag output</span>
-            <span class="n">output_datastore</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="n">mains_data_location</span><span class="p">,</span> 
+            <span class="n">output_datastore</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="n">mains_data_location</span><span class="p">,</span>
                                     <span class="n">value</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">chunk</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">cols</span><span class="p">))</span>
 
         <span class="c">##################################</span>
@@ -285,7 +288,7 @@
                 <span class="s">&#39;max_sample_period&#39;</span><span class="p">:</span> <span class="n">resample_seconds</span><span class="p">,</span>
                 <span class="s">&#39;measurements&#39;</span><span class="p">:</span> <span class="p">[{</span>
                     <span class="s">&#39;physical_quantity&#39;</span><span class="p">:</span> <span class="n">measurement</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
-                    <span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="n">measurement</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> 
+                    <span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="n">measurement</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
                 <span class="p">}]</span>
             <span class="p">},</span>
             <span class="s">&#39;mains&#39;</span><span class="p">:</span> <span class="p">{</span>
@@ -294,29 +297,29 @@
                 <span class="s">&#39;max_sample_period&#39;</span><span class="p">:</span> <span class="n">resample_seconds</span><span class="p">,</span>
                 <span class="s">&#39;measurements&#39;</span><span class="p">:</span> <span class="p">[{</span>
                     <span class="s">&#39;physical_quantity&#39;</span><span class="p">:</span> <span class="n">measurement</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
-                    <span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="n">measurement</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> 
-                <span class="p">}]</span>                
+                    <span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="n">measurement</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="p">}]</span>
             <span class="p">}</span>
         <span class="p">}</span>
 
         <span class="n">merged_timeframes</span> <span class="o">=</span> <span class="n">merge_timeframes</span><span class="p">(</span><span class="n">timeframes</span><span class="p">,</span> <span class="n">gap</span><span class="o">=</span><span class="n">resample_seconds</span><span class="p">)</span>
-        <span class="n">total_timeframe</span> <span class="o">=</span> <span class="n">TimeFrame</span><span class="p">(</span><span class="n">merged_timeframes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> 
+        <span class="n">total_timeframe</span> <span class="o">=</span> <span class="n">TimeFrame</span><span class="p">(</span><span class="n">merged_timeframes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">start</span><span class="p">,</span>
                                     <span class="n">merged_timeframes</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">end</span><span class="p">)</span>
 
-        <span class="n">dataset_metadata</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;name&#39;</span><span class="p">:</span> <span class="n">output_name</span><span class="p">,</span> <span class="s">&#39;date&#39;</span><span class="p">:</span> <span class="n">date_now</span><span class="p">,</span> 
+        <span class="n">dataset_metadata</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;name&#39;</span><span class="p">:</span> <span class="n">output_name</span><span class="p">,</span> <span class="s">&#39;date&#39;</span><span class="p">:</span> <span class="n">date_now</span><span class="p">,</span>
                             <span class="s">&#39;meter_devices&#39;</span><span class="p">:</span> <span class="n">meter_devices</span><span class="p">,</span>
                             <span class="s">&#39;timeframe&#39;</span><span class="p">:</span> <span class="n">total_timeframe</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()}</span>
         <span class="n">output_datastore</span><span class="o">.</span><span class="n">save_metadata</span><span class="p">(</span><span class="s">&#39;/&#39;</span><span class="p">,</span> <span class="n">dataset_metadata</span><span class="p">)</span>
 
         <span class="c"># Building metadata</span>
-        
+
         <span class="c"># Mains meter:</span>
         <span class="n">elec_meters</span> <span class="o">=</span> <span class="p">{</span>
             <span class="n">mains</span><span class="o">.</span><span class="n">instance</span><span class="p">():</span> <span class="p">{</span>
-                <span class="s">&#39;device_model&#39;</span><span class="p">:</span> <span class="s">&#39;mains&#39;</span><span class="p">,</span> 
-                <span class="s">&#39;site_meter&#39;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span> 
+                <span class="s">&#39;device_model&#39;</span><span class="p">:</span> <span class="s">&#39;mains&#39;</span><span class="p">,</span>
+                <span class="s">&#39;site_meter&#39;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
                 <span class="s">&#39;data_location&#39;</span><span class="p">:</span> <span class="n">mains_data_location</span><span class="p">,</span>
-                <span class="s">&#39;preprocessing_applied&#39;</span><span class="p">:</span> <span class="p">{},</span> <span class="c"># TODO</span>
+                <span class="s">&#39;preprocessing_applied&#39;</span><span class="p">:</span> <span class="p">{},</span>  <span class="c"># TODO</span>
                 <span class="s">&#39;statistics&#39;</span><span class="p">:</span> <span class="p">{</span>
                     <span class="s">&#39;timeframe&#39;</span><span class="p">:</span> <span class="n">total_timeframe</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(),</span>
                     <span class="s">&#39;good_sections&#39;</span><span class="p">:</span> <span class="n">list_of_timeframe_dicts</span><span class="p">(</span><span class="n">merged_timeframes</span><span class="p">)</span>
@@ -333,7 +336,7 @@
                     <span class="s">&#39;data_location&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;{}/elec/meter{}&#39;</span>
                                       <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">building_path</span><span class="p">,</span>
                                               <span class="n">container_to_string</span><span class="p">(</span><span class="n">chan</span><span class="p">))),</span>
-                    <span class="s">&#39;preprocessing_applied&#39;</span><span class="p">:</span> <span class="p">{},</span> <span class="c"># TODO</span>
+                    <span class="s">&#39;preprocessing_applied&#39;</span><span class="p">:</span> <span class="p">{},</span>  <span class="c"># TODO</span>
                     <span class="s">&#39;statistics&#39;</span><span class="p">:</span> <span class="p">{</span>
                         <span class="s">&#39;timeframe&#39;</span><span class="p">:</span> <span class="n">total_timeframe</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(),</span>
                         <span class="s">&#39;good_sections&#39;</span><span class="p">:</span> <span class="n">list_of_timeframe_dicts</span><span class="p">(</span><span class="n">merged_timeframes</span><span class="p">)</span>
@@ -342,13 +345,14 @@
             <span class="p">})</span>
 
         <span class="c"># Appliances:</span>
-        <span class="n">appliances</span> <span class="o">=</span> <span class="p">[]</span> <span class="c"># TODO</span>
+        <span class="n">appliances</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c"># TODO</span>
 
         <span class="n">building_metadata</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s">&#39;instance&#39;</span><span class="p">:</span> <span class="n">mains</span><span class="o">.</span><span class="n">building</span><span class="p">(),</span>
             <span class="s">&#39;elec_meters&#39;</span><span class="p">:</span> <span class="n">elec_meters</span><span class="p">,</span>
             <span class="s">&#39;appliances&#39;</span><span class="p">:</span> <span class="n">appliances</span>
         <span class="p">}</span>
+
         <span class="n">output_datastore</span><span class="o">.</span><span class="n">save_metadata</span><span class="p">(</span><span class="n">building_path</span><span class="p">,</span> <span class="n">building_metadata</span><span class="p">)</span>
 </div>
 <div class="viewcode-block" id="CombinatorialOptimisation.export_model"><a class="viewcode-back" href="../../../nilmtk.disaggregate.html#nilmtk.disaggregate.combinatorial_optimisation.CombinatorialOptimisation.export_model">[docs]</a>    <span class="k">def</span> <span class="nf">export_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>

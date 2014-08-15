@@ -135,6 +135,8 @@
 <span class="kn">import</span> <span class="nn">networkx</span> <span class="kn">as</span> <span class="nn">nx</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">compiler.ast</span> <span class="kn">import</span> <span class="n">flatten</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">timedelta</span>
 <span class="kn">from</span> <span class="nn">warnings</span> <span class="kn">import</span> <span class="n">warn</span>
 <span class="kn">from</span> <span class="nn">.elecmeter</span> <span class="kn">import</span> <span class="n">ElecMeter</span><span class="p">,</span> <span class="n">ElecMeterID</span>
 <span class="kn">from</span> <span class="nn">.appliance</span> <span class="kn">import</span> <span class="n">Appliance</span>
@@ -235,7 +237,15 @@
         <span class="k">elif</span> <span class="n">n_dominant_appliances</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">dominant_appliances</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s">&quot;More than one dominant appliance in MeterGroup!&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                <span class="s">&quot;More than one dominant appliance in MeterGroup!&quot;</span>
+                <span class="s">&quot; (The dominant appliance per meter should be manually&quot;</span>
+                <span class="s">&quot; specified in the metadata. If it isn&#39;t and if there are&quot;</span>
+                <span class="s">&quot; multiple appliances for a meter then NILMTK assumes&quot;</span>
+                <span class="s">&quot; all appliances on that meter are dominant. NILMTK&quot;</span>
+                <span class="s">&quot; can&#39;t automatically distinguish between multiple&quot;</span>
+                <span class="s">&quot; appliances on the same meter (at least,&quot;</span>
+                <span class="s">&quot; not without using NILM!))&quot;</span><span class="p">)</span>
 </div>
 <div class="viewcode-block" id="MeterGroup.nested_metergroups"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.metergroup.MeterGroup.nested_metergroups">[docs]</a>    <span class="k">def</span> <span class="nf">nested_metergroups</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">m</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">meters</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">MeterGroup</span><span class="p">)]</span>
@@ -501,7 +511,21 @@
         <span class="n">appliances</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">meter</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">meters</span><span class="p">:</span>
             <span class="n">appliances</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">meter</span><span class="o">.</span><span class="n">appliances</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">appliances</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">appliances</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="MeterGroup.map_meter_instances_to_appliance_ids"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.metergroup.MeterGroup.map_meter_instances_to_appliance_ids">[docs]</a>    <span class="k">def</span> <span class="nf">map_meter_instances_to_appliance_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        dict where keys are meter instances (for ElecMeters)</span>
+<span class="sd">        or tuples of meter instances (for MeterGroups) and values</span>
+<span class="sd">        are a list of ApplianceIDs.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">meter_instance_to_appliance_ids_map</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">meter</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">meters</span><span class="p">:</span>
+            <span class="n">meter_instance_to_appliance_ids_map</span><span class="p">[</span><span class="n">meter</span><span class="o">.</span><span class="n">instance</span><span class="p">()]</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">meter</span><span class="o">.</span><span class="n">appliances</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">meter_instance_to_appliance_ids_map</span>
 </div>
     <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">s</span> <span class="o">=</span> <span class="s">&quot;{:s}(meters=</span><span class="se">\n</span><span class="s">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">)</span>
@@ -638,7 +662,7 @@
         <span class="k">return</span> <span class="nb">any</span><span class="p">([</span><span class="n">meter</span><span class="o">.</span><span class="n">is_site_meter</span><span class="p">()</span> <span class="k">for</span> <span class="n">meter</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">meters</span><span class="p">])</span>
 </div>
 <div class="viewcode-block" id="MeterGroup.total_energy"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.metergroup.MeterGroup.total_energy">[docs]</a>    <span class="k">def</span> <span class="nf">total_energy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">load_kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Sums together total energy for each meter.</span>
+        <span class="sd">&quot;&quot;&quot;Sums together total meter_energy for each meter.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -651,20 +675,36 @@
 <span class="sd">        else return either a single number of, if there are multiple</span>
 <span class="sd">        AC types, then return a pd.Series with a row for each AC type.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_kwargs</span><span class="p">(</span><span class="n">load_kwargs</span><span class="p">)</span>
         <span class="n">full_results</span> <span class="o">=</span> <span class="n">load_kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s">&#39;full_results&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
-        <span class="n">total_energy</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="k">for</span> <span class="n">meter</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">meters</span><span class="p">:</span>
-            <span class="n">meter_energy</span> <span class="o">=</span> <span class="n">meter</span><span class="o">.</span><span class="n">total_energy</span><span class="p">(</span><span class="n">full_results</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="o">**</span><span class="n">load_kwargs</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">total_energy</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-                <span class="n">total_energy</span> <span class="o">=</span> <span class="n">meter_energy</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">total_energy</span><span class="o">.</span><span class="n">unify</span><span class="p">(</span><span class="n">meter_energy</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">full_results</span><span class="p">:</span> 
-            <span class="k">return</span> <span class="n">total_energy</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">total_energy</span><span class="o">.</span><span class="n">simple</span><span class="p">()</span>
+        <span class="n">meter_energies</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_collect_stats_on_all_meters</span><span class="p">(</span>
+            <span class="n">load_kwargs</span><span class="p">,</span> <span class="s">&#39;total_energy&#39;</span><span class="p">,</span> <span class="n">full_results</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">meter_energies</span><span class="p">:</span>
+            <span class="n">total_energy_results</span> <span class="o">=</span> <span class="n">meter_energies</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">meter_energy</span> <span class="ow">in</span> <span class="n">meter_energies</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+                <span class="k">if</span> <span class="n">full_results</span><span class="p">:</span>
+                    <span class="n">total_energy_results</span><span class="o">.</span><span class="n">unify</span><span class="p">(</span><span class="n">meter_energy</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">total_energy_results</span> <span class="o">+=</span> <span class="n">meter_energy</span>
+            <span class="k">return</span> <span class="n">total_energy_results</span>
 </div>
+    <span class="k">def</span> <span class="nf">_collect_stats_on_all_meters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">load_kwargs</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">full_results</span><span class="p">):</span>
+        <span class="n">collected_stats</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">meter</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">meters</span><span class="p">:</span>
+            <span class="n">single_stat</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">meter</span><span class="p">,</span> <span class="n">func</span><span class="p">)(</span><span class="n">full_results</span><span class="o">=</span><span class="n">full_results</span><span class="p">,</span>
+                                               <span class="o">**</span><span class="n">load_kwargs</span><span class="p">)</span>
+            <span class="n">collected_stats</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">single_stat</span><span class="p">)</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">full_results</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">meters</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span>
+                <span class="ow">not</span> <span class="n">meter</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">all_sections_smaller_than_chunksize</span><span class="p">):</span>
+                <span class="n">warn</span><span class="p">(</span><span class="s">&quot;at least one section requested from &#39;{}&#39; required&quot;</span>
+                     <span class="s">&quot; multiple chunks to be loaded into memory. This may cause&quot;</span>
+                     <span class="s">&quot; a failure when we try to unify results from multiple&quot;</span>
+                     <span class="s">&quot; meters.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">meter</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">collected_stats</span>
+
 <div class="viewcode-block" id="MeterGroup.dropout_rate"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.metergroup.MeterGroup.dropout_rate">[docs]</a>    <span class="k">def</span> <span class="nf">dropout_rate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">load_kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Sums together total energy for each meter.</span>
 
@@ -679,23 +719,42 @@
 <span class="sd">        else return either a single number of, if there are multiple</span>
 <span class="sd">        AC types, then return a pd.Series with a row for each AC type.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_kwargs</span><span class="p">(</span><span class="n">load_kwargs</span><span class="p">)</span>
         <span class="n">full_results</span> <span class="o">=</span> <span class="n">load_kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s">&#39;full_results&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">full_results</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
 
-        <span class="n">dropout_rates</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">meter</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">meters</span><span class="p">:</span>
-            <span class="n">meter_dropout</span> <span class="o">=</span> <span class="n">meter</span><span class="o">.</span><span class="n">dropout_rate</span><span class="p">(</span><span class="n">full_results</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="o">**</span><span class="n">load_kwargs</span><span class="p">)</span>
-            <span class="n">dropout_rates</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">meter_dropout</span><span class="p">)</span>
+        <span class="n">dropout_rates</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_collect_stats_on_all_meters</span><span class="p">(</span>
+            <span class="n">load_kwargs</span><span class="p">,</span> <span class="s">&#39;dropout_rate&#39;</span><span class="p">,</span> <span class="n">full_results</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">dropout_rates</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">full_results</span> <span class="ow">and</span> <span class="n">dropout_rates</span><span class="p">:</span>
+            <span class="n">dropout_rate_results</span> <span class="o">=</span> <span class="n">dropout_rates</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">dr</span> <span class="ow">in</span> <span class="n">dropout_rates</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+                <span class="n">dropout_rate_results</span><span class="o">.</span><span class="n">unify</span><span class="p">(</span><span class="n">dr</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">dropout_rate_results</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">dropout_rates</span><span class="p">)</span>
 </div>
+    <span class="k">def</span> <span class="nf">_check_kwargs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">load_kwargs</span><span class="p">):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">load_kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;full_results &#39;</span><span class="p">)</span>
+            <span class="ow">and</span> <span class="ow">not</span> <span class="n">load_kwargs</span><span class="o">.</span><span class="n">has_key</span><span class="p">(</span><span class="s">&#39;sections&#39;</span><span class="p">)</span> 
+            <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">meters</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s">&quot;MeterGroup stats can only return full results&quot;</span>
+                               <span class="s">&quot; objects if you specify &#39;sections&#39; to load. If&quot;</span>
+                               <span class="s">&quot; you do not specify periods then the results&quot;</span>
+                               <span class="s">&quot; from individual meters are likely to be for&quot;</span>
+                               <span class="s">&quot; different periods and hence&quot;</span>
+                               <span class="s">&quot; cannot be unified.&quot;</span><span class="p">)</span>
+
 <div class="viewcode-block" id="MeterGroup.good_sections"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.metergroup.MeterGroup.good_sections">[docs]</a>    <span class="k">def</span> <span class="nf">good_sections</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Returns good sections for just the first meter.</span>
 
 <span class="sd">        TODO: combine good sections from every meter.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">meters</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">meters</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">warn</span><span class="p">(</span><span class="s">&quot;As a quick implementation we only get Good Sections from&quot;</span>
+                <span class="s">&quot; the first meter in the meter group.  We should really&quot;</span>
+                <span class="s">&quot; return the intersection of the good sections for all&quot;</span>
+                <span class="s">&quot; meters.  This will be fixed...&quot;</span><span class="p">)</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">meters</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">good_sections</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">[]</span>
@@ -810,6 +869,49 @@
         <span class="n">total_energy</span> <span class="o">=</span> <span class="n">energy_per_meter</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">energy_per_meter</span> <span class="o">/</span> <span class="n">total_energy</span>
 
+</div>
+<div class="viewcode-block" id="MeterGroup.train_test_split"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.metergroup.MeterGroup.train_test_split">[docs]</a>    <span class="k">def</span> <span class="nf">train_test_split</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">train_fraction</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        train_fraction</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        split_time: pd.Timestamp where split should happen</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">assert</span><span class="p">(</span><span class="mi">0</span><span class="o">&lt;</span><span class="n">train_fraction</span><span class="o">&lt;</span><span class="mi">1</span><span class="p">),</span> <span class="s">&quot;`train_fraction` should be between 0 and 1&quot;</span>
+
+        <span class="c">#TODO: currently just works with the first mains meter, assuming</span>
+        <span class="c"># both to be simultaneosly sampled</span>
+        <span class="n">mains_first_meter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mains</span><span class="p">()</span><span class="o">.</span><span class="n">meters</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">good_sections</span> <span class="o">=</span> <span class="n">mains_first_meter</span><span class="o">.</span><span class="n">good_sections</span><span class="p">()</span>
+        <span class="n">sample_period</span> <span class="o">=</span> <span class="n">mains_first_meter</span><span class="o">.</span><span class="n">device</span><span class="p">[</span><span class="s">&#39;sample_period&#39;</span><span class="p">]</span>
+        <span class="n">appx_num_records_in_each_good_section</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">((</span><span class="n">ts</span><span class="o">.</span><span class="n">end</span><span class="o">-</span><span class="n">ts</span><span class="o">.</span><span class="n">start</span><span class="p">)</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span><span class="o">/</span><span class="n">sample_period</span><span class="p">)</span> <span class="k">for</span> <span class="n">ts</span> <span class="ow">in</span> <span class="n">good_sections</span><span class="p">]</span>
+        <span class="n">appx_total_records</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">appx_num_records_in_each_good_section</span><span class="p">)</span>
+        <span class="n">records_in_train</span> <span class="o">=</span> <span class="n">appx_total_records</span><span class="o">*</span><span class="n">train_fraction</span>
+        <span class="n">seconds_in_train</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">records_in_train</span><span class="o">*</span><span class="n">sample_period</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">good_sections</span><span class="p">)</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
+            <span class="c"># all data is contained in one good section</span>
+            <span class="n">split_point</span> <span class="o">=</span> <span class="n">good_sections</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">start</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">seconds_in_train</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">split_point</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c"># data is split across multiple time deltas</span>
+            <span class="n">records_remaining</span> <span class="o">=</span> <span class="n">records_in_train</span>
+            <span class="k">while</span> <span class="n">records_remaining</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">records_in_section</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">appx_num_records_in_each_good_section</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">records_remaining</span><span class="o">&gt;</span><span class="n">records_in_section</span><span class="p">:</span>
+                        <span class="n">records_remaining</span><span class="o">-=</span><span class="n">records_in_section</span>
+                    <span class="k">elif</span> <span class="n">records_remaining</span> <span class="o">==</span> <span class="n">records_in_section</span><span class="p">:</span>
+                        <span class="c"># Next TimeFrame is the split point!!</span>
+                        <span class="n">split_point</span> <span class="o">=</span> <span class="n">good_sections</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">start</span>
+                        <span class="k">return</span> <span class="n">split_point</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="c"># Need to split this timeframe</span>
+                        <span class="n">split_point</span> <span class="o">=</span> <span class="n">good_sections</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">start</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">sample_period</span><span class="o">*</span><span class="n">records_remaining</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">split_point</span>
+
 
     <span class="c">################## FUNCTIONS NOT YET IMPLEMENTED ###################</span>
 
@@ -850,14 +952,35 @@
                     
     <span class="c"># def on_off_events(self, minimum_state_duration):</span>
     <span class="c">#     raise NotImplementedError</span>
-    
-    <span class="c"># def select_top_k(self, k=5):</span>
-    <span class="c">#     &quot;&quot;&quot;</span>
-    <span class="c">#     Returns</span>
-    <span class="c">#     -------</span>
-    <span class="c">#     MeterGroup containing top k meters.</span>
-    <span class="c">#     &quot;&quot;&quot;</span>
-    <span class="c">#     top_k = self.energy_per_meter().iloc[:k]</span>
+    </div>
+<div class="viewcode-block" id="MeterGroup.select_top_k"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.metergroup.MeterGroup.select_top_k">[docs]</a>    <span class="k">def</span> <span class="nf">select_top_k</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        MeterGroup containing top k meters.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c"># Filtering out mains to create a meter group of appliances</span>
+        <span class="n">appliance_meter_group</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">submeters</span><span class="p">()</span>
+        <span class="c"># Energy per appliance</span>
+        <span class="n">appliance_energy_per_meter</span>  <span class="o">=</span> <span class="n">appliance_meter_group</span><span class="o">.</span><span class="n">energy_per_meter</span><span class="p">()</span>
+        <span class="c"># Finding the most relevant measurement to sort on. For now, this is a</span>
+        <span class="c"># simple function which considers the measurement having the most records</span>
+        <span class="c"># if there is only a single measurement, just take that</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">appliance_energy_per_meter</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
+            <span class="n">measurement</span> <span class="o">=</span> <span class="n">appliance_energy_per_meter</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">measurement</span> <span class="o">=</span> <span class="n">appliance_energy_per_meter</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">index</span>
+        <span class="n">top_k_appliance_index</span> <span class="o">=</span> <span class="n">flatten</span><span class="p">(</span><span class="n">appliance_energy_per_meter</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="n">measurement</span><span class="p">],</span> <span class="n">ascending</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="n">k</span><span class="p">)</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+        <span class="n">meters_top_k</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">meter</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">meters</span><span class="p">:</span>
+
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">meter</span><span class="p">,</span> <span class="n">MeterGroup</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">meter</span><span class="o">.</span><span class="n">meters</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span> <span class="ow">in</span> <span class="n">top_k_appliance_index</span><span class="p">:</span>
+                    <span class="n">meters_top_k</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">meter</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">meter</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span> <span class="ow">in</span> <span class="n">top_k_appliance_index</span><span class="p">:</span>
+                    <span class="n">meters_top_k</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">meter</span><span class="p">)</span>         
+        <span class="k">return</span> <span class="n">MeterGroup</span><span class="p">(</span><span class="n">meters_top_k</span><span class="p">)</span>
             
     <span class="c"># def select_meters_contributing_more_than(self, threshold_proportion):</span>
     <span class="c">#     &quot;&quot;&quot;Return new MeterGroup with all meters whose proportion of</span>

@@ -207,13 +207,16 @@
             <span class="n">end_date_of_prev_row</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s">&#39;end&#39;</span><span class="p">]</span>
             <span class="n">sections</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">row_sections</span><span class="p">)</span>
 
-        <span class="n">sections</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">include_end</span> <span class="o">=</span> <span class="bp">True</span>
-        <span class="k">if</span> <span class="n">sections</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">end</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="n">sections</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">end</span> <span class="o">=</span> <span class="n">end_date_of_prev_row</span>
+        <span class="k">if</span> <span class="n">sections</span><span class="p">:</span>
+            <span class="n">sections</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">include_end</span> <span class="o">=</span> <span class="bp">True</span>
+            <span class="k">if</span> <span class="n">sections</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">end</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="n">sections</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">end</span> <span class="o">=</span> <span class="n">end_date_of_prev_row</span>
+
         <span class="k">return</span> <span class="n">sections</span>
 </div>
 <div class="viewcode-block" id="GoodSectionsResults.unify"><a class="viewcode-back" href="../../../nilmtk.stats.html#nilmtk.stats.goodsectionsresults.GoodSectionsResults.unify">[docs]</a>    <span class="k">def</span> <span class="nf">unify</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="c"># TODO!</span>
+        <span class="n">warn</span><span class="p">(</span><span class="s">&quot;Not yet able to do unification of good sections results.&quot;</span><span class="p">)</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">GoodSectionsResults</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">unify</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
 </div>
 <div class="viewcode-block" id="GoodSectionsResults.to_dict"><a class="viewcode-back" href="../../../nilmtk.stats.html#nilmtk.stats.goodsectionsresults.GoodSectionsResults.to_dict">[docs]</a>    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>

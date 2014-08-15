@@ -31,8 +31,8 @@
     <script type="text/javascript" src="_static/bootstrap-3.1.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
     <link rel="top" title="NILMTK 0.2-beta documentation" href="index.html" />
-    <link rel="next" title="Contributing" href="contribute.html" />
-    <link rel="prev" title="Welcome to NILMTK’s documentation!" href="index.html" />
+    <link rel="next" title="MeterGroup, ElecMeter, selection and basic statistics" href="elecmeter_and_metergroup.html" />
+    <link rel="prev" title="Introducing NILMTK v0.2" href="intro_nilmtk_v0_2.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -70,8 +70,14 @@
      href="index.html">Site <b class="caret"></b></a>
   <ul class="dropdown-menu globaltoc"
       role="menu"
-      aria-labelledby="dLabelGlobalToc"><ul class="current">
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="intro_nilmtk_v0_2.html">Introducing NILMTK v0.2</a></li>
+</ul>
+<ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="">Convert data to NILMTK format and load into NILMTK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="elecmeter_and_metergroup.html">MeterGroup, ElecMeter, selection and basic statistics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pipeline_preprocessing_more_stats.html">Processing pipeline, preprocessing and more stats</a></li>
+<li class="toctree-l1"><a class="reference internal" href="disaggregation_and_metrics.html">Disaggregation and Metrics</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="contribute.html">Contributing</a></li>
@@ -110,11 +116,11 @@
               
                 
   <li>
-    <a href="index.html" title="Previous Chapter: Welcome to NILMTK’s documentation!"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm">&laquo; Welcome to NILMT...</span>
+    <a href="intro_nilmtk_v0_2.html" title="Previous Chapter: Introducing NILMTK v0.2"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm">&laquo; Introducing NILM...</span>
     </a>
   </li>
   <li>
-    <a href="contribute.html" title="Next Chapter: Contributing"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm">Contributing &raquo;</span>
+    <a href="elecmeter_and_metergroup.html" title="Next Chapter: MeterGroup, ElecMeter, selection and basic statistics"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm">MeterGroup, Elec... &raquo;</span>
     </a>
   </li>
               
@@ -181,9 +187,10 @@ just to do the dataset conversion!).</p>
 </div>
 <div class="section" id="other-datasets">
 <h2>Other datasets<a class="headerlink" href="#other-datasets" title="Permalink to this headline">¶</a></h2>
-<p>A converter for the Pecan Street <a class="reference external" href="http://wiki-energy.org/datasets/">WikiEnergy
+<p>A converter for the iAWE <a class="reference external" href="http://iawe.github.io/">dataset</a> is available.</p>
+<p>A downloader/converter for the Pecan Street <a class="reference external" href="http://wiki-energy.org/datasets/">WikiEnergy
 dataset</a> (&gt;200 homes at 1 minute
-resolution) is almost ready.</p>
+resolution) is also available.</p>
 <p>Contributing a new converter is easy and highly encouraged! <a class="reference external" href="writing_a_dataset_converter.html">Learn how
 to write a dataset converter</a>.</p>
 </div>

@@ -136,7 +136,8 @@
 <span class="kn">import</span> <span class="nn">unittest</span>
 <span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">join</span>
 <span class="kn">from</span> <span class="nn">nilmtk.tests.testingtools</span> <span class="kn">import</span> <span class="n">data_dir</span>
-<span class="kn">from</span> <span class="nn">nilmtk</span> <span class="kn">import</span> <span class="n">Appliance</span><span class="p">,</span> <span class="n">MeterGroup</span><span class="p">,</span> <span class="n">ElecMeter</span><span class="p">,</span> <span class="n">HDFDataStore</span><span class="p">,</span> <span class="n">global_meter_group</span>
+<span class="kn">from</span> <span class="nn">nilmtk</span> <span class="kn">import</span> <span class="p">(</span><span class="n">Appliance</span><span class="p">,</span> <span class="n">MeterGroup</span><span class="p">,</span> <span class="n">ElecMeter</span><span class="p">,</span> <span class="n">HDFDataStore</span><span class="p">,</span> 
+                    <span class="n">global_meter_group</span><span class="p">,</span> <span class="n">TimeFrame</span><span class="p">,</span> <span class="n">DataSet</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">nilmtk.utils</span> <span class="kn">import</span> <span class="n">tree_root</span><span class="p">,</span> <span class="n">nodes_adjacent_to_root</span>
 <span class="kn">from</span> <span class="nn">nilmtk.elecmeter</span> <span class="kn">import</span> <span class="n">ElecMeterID</span>
 <span class="kn">from</span> <span class="nn">nilmtk.building</span> <span class="kn">import</span> <span class="n">BuildingID</span>
@@ -232,11 +233,24 @@
             <span class="p">(</span><span class="n">ElecMeterID</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="bp">None</span><span class="p">),</span> 
              <span class="p">(</span><span class="n">ElecMeterID</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="bp">None</span><span class="p">),</span> <span class="n">ElecMeterID</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="bp">None</span><span class="p">),</span> <span class="n">ElecMeterID</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="bp">None</span><span class="p">)))</span>
         <span class="p">])</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertIs</span><span class="p">(</span><span class="n">mg</span><span class="o">.</span><span class="n">meters</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">meters</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertIs</span><span class="p">(</span><span class="n">mg</span><span class="o">.</span><span class="n">meters</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">meters</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">meters</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">mg</span><span class="o">.</span><span class="n">meters</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">meters</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">meters</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">mg</span><span class="o">.</span><span class="n">meters</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Commented for the time being</span>
+<span class="sd">        self.assertIs(mg.meters[0], meters[0])</span>
+<span class="sd">        self.assertIs(mg.meters[1].meters[0], meters[1])</span>
+<span class="sd">        self.assertEqual(len(mg.meters[1].meters[1].meters), 3)</span>
+<span class="sd">        self.assertEqual(len(mg.meters), 2)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+</div>
+<div class="viewcode-block" id="TestMeterGroup.test_full_results_with_no_sections_raises_runtime_error"><a class="viewcode-back" href="../../../nilmtk.tests.html#nilmtk.tests.test_metergroup.TestMeterGroup.test_full_results_with_no_sections_raises_runtime_error">[docs]</a>    <span class="k">def</span> <span class="nf">test_full_results_with_no_sections_raises_runtime_error</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">mg</span> <span class="o">=</span> <span class="n">MeterGroup</span><span class="p">([</span><span class="n">ElecMeter</span><span class="p">(),</span> <span class="n">ElecMeter</span><span class="p">()])</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertRaises</span><span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
+            <span class="n">mg</span><span class="o">.</span><span class="n">dropout_rate</span><span class="p">(</span><span class="n">full_results</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="TestMeterGroup.test_total_energy"><a class="viewcode-back" href="../../../nilmtk.tests.html#nilmtk.tests.test_metergroup.TestMeterGroup.test_total_energy">[docs]</a>    <span class="k">def</span> <span class="nf">test_total_energy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="n">data_dir</span><span class="p">(),</span> <span class="s">&#39;random.h5&#39;</span><span class="p">)</span>
+        <span class="n">ds</span> <span class="o">=</span> <span class="n">DataSet</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="n">ds</span><span class="o">.</span><span class="n">buildings</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">elec</span><span class="o">.</span><span class="n">total_energy</span><span class="p">()</span>
+        
 </div></div>
 <span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
     <span class="n">unittest</span><span class="o">.</span><span class="n">main</span><span class="p">()</span>

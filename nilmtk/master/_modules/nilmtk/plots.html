@@ -148,18 +148,20 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
+<span class="sd">    series : pd.Series</span>
 <span class="sd">    ax : matplotlib Axes, optional</span>
 <span class="sd">        If not provided then will generate our own axes.</span>
-
-<span class="sd">    fig</span>
-
+<span class="sd">    fig : matplotlib Figure</span>
 <span class="sd">    date_format : str, optional, default=&#39;%d/%m/%y %H:%M:%S&#39;</span>
+<span class="sd">    tz_localize : boolean, optional, default is True</span>
+<span class="sd">        if False then display UTC times.</span>
 
 <span class="sd">    Can also use all **kwargs expected by `ax.plot`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">ax</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s">&#39;ax&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
     <span class="n">fig</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s">&#39;fig&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
     <span class="n">date_format</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s">&#39;date_format&#39;</span><span class="p">,</span> <span class="s">&#39;</span><span class="si">%d</span><span class="s">/%m/%y %H:%M:%S&#39;</span><span class="p">)</span>
+    <span class="n">tz_localize</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s">&#39;tz_localize&#39;</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
         <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
@@ -169,8 +171,9 @@
 
     <span class="n">x</span> <span class="o">=</span> <span class="n">_to_ordinalf_np_vectorized</span><span class="p">(</span><span class="n">series</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">to_pydatetime</span><span class="p">())</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">series</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">tz</span> <span class="o">=</span> <span class="n">series</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tzinfo</span> <span class="k">if</span> <span class="n">tz_localize</span> <span class="k">else</span> <span class="bp">None</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_major_formatter</span><span class="p">(</span><span class="n">mdates</span><span class="o">.</span><span class="n">DateFormatter</span><span class="p">(</span><span class="n">date_format</span><span class="p">,</span> 
-                                                      <span class="n">tz</span><span class="o">=</span><span class="n">series</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tzinfo</span><span class="p">))</span>
+                                                      <span class="n">tz</span><span class="o">=</span><span class="n">tz</span><span class="p">))</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s">&#39;watts&#39;</span><span class="p">)</span>
     <span class="n">fig</span><span class="o">.</span><span class="n">autofmt_xdate</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">ax</span>

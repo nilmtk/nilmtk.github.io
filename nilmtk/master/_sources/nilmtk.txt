@@ -104,6 +104,14 @@ nilmtk.metergroup module
     :undoc-members:
     :show-inheritance:
 
+nilmtk.exceptions module
+------------------------
+
+.. automodule:: nilmtk.exceptions
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 nilmtk.metrics module
 ---------------------
 

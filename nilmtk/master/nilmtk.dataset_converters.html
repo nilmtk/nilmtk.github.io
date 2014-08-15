@@ -173,32 +173,6 @@
 </div>
 <div class="section" id="module-nilmtk.dataset_converters.wikienergy">
 <span id="nilmtk-dataset-converters-wikienergy-module"></span><h2>nilmtk.dataset_converters.wikienergy module<a class="headerlink" href="#module-nilmtk.dataset_converters.wikienergy" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
-<dt id="nilmtk.dataset_converters.wikienergy.download_dataset">
-<tt class="descclassname">nilmtk.dataset_converters.wikienergy.</tt><tt class="descname">download_dataset</tt><big>(</big><em>self</em>, <em>database_username</em>, <em>database_password</em>, <em>output_filename</em>, <em>periods_to_load=None</em><big>)</big><a class="reference internal" href="_modules/nilmtk/dataset_converters/wikienergy.html#download_dataset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.dataset_converters.wikienergy.download_dataset" title="Permalink to this definition">¶</a></dt>
-<dd><p>Downloads data from WikiEnergy database into an HDF5 file.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>output_filename</strong> : str</p>
-<blockquote>
-<div><p>Output HDF filename.  If file exists already then will be deleted.</p>
-</div></blockquote>
-<p><strong>database_username, database_password</strong> : str</p>
-<p><strong>periods_to_load</strong> : dict of tuples, optional</p>
-<blockquote class="last">
-<div><p>Key of dict is the building number (int).
-Values are (&lt;start date&gt;, &lt;end date&gt;)
-e.g. (&#8220;2013-04-01&#8221;, None) or (&#8220;2013-04-01&#8221;, &#8220;2013-08-01&#8221;)
-defaults to all buildings and all date ranges</p>
-</div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
 </div>
 <div class="section" id="module-nilmtk.dataset_converters">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-nilmtk.dataset_converters" title="Permalink to this headline">¶</a></h2>

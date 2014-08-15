@@ -112,6 +112,7 @@
 <li><a class="reference internal" href="#module-nilmtk.hashable">nilmtk.hashable module</a></li>
 <li><a class="reference internal" href="#module-nilmtk.measurement">nilmtk.measurement module</a></li>
 <li><a class="reference internal" href="#module-nilmtk.metergroup">nilmtk.metergroup module</a></li>
+<li><a class="reference internal" href="#id1">nilmtk.exceptions module</a></li>
 <li><a class="reference internal" href="#module-nilmtk.metrics">nilmtk.metrics module</a><ul>
 <li><a class="reference internal" href="#notation">Notation</a></li>
 <li><a class="reference internal" href="#functions">Functions</a></li>
@@ -540,7 +541,7 @@ feed etc.</li>
 
 <dl class="method">
 <dt id="nilmtk.datastore.HDFDataStore.load">
-<tt class="descname">load</tt><big>(</big><em>key</em>, <em>cols=None</em>, <em>sections=None</em>, <em>n_look_ahead_rows=10</em>, <em>chunksize=1000000</em><big>)</big><a class="reference internal" href="_modules/nilmtk/datastore.html#HDFDataStore.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.datastore.HDFDataStore.load" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">load</tt><big>(</big><em>key</em>, <em>cols=None</em>, <em>sections=None</em>, <em>n_look_ahead_rows=0</em>, <em>chunksize=1000000</em><big>)</big><a class="reference internal" href="_modules/nilmtk/datastore.html#HDFDataStore.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.datastore.HDFDataStore.load" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -554,9 +555,14 @@ if not provided then will return all columns from the table.</p>
 <p><strong>sections</strong> : list of nilmtk.TimeFrame objects or a pd.PeriodIndex, optional</p>
 <blockquote>
 <div><p>defines the time sections to load.  If <cite>self.window</cite> is enabled
-then each <cite>period</cite> will be intersected with <cite>self.window</cite>.</p>
+then each <cite>section</cite> will be intersected with <cite>self.window</cite>.</p>
 </div></blockquote>
-<p><strong>n_look_ahead_rows</strong> : int, optional, defaults to 10</p>
+<p><strong>n_look_ahead_rows</strong> : int, optional, defaults to 0</p>
+<blockquote>
+<div><p>If &gt;0 then each returned DataFrame will have a <cite>look_ahead</cite>
+property which will be a DataFrame of length <cite>n_look_ahead_rows</cite>
+of the data immediately in front of the data in the main DataFrame.</p>
+</div></blockquote>
 <p><strong>chunksize</strong> : int, optional</p>
 </td>
 </tr>
@@ -565,14 +571,14 @@ then each <cite>period</cite> will be intersected with <cite>self.window</cite>.
 <div><dl class="docutils">
 <dt>Each DataFrame is has extra attributes:</dt>
 <dd><ul class="first last">
-<li><p class="first">timeframe : TimeFrame of period intersected with self.window</p>
+<li><p class="first">timeframe : TimeFrame of section intersected with self.window</p>
 </li>
 <li><dl class="first docutils">
 <dt>look_ahead <span class="classifier-delimiter">:</span> <span class="classifier">pd.DataFrame:</span></dt>
 <dd><p class="first last">with <cite>n_look_ahead_rows</cite> rows.  The first row will be for
-<cite>period.end</cite>.  <cite>look_ahead</cite> stores data which appears on 
-disk immediately after <cite>period.end</cite>; i.e. it ignores
-the next <cite>period.start</cite>.</p>
+<cite>section.end</cite>.  <cite>look_ahead</cite> stores data which appears on 
+disk immediately after <cite>section.end</cite>; i.e. it ignores
+the next <cite>section.start</cite>.</p>
 </dd>
 </dl>
 </li>
@@ -580,7 +586,7 @@ the next <cite>period.start</cite>.</p>
 </dd>
 </dl>
 <p>Returns an empty DataFrame if no data is available for the
-specified period (or if the period.intersect(self.window)
+specified section (or if the section.intersect(self.window)
 is empty).</p>
 </div></blockquote>
 </td>
@@ -1347,6 +1353,22 @@ metergroup from a meter group of NILM predictions.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="nilmtk.metergroup.MeterGroup.map_meter_instances_to_appliance_ids">
+<tt class="descname">map_meter_instances_to_appliance_ids</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/metergroup.html#MeterGroup.map_meter_instances_to_appliance_ids"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.metergroup.MeterGroup.map_meter_instances_to_appliance_ids" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">dict where keys are meter instances (for ElecMeters)</p>
+<p>or tuples of meter instances (for MeterGroups) and values</p>
+<p class="last">are a list of ApplianceIDs.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="nilmtk.metergroup.MeterGroup.matches">
 <tt class="descname">matches</tt><big>(</big><em>key</em><big>)</big><a class="reference internal" href="_modules/nilmtk/metergroup.html#MeterGroup.matches"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.metergroup.MeterGroup.matches" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -1423,6 +1445,19 @@ available then will raise a warning and will select another ac type.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="nilmtk.metergroup.MeterGroup.select_top_k">
+<tt class="descname">select_top_k</tt><big>(</big><em>k=5</em><big>)</big><a class="reference internal" href="_modules/nilmtk/metergroup.html#MeterGroup.select_top_k"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.metergroup.MeterGroup.select_top_k" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">MeterGroup containing top k meters.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="nilmtk.metergroup.MeterGroup.select_using_appliances">
 <tt class="descname">select_using_appliances</tt><big>(</big><em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/nilmtk/metergroup.html#MeterGroup.select_using_appliances"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.metergroup.MeterGroup.select_using_appliances" title="Permalink to this definition">¶</a></dt>
 <dd><p>Select a group of meters based on appliance metadata.</p>
@@ -1451,7 +1486,7 @@ available then will raise a warning and will select another ac type.</p>
 <dl class="method">
 <dt id="nilmtk.metergroup.MeterGroup.total_energy">
 <tt class="descname">total_energy</tt><big>(</big><em>**load_kwargs</em><big>)</big><a class="reference internal" href="_modules/nilmtk/metergroup.html#MeterGroup.total_energy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.metergroup.MeterGroup.total_energy" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sums together total energy for each meter.</p>
+<dd><p>Sums together total meter_energy for each meter.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -1464,6 +1499,21 @@ available then will raise a warning and will select another ac type.</p>
 <p>else return either a single number of, if there are multiple</p>
 <p class="last">AC types, then return a pd.Series with a row for each AC type.</p>
 </td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.metergroup.MeterGroup.train_test_split">
+<tt class="descname">train_test_split</tt><big>(</big><em>train_fraction=0.5</em><big>)</big><a class="reference internal" href="_modules/nilmtk/metergroup.html#MeterGroup.train_test_split"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.metergroup.MeterGroup.train_test_split" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>train_fraction</strong></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">split_time: pd.Timestamp where split should happen</td>
 </tr>
 </tbody>
 </table>
@@ -1505,6 +1555,16 @@ available then will raise a warning and will select another ac type.</p>
 </tr>
 </tbody>
 </table>
+</dd></dl>
+
+</div>
+<div class="section" id="id1">
+<h2>nilmtk.exceptions module<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-nilmtk.exceptions"></span><p>File defining custom nilmtk exception classes.</p>
+<dl class="exception">
+<dt>
+<em class="property">exception </em><tt class="descclassname">nilmtk.exceptions.</tt><tt class="descname">TooFewSamplesError</tt><a class="reference internal" href="_modules/nilmtk/exceptions.html#TooFewSamplesError"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></tt></p>
 </dd></dl>
 
 </div>
@@ -1818,12 +1878,17 @@ pd.Series.plot().</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>ax</strong> : matplotlib Axes, optional</p>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>series</strong> : pd.Series</p>
+<p><strong>ax</strong> : matplotlib Axes, optional</p>
 <blockquote>
 <div><p>If not provided then will generate our own axes.</p>
 </div></blockquote>
-<p><strong>fig</strong></p>
+<p><strong>fig</strong> : matplotlib Figure</p>
 <p><strong>date_format</strong> : str, optional, default=&#8217;%d/%m/%y %H:%M:%S&#8217;</p>
+<p><strong>tz_localize</strong> : boolean, optional, default is True</p>
+<blockquote>
+<div><p>if False then display UTC times.</p>
+</div></blockquote>
 <p class="last"><strong>Can also use all **kwargs expected by `ax.plot`</strong></p>
 </td>
 </tr>
