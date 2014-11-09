@@ -9,8 +9,8 @@
     
     <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/bootstrap-3.1.0/css/bootstrap.min.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/bootstrap-3.1.0/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/bootstrap-3.2.0/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/bootstrap-3.2.0/css/bootstrap-theme.min.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     
     <script type="text/javascript">
@@ -28,7 +28,7 @@
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="../../_static/bootstrap-3.1.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-3.2.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
     <link rel="top" title="NILMTK 0.2-beta documentation" href="../../index.html" />
     <link rel="up" title="Module code" href="../index.html" />
@@ -136,6 +136,10 @@
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">networkx</span> <span class="kn">as</span> <span class="nn">nx</span>
 <span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
+<span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">isdir</span><span class="p">,</span> <span class="n">dirname</span><span class="p">,</span> <span class="n">abspath</span>
+<span class="kn">from</span> <span class="nn">os</span> <span class="kn">import</span> <span class="n">getcwd</span>
+<span class="kn">from</span> <span class="nn">inspect</span> <span class="kn">import</span> <span class="n">currentframe</span><span class="p">,</span> <span class="n">getfile</span><span class="p">,</span> <span class="n">getsourcefile</span>
+<span class="kn">from</span> <span class="nn">sys</span> <span class="kn">import</span> <span class="n">getfilesystemencoding</span>
 
 
 <div class="viewcode-block" id="timedelta64_to_secs"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.utils.timedelta64_to_secs">[docs]</a><span class="k">def</span> <span class="nf">timedelta64_to_secs</span><span class="p">(</span><span class="n">timedelta</span><span class="p">):</span>
@@ -268,7 +272,34 @@
         <span class="n">index</span> <span class="o">=</span> <span class="n">data</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s">&#39;wrong type for `data`.&#39;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">index</span></div>
+    <span class="k">return</span> <span class="n">index</span>
+
+</div>
+<div class="viewcode-block" id="convert_to_timestamp"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.utils.convert_to_timestamp">[docs]</a><span class="k">def</span> <span class="nf">convert_to_timestamp</span><span class="p">(</span><span class="n">t</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    t : str or pd.Timestamp or datetime or None</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    pd.Timestamp or None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="bp">None</span> <span class="k">if</span> <span class="n">t</span> <span class="ow">is</span> <span class="bp">None</span> <span class="k">else</span> <span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="get_module_directory"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.utils.get_module_directory">[docs]</a><span class="k">def</span> <span class="nf">get_module_directory</span><span class="p">():</span>
+    <span class="c"># Taken from http://stackoverflow.com/a/6098238/732596</span>
+    <span class="n">path_to_this_file</span> <span class="o">=</span> <span class="n">dirname</span><span class="p">(</span><span class="n">getfile</span><span class="p">(</span><span class="n">currentframe</span><span class="p">()))</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">isdir</span><span class="p">(</span><span class="n">path_to_this_file</span><span class="p">):</span>
+        <span class="n">encoding</span> <span class="o">=</span> <span class="n">getfilesystemencoding</span><span class="p">()</span>
+        <span class="n">path_to_this_file</span> <span class="o">=</span> <span class="n">dirname</span><span class="p">(</span><span class="nb">unicode</span><span class="p">(</span><span class="n">__file__</span><span class="p">,</span> <span class="n">encoding</span><span class="p">))</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">isdir</span><span class="p">(</span><span class="n">path_to_this_file</span><span class="p">):</span>
+        <span class="n">abspath</span><span class="p">(</span><span class="n">getsourcefile</span><span class="p">(</span><span class="k">lambda</span> <span class="n">_</span><span class="p">:</span> <span class="bp">None</span><span class="p">))</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">isdir</span><span class="p">(</span><span class="n">path_to_this_file</span><span class="p">):</span>
+        <span class="n">path_to_this_file</span> <span class="o">=</span> <span class="n">getcwd</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="n">isdir</span><span class="p">(</span><span class="n">path_to_this_file</span><span class="p">),</span> <span class="n">path_to_this_file</span> <span class="o">+</span> <span class="s">&#39; is not a directory&#39;</span>
+    <span class="k">return</span> <span class="n">path_to_this_file</span></div>
 </pre></div>
 
     </div>
@@ -283,7 +314,7 @@
     </p>
     <p>
         &copy; Copyright 2014, NILMTK Authors.<br/>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.1.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.2.<br/>
     </p>
   </div>
 </footer>

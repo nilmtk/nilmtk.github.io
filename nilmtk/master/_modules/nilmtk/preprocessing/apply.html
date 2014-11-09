@@ -9,8 +9,8 @@
     
     <link rel="stylesheet" href="../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../../../_static/bootstrap-3.1.0/css/bootstrap.min.css" type="text/css" />
-    <link rel="stylesheet" href="../../../_static/bootstrap-3.1.0/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/bootstrap-3.2.0/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/bootstrap-3.2.0/css/bootstrap-theme.min.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
     
     <script type="text/javascript">
@@ -28,7 +28,7 @@
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="../../../_static/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="../../../_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="../../../_static/bootstrap-3.1.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../../_static/bootstrap-3.2.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../_static/bootstrap-sphinx.js"></script>
     <link rel="top" title="NILMTK 0.2-beta documentation" href="../../../index.html" />
     <link rel="up" title="Module code" href="../../index.html" />
@@ -147,7 +147,8 @@
         <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">upstream</span><span class="o">.</span><span class="n">process</span><span class="p">():</span>
             <span class="n">new_chunk</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
             <span class="n">new_chunk</span><span class="o">.</span><span class="n">timeframe</span> <span class="o">=</span> <span class="n">chunk</span><span class="o">.</span><span class="n">timeframe</span>
-            <span class="n">new_chunk</span><span class="o">.</span><span class="n">look_ahead</span> <span class="o">=</span> <span class="n">chunk</span><span class="o">.</span><span class="n">look_ahead</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">chunk</span><span class="p">,</span> <span class="s">&#39;look_ahead&#39;</span><span class="p">):</span>
+                <span class="n">new_chunk</span><span class="o">.</span><span class="n">look_ahead</span> <span class="o">=</span> <span class="n">chunk</span><span class="o">.</span><span class="n">look_ahead</span>
             <span class="k">yield</span> <span class="n">new_chunk</span></div></div>
 </pre></div>
 
@@ -163,7 +164,7 @@
     </p>
     <p>
         &copy; Copyright 2014, NILMTK Authors.<br/>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.1.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.2.<br/>
     </p>
   </div>
 </footer>

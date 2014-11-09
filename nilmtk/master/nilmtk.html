@@ -9,8 +9,8 @@
     
     <link rel="stylesheet" href="_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="_static/bootstrap-3.1.0/css/bootstrap.min.css" type="text/css" />
-    <link rel="stylesheet" href="_static/bootstrap-3.1.0/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-3.2.0/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-3.2.0/css/bootstrap-theme.min.css" type="text/css" />
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     
     <script type="text/javascript">
@@ -28,7 +28,7 @@
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="_static/bootstrap-3.1.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-3.2.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
     <link rel="top" title="NILMTK 0.2-beta documentation" href="index.html" />
     <link rel="next" title="nilmtk.dataset_converters package" href="nilmtk.dataset_converters.html" />
@@ -895,6 +895,12 @@ available then will raise a warning and will select another ac type.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="nilmtk.elecmeter.ElecMeter.power_series_all_columns">
+<tt class="descname">power_series_all_columns</tt><big>(</big><em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/nilmtk/elecmeter.html#ElecMeter.power_series_all_columns"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.elecmeter.ElecMeter.power_series_all_columns" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all power parameters available</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="nilmtk.elecmeter.ElecMeter.sample_period">
 <tt class="descname">sample_period</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/elecmeter.html#ElecMeter.sample_period"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.elecmeter.ElecMeter.sample_period" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -1154,6 +1160,19 @@ available then will raise a warning and will select another ac type.</p>
 </tr>
 </tbody>
 </table>
+<dl class="method">
+<dt id="nilmtk.metergroup.MeterGroup.appliance_label">
+<tt class="descname">appliance_label</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/metergroup.html#MeterGroup.appliance_label"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.metergroup.MeterGroup.appliance_label" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>string</strong> : A label listing all the appliance types.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 <dl class="attribute">
 <dt id="nilmtk.metergroup.MeterGroup.appliances">
 <tt class="descname">appliances</tt><a class="reference internal" href="_modules/nilmtk/metergroup.html#MeterGroup.appliances"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.metergroup.MeterGroup.appliances" title="Permalink to this definition">¶</a></dt>
@@ -1292,6 +1311,23 @@ metergroup from a meter group of NILM predictions.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="nilmtk.metergroup.MeterGroup.get_timeframe">
+<tt class="descname">get_timeframe</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/metergroup.html#MeterGroup.get_timeframe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.metergroup.MeterGroup.get_timeframe" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">nilmtk.TimeFrame representing the timeframe which is the union</p>
+<blockquote class="last">
+<div><p>of all meters in self.meters.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="nilmtk.metergroup.MeterGroup.good_sections">
 <tt class="descname">good_sections</tt><big>(</big><em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/nilmtk/metergroup.html#MeterGroup.good_sections"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.metergroup.MeterGroup.good_sections" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns good sections for just the first meter.</p>
@@ -1384,6 +1420,25 @@ metergroup from a meter group of NILM predictions.</p>
 <dd></dd></dl>
 
 <dl class="method">
+<dt id="nilmtk.metergroup.MeterGroup.plot">
+<tt class="descname">plot</tt><big>(</big><em>start=None</em>, <em>end=None</em>, <em>width=800</em>, <em>ax=None</em><big>)</big><a class="reference internal" href="_modules/nilmtk/metergroup.html#MeterGroup.plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.metergroup.MeterGroup.plot" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>start, end</strong> : str or pd.Timestamp or datetime or None, optional</p>
+<p><strong>width</strong> : int, optional</p>
+<blockquote>
+<div><p>Number of points on the x axis required</p>
+</div></blockquote>
+<p class="last"><strong>ax</strong> : matplotlib.axes, optional</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="nilmtk.metergroup.MeterGroup.power_series">
 <tt class="descname">power_series</tt><big>(</big><em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/nilmtk/metergroup.html#MeterGroup.power_series"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.metergroup.MeterGroup.power_series" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sum together all meters and return power Series.</p>
@@ -1406,6 +1461,11 @@ available then will raise a warning and will select another ac type.</p>
 </tbody>
 </table>
 </dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.metergroup.MeterGroup.power_series_all_columns">
+<tt class="descname">power_series_all_columns</tt><big>(</big><em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/nilmtk/metergroup.html#MeterGroup.power_series_all_columns"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.metergroup.MeterGroup.power_series_all_columns" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="method">
 <dt id="nilmtk.metergroup.MeterGroup.proportion_of_energy_submetered">
@@ -2192,6 +2252,21 @@ will have empty == True.</p>
 <dd></dd></dl>
 
 <dl class="function">
+<dt id="nilmtk.utils.convert_to_timestamp">
+<tt class="descclassname">nilmtk.utils.</tt><tt class="descname">convert_to_timestamp</tt><big>(</big><em>t</em><big>)</big><a class="reference internal" href="_modules/nilmtk/utils.html#convert_to_timestamp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.utils.convert_to_timestamp" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>t</strong> : str or pd.Timestamp or datetime or None</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">pd.Timestamp or None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
 <dt id="nilmtk.utils.find_nearest">
 <tt class="descclassname">nilmtk.utils.</tt><tt class="descname">find_nearest</tt><big>(</big><em>known_array</em>, <em>test_array</em><big>)</big><a class="reference internal" href="_modules/nilmtk/utils.html#find_nearest"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.utils.find_nearest" title="Permalink to this definition">¶</a></dt>
 <dd><p>Find closest value in <cite>known_array</cite> for each element in <cite>test_array</cite>.</p>
@@ -2244,6 +2319,11 @@ value in <cite>known_array</cite>.</p>
 </tbody>
 </table>
 </dd></dl>
+
+<dl class="function">
+<dt id="nilmtk.utils.get_module_directory">
+<tt class="descclassname">nilmtk.utils.</tt><tt class="descname">get_module_directory</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/utils.html#get_module_directory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.utils.get_module_directory" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="function">
 <dt id="nilmtk.utils.index_of_column_name">
@@ -2312,7 +2392,7 @@ value in <cite>known_array</cite>.</p>
     </p>
     <p>
         &copy; Copyright 2014, NILMTK Authors.<br/>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.1.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.2.<br/>
     </p>
   </div>
 </footer>

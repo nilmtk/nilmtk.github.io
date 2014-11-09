@@ -9,8 +9,8 @@
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../../../../_static/bootstrap-3.1.0/css/bootstrap.min.css" type="text/css" />
-    <link rel="stylesheet" href="../../../../_static/bootstrap-3.1.0/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/bootstrap-3.2.0/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/bootstrap-3.2.0/css/bootstrap-theme.min.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     
     <script type="text/javascript">
@@ -28,7 +28,7 @@
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="../../../../_static/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="../../../../_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="../../../../_static/bootstrap-3.1.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../../../_static/bootstrap-3.2.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="top" title="NILMTK 0.2-beta documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" />
@@ -135,15 +135,15 @@
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
-<span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">join</span><span class="p">,</span> <span class="n">isdir</span><span class="p">,</span> <span class="n">isfile</span><span class="p">,</span> <span class="n">dirname</span><span class="p">,</span> <span class="n">abspath</span>
-<span class="kn">from</span> <span class="nn">os</span> <span class="kn">import</span> <span class="n">listdir</span><span class="p">,</span> <span class="n">getcwd</span>
+<span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">join</span><span class="p">,</span> <span class="n">isdir</span><span class="p">,</span> <span class="n">isfile</span>
+<span class="kn">from</span> <span class="nn">os</span> <span class="kn">import</span> <span class="n">listdir</span>
 <span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">from</span> <span class="nn">sys</span> <span class="kn">import</span> <span class="n">stdout</span><span class="p">,</span> <span class="n">getfilesystemencoding</span>
+<span class="kn">from</span> <span class="nn">sys</span> <span class="kn">import</span> <span class="n">stdout</span>
 <span class="kn">from</span> <span class="nn">nilmtk.datastore</span> <span class="kn">import</span> <span class="n">Key</span>
 <span class="kn">from</span> <span class="nn">nilmtk.timeframe</span> <span class="kn">import</span> <span class="n">TimeFrame</span>
 <span class="kn">from</span> <span class="nn">nilmtk.measurement</span> <span class="kn">import</span> <span class="n">LEVEL_NAMES</span>
+<span class="kn">from</span> <span class="nn">nilmtk.utils</span> <span class="kn">import</span> <span class="n">get_module_directory</span>
 <span class="kn">from</span> <span class="nn">nilm_metadata</span> <span class="kn">import</span> <span class="n">convert_yaml_to_hdf5</span>
-<span class="kn">from</span> <span class="nn">inspect</span> <span class="kn">import</span> <span class="n">currentframe</span><span class="p">,</span> <span class="n">getfile</span><span class="p">,</span> <span class="n">getsourcefile</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">TODO:</span>
@@ -151,6 +151,7 @@
 <span class="sd">  multiprocessing module to use multiple CPU cores to load REDD channels in </span>
 <span class="sd">  parallel.</span>
 <span class="sd">&quot;&quot;&quot;</span>
+
 
 <div class="viewcode-block" id="convert_redd"><a class="viewcode-back" href="../../../../nilmtk.dataset_converters.redd.html#nilmtk.dataset_converters.redd.convert_redd.convert_redd">[docs]</a><span class="k">def</span> <span class="nf">convert_redd</span><span class="p">(</span><span class="n">redd_path</span><span class="p">,</span> <span class="n">hdf_filename</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -162,53 +163,80 @@
 <span class="sd">        The destination HDF5 filename (including path and suffix).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">assert</span> <span class="n">isdir</span><span class="p">(</span><span class="n">redd_path</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">_redd_measurement_mapping_func</span><span class="p">(</span><span class="n">house_id</span><span class="p">,</span> <span class="n">chan_id</span><span class="p">):</span>
+        <span class="n">ac_type</span> <span class="o">=</span> <span class="s">&#39;apparent&#39;</span> <span class="k">if</span> <span class="n">chan_id</span> <span class="o">&lt;=</span> <span class="mi">2</span> <span class="k">else</span> <span class="s">&#39;active&#39;</span>
+        <span class="k">return</span> <span class="p">[(</span><span class="s">&#39;power&#39;</span><span class="p">,</span> <span class="n">ac_type</span><span class="p">)]</span>
+
+    <span class="n">_convert</span><span class="p">(</span><span class="n">redd_path</span><span class="p">,</span> <span class="n">hdf_filename</span><span class="p">,</span> <span class="n">_redd_measurement_mapping_func</span><span class="p">,</span> <span class="s">&#39;US/Eastern&#39;</span><span class="p">)</span>
+
+    <span class="c"># Add metadata</span>
+    <span class="n">convert_yaml_to_hdf5</span><span class="p">(</span><span class="n">join</span><span class="p">(</span><span class="n">get_module_directory</span><span class="p">(),</span> 
+                              <span class="s">&#39;dataset_converters&#39;</span><span class="p">,</span> 
+                              <span class="s">&#39;redd&#39;</span><span class="p">,</span> 
+                              <span class="s">&#39;metadata&#39;</span><span class="p">),</span>
+                         <span class="n">hdf_filename</span><span class="p">)</span>
+
+    <span class="k">print</span><span class="p">(</span><span class="s">&quot;Done converting REDD to HDF5!&quot;</span><span class="p">)</span>
+
+</div>
+<span class="k">def</span> <span class="nf">_convert</span><span class="p">(</span><span class="n">input_path</span><span class="p">,</span> <span class="n">hdf_filename</span><span class="p">,</span> <span class="n">measurement_mapping_func</span><span class="p">,</span> <span class="n">tz</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    input_path : str</span>
+<span class="sd">        The root path of the REDD low_freq dataset.</span>
+<span class="sd">    hdf_filename : str</span>
+<span class="sd">        The destination HDF5 filename (including path and suffix).</span>
+<span class="sd">    measurement_mapping_func : function</span>
+<span class="sd">        Must take these parameters:</span>
+<span class="sd">            - house_id</span>
+<span class="sd">            - chan_id</span>
+<span class="sd">        Function should return a list of tuples e.g. [(&#39;power&#39;, &#39;active&#39;)]</span>
+<span class="sd">    tz : str </span>
+<span class="sd">        Timezone e.g. &#39;US/Eastern&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">assert</span> <span class="n">isdir</span><span class="p">(</span><span class="n">input_path</span><span class="p">)</span>
 
     <span class="c"># Open HDF5 file</span>
     <span class="n">store</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">HDFStore</span><span class="p">(</span><span class="n">hdf_filename</span><span class="p">,</span> <span class="s">&#39;w&#39;</span><span class="p">,</span> <span class="n">complevel</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span> <span class="n">complib</span><span class="o">=</span><span class="s">&#39;zlib&#39;</span><span class="p">)</span>
 
     <span class="c"># Iterate though all houses and channels</span>
-    <span class="n">houses</span> <span class="o">=</span> <span class="n">_find_all_houses</span><span class="p">(</span><span class="n">redd_path</span><span class="p">)</span>
+    <span class="n">houses</span> <span class="o">=</span> <span class="n">_find_all_houses</span><span class="p">(</span><span class="n">input_path</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">house_id</span> <span class="ow">in</span> <span class="n">houses</span><span class="p">:</span>
         <span class="k">print</span><span class="p">(</span><span class="s">&quot;Loading house&quot;</span><span class="p">,</span> <span class="n">house_id</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s">&quot;... &quot;</span><span class="p">)</span>
         <span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
-        <span class="n">chans</span> <span class="o">=</span> <span class="n">_find_all_chans</span><span class="p">(</span><span class="n">redd_path</span><span class="p">,</span> <span class="n">house_id</span><span class="p">)</span>
+        <span class="n">chans</span> <span class="o">=</span> <span class="n">_find_all_chans</span><span class="p">(</span><span class="n">input_path</span><span class="p">,</span> <span class="n">house_id</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">chan_id</span> <span class="ow">in</span> <span class="n">chans</span><span class="p">:</span>
             <span class="k">print</span><span class="p">(</span><span class="n">chan_id</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s">&quot; &quot;</span><span class="p">)</span>
             <span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
             <span class="n">key</span> <span class="o">=</span> <span class="n">Key</span><span class="p">(</span><span class="n">building</span><span class="o">=</span><span class="n">house_id</span><span class="p">,</span> <span class="n">meter</span><span class="o">=</span><span class="n">chan_id</span><span class="p">)</span>
-            <span class="n">ac_type</span> <span class="o">=</span> <span class="s">&#39;apparent&#39;</span> <span class="k">if</span> <span class="n">chan_id</span> <span class="o">&lt;=</span> <span class="mi">2</span> <span class="k">else</span> <span class="s">&#39;active&#39;</span>
-            <span class="n">df</span> <span class="o">=</span> <span class="n">_load_chan</span><span class="p">(</span><span class="n">redd_path</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="p">[(</span><span class="s">&#39;power&#39;</span><span class="p">,</span> <span class="n">ac_type</span><span class="p">)])</span>            
+            <span class="n">measurements</span> <span class="o">=</span> <span class="n">measurement_mapping_func</span><span class="p">(</span><span class="n">house_id</span><span class="p">,</span> <span class="n">chan_id</span><span class="p">)</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">_load_chan</span><span class="p">(</span><span class="n">input_path</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">measurements</span><span class="p">,</span> <span class="n">tz</span><span class="p">)</span>
             <span class="n">store</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">key</span><span class="p">),</span> <span class="n">df</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="s">&#39;table&#39;</span><span class="p">)</span>
             <span class="n">store</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
         <span class="k">print</span><span class="p">()</span>
 
     <span class="n">store</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
     
-    <span class="c"># Add metadata</span>
-    <span class="n">convert_yaml_to_hdf5</span><span class="p">(</span><span class="n">join</span><span class="p">(</span><span class="n">_get_module_directory</span><span class="p">(),</span> <span class="s">&#39;metadata&#39;</span><span class="p">),</span>
-                         <span class="n">hdf_filename</span><span class="p">)</span>
 
-    <span class="k">print</span><span class="p">(</span><span class="s">&quot;Done converting REDD to HDF5!&quot;</span><span class="p">)</span>
-
-</div>
-<span class="k">def</span> <span class="nf">_find_all_houses</span><span class="p">(</span><span class="n">redd_path</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">_find_all_houses</span><span class="p">(</span><span class="n">input_path</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    list of integers (house instances)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">dir_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">listdir</span><span class="p">(</span><span class="n">redd_path</span><span class="p">)</span> <span class="k">if</span> <span class="n">isdir</span><span class="p">(</span><span class="n">join</span><span class="p">(</span><span class="n">redd_path</span><span class="p">,</span> <span class="n">p</span><span class="p">))]</span>
+    <span class="n">dir_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">listdir</span><span class="p">(</span><span class="n">input_path</span><span class="p">)</span> <span class="k">if</span> <span class="n">isdir</span><span class="p">(</span><span class="n">join</span><span class="p">(</span><span class="n">input_path</span><span class="p">,</span> <span class="n">p</span><span class="p">))]</span>
     <span class="k">return</span> <span class="n">_matching_ints</span><span class="p">(</span><span class="n">dir_names</span><span class="p">,</span> <span class="s">&#39;^house_(\d)$&#39;</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_find_all_chans</span><span class="p">(</span><span class="n">redd_path</span><span class="p">,</span> <span class="n">house_id</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">_find_all_chans</span><span class="p">(</span><span class="n">input_path</span><span class="p">,</span> <span class="n">house_id</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    list of integers (channels)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">house_path</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="n">redd_path</span><span class="p">,</span> <span class="s">&#39;house_{:d}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">house_id</span><span class="p">))</span>
+    <span class="n">house_path</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="n">input_path</span><span class="p">,</span> <span class="s">&#39;house_{:d}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">house_id</span><span class="p">))</span>
     <span class="n">filenames</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">listdir</span><span class="p">(</span><span class="n">house_path</span><span class="p">)</span> <span class="k">if</span> <span class="n">isfile</span><span class="p">(</span><span class="n">join</span><span class="p">(</span><span class="n">house_path</span><span class="p">,</span> <span class="n">p</span><span class="p">))]</span>
     <span class="k">return</span> <span class="n">_matching_ints</span><span class="p">(</span><span class="n">filenames</span><span class="p">,</span> <span class="s">&#39;^channel_(\d\d?).dat$&#39;</span><span class="p">)</span>
 
@@ -239,24 +267,25 @@
     <span class="k">return</span> <span class="n">ints</span>
 
 
-<span class="k">def</span> <span class="nf">_load_chan</span><span class="p">(</span><span class="n">redd_path</span><span class="p">,</span> <span class="n">key_obj</span><span class="p">,</span> <span class="n">columns</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">_load_chan</span><span class="p">(</span><span class="n">input_path</span><span class="p">,</span> <span class="n">key_obj</span><span class="p">,</span> <span class="n">columns</span><span class="p">,</span> <span class="n">tz</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    redd_path : (str) the root path of the REDD low_freq dataset</span>
+<span class="sd">    input_path : (str) the root path of the REDD low_freq dataset</span>
 <span class="sd">    key_obj : (nilmtk.Key) the house and channel to load</span>
 <span class="sd">    columns : list of tuples (for hierarchical column index)</span>
+<span class="sd">    tz : str e.g. &#39;US/Eastern&#39;</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    ------- </span>
 <span class="sd">    DataFrame of data.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">redd_path</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">input_path</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
     <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key_obj</span><span class="p">,</span> <span class="n">Key</span><span class="p">)</span>
 
     <span class="c"># Get path</span>
     <span class="n">house_path</span> <span class="o">=</span> <span class="s">&#39;house_{:d}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key_obj</span><span class="o">.</span><span class="n">building</span><span class="p">)</span>
-    <span class="n">path</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="n">redd_path</span><span class="p">,</span> <span class="n">house_path</span><span class="p">)</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="n">input_path</span><span class="p">,</span> <span class="n">house_path</span><span class="p">)</span>
     <span class="k">assert</span> <span class="n">isdir</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
 
     <span class="c"># Get filename</span>
@@ -276,23 +305,9 @@
     
     <span class="c"># Convert the integer index column to timezone-aware datetime </span>
     <span class="n">df</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s">&#39;s&#39;</span><span class="p">,</span> <span class="n">utc</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">tz_convert</span><span class="p">(</span><span class="s">&#39;US/Eastern&#39;</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">tz_convert</span><span class="p">(</span><span class="n">tz</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">df</span>
-
-
-<span class="k">def</span> <span class="nf">_get_module_directory</span><span class="p">():</span>
-    <span class="c"># Taken from http://stackoverflow.com/a/6098238/732596</span>
-    <span class="n">path_to_this_file</span> <span class="o">=</span> <span class="n">dirname</span><span class="p">(</span><span class="n">getfile</span><span class="p">(</span><span class="n">currentframe</span><span class="p">()))</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">isdir</span><span class="p">(</span><span class="n">path_to_this_file</span><span class="p">):</span>
-        <span class="n">encoding</span> <span class="o">=</span> <span class="n">getfilesystemencoding</span><span class="p">()</span>
-        <span class="n">path_to_this_file</span> <span class="o">=</span> <span class="n">dirname</span><span class="p">(</span><span class="nb">unicode</span><span class="p">(</span><span class="n">__file__</span><span class="p">,</span> <span class="n">encoding</span><span class="p">))</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">isdir</span><span class="p">(</span><span class="n">path_to_this_file</span><span class="p">):</span>
-        <span class="n">abspath</span><span class="p">(</span><span class="n">getsourcefile</span><span class="p">(</span><span class="k">lambda</span> <span class="n">_</span><span class="p">:</span> <span class="bp">None</span><span class="p">))</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">isdir</span><span class="p">(</span><span class="n">path_to_this_file</span><span class="p">):</span>
-        <span class="n">path_to_this_file</span> <span class="o">=</span> <span class="n">getcwd</span><span class="p">()</span>
-    <span class="k">assert</span> <span class="n">isdir</span><span class="p">(</span><span class="n">path_to_this_file</span><span class="p">),</span> <span class="n">path_to_this_file</span> <span class="o">+</span> <span class="s">&#39; is not a directory&#39;</span>
-    <span class="k">return</span> <span class="n">path_to_this_file</span>
 </pre></div>
 
     </div>
@@ -307,7 +322,7 @@
     </p>
     <p>
         &copy; Copyright 2014, NILMTK Authors.<br/>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.1.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.2.<br/>
     </p>
   </div>
 </footer>
