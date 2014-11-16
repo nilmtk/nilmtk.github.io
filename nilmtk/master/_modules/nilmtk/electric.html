@@ -5,18 +5,18 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>nilmtk.electric &mdash; NILMTK 0.2-beta documentation</title>
+    <title>nilmtk.electric &mdash; NILMTK 0.2 documentation</title>
     
     <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/bootstrap-3.2.0/css/bootstrap.min.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/bootstrap-3.2.0/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/bootstrap-3.1.0/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/bootstrap-3.1.0/css/bootstrap-theme.min.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '0.2-beta',
+        VERSION:     '0.2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -28,9 +28,9 @@
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="../../_static/bootstrap-3.2.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-3.1.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="NILMTK 0.2-beta documentation" href="../../index.html" />
+    <link rel="top" title="NILMTK 0.2 documentation" href="../../index.html" />
     <link rel="up" title="Module code" href="../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -133,6 +133,8 @@
   <h1>Source code for nilmtk.electric</h1><div class="highlight"><pre>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
 <span class="kn">from</span> <span class="nn">.timeframe</span> <span class="kn">import</span> <span class="n">TimeFrame</span>
+<span class="kn">from</span> <span class="nn">.measurement</span> <span class="kn">import</span> <span class="n">select_best_ac_type</span>
+<span class="kn">from</span> <span class="nn">nilmtk.utils</span> <span class="kn">import</span> <span class="n">offset_alias_to_seconds</span>
 
 <div class="viewcode-block" id="Electric"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.electric.Electric">[docs]</a><span class="k">class</span> <span class="nc">Electric</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Common implementations of methods shared by ElecMeter and MeterGroup.</span>
@@ -206,6 +208,52 @@
 <span class="sd">        pretty snakey:</span>
 <span class="sd">        http://www.cl.cam.ac.uk/research/srg/netos/c-aware/joule/V4.00/</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+</div>
+<div class="viewcode-block" id="Electric.proportion_of_upstream"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.electric.Electric.proportion_of_upstream">[docs]</a>    <span class="k">def</span> <span class="nf">proportion_of_upstream</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">load_kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns a value in the range [0,1] specifying the proportion of</span>
+<span class="sd">        the upstream meter&#39;s total energy used by this meter.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">upstream</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">upstream_meter</span><span class="p">()</span>
+        <span class="n">upstream_good_sects</span> <span class="o">=</span> <span class="n">upstream</span><span class="o">.</span><span class="n">good_sections</span><span class="p">(</span><span class="o">**</span><span class="n">load_kwargs</span><span class="p">)</span>
+        <span class="n">proportion_of_energy</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">total_energy</span><span class="p">(</span><span class="n">sections</span><span class="o">=</span><span class="n">upstream_good_sects</span><span class="p">)</span> <span class="o">/</span>
+                                <span class="n">upstream</span><span class="o">.</span><span class="n">total_energy</span><span class="p">(</span><span class="n">sections</span><span class="o">=</span><span class="n">upstream_good_sects</span><span class="p">))</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">proportion_of_energy</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">):</span>
+            <span class="n">best_ac_type</span> <span class="o">=</span> <span class="n">select_best_ac_type</span><span class="p">(</span><span class="n">proportion_of_energy</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+            <span class="k">return</span> <span class="n">proportion_of_energy</span><span class="p">[</span><span class="n">best_ac_type</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">proportion_of_energy</span>
+</div>
+<div class="viewcode-block" id="Electric.vampire_power"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.electric.Electric.vampire_power">[docs]</a>    <span class="k">def</span> <span class="nf">vampire_power</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">load_kwargs</span><span class="p">):</span>
+        <span class="c"># TODO: this might be a naive approach to calculating vampire power.</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">power_series_all_data</span><span class="p">(</span><span class="o">**</span><span class="n">load_kwargs</span><span class="p">)</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="Electric.uptime"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.electric.Electric.uptime">[docs]</a>    <span class="k">def</span> <span class="nf">uptime</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">load_kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        timedelta: total duration of all good sections.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">good_sections</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">good_sections</span><span class="p">(</span><span class="o">**</span><span class="n">load_kwargs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">good_sections</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">good_sections</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="n">uptime</span> <span class="o">=</span> <span class="n">good_sections</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">timedelta</span>
+        <span class="k">for</span> <span class="n">good_section</span> <span class="ow">in</span> <span class="n">good_sections</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+            <span class="n">uptime</span> <span class="o">+=</span> <span class="n">good_section</span><span class="o">.</span><span class="n">timedelta</span>
+        <span class="k">return</span> <span class="n">uptime</span>
+</div>
+<div class="viewcode-block" id="Electric.average_energy_per_period"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.electric.Electric.average_energy_per_period">[docs]</a>    <span class="k">def</span> <span class="nf">average_energy_per_period</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">offset_alias</span><span class="o">=</span><span class="s">&#39;D&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">load_kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        offset_alias : str</span>
+<span class="sd">            A Pandas `offset alias`.  See:</span>
+<span class="sd">            pandas.pydata.org/pandas-docs/stable/timeseries.html#offset-aliases</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">uptime_secs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">uptime</span><span class="p">(</span><span class="o">**</span><span class="n">load_kwargs</span><span class="p">)</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span>
+        <span class="n">periods</span> <span class="o">=</span> <span class="n">uptime_secs</span> <span class="o">/</span> <span class="n">offset_alias_to_seconds</span><span class="p">(</span><span class="n">offset_alias</span><span class="p">)</span>
+        <span class="n">energy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">total_energy</span><span class="p">(</span><span class="o">**</span><span class="n">load_kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">energy</span> <span class="o">/</span> <span class="n">periods</span>
+        
 
   <span class="c">#   def activity_distribution(self):</span>
   <span class="c"># * activity distribution:</span>
@@ -262,7 +310,7 @@
     </p>
     <p>
         &copy; Copyright 2014, NILMTK Authors.<br/>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.2.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.1.<br/>
     </p>
   </div>
 </footer>

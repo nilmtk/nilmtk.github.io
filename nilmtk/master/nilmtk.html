@@ -5,18 +5,18 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>nilmtk package &mdash; NILMTK 0.2-beta documentation</title>
+    <title>nilmtk package &mdash; NILMTK 0.2 documentation</title>
     
     <link rel="stylesheet" href="_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="_static/bootstrap-3.2.0/css/bootstrap.min.css" type="text/css" />
-    <link rel="stylesheet" href="_static/bootstrap-3.2.0/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-3.1.0/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-3.1.0/css/bootstrap-theme.min.css" type="text/css" />
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '0.2-beta',
+        VERSION:     '0.2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -28,9 +28,9 @@
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="_static/bootstrap-3.2.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-3.1.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="NILMTK 0.2-beta documentation" href="index.html" />
+    <link rel="top" title="NILMTK 0.2 documentation" href="index.html" />
     <link rel="next" title="nilmtk.dataset_converters package" href="nilmtk.dataset_converters.html" />
     <link rel="prev" title="Writing a dataset converter" href="writing_a_dataset_converter.html" />
 <meta charset='utf-8'>
@@ -268,12 +268,15 @@
 <p class="rubric">Attributes</p>
 <table border="1" class="docutils">
 <colgroup>
-<col width="7%" />
-<col width="93%" />
+<col width="9%" />
+<col width="4%" />
+<col width="87%" />
 </colgroup>
 <tbody valign="top">
 <tr class="row-odd"><td>metadata</td>
-<td>(dict) See here metadata attributes: <a class="reference external" href="http://nilm-metadata.readthedocs.org/en/latest/dataset_metadata.html#appliance">http://nilm-metadata.readthedocs.org/en/latest/dataset_metadata.html#appliance</a></td>
+<td>dict</td>
+<td>See here metadata attributes:
+<a class="reference external" href="http://nilm-metadata.readthedocs.org/en/latest/dataset_metadata.html#appliance">http://nilm-metadata.readthedocs.org/en/latest/dataset_metadata.html#appliance</a></td>
 </tr>
 </tbody>
 </table>
@@ -299,7 +302,8 @@ describing metadata about each appliance type.</p>
 <dl class="method">
 <dt id="nilmtk.appliance.Appliance.label">
 <tt class="descname">label</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/appliance.html#Appliance.label"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.appliance.Appliance.label" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return string &#8216;(&lt;type&gt;, &lt;identifier&gt;)&#8217; e.g. &#8216;(fridge, 1)&#8217;.</p>
+<dd><p>Return string &#8216;(&lt;type&gt;, &lt;identifier&gt;)&#8217; e.g. &#8216;(fridge, 1)&#8217;.
+If type == &#8216;unknown&#8217; then also returns <cite>original_name</cite>.</p>
 </dd></dl>
 
 <dl class="method">
@@ -312,7 +316,7 @@ describing metadata about each appliance type.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>key</strong> : dict</p>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Bool</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>Bool</strong> :</p>
 <blockquote class="last">
 <div><p>True if all key:value pairs in <cite>key</cite> match <cite>appliance.metadata</cite>
 or <cite>Appliance.appliance_types[appliance.metadata[&#8216;type&#8217;]]</cite>.
@@ -364,20 +368,6 @@ Returns True if key is empty dict.</p>
 <em class="property">class </em><tt class="descclassname">nilmtk.building.</tt><tt class="descname">Building</tt><a class="reference internal" href="_modules/nilmtk/building.html#Building"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.building.Building" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#nilmtk.hashable.Hashable" title="nilmtk.hashable.Hashable"><tt class="xref py py-class docutils literal"><span class="pre">nilmtk.hashable.Hashable</span></tt></a></p>
 <p class="rubric">Attributes</p>
-<table border="1" class="docutils">
-<colgroup>
-<col width="4%" />
-<col width="96%" />
-</colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td>elec</td>
-<td>(MeterGroup)</td>
-</tr>
-<tr class="row-even"><td>metadata</td>
-<td>(dict) Metadata just about this building (e.g. geo location etc). See <a class="reference external" href="http://nilm-metadata.readthedocs.org/en/latest/dataset_metadata.html#building">http://nilm-metadata.readthedocs.org/en/latest/dataset_metadata.html#building</a> Has these additional keys: dataset : string</td>
-</tr>
-</tbody>
-</table>
 <dl class="attribute">
 <dt id="nilmtk.building.Building.identifier">
 <tt class="descname">identifier</tt><a class="reference internal" href="_modules/nilmtk/building.html#Building.identifier"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.building.Building.identifier" title="Permalink to this definition">¶</a></dt>
@@ -424,23 +414,6 @@ Returns True if key is empty dict.</p>
 <em class="property">class </em><tt class="descclassname">nilmtk.dataset.</tt><tt class="descname">DataSet</tt><big>(</big><em>filename=None</em><big>)</big><a class="reference internal" href="_modules/nilmtk/dataset.html#DataSet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.dataset.DataSet" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
 <p class="rubric">Attributes</p>
-<table border="1" class="docutils">
-<colgroup>
-<col width="4%" />
-<col width="96%" />
-</colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td>buildings</td>
-<td>(OrderedDict) Each key is an integer, starting from 1. Each value is a nilmtk.Building object.</td>
-</tr>
-<tr class="row-even"><td>store</td>
-<td>(nilmtk.DataStore)</td>
-</tr>
-<tr class="row-odd"><td>metadata</td>
-<td>(dict) Metadata describing the dataset name, authors etc. (Metadata about specific buildings, meters, appliances etc. is stored elsewhere.) See <a class="reference external" href="http://nilm-metadata.readthedocs.org/en/latest/dataset_metadata.html#dataset">http://nilm-metadata.readthedocs.org/en/latest/dataset_metadata.html#dataset</a></td>
-</tr>
-</tbody>
-</table>
 <dl class="method">
 <dt id="nilmtk.dataset.DataSet.load">
 <tt class="descname">load</tt><big>(</big><em>store</em><big>)</big><a class="reference internal" href="_modules/nilmtk/dataset.html#DataSet.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.dataset.DataSet.load" title="Permalink to this definition">¶</a></dt>
@@ -489,11 +462,13 @@ feed etc.</li>
 <table border="1" class="docutils">
 <colgroup>
 <col width="9%" />
-<col width="91%" />
+<col width="25%" />
+<col width="66%" />
 </colgroup>
 <tbody valign="top">
 <tr class="row-odd"><td>window</td>
-<td>(nilmtk.TimeFrame) Defines the timeframe we are interested in.</td>
+<td>nilmtk.TimeFrame</td>
+<td>Defines the timeframe we are interested in.</td>
 </tr>
 </tbody>
 </table>
@@ -520,7 +495,7 @@ feed etc.</li>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">list of strings</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>list of strings</strong> :</td>
 </tr>
 </tbody>
 </table>
@@ -533,7 +508,7 @@ feed etc.</li>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">nilmtk.TimeFrame of entire table after intersecting with self.window.</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>nilmtk.TimeFrame of entire table after intersecting with self.window.</strong> :</td>
 </tr>
 </tbody>
 </table>
@@ -566,7 +541,7 @@ of the data immediately in front of the data in the main DataFrame.</p>
 <p><strong>chunksize</strong> : int, optional</p>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">generator of DataFrame objects</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>generator of DataFrame objects</strong> :</p>
 <blockquote class="last">
 <div><dl class="docutils">
 <dt>Each DataFrame is has extra attributes:</dt>
@@ -645,18 +620,22 @@ is empty).</p>
 <p class="rubric">Attributes</p>
 <table border="1" class="docutils">
 <colgroup>
-<col width="44%" />
-<col width="56%" />
+<col width="38%" />
+<col width="14%" />
+<col width="48%" />
 </colgroup>
 <tbody valign="top">
 <tr class="row-odd"><td>building</td>
-<td>(int)</td>
+<td>int</td>
+<td>&nbsp;</td>
 </tr>
 <tr class="row-even"><td>meter</td>
-<td>(int)</td>
+<td>int</td>
+<td>&nbsp;</td>
 </tr>
 <tr class="row-odd"><td>utility</td>
-<td>(str)</td>
+<td>str</td>
+<td>&nbsp;</td>
 </tr>
 </tbody>
 </table>
@@ -689,263 +668,14 @@ is empty).</p>
 <dd><p>Bases: <a class="reference internal" href="#nilmtk.hashable.Hashable" title="nilmtk.hashable.Hashable"><tt class="xref py py-class docutils literal"><span class="pre">nilmtk.hashable.Hashable</span></tt></a>, <a class="reference internal" href="#nilmtk.electric.Electric" title="nilmtk.electric.Electric"><tt class="xref py py-class docutils literal"><span class="pre">nilmtk.electric.Electric</span></tt></a></p>
 <p>Represents a physical electricity meter.</p>
 <p class="rubric">Attributes</p>
-<table border="1" class="docutils">
+<table border="1" class="longtable docutils">
 <colgroup>
-<col width="7%" />
-<col width="93%" />
+<col width="10%" />
+<col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td>appliances</td>
-<td>(list of Appliance objects connected immediately downstream) of this meter.  Will be [] if no appliances are connected directly to this meter.</td>
-</tr>
-<tr class="row-even"><td>store</td>
-<td>(nilmtk.DataStore)</td>
-</tr>
-<tr class="row-odd"><td>key</td>
-<td>(string) key into nilmtk.DataStore to access data.</td>
-</tr>
-<tr class="row-even"><td>metadata</td>
-<td>(dict.) See <a class="reference external" href="http://nilm-metadata.readthedocs.org/en/latest/dataset_metadata.html#elecmeter">http://nilm-metadata.readthedocs.org/en/latest/dataset_metadata.html#elecmeter</a></td>
-</tr>
 </tbody>
 </table>
-<dl class="method">
-<dt id="nilmtk.elecmeter.ElecMeter.appliance_label">
-<tt class="descname">appliance_label</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/elecmeter.html#ElecMeter.appliance_label"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.elecmeter.ElecMeter.appliance_label" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>string</strong> : A label listing all the appliance types.</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="nilmtk.elecmeter.ElecMeter.available_power_ac_types">
-<tt class="descname">available_power_ac_types</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/elecmeter.html#ElecMeter.available_power_ac_types"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.elecmeter.ElecMeter.available_power_ac_types" title="Permalink to this definition">¶</a></dt>
-<dd><p>Finds available alternating current types from power measurements.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">list of strings e.g. [&#8216;apparent&#8217;, &#8216;active&#8217;]</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="nilmtk.elecmeter.ElecMeter.building">
-<tt class="descname">building</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/elecmeter.html#ElecMeter.building"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.elecmeter.ElecMeter.building" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="nilmtk.elecmeter.ElecMeter.dataset">
-<tt class="descname">dataset</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/elecmeter.html#ElecMeter.dataset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.elecmeter.ElecMeter.dataset" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="nilmtk.elecmeter.ElecMeter.device">
-<tt class="descname">device</tt><a class="reference internal" href="_modules/nilmtk/elecmeter.html#ElecMeter.device"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.elecmeter.ElecMeter.device" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">dict describing the MeterDevice for this meter (sample period etc).</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="nilmtk.elecmeter.ElecMeter.dominant_appliance">
-<tt class="descname">dominant_appliance</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/elecmeter.html#ElecMeter.dominant_appliance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.elecmeter.ElecMeter.dominant_appliance" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tries to find the most dominant appliance on this meter,
-and then returns that appliance object.  Will return None
-if there are no appliances on this meter.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="nilmtk.elecmeter.ElecMeter.dropout_rate">
-<tt class="descname">dropout_rate</tt><big>(</big><em>**loader_kwargs</em><big>)</big><a class="reference internal" href="_modules/nilmtk/elecmeter.html#ElecMeter.dropout_rate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.elecmeter.ElecMeter.dropout_rate" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>full_results</strong> : bool, default=False</p>
-<p><strong>**loader_kwargs</strong> : key word arguments for DataStore.load()</p>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">DropoutRateResults object if <cite>full_results</cite> is True,</p>
-<p class="last">else float</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="nilmtk.elecmeter.ElecMeter.dry_run_metadata">
-<tt class="descname">dry_run_metadata</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/elecmeter.html#ElecMeter.dry_run_metadata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.elecmeter.ElecMeter.dry_run_metadata" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="nilmtk.elecmeter.ElecMeter.get_metadata">
-<tt class="descname">get_metadata</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/elecmeter.html#ElecMeter.get_metadata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.elecmeter.ElecMeter.get_metadata" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="nilmtk.elecmeter.ElecMeter.get_source_node">
-<tt class="descname">get_source_node</tt><big>(</big><em>**loader_kwargs</em><big>)</big><a class="reference internal" href="_modules/nilmtk/elecmeter.html#ElecMeter.get_source_node"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.elecmeter.ElecMeter.get_source_node" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="nilmtk.elecmeter.ElecMeter.get_timeframe">
-<tt class="descname">get_timeframe</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/elecmeter.html#ElecMeter.get_timeframe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.elecmeter.ElecMeter.get_timeframe" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="nilmtk.elecmeter.ElecMeter.good_sections">
-<tt class="descname">good_sections</tt><big>(</big><em>**loader_kwargs</em><big>)</big><a class="reference internal" href="_modules/nilmtk/elecmeter.html#ElecMeter.good_sections"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.elecmeter.ElecMeter.good_sections" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>full_results</strong> : bool, default=False</p>
-<p><strong>**loader_kwargs</strong> : key word arguments for DataStore.load()</p>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">if <cite>full_results</cite> is True then return nilmtk.stats.GoodSectionsResults</p>
-<p class="last">object otherwise return list of TimeFrame objects.</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="nilmtk.elecmeter.ElecMeter.instance">
-<tt class="descname">instance</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/elecmeter.html#ElecMeter.instance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.elecmeter.ElecMeter.instance" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="nilmtk.elecmeter.ElecMeter.is_site_meter">
-<tt class="descname">is_site_meter</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/elecmeter.html#ElecMeter.is_site_meter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.elecmeter.ElecMeter.is_site_meter" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="nilmtk.elecmeter.ElecMeter.key">
-<tt class="descname">key</tt><a class="reference internal" href="_modules/nilmtk/elecmeter.html#ElecMeter.key"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.elecmeter.ElecMeter.key" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="classmethod">
-<dt id="nilmtk.elecmeter.ElecMeter.load_meter_devices">
-<em class="property">classmethod </em><tt class="descname">load_meter_devices</tt><big>(</big><em>store</em><big>)</big><a class="reference internal" href="_modules/nilmtk/elecmeter.html#ElecMeter.load_meter_devices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.elecmeter.ElecMeter.load_meter_devices" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="nilmtk.elecmeter.ElecMeter.matches">
-<tt class="descname">matches</tt><big>(</big><em>key</em><big>)</big><a class="reference internal" href="_modules/nilmtk/elecmeter.html#ElecMeter.matches"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.elecmeter.ElecMeter.matches" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>key</strong> : dict</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Bool</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="nilmtk.elecmeter.ElecMeter.meter_devices">
-<tt class="descname">meter_devices</tt><em class="property"> = {}</em><a class="headerlink" href="#nilmtk.elecmeter.ElecMeter.meter_devices" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="nilmtk.elecmeter.ElecMeter.power_series">
-<tt class="descname">power_series</tt><big>(</big><em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/nilmtk/elecmeter.html#ElecMeter.power_series"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.elecmeter.ElecMeter.power_series" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get power Series.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>measurement_ac_type_prefs</strong> : list of strings, optional</p>
-<blockquote>
-<div><p>if provided then will try to select the best AC type from 
-self.available_ac_types which is also in measurement_ac_type_prefs.
-If none of the measurements from measurement_ac_type_prefs are 
-available then will raise a warning and will select another ac type.</p>
-</div></blockquote>
-<p><strong>preprocessing</strong> : list of Node subclass instances</p>
-<p><strong>**kwargs :</strong></p>
-<blockquote>
-<div><p>Any other key word arguments are passed to self.store.load()</p>
-</div></blockquote>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">generator of pd.Series of power measurements.</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="nilmtk.elecmeter.ElecMeter.power_series_all_columns">
-<tt class="descname">power_series_all_columns</tt><big>(</big><em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/nilmtk/elecmeter.html#ElecMeter.power_series_all_columns"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.elecmeter.ElecMeter.power_series_all_columns" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get all power parameters available</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="nilmtk.elecmeter.ElecMeter.sample_period">
-<tt class="descname">sample_period</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/elecmeter.html#ElecMeter.sample_period"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.elecmeter.ElecMeter.sample_period" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="nilmtk.elecmeter.ElecMeter.save">
-<tt class="descname">save</tt><big>(</big><em>destination</em>, <em>key</em><big>)</big><a class="reference internal" href="_modules/nilmtk/elecmeter.html#ElecMeter.save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.elecmeter.ElecMeter.save" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convert all relevant attributes to a dict to be 
-saved as metadata in destination at location specified
-by key</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="nilmtk.elecmeter.ElecMeter.total_energy">
-<tt class="descname">total_energy</tt><big>(</big><em>**loader_kwargs</em><big>)</big><a class="reference internal" href="_modules/nilmtk/elecmeter.html#ElecMeter.total_energy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.elecmeter.ElecMeter.total_energy" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>full_results</strong> : bool, default=False</p>
-<p><strong>**loader_kwargs</strong> : key word arguments for DataStore.load()</p>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">if <cite>full_results</cite> is True then return TotalEnergyResults object</p>
-<p>else return either a single number of, if there are multiple</p>
-<p class="last">AC types, then return a pd.Series with a row for each AC type.</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="nilmtk.elecmeter.ElecMeter.upstream_meter">
-<tt class="descname">upstream_meter</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/elecmeter.html#ElecMeter.upstream_meter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.elecmeter.ElecMeter.upstream_meter" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">ElecMeterID of upstream meter or None if is site meter.</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
 </dd></dl>
 
 <dl class="class">
@@ -981,6 +711,24 @@ by key</p>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
 <p>Common implementations of methods shared by ElecMeter and MeterGroup.</p>
 <dl class="method">
+<dt id="nilmtk.electric.Electric.average_energy_per_period">
+<tt class="descname">average_energy_per_period</tt><big>(</big><em>offset_alias='D'</em>, <em>**load_kwargs</em><big>)</big><a class="reference internal" href="_modules/nilmtk/electric.html#Electric.average_energy_per_period"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.electric.Electric.average_energy_per_period" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>offset_alias</strong> : str</p>
+<blockquote class="last">
+<div><p>A Pandas <cite>offset alias</cite>.  See:
+pandas.pydata.org/pandas-docs/stable/timeseries.html#offset-aliases</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="nilmtk.electric.Electric.matches_appliances">
 <tt class="descname">matches_appliances</tt><big>(</big><em>key</em><big>)</big><a class="reference internal" href="_modules/nilmtk/electric.html#Electric.matches_appliances"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.electric.Electric.matches_appliances" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
@@ -990,8 +738,8 @@ by key</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>key</strong> : dict</p>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">True if all key:value pairs in <cite>key</cite> match any appliance</p>
-<p class="last">in <cite>self.appliances</cite>.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>True if all key:value pairs in `key` match any appliance</strong> :</p>
+<p class="last"><strong>in `self.appliances`.</strong> :</p>
 </td>
 </tr>
 </tbody>
@@ -1017,6 +765,31 @@ does not have an <cite>on_power_threshold</cite> then default to 10 watts.</p>
 <dd></dd></dl>
 
 <dl class="method">
+<dt id="nilmtk.electric.Electric.proportion_of_upstream">
+<tt class="descname">proportion_of_upstream</tt><big>(</big><em>**load_kwargs</em><big>)</big><a class="reference internal" href="_modules/nilmtk/electric.html#Electric.proportion_of_upstream"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.electric.Electric.proportion_of_upstream" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a value in the range [0,1] specifying the proportion of
+the upstream meter&#8217;s total energy used by this meter.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.electric.Electric.uptime">
+<tt class="descname">uptime</tt><big>(</big><em>**load_kwargs</em><big>)</big><a class="reference internal" href="_modules/nilmtk/electric.html#Electric.uptime"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.electric.Electric.uptime" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>timedelta: total duration of all good sections.</strong> :</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.electric.Electric.vampire_power">
+<tt class="descname">vampire_power</tt><big>(</big><em>**load_kwargs</em><big>)</big><a class="reference internal" href="_modules/nilmtk/electric.html#Electric.vampire_power"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.electric.Electric.vampire_power" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
 <dt id="nilmtk.electric.Electric.when_on">
 <tt class="descname">when_on</tt><big>(</big><em>**load_kwargs</em><big>)</big><a class="reference internal" href="_modules/nilmtk/electric.html#Electric.when_on"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.electric.Electric.when_on" title="Permalink to this definition">¶</a></dt>
 <dd><p>Are the connected appliances appliance is on (True) or off (False)?</p>
@@ -1032,7 +805,7 @@ does not have an <cite>on_power_threshold</cite> then default to 10 watts.</p>
 </div></blockquote>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">generator of pd.Series</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>generator of pd.Series</strong> :</p>
 <blockquote class="last">
 <div><p>index is the same as for chunk returned by <cite>self.power_series()</cite>
 values are booleans</p>
@@ -1105,7 +878,7 @@ an <cite>identifier</cite> namedtuple.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>column_tuples</strong> : list of 2-tuples</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">pd.MultiIndex</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>pd.MultiIndex</strong> :</td>
 </tr>
 </tbody>
 </table>
@@ -1151,12 +924,14 @@ available then will raise a warning and will select another ac type.</p>
 <p class="rubric">Attributes</p>
 <table border="1" class="docutils">
 <colgroup>
-<col width="23%" />
-<col width="77%" />
+<col width="18%" />
+<col width="53%" />
+<col width="29%" />
 </colgroup>
 <tbody valign="top">
 <tr class="row-odd"><td>meters</td>
-<td>(list of ElecMeters)</td>
+<td>list of ElecMeters</td>
+<td>&nbsp;</td>
 </tr>
 </tbody>
 </table>
@@ -1197,7 +972,7 @@ available then will raise a warning and will select another ac type.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">DataFrame</p>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>DataFrame</strong> :</p>
 <blockquote class="last">
 <div><p>Each column is a meter.  We select the most appropriate measurement.
 First column is mains.
@@ -1239,9 +1014,9 @@ will be breaks in the index where there were holes in the mains data.</p>
 <p><strong>**loader_kwargs</strong> : key word arguments for DataStore.load()</p>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">if <cite>full_results</cite> is True then return TotalEnergyResults object</p>
-<p>else return either a single number of, if there are multiple</p>
-<p class="last">AC types, then return a pd.Series with a row for each AC type.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>if `full_results` is True then return TotalEnergyResults object</strong> :</p>
+<p><strong>else return either a single number of, if there are multiple</strong> :</p>
+<p class="last"><strong>AC types, then return a pd.Series with a row for each AC type.</strong> :</p>
 </td>
 </tr>
 </tbody>
@@ -1251,7 +1026,7 @@ will be breaks in the index where there were holes in the mains data.</p>
 <dl class="method">
 <dt id="nilmtk.metergroup.MeterGroup.energy_per_meter">
 <tt class="descname">energy_per_meter</tt><big>(</big><em>**load_kwargs</em><big>)</big><a class="reference internal" href="_modules/nilmtk/metergroup.html#MeterGroup.energy_per_meter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.metergroup.MeterGroup.energy_per_meter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns pd.DataFrame where columns is meter.instance and 
+<dd><p>Returns pd.DataFrame where columns is meter.identifier and 
 each value is total energy.  Index is AC types.</p>
 <p>Does not care about wiring hierarchy.  Does not attempt to ensure all 
 channels share the same time sections.</p>
@@ -1279,7 +1054,7 @@ a tuple of ElecMeterIDs (to make a nested MeterGroup)</p>
 </div></blockquote>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">MeterGroup</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>MeterGroup</strong> :</p>
 </td>
 </tr>
 </tbody>
@@ -1303,8 +1078,24 @@ metergroup from a meter group of NILM predictions.</p>
 </div></blockquote>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">MeterGroup</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>MeterGroup</strong> :</p>
 </td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.metergroup.MeterGroup.get_appliance_labels">
+<tt class="descname">get_appliance_labels</tt><big>(</big><em>meter_ids</em><big>)</big><a class="reference internal" href="_modules/nilmtk/metergroup.html#MeterGroup.get_appliance_labels"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.metergroup.MeterGroup.get_appliance_labels" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create human-readable appliance labels.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>meter_ids</strong> : list of ElecMeterIDs (or 3-tuples in same order as ElecMeterID)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>list of strings describing the appliances.</strong> :</td>
 </tr>
 </tbody>
 </table>
@@ -1317,7 +1108,7 @@ metergroup from a meter group of NILM predictions.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">nilmtk.TimeFrame representing the timeframe which is the union</p>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>nilmtk.TimeFrame representing the timeframe which is the union</strong> :</p>
 <blockquote class="last">
 <div><p>of all meters in self.meters.</p>
 </div></blockquote>
@@ -1382,23 +1173,7 @@ metergroup from a meter group of NILM predictions.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">ElecMeter or MeterGroup or None</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="nilmtk.metergroup.MeterGroup.map_meter_instances_to_appliance_ids">
-<tt class="descname">map_meter_instances_to_appliance_ids</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/metergroup.html#MeterGroup.map_meter_instances_to_appliance_ids"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.metergroup.MeterGroup.map_meter_instances_to_appliance_ids" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">dict where keys are meter instances (for ElecMeters)</p>
-<p>or tuples of meter instances (for MeterGroups) and values</p>
-<p class="last">are a list of ApplianceIDs.</p>
-</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>ElecMeter or MeterGroup or None</strong> :</td>
 </tr>
 </tbody>
 </table>
@@ -1455,7 +1230,7 @@ available then will raise a warning and will select another ac type.</p>
 </div></blockquote>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">generator of pd.Series of power measurements.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>generator of pd.Series of power measurements.</strong> :</p>
 </td>
 </tr>
 </tbody>
@@ -1474,11 +1249,16 @@ available then will raise a warning and will select another ac type.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">float [0,1]</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>float [0,1]</strong> :</td>
 </tr>
 </tbody>
 </table>
 </dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.metergroup.MeterGroup.proportion_of_upstream_total_per_meter">
+<tt class="descname">proportion_of_upstream_total_per_meter</tt><big>(</big><em>**load_kwargs</em><big>)</big><a class="reference internal" href="_modules/nilmtk/metergroup.html#MeterGroup.proportion_of_upstream_total_per_meter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.metergroup.MeterGroup.proportion_of_upstream_total_per_meter" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="method">
 <dt id="nilmtk.metergroup.MeterGroup.sample_period">
@@ -1498,7 +1278,7 @@ available then will raise a warning and will select another ac type.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">new MeterGroup of selected meters.</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>new MeterGroup of selected meters.</strong> :</td>
 </tr>
 </tbody>
 </table>
@@ -1511,7 +1291,7 @@ available then will raise a warning and will select another ac type.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">MeterGroup containing top k meters.</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>MeterGroup containing top k meters.</strong> :</td>
 </tr>
 </tbody>
 </table>
@@ -1531,7 +1311,7 @@ available then will raise a warning and will select another ac type.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">new MeterGroup of selected meters.</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>new MeterGroup of selected meters.</strong> :</td>
 </tr>
 </tbody>
 </table>
@@ -1555,9 +1335,9 @@ available then will raise a warning and will select another ac type.</p>
 <p><strong>**loader_kwargs</strong> : key word arguments for DataStore.load()</p>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">if <cite>full_results</cite> is True then return TotalEnergyResults object</p>
-<p>else return either a single number of, if there are multiple</p>
-<p class="last">AC types, then return a pd.Series with a row for each AC type.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>if `full_results` is True then return TotalEnergyResults object</strong> :</p>
+<p><strong>else return either a single number or, if there are multiple</strong> :</p>
+<p class="last"><strong>AC types, then return a pd.Series with a row for each AC type.</strong> :</p>
 </td>
 </tr>
 </tbody>
@@ -1571,9 +1351,9 @@ available then will raise a warning and will select another ac type.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>train_fraction</strong></td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>train_fraction</strong> :</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">split_time: pd.Timestamp where split should happen</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>split_time: pd.Timestamp where split should happen</strong> :</td>
 </tr>
 </tbody>
 </table>
@@ -1586,12 +1366,19 @@ available then will raise a warning and will select another ac type.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">new MeterGroup where its set of <cite>meters</cite> is the union of</p>
-<p class="last"><cite>self.meters</cite> and <cite>other.meters</cite>.</p>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>new MeterGroup where its set of `meters` is the union of</strong> :</p>
+<p class="last"><strong>`self.meters` and `other.meters`.</strong> :</p>
 </td>
 </tr>
 </tbody>
 </table>
+</dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.metergroup.MeterGroup.upstream_meter">
+<tt class="descname">upstream_meter</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/metergroup.html#MeterGroup.upstream_meter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.metergroup.MeterGroup.upstream_meter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns single upstream meter.
+Raises RuntimeError if more than 1 upstream meter.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1611,7 +1398,7 @@ available then will raise a warning and will select another ac type.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>master, slave</strong> : MeterGroup</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">list of 2-tuples of the form (<cite>master_meter</cite>, <cite>slave_meter</cite>)</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>list of 2-tuples of the form (`master_meter`, `slave_meter`)</strong> :</td>
 </tr>
 </tbody>
 </table>
@@ -1806,7 +1593,7 @@ where a &#8216;node&#8217; is a module which runs pre-processing or statistics
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><strong>UnsatistfiedRequirementsError</strong></td>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><strong>UnsatistfiedRequirementsError</strong> :</td>
 </tr>
 </tbody>
 </table>
@@ -1849,7 +1636,7 @@ loading any data.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Set of measurements that need to be loaded from disk for this node.</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>Set of measurements that need to be loaded from disk for this node.</strong> :</td>
 </tr>
 </tbody>
 </table>
@@ -1894,9 +1681,9 @@ matter then use &#8216;ANY VALUE&#8217; as the value in <cite>requirements</cite
 </div></blockquote>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">list of strings describing (for human consumption) which</p>
-<p>conditions are not satisfied.  If all conditions are satisfied</p>
-<p class="last">then returns an empty list.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>list of strings describing (for human consumption) which</strong> :</p>
+<p><strong>conditions are not satisfied.  If all conditions are satisfied</strong> :</p>
+<p class="last"><strong>then returns an empty list.</strong> :</p>
 </td>
 </tr>
 </tbody>
@@ -1949,7 +1736,7 @@ pd.Series.plot().</p>
 <blockquote>
 <div><p>if False then display UTC times.</p>
 </div></blockquote>
-<p class="last"><strong>Can also use all **kwargs expected by `ax.plot`</strong></p>
+<p class="last"><strong>Can also use all **kwargs expected by `ax.plot`</strong> :</p>
 </td>
 </tr>
 </tbody>
@@ -1974,12 +1761,15 @@ for the results.</p>
 <p class="rubric">Attributes</p>
 <table border="1" class="docutils">
 <colgroup>
-<col width="5%" />
-<col width="95%" />
+<col width="6%" />
+<col width="11%" />
+<col width="82%" />
 </colgroup>
 <tbody valign="top">
 <tr class="row-odd"><td>_data</td>
-<td>(DataFrame) Index is period start. Columns are: <cite>end</cite> and any columns for internal storage of stats.</td>
+<td>DataFrame</td>
+<td>Index is period start.
+Columns are: <cite>end</cite> and any columns for internal storage of stats.</td>
 </tr>
 </tbody>
 </table>
@@ -2074,24 +1864,32 @@ e.g. from &#8220;2013&#8221; to &#8220;2014&#8221;.</p>
 <p class="rubric">Attributes</p>
 <table border="1" class="docutils">
 <colgroup>
-<col width="9%" />
-<col width="91%" />
+<col width="13%" />
+<col width="23%" />
+<col width="64%" />
 </colgroup>
 <tbody valign="top">
 <tr class="row-odd"><td>_start</td>
-<td>(pd.Timestamp or None) if None and empty if False then behave as if start is infinitely far into the past</td>
+<td>pd.Timestamp or None</td>
+<td>if None and empty if False
+then behave as if start is infinitely far into the past</td>
 </tr>
 <tr class="row-even"><td>_end</td>
-<td>(pd.Timestamp or None) if None and empty is False then behave as if end is infinitely far into the future</td>
+<td>pd.Timestamp or None</td>
+<td>if None and empty is False
+then behave as if end is infinitely far into the future</td>
 </tr>
 <tr class="row-odd"><td>enabled</td>
-<td>(boolean) If False then behave as if both _end and _start are None</td>
+<td>boolean</td>
+<td>If False then behave as if both _end and _start are None</td>
 </tr>
 <tr class="row-even"><td>_empty</td>
-<td>(boolean) If True then represents an empty time frame</td>
+<td>boolean</td>
+<td>If True then represents an empty time frame</td>
 </tr>
 <tr class="row-odd"><td>include_end</td>
-<td>(boolean)</td>
+<td>boolean</td>
+<td>&nbsp;</td>
 </tr>
 </tbody>
 </table>
@@ -2192,7 +1990,7 @@ will have empty == True.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>timeframes</strong> : list of TimeFrame objects</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">list of dicts</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>list of dicts</strong> :</td>
 </tr>
 </tbody>
 </table>
@@ -2237,7 +2035,7 @@ will have empty == True.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>periods</strong> : pd.PeriodIndex</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">list of TimeFrames</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>list of TimeFrames</strong> :</td>
 </tr>
 </tbody>
 </table>
@@ -2260,11 +2058,16 @@ will have empty == True.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>t</strong> : str or pd.Timestamp or datetime or None</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">pd.Timestamp or None</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>pd.Timestamp or None</strong> :</td>
 </tr>
 </tbody>
 </table>
 </dd></dl>
+
+<dl class="function">
+<dt id="nilmtk.utils.dict_to_html">
+<tt class="descclassname">nilmtk.utils.</tt><tt class="descname">dict_to_html</tt><big>(</big><em>dictionary</em><big>)</big><a class="reference internal" href="_modules/nilmtk/utils.html#dict_to_html"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.utils.dict_to_html" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="function">
 <dt id="nilmtk.utils.find_nearest">
@@ -2336,6 +2139,17 @@ value in <cite>known_array</cite>.</p>
 <dd></dd></dl>
 
 <dl class="function">
+<dt id="nilmtk.utils.offset_alias_to_seconds">
+<tt class="descclassname">nilmtk.utils.</tt><tt class="descname">offset_alias_to_seconds</tt><big>(</big><em>alias</em><big>)</big><a class="reference internal" href="_modules/nilmtk/utils.html#offset_alias_to_seconds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.utils.offset_alias_to_seconds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Seconds for each period length.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="nilmtk.utils.print_dict">
+<tt class="descclassname">nilmtk.utils.</tt><tt class="descname">print_dict</tt><big>(</big><em>dictionary</em><big>)</big><a class="reference internal" href="_modules/nilmtk/utils.html#print_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.utils.print_dict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
 <dt id="nilmtk.utils.simplest_type_for">
 <tt class="descclassname">nilmtk.utils.</tt><tt class="descname">simplest_type_for</tt><big>(</big><em>values</em><big>)</big><a class="reference internal" href="_modules/nilmtk/utils.html#simplest_type_for"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.utils.simplest_type_for" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -2392,7 +2206,7 @@ value in <cite>known_array</cite>.</p>
     </p>
     <p>
         &copy; Copyright 2014, NILMTK Authors.<br/>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.2.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.1.<br/>
     </p>
   </div>
 </footer>

@@ -5,18 +5,18 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>nilmtk.stats package &mdash; NILMTK 0.2-beta documentation</title>
+    <title>nilmtk.stats package &mdash; NILMTK 0.2 documentation</title>
     
     <link rel="stylesheet" href="_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="_static/bootstrap-3.2.0/css/bootstrap.min.css" type="text/css" />
-    <link rel="stylesheet" href="_static/bootstrap-3.2.0/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-3.1.0/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-3.1.0/css/bootstrap-theme.min.css" type="text/css" />
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '0.2-beta',
+        VERSION:     '0.2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -28,9 +28,9 @@
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="_static/bootstrap-3.2.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-3.1.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="NILMTK 0.2-beta documentation" href="index.html" />
+    <link rel="top" title="NILMTK 0.2 documentation" href="index.html" />
     <link rel="up" title="nilmtk package" href="nilmtk.html" />
     <link rel="next" title="nilmtk.stats.tests package" href="nilmtk.stats.tests.html" />
     <link rel="prev" title="nilmtk.preprocessing package" href="nilmtk.preprocessing.html" />
@@ -220,7 +220,7 @@
 </div></blockquote>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><strong>TooFewSamplesError</strong></p>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><strong>TooFewSamplesError</strong> :</p>
 </td>
 </tr>
 </tbody>
@@ -237,12 +237,17 @@
 <p class="rubric">Attributes</p>
 <table border="1" class="docutils">
 <colgroup>
-<col width="3%" />
-<col width="97%" />
+<col width="7%" />
+<col width="17%" />
+<col width="76%" />
 </colgroup>
 <tbody valign="top">
 <tr class="row-odd"><td>_data</td>
-<td>(pd.DataFrame) index is start date for the whole chunk <cite>end</cite> is end date for the whole chunk <cite>dropout_rate</cite> is float [0,1] <cite>n_samples</cite> is int, used for calculating weighted mean</td>
+<td>pd.DataFrame</td>
+<td>index is start date for the whole chunk
+<cite>end</cite> is end date for the whole chunk
+<cite>dropout_rate</cite> is float [0,1]
+<cite>n_samples</cite> is int, used for calculating weighted mean</td>
 </tr>
 </tbody>
 </table>
@@ -288,12 +293,14 @@
 <p class="rubric">Attributes</p>
 <table border="1" class="docutils">
 <colgroup>
-<col width="83%" />
-<col width="17%" />
+<col width="78%" />
+<col width="6%" />
+<col width="16%" />
 </colgroup>
 <tbody valign="top">
 <tr class="row-odd"><td>previous_chunk_ended_with_open_ended_good_section</td>
-<td>(bool)</td>
+<td>bool</td>
+<td>&nbsp;</td>
 </tr>
 </tbody>
 </table>
@@ -355,15 +362,20 @@ then the first TimeFrame will have <cite>start=None</cite>.</p>
 <p class="rubric">Attributes</p>
 <table border="1" class="docutils">
 <colgroup>
-<col width="12%" />
-<col width="88%" />
+<col width="25%" />
+<col width="15%" />
+<col width="60%" />
 </colgroup>
 <tbody valign="top">
 <tr class="row-odd"><td>max_sample_period_td</td>
-<td>(timedelta)</td>
+<td>timedelta</td>
+<td>&nbsp;</td>
 </tr>
 <tr class="row-even"><td>_data</td>
-<td>(pd.DataFrame) index is start date for the whole chunk <cite>end</cite> is end date for the whole chunk <cite>sections</cite> is a list of nilmtk.TimeFrame objects</td>
+<td>pd.DataFrame</td>
+<td>index is start date for the whole chunk
+<cite>end</cite> is end date for the whole chunk
+<cite>sections</cite> is a list of nilmtk.TimeFrame objects</td>
 </tr>
 </tbody>
 </table>
@@ -488,17 +500,6 @@ Values are energy in kWh (or equivalent for reactive and apparent power).</p>
 <em class="property">class </em><tt class="descclassname">nilmtk.stats.totalenergyresults.</tt><tt class="descname">TotalEnergyResults</tt><a class="reference internal" href="_modules/nilmtk/stats/totalenergyresults.html#TotalEnergyResults"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.stats.totalenergyresults.TotalEnergyResults" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="nilmtk.html#nilmtk.results.Results" title="nilmtk.results.Results"><tt class="xref py py-class docutils literal"><span class="pre">nilmtk.results.Results</span></tt></a></p>
 <p class="rubric">Attributes</p>
-<table border="1" class="docutils">
-<colgroup>
-<col width="3%" />
-<col width="97%" />
-</colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td>_data</td>
-<td>(pd.DataFrame) index is start date <cite>end</cite> is end date <cite>active</cite> is (optional) energy in kWh <cite>reactive</cite> is (optional) energy in kVARh <cite>apparent</cite> is (optional) energy in kVAh</td>
-</tr>
-</tbody>
-</table>
 <dl class="method">
 <dt id="nilmtk.stats.totalenergyresults.TotalEnergyResults.append">
 <tt class="descname">append</tt><big>(</big><em>timeframe</em>, <em>new_results</em><big>)</big><a class="reference internal" href="_modules/nilmtk/stats/totalenergyresults.html#TotalEnergyResults.append"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.stats.totalenergyresults.TotalEnergyResults.append" title="Permalink to this definition">¶</a></dt>
@@ -542,7 +543,7 @@ e.g. append(TimeFrame(start, end), {&#8216;apparent&#8217;: 34, &#8216;active&#8
     </p>
     <p>
         &copy; Copyright 2014, NILMTK Authors.<br/>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.2.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.1.<br/>
     </p>
   </div>
 </footer>

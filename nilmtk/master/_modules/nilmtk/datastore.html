@@ -5,18 +5,18 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>nilmtk.datastore &mdash; NILMTK 0.2-beta documentation</title>
+    <title>nilmtk.datastore &mdash; NILMTK 0.2 documentation</title>
     
     <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/bootstrap-3.2.0/css/bootstrap.min.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/bootstrap-3.2.0/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/bootstrap-3.1.0/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/bootstrap-3.1.0/css/bootstrap-theme.min.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '0.2-beta',
+        VERSION:     '0.2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -28,9 +28,9 @@
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="../../_static/bootstrap-3.2.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-3.1.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="NILMTK 0.2-beta documentation" href="../../index.html" />
+    <link rel="top" title="NILMTK 0.2 documentation" href="../../index.html" />
     <link rel="up" title="Module code" href="../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -133,7 +133,7 @@
   <h1>Source code for nilmtk.datastore</h1><div class="highlight"><pre>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">division</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
-<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">repeat</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">repeat</span><span class="p">,</span> <span class="n">tee</span>
 <span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
 <span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
 <span class="kn">from</span> <span class="nn">.timeframe</span> <span class="kn">import</span> <span class="n">TimeFrame</span><span class="p">,</span> <span class="n">timeframes_from_periodindex</span>
@@ -188,9 +188,6 @@
 
 <div class="viewcode-block" id="HDFDataStore.load"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.datastore.HDFDataStore.load">[docs]</a>    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">sections</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">n_look_ahead_rows</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
              <span class="n">chunksize</span><span class="o">=</span><span class="mi">1000000</span><span class="p">):</span>
-
-        <span class="c">#_breakpoint()  # 9a2a1bb0</span>
-
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -231,7 +228,6 @@
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">key</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;/&#39;</span><span class="p">:</span>
             <span class="n">key</span> <span class="o">=</span> <span class="n">key</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 
-
         <span class="n">sections</span> <span class="o">=</span> <span class="p">[</span><span class="n">TimeFrame</span><span class="p">()]</span> <span class="k">if</span> <span class="n">sections</span> <span class="ow">is</span> <span class="bp">None</span> <span class="k">else</span> <span class="n">sections</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sections</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">PeriodIndex</span><span class="p">):</span>
             <span class="n">sections</span> <span class="o">=</span> <span class="n">timeframes_from_periodindex</span><span class="p">(</span><span class="n">sections</span><span class="p">)</span>
@@ -241,19 +237,18 @@
         <span class="k">for</span> <span class="n">section</span> <span class="ow">in</span> <span class="n">sections</span><span class="p">:</span>
             <span class="n">window_intersect</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">intersect</span><span class="p">(</span><span class="n">section</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">window_intersect</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
-                <span class="c"># Trick to make a generator with just a single, empty DataFrame</span>
+                <span class="c"># Trick to make a generator with one empty DataFrame</span>
                 <span class="n">generator</span> <span class="o">=</span> <span class="n">repeat</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(),</span> <span class="mi">1</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">terms</span> <span class="o">=</span> <span class="n">window_intersect</span><span class="o">.</span><span class="n">query_terms</span><span class="p">(</span><span class="s">&#39;window_intersect&#39;</span><span class="p">)</span>
                 <span class="n">generator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="n">cols</span><span class="p">,</span> <span class="n">where</span><span class="o">=</span><span class="n">terms</span><span class="p">,</span>
                                               <span class="n">chunksize</span><span class="o">=</span><span class="n">chunksize</span><span class="p">)</span><span class="o">.</span><span class="n">__iter__</span><span class="p">()</span>
                 
-            <span class="n">first_sub_chunk</span> <span class="o">=</span> <span class="bp">True</span>
-            <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">generator</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">subchunk_i</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">generator</span><span class="p">):</span>
                 <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">2</span><span class="p">:</span>
                     <span class="k">continue</span>
 
-                <span class="k">if</span> <span class="ow">not</span> <span class="n">first_sub_chunk</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">subchunk_i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">all_sections_smaller_than_chunksize</span> <span class="o">=</span> <span class="bp">False</span>
 
                 <span class="c"># Load look ahead if necessary</span>
@@ -275,14 +270,34 @@
                 <span class="c"># Set timeframe</span>
                 <span class="n">start</span> <span class="o">=</span> <span class="bp">None</span>
                 <span class="n">end</span> <span class="o">=</span> <span class="bp">None</span>
-                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">==</span> <span class="n">chunksize</span><span class="p">:</span>
-                    <span class="c"># If len(data) == chunksize then we can fairly safely</span>
-                    <span class="c"># assume that the full `section` is larger than the</span>
-                    <span class="c"># chunksize so we&#39;re going to go through several</span>
-                    <span class="c"># &#39;sub chunks&#39;.</span>
-                    <span class="k">if</span> <span class="n">first_sub_chunk</span><span class="p">:</span>
+
+                <span class="c"># Test if there are any more subchunks</span>
+                <span class="c"># We cannot simply test if len(data) == chunksize</span>
+                <span class="c"># because store.select(chunksize=chunksize) doesn&#39;t</span>
+                <span class="c"># appear to respect the chunksize argument!</span>
+                <span class="c"># TODO: report bug to Pandas / PyTables</span>
+                <span class="c"># Alternative approach: before this loop,</span>
+                <span class="c"># make a copy of the generator using tee()</span>
+                <span class="c"># and loop through it to find out how many</span>
+                <span class="c"># items there are in it, then count through those </span>
+                <span class="c"># in this loop.</span>
+
+                <span class="c"># This strategy for &#39;peaking&#39; into a generator from:</span>
+                <span class="c"># http://stackoverflow.com/a/12059829/732596</span>
+                <span class="n">generator_copy1</span><span class="p">,</span> <span class="n">generator_copy2</span> <span class="o">=</span> <span class="n">tee</span><span class="p">(</span><span class="n">generator</span><span class="p">)</span>
+                <span class="n">generator</span> <span class="o">=</span> <span class="n">generator_copy2</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">generator_copy1</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
+                <span class="k">except</span> <span class="ne">StopIteration</span><span class="p">:</span>
+                    <span class="n">there_are_more_subchunks</span> <span class="o">=</span> <span class="bp">False</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">there_are_more_subchunks</span> <span class="o">=</span> <span class="bp">True</span>
+                <span class="k">del</span> <span class="n">generator_copy1</span>
+
+                <span class="k">if</span> <span class="n">there_are_more_subchunks</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">subchunk_i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                         <span class="n">start</span> <span class="o">=</span> <span class="n">window_intersect</span><span class="o">.</span><span class="n">start</span>
-                <span class="k">elif</span> <span class="ow">not</span> <span class="n">first_sub_chunk</span><span class="p">:</span>
+                <span class="k">elif</span> <span class="n">subchunk_i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
                     <span class="c"># This is the last subchunk</span>
                     <span class="n">end</span> <span class="o">=</span> <span class="n">window_intersect</span><span class="o">.</span><span class="n">end</span>
                 <span class="k">else</span><span class="p">:</span>
@@ -296,8 +311,6 @@
                     <span class="n">end</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 
                 <span class="n">data</span><span class="o">.</span><span class="n">timeframe</span> <span class="o">=</span> <span class="n">TimeFrame</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">)</span>
-                <span class="n">first_sub_chunk</span> <span class="o">=</span> <span class="bp">False</span>
-
                 <span class="k">yield</span> <span class="n">data</span>
 </div>
 <div class="viewcode-block" id="HDFDataStore.append"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.datastore.HDFDataStore.append">[docs]</a>    <span class="k">def</span> <span class="nf">append</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -551,7 +564,7 @@
     </p>
     <p>
         &copy; Copyright 2014, NILMTK Authors.<br/>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.2.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.1.<br/>
     </p>
   </div>
 </footer>

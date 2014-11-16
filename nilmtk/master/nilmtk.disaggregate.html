@@ -5,18 +5,18 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>nilmtk.disaggregate package &mdash; NILMTK 0.2-beta documentation</title>
+    <title>nilmtk.disaggregate package &mdash; NILMTK 0.2 documentation</title>
     
     <link rel="stylesheet" href="_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="_static/bootstrap-3.2.0/css/bootstrap.min.css" type="text/css" />
-    <link rel="stylesheet" href="_static/bootstrap-3.2.0/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-3.1.0/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-3.1.0/css/bootstrap-theme.min.css" type="text/css" />
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '0.2-beta',
+        VERSION:     '0.2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -28,9 +28,9 @@
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="_static/bootstrap-3.2.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-3.1.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="NILMTK 0.2-beta documentation" href="index.html" />
+    <link rel="top" title="NILMTK 0.2 documentation" href="index.html" />
     <link rel="up" title="nilmtk package" href="nilmtk.html" />
     <link rel="next" title="nilmtk.feature_detectors package" href="nilmtk.feature_detectors.html" />
     <link rel="prev" title="nilmtk.dataset_converters.redd package" href="nilmtk.dataset_converters.redd.html" />
@@ -165,17 +165,6 @@
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
 <p>1 dimensional combinatorial optimisation NILM algorithm.</p>
 <p class="rubric">Attributes</p>
-<table border="1" class="docutils">
-<colgroup>
-<col width="3%" />
-<col width="97%" />
-</colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td>model</td>
-<td>(dict) Each key is either the instance integer for an ElecMeter, or a tuple of instances for a MeterGroup. Each value is a sorted list of power in different states.</td>
-</tr>
-</tbody>
-</table>
 <dl class="method">
 <dt id="nilmtk.disaggregate.combinatorial_optimisation.CombinatorialOptimisation.disaggregate">
 <tt class="descname">disaggregate</tt><big>(</big><em>mains</em>, <em>output_datastore</em>, <em>**load_kwargs</em><big>)</big><a class="reference internal" href="_modules/nilmtk/disaggregate/combinatorial_optimisation.html#CombinatorialOptimisation.disaggregate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.disaggregate.combinatorial_optimisation.CombinatorialOptimisation.disaggregate" title="Permalink to this definition">¶</a></dt>
@@ -210,19 +199,9 @@ e.g. some sort of name for this experiment.  Defaults to
 </dd></dl>
 
 <dl class="method">
-<dt id="nilmtk.disaggregate.combinatorial_optimisation.CombinatorialOptimisation.export_model">
-<tt class="descname">export_model</tt><big>(</big><em>filename</em><big>)</big><a class="reference internal" href="_modules/nilmtk/disaggregate/combinatorial_optimisation.html#CombinatorialOptimisation.export_model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.disaggregate.combinatorial_optimisation.CombinatorialOptimisation.export_model" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="nilmtk.disaggregate.combinatorial_optimisation.CombinatorialOptimisation.import_model">
-<tt class="descname">import_model</tt><big>(</big><em>filename</em><big>)</big><a class="reference internal" href="_modules/nilmtk/disaggregate/combinatorial_optimisation.html#CombinatorialOptimisation.import_model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.disaggregate.combinatorial_optimisation.CombinatorialOptimisation.import_model" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
 <dt id="nilmtk.disaggregate.combinatorial_optimisation.CombinatorialOptimisation.train">
 <tt class="descname">train</tt><big>(</big><em>metergroup</em><big>)</big><a class="reference internal" href="_modules/nilmtk/disaggregate/combinatorial_optimisation.html#CombinatorialOptimisation.train"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.disaggregate.combinatorial_optimisation.CombinatorialOptimisation.train" title="Permalink to this definition">¶</a></dt>
-<dd><p>Train using 1D CO. Places the learnt model in <cite>model</cite> attribute.</p>
+<dd><p>Train using 1D CO. Places the learnt model in the <cite>model</cite> attribute.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -258,7 +237,7 @@ e.g. some sort of name for this experiment.  Defaults to
     </p>
     <p>
         &copy; Copyright 2014, NILMTK Authors.<br/>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.2.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.1.<br/>
     </p>
   </div>
 </footer>
