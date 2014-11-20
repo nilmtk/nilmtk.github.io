@@ -70,7 +70,7 @@
   <ul class="dropdown-menu globaltoc"
       role="menu"
       aria-labelledby="dLabelGlobalToc"><ul>
-<li class="toctree-l1"><a class="reference internal" href="../../intro_nilmtk_v0_2.html">Introducing NILMTK v0.2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../intro_nilmtk_v0_2.html">Intro to NILMTK v0.2</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../convert_data_to_NILMTK_format.html">Convert data to NILMTK format and load into NILMTK</a></li>
@@ -81,6 +81,9 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../contribute.html">Contributing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../writing_a_dataset_converter.html">Writing a dataset converter</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Change log</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../nilmtk.html">nilmtk package</a></li>
@@ -132,9 +135,10 @@
       
   <h1>Source code for nilmtk.dataset</h1><div class="highlight"><pre>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">division</span>
+<span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
 <span class="kn">from</span> <span class="nn">.building</span> <span class="kn">import</span> <span class="n">Building</span>
-<span class="kn">from</span> <span class="nn">.datastore</span> <span class="kn">import</span> <span class="n">join_key</span><span class="p">,</span> <span class="n">HDFDataStore</span>
+<span class="kn">from</span> <span class="nn">.datastore</span> <span class="kn">import</span> <span class="n">join_key</span><span class="p">,</span> <span class="n">get_datastore</span>
 
 <div class="viewcode-block" id="DataSet"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.dataset.DataSet">[docs]</a><span class="k">class</span> <span class="nc">DataSet</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -153,17 +157,19 @@
 <span class="sd">        See http://nilm-metadata.readthedocs.org/en/latest/dataset_metadata.html#dataset</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="s">&#39;HDF&#39;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        filename : str</span>
-<span class="sd">            HDF5 file</span>
+<span class="sd">            path to data set</span>
+<span class="sd">        </span>
+<span class="sd">        format : str</span>
+<span class="sd">            format of output. Either &#39;HDF&#39; or &#39;CSV&#39;. Defaults to &#39;HDF&#39;</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">buildings</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">if</span> <span class="n">filename</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">HDFDataStore</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">get_datastore</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">format</span><span class="p">))</span>
         
 <div class="viewcode-block" id="DataSet.load"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.dataset.DataSet.load">[docs]</a>    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">store</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -201,7 +207,7 @@
     </p>
     <p>
         &copy; Copyright 2014, NILMTK Authors.<br/>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.1.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.3.<br/>
     </p>
   </div>
 </footer>

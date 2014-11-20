@@ -70,7 +70,7 @@
   <ul class="dropdown-menu globaltoc"
       role="menu"
       aria-labelledby="dLabelGlobalToc"><ul>
-<li class="toctree-l1"><a class="reference internal" href="../../intro_nilmtk_v0_2.html">Introducing NILMTK v0.2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../intro_nilmtk_v0_2.html">Intro to NILMTK v0.2</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../convert_data_to_NILMTK_format.html">Convert data to NILMTK format and load into NILMTK</a></li>
@@ -81,6 +81,9 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../contribute.html">Contributing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../writing_a_dataset_converter.html">Writing a dataset converter</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Change log</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../nilmtk.html">nilmtk package</a></li>
@@ -166,6 +169,15 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_start</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_end</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_empty</span> <span class="o">=</span> <span class="bp">False</span>
+</div>
+    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="TimeFrame.from_dict"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.timeframe.TimeFrame.from_dict">[docs]</a>    <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">key_to_timestamp</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
+            <span class="n">string</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">None</span> <span class="k">if</span> <span class="n">string</span> <span class="ow">is</span> <span class="bp">None</span> <span class="k">else</span> <span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="n">key_to_timestamp</span><span class="p">(</span><span class="s">&#39;start&#39;</span><span class="p">)</span>
+        <span class="n">end</span> <span class="o">=</span> <span class="n">key_to_timestamp</span><span class="p">(</span><span class="s">&#39;end&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">cls</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">)</span>
 </div>
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -334,9 +346,16 @@
     <span class="k">def</span> <span class="nf">__ne__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">__eq__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
 
+    <span class="k">def</span> <span class="nf">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">hash</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">end</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">empty</span><span class="p">))</span>
+
 <div class="viewcode-block" id="TimeFrame.to_dict"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.timeframe.TimeFrame.to_dict">[docs]</a>    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">{</span><span class="s">&#39;start&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="o">.</span><span class="n">isoformat</span><span class="p">(),</span> 
-                <span class="s">&#39;end&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">end</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()}</span>
+        <span class="n">dct</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="p">:</span>
+            <span class="n">dct</span><span class="p">[</span><span class="s">&#39;start&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">end</span><span class="p">:</span>
+            <span class="n">dct</span><span class="p">[</span><span class="s">&#39;end&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">end</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">dct</span>
 
 </div></div>
 <div class="viewcode-block" id="merge_timeframes"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.timeframe.merge_timeframes">[docs]</a><span class="k">def</span> <span class="nf">merge_timeframes</span><span class="p">(</span><span class="n">timeframes</span><span class="p">,</span> <span class="n">gap</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
@@ -382,7 +401,7 @@
 
 </div>
 <div class="viewcode-block" id="timeframe_from_dict"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.timeframe.timeframe_from_dict">[docs]</a><span class="k">def</span> <span class="nf">timeframe_from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">TimeFrame</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s">&#39;start&#39;</span><span class="p">],</span> <span class="n">end</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s">&#39;end&#39;</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">TimeFrame</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
 
 </div>
 <div class="viewcode-block" id="list_of_timeframes_from_list_of_dicts"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.timeframe.list_of_timeframes_from_list_of_dicts">[docs]</a><span class="k">def</span> <span class="nf">list_of_timeframes_from_list_of_dicts</span><span class="p">(</span><span class="n">dicts</span><span class="p">):</span>
@@ -419,7 +438,7 @@
     </p>
     <p>
         &copy; Copyright 2014, NILMTK Authors.<br/>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.1.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.3.<br/>
     </p>
   </div>
 </footer>

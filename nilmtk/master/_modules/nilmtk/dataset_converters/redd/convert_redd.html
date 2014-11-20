@@ -70,7 +70,7 @@
   <ul class="dropdown-menu globaltoc"
       role="menu"
       aria-labelledby="dLabelGlobalToc"><ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../../intro_nilmtk_v0_2.html">Introducing NILMTK v0.2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../intro_nilmtk_v0_2.html">Intro to NILMTK v0.2</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../convert_data_to_NILMTK_format.html">Convert data to NILMTK format and load into NILMTK</a></li>
@@ -81,6 +81,9 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../contribute.html">Contributing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../writing_a_dataset_converter.html">Writing a dataset converter</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../changelog.html">Change log</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../nilmtk.html">nilmtk package</a></li>
@@ -139,11 +142,11 @@
 <span class="kn">from</span> <span class="nn">os</span> <span class="kn">import</span> <span class="n">listdir</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">from</span> <span class="nn">sys</span> <span class="kn">import</span> <span class="n">stdout</span>
-<span class="kn">from</span> <span class="nn">nilmtk.datastore</span> <span class="kn">import</span> <span class="n">Key</span>
+<span class="kn">from</span> <span class="nn">nilmtk.datastore</span> <span class="kn">import</span> <span class="n">Key</span><span class="p">,</span> <span class="n">get_datastore</span>
 <span class="kn">from</span> <span class="nn">nilmtk.timeframe</span> <span class="kn">import</span> <span class="n">TimeFrame</span>
 <span class="kn">from</span> <span class="nn">nilmtk.measurement</span> <span class="kn">import</span> <span class="n">LEVEL_NAMES</span>
-<span class="kn">from</span> <span class="nn">nilmtk.utils</span> <span class="kn">import</span> <span class="n">get_module_directory</span>
-<span class="kn">from</span> <span class="nn">nilm_metadata</span> <span class="kn">import</span> <span class="n">convert_yaml_to_hdf5</span>
+<span class="kn">from</span> <span class="nn">nilmtk.utils</span> <span class="kn">import</span> <span class="n">get_module_directory</span><span class="p">,</span> <span class="n">check_directory_exists</span>
+<span class="kn">from</span> <span class="nn">nilm_metadata</span> <span class="kn">import</span> <span class="n">convert_yaml_to_hdf5</span><span class="p">,</span> <span class="n">save_yaml_to_datastore</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">TODO:</span>
@@ -153,40 +156,46 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 
-<div class="viewcode-block" id="convert_redd"><a class="viewcode-back" href="../../../../nilmtk.dataset_converters.redd.html#nilmtk.dataset_converters.redd.convert_redd.convert_redd">[docs]</a><span class="k">def</span> <span class="nf">convert_redd</span><span class="p">(</span><span class="n">redd_path</span><span class="p">,</span> <span class="n">hdf_filename</span><span class="p">):</span>
+<div class="viewcode-block" id="convert_redd"><a class="viewcode-back" href="../../../../nilmtk.dataset_converters.redd.html#nilmtk.dataset_converters.redd.convert_redd.convert_redd">[docs]</a><span class="k">def</span> <span class="nf">convert_redd</span><span class="p">(</span><span class="n">redd_path</span><span class="p">,</span> <span class="n">output_filename</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="s">&#39;HDF&#39;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    redd_path : str</span>
 <span class="sd">        The root path of the REDD low_freq dataset.</span>
-<span class="sd">    hdf_filename : str</span>
+<span class="sd">    output_filename : str</span>
 <span class="sd">        The destination HDF5 filename (including path and suffix).</span>
+<span class="sd">    format : str</span>
+<span class="sd">        format of output. Either &#39;HDF&#39; or &#39;CSV&#39;. Defaults to &#39;HDF&#39;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">_redd_measurement_mapping_func</span><span class="p">(</span><span class="n">house_id</span><span class="p">,</span> <span class="n">chan_id</span><span class="p">):</span>
         <span class="n">ac_type</span> <span class="o">=</span> <span class="s">&#39;apparent&#39;</span> <span class="k">if</span> <span class="n">chan_id</span> <span class="o">&lt;=</span> <span class="mi">2</span> <span class="k">else</span> <span class="s">&#39;active&#39;</span>
         <span class="k">return</span> <span class="p">[(</span><span class="s">&#39;power&#39;</span><span class="p">,</span> <span class="n">ac_type</span><span class="p">)]</span>
+        
+    <span class="c"># Open DataStore</span>
+    <span class="n">store</span> <span class="o">=</span> <span class="n">get_datastore</span><span class="p">(</span><span class="n">output_filename</span><span class="p">,</span> <span class="n">format</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s">&#39;w&#39;</span><span class="p">)</span>
 
-    <span class="n">_convert</span><span class="p">(</span><span class="n">redd_path</span><span class="p">,</span> <span class="n">hdf_filename</span><span class="p">,</span> <span class="n">_redd_measurement_mapping_func</span><span class="p">,</span> <span class="s">&#39;US/Eastern&#39;</span><span class="p">)</span>
+    <span class="c"># Convert raw data to DataStore</span>
+    <span class="n">_convert</span><span class="p">(</span><span class="n">redd_path</span><span class="p">,</span> <span class="n">store</span><span class="p">,</span> <span class="n">_redd_measurement_mapping_func</span><span class="p">,</span> <span class="s">&#39;US/Eastern&#39;</span><span class="p">)</span>
 
     <span class="c"># Add metadata</span>
-    <span class="n">convert_yaml_to_hdf5</span><span class="p">(</span><span class="n">join</span><span class="p">(</span><span class="n">get_module_directory</span><span class="p">(),</span> 
+    <span class="n">save_yaml_to_datastore</span><span class="p">(</span><span class="n">join</span><span class="p">(</span><span class="n">get_module_directory</span><span class="p">(),</span> 
                               <span class="s">&#39;dataset_converters&#39;</span><span class="p">,</span> 
                               <span class="s">&#39;redd&#39;</span><span class="p">,</span> 
                               <span class="s">&#39;metadata&#39;</span><span class="p">),</span>
-                         <span class="n">hdf_filename</span><span class="p">)</span>
+                         <span class="n">store</span><span class="p">)</span>
+    <span class="n">store</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
     <span class="k">print</span><span class="p">(</span><span class="s">&quot;Done converting REDD to HDF5!&quot;</span><span class="p">)</span>
-
 </div>
-<span class="k">def</span> <span class="nf">_convert</span><span class="p">(</span><span class="n">input_path</span><span class="p">,</span> <span class="n">hdf_filename</span><span class="p">,</span> <span class="n">measurement_mapping_func</span><span class="p">,</span> <span class="n">tz</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">_convert</span><span class="p">(</span><span class="n">input_path</span><span class="p">,</span> <span class="n">store</span><span class="p">,</span> <span class="n">measurement_mapping_func</span><span class="p">,</span> <span class="n">tz</span><span class="p">,</span> <span class="n">sort_index</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    input_path : str</span>
 <span class="sd">        The root path of the REDD low_freq dataset.</span>
-<span class="sd">    hdf_filename : str</span>
-<span class="sd">        The destination HDF5 filename (including path and suffix).</span>
+<span class="sd">    store : DataStore</span>
+<span class="sd">        The NILMTK DataStore object.</span>
 <span class="sd">    measurement_mapping_func : function</span>
 <span class="sd">        Must take these parameters:</span>
 <span class="sd">            - house_id</span>
@@ -194,12 +203,10 @@
 <span class="sd">        Function should return a list of tuples e.g. [(&#39;power&#39;, &#39;active&#39;)]</span>
 <span class="sd">    tz : str </span>
 <span class="sd">        Timezone e.g. &#39;US/Eastern&#39;</span>
+<span class="sd">    sort_index : bool</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">assert</span> <span class="n">isdir</span><span class="p">(</span><span class="n">input_path</span><span class="p">)</span>
-
-    <span class="c"># Open HDF5 file</span>
-    <span class="n">store</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">HDFStore</span><span class="p">(</span><span class="n">hdf_filename</span><span class="p">,</span> <span class="s">&#39;w&#39;</span><span class="p">,</span> <span class="n">complevel</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span> <span class="n">complib</span><span class="o">=</span><span class="s">&#39;zlib&#39;</span><span class="p">)</span>
+    <span class="n">check_directory_exists</span><span class="p">(</span><span class="n">input_path</span><span class="p">)</span>
 
     <span class="c"># Iterate though all houses and channels</span>
     <span class="n">houses</span> <span class="o">=</span> <span class="n">_find_all_houses</span><span class="p">(</span><span class="n">input_path</span><span class="p">)</span>
@@ -212,12 +219,25 @@
             <span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
             <span class="n">key</span> <span class="o">=</span> <span class="n">Key</span><span class="p">(</span><span class="n">building</span><span class="o">=</span><span class="n">house_id</span><span class="p">,</span> <span class="n">meter</span><span class="o">=</span><span class="n">chan_id</span><span class="p">)</span>
             <span class="n">measurements</span> <span class="o">=</span> <span class="n">measurement_mapping_func</span><span class="p">(</span><span class="n">house_id</span><span class="p">,</span> <span class="n">chan_id</span><span class="p">)</span>
-            <span class="n">df</span> <span class="o">=</span> <span class="n">_load_chan</span><span class="p">(</span><span class="n">input_path</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">measurements</span><span class="p">,</span> <span class="n">tz</span><span class="p">)</span>
-            <span class="n">store</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">key</span><span class="p">),</span> <span class="n">df</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="s">&#39;table&#39;</span><span class="p">)</span>
-            <span class="n">store</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
-        <span class="k">print</span><span class="p">()</span>
+            <span class="n">csv_filename</span> <span class="o">=</span> <span class="n">_get_csv_filename</span><span class="p">(</span><span class="n">input_path</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">_load_csv</span><span class="p">(</span><span class="n">csv_filename</span><span class="p">,</span> <span class="n">measurements</span><span class="p">,</span> <span class="n">tz</span><span class="p">)</span>
 
-    <span class="n">store</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">sort_index</span><span class="p">:</span>
+                <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sort_index</span><span class="p">()</span> <span class="c"># raw REDD data isn&#39;t always sorted</span>
+            <span class="n">store</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">key</span><span class="p">),</span> <span class="n">df</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">()</span>
+    
+
+<span class="k">def</span> <span class="nf">_store_put</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">df</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    store : HDFStore</span>
+<span class="sd">    key : str</span>
+<span class="sd">    df : pd.DataFrame</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">store</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="s">&#39;table&#39;</span><span class="p">,</span> <span class="n">expectedrows</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">),</span> <span class="n">index</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">store</span><span class="o">.</span><span class="n">create_table_index</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;index&#39;</span><span class="p">],</span> <span class="n">kind</span><span class="o">=</span><span class="s">&#39;full&#39;</span><span class="p">,</span> <span class="n">optlevel</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
     
 
 <span class="k">def</span> <span class="nf">_find_all_houses</span><span class="p">(</span><span class="n">input_path</span><span class="p">):</span>
@@ -267,18 +287,16 @@
     <span class="k">return</span> <span class="n">ints</span>
 
 
-<span class="k">def</span> <span class="nf">_load_chan</span><span class="p">(</span><span class="n">input_path</span><span class="p">,</span> <span class="n">key_obj</span><span class="p">,</span> <span class="n">columns</span><span class="p">,</span> <span class="n">tz</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">_get_csv_filename</span><span class="p">(</span><span class="n">input_path</span><span class="p">,</span> <span class="n">key_obj</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    input_path : (str) the root path of the REDD low_freq dataset</span>
 <span class="sd">    key_obj : (nilmtk.Key) the house and channel to load</span>
-<span class="sd">    columns : list of tuples (for hierarchical column index)</span>
-<span class="sd">    tz : str e.g. &#39;US/Eastern&#39;</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    ------- </span>
-<span class="sd">    DataFrame of data.</span>
+<span class="sd">    filename : str</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">input_path</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
     <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key_obj</span><span class="p">,</span> <span class="n">Key</span><span class="p">)</span>
@@ -293,6 +311,21 @@
     <span class="n">filename</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
     <span class="k">assert</span> <span class="n">isfile</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
 
+    <span class="k">return</span> <span class="n">filename</span>
+
+
+<span class="k">def</span> <span class="nf">_load_csv</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">columns</span><span class="p">,</span> <span class="n">tz</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    filename : str</span>
+<span class="sd">    columns : list of tuples (for hierarchical column index)</span>
+<span class="sd">    tz : str e.g. &#39;US/Eastern&#39;</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dataframe</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="c"># Load data</span>
     <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s">&#39; &#39;</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="n">columns</span><span class="p">,</span>
                      <span class="n">dtype</span><span class="o">=</span><span class="p">{</span><span class="n">m</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">columns</span><span class="p">})</span>
@@ -300,9 +333,6 @@
     <span class="c"># Modify the column labels to reflect the power measurements recorded.</span>
     <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">set_names</span><span class="p">(</span><span class="n">LEVEL_NAMES</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 
-    <span class="c"># raw REDD data isn&#39;t always sorted</span>
-    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sort_index</span><span class="p">()</span>
-    
     <span class="c"># Convert the integer index column to timezone-aware datetime </span>
     <span class="n">df</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s">&#39;s&#39;</span><span class="p">,</span> <span class="n">utc</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
     <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">tz_convert</span><span class="p">(</span><span class="n">tz</span><span class="p">)</span>
@@ -322,7 +352,7 @@
     </p>
     <p>
         &copy; Copyright 2014, NILMTK Authors.<br/>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.1.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.3.<br/>
     </p>
   </div>
 </footer>

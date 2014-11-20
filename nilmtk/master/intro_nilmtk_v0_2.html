@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Introducing NILMTK v0.2 &mdash; NILMTK 0.2 documentation</title>
+    <title>Intro to NILMTK v0.2 &mdash; NILMTK 0.2 documentation</title>
     
     <link rel="stylesheet" href="_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -71,7 +71,7 @@
   <ul class="dropdown-menu globaltoc"
       role="menu"
       aria-labelledby="dLabelGlobalToc"><ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="">Introducing NILMTK v0.2</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">Intro to NILMTK v0.2</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="convert_data_to_NILMTK_format.html">Convert data to NILMTK format and load into NILMTK</a></li>
@@ -98,7 +98,7 @@
   <ul class="dropdown-menu localtoc"
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
-<li><a class="reference internal" href="#">Introducing NILMTK v0.2</a></li>
+<li><a class="reference internal" href="#">Intro to NILMTK v0.2</a></li>
 </ul>
 </ul>
 </li>
@@ -146,44 +146,9 @@
   <div class="row">
     <div class="col-md-12">
       
-  <div class="section" id="introducing-nilmtk-v0-2">
-<h1>Introducing NILMTK v0.2<a class="headerlink" href="#introducing-nilmtk-v0-2" title="Permalink to this headline">¶</a></h1>
-<p>NILMTK v0.2 is a complete re-write of NILMTK from the ground up.</p>
-<p>Some feature highlights of v0.2:</p>
-<ul class="simple">
-<li>The entire pipeline (loading, stats, preprocessing, disag, metrics)
-can cope with arbitrarily large datasets whilst being gently on the
-system RAM usage</li>
-<li>Full metadata support, including for arbitrary wiring hierarchies</li>
-<li>MeterGroup allows users to select and aggregate meters in powerful
-ways with a single line of code.  e.g. to see the total energy used
-by all the lights in a house just do
-&#8216;elec.select(category=&#8217;lighting&#8217;).total_energy()&#8217;.</li>
-<li>Much more elegant handling of &#8220;dual supply&#8221; and split-phase mains
-(using MeterGroup)</li>
-<li>Experimental support for preconditions checks for some stats
-function.</li>
-<li>OOP design hides complexity from the user</li>
-<li>CO works well</li>
-<li>Most metrics have been converted</li>
-<li>REDD converter works</li>
-<li>about 40 unit tests</li>
-<li>Disag output is now saved chunk-by-chunk to disk, allowing us to
-disag and do metrics on arbitrarily large datasets.  Also lays the
-foundation for sharing raw disag output and for users to be able to
-ignore all the NILMTK pipeline except the metrics</li>
-<li>Automatic selection of the best type of power measurement (reactive,
-active or apparent) etc etc...</li>
-</ul>
-<p>However, there are still some things that are implemented in NILMTK
-v0.1 but are not yet in v0.2.  For example:</p>
-<ul class="simple">
-<li>v0.2 does not yet include all the dataset importers that v0.1 had.</li>
-<li>v0.2 only has one disag algo: CO.  It should be fairly simple to
-port the FHMM algo from v0.1</li>
-<li>There are a few stats functions and metrics which we haven&#8217;t had a
-chance to port.</li>
-</ul>
+  <div class="section" id="intro-to-nilmtk-v0-2">
+<h1>Intro to NILMTK v0.2<a class="headerlink" href="#intro-to-nilmtk-v0-2" title="Permalink to this headline">¶</a></h1>
+<p>This content has moved to the <a class="reference external" href="changelog.html">changelog</a>.</p>
 </div>
 
 
@@ -199,7 +164,7 @@ chance to port.</li>
     </p>
     <p>
         &copy; Copyright 2014, NILMTK Authors.<br/>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.1.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.3.<br/>
     </p>
   </div>
 </footer>

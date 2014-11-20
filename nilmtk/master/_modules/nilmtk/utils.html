@@ -70,7 +70,7 @@
   <ul class="dropdown-menu globaltoc"
       role="menu"
       aria-labelledby="dLabelGlobalToc"><ul>
-<li class="toctree-l1"><a class="reference internal" href="../../intro_nilmtk_v0_2.html">Introducing NILMTK v0.2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../intro_nilmtk_v0_2.html">Intro to NILMTK v0.2</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../convert_data_to_NILMTK_format.html">Convert data to NILMTK format and load into NILMTK</a></li>
@@ -81,6 +81,9 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../contribute.html">Contributing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../writing_a_dataset_converter.html">Writing a dataset converter</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Change log</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../nilmtk.html">nilmtk package</a></li>
@@ -339,7 +342,12 @@
 <div class="viewcode-block" id="offset_alias_to_seconds"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.utils.offset_alias_to_seconds">[docs]</a><span class="k">def</span> <span class="nf">offset_alias_to_seconds</span><span class="p">(</span><span class="n">alias</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Seconds for each period length.&quot;&quot;&quot;</span>
     <span class="n">dr</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">date_range</span><span class="p">(</span><span class="s">&#39;00:00&#39;</span><span class="p">,</span> <span class="n">periods</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="n">alias</span><span class="p">)</span>
-    <span class="k">return</span> <span class="p">(</span><span class="n">dr</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">dr</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span></div>
+    <span class="k">return</span> <span class="p">(</span><span class="n">dr</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">dr</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span>
+
+</div>
+<div class="viewcode-block" id="check_directory_exists"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.utils.check_directory_exists">[docs]</a><span class="k">def</span> <span class="nf">check_directory_exists</span><span class="p">(</span><span class="n">d</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">isdir</span><span class="p">(</span><span class="n">d</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s">&quot;Directory &#39;{}&#39; does not exist.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">d</span><span class="p">))</span></div>
 </pre></div>
 
     </div>
@@ -354,7 +362,7 @@
     </p>
     <p>
         &copy; Copyright 2014, NILMTK Authors.<br/>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.1.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.3.<br/>
     </p>
   </div>
 </footer>

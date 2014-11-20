@@ -70,7 +70,7 @@
   <ul class="dropdown-menu globaltoc"
       role="menu"
       aria-labelledby="dLabelGlobalToc"><ul>
-<li class="toctree-l1"><a class="reference internal" href="../../intro_nilmtk_v0_2.html">Introducing NILMTK v0.2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../intro_nilmtk_v0_2.html">Intro to NILMTK v0.2</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../convert_data_to_NILMTK_format.html">Convert data to NILMTK format and load into NILMTK</a></li>
@@ -81,6 +81,9 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../contribute.html">Contributing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../writing_a_dataset_converter.html">Writing a dataset converter</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Change log</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../nilmtk.html">nilmtk package</a></li>
@@ -159,11 +162,15 @@
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
-<span class="sd">    meters : list of ElecMeters</span>
+<span class="sd">    meters : list of ElecMeters or nested MeterGroups</span>
+<span class="sd">    disabled_meters : list of ElecMeters or nested MeterGroups</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">meters</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">meters</span> <span class="o">=</span> <span class="p">[]</span> <span class="k">if</span> <span class="n">meters</span> <span class="ow">is</span> <span class="bp">None</span> <span class="k">else</span> <span class="nb">list</span><span class="p">(</span><span class="n">meters</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">meters</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">disabled_meters</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">_convert_to_list</span><span class="p">(</span><span class="n">list_like</span><span class="p">):</span>
+            <span class="k">return</span> <span class="p">[]</span> <span class="k">if</span> <span class="n">list_like</span> <span class="ow">is</span> <span class="bp">None</span> <span class="k">else</span> <span class="nb">list</span><span class="p">(</span><span class="n">list_like</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">meters</span> <span class="o">=</span> <span class="n">_convert_to_list</span><span class="p">(</span><span class="n">meters</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">disabled_meters</span> <span class="o">=</span> <span class="n">_convert_to_list</span><span class="p">(</span><span class="n">disabled_meters</span><span class="p">)</span>
 
 <div class="viewcode-block" id="MeterGroup.load"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.metergroup.MeterGroup.load">[docs]</a>    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">store</span><span class="p">,</span> <span class="n">elec_meters</span><span class="p">,</span> <span class="n">appliances</span><span class="p">,</span> <span class="n">building_id</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -211,7 +218,12 @@
             <span class="k">if</span> <span class="n">appliance</span><span class="o">.</span><span class="n">n_meters</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="c"># Attach this appliance to just a single meter</span>
                 <span class="n">meter</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="n">meter_ids</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
-                <span class="n">meter</span><span class="o">.</span><span class="n">appliances</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">appliance</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">meter</span><span class="p">,</span> <span class="n">MeterGroup</span><span class="p">):</span> <span class="c"># MeterGroup of site_meters</span>
+                    <span class="n">metergroup</span> <span class="o">=</span> <span class="n">meter</span>
+                    <span class="k">for</span> <span class="n">meter</span> <span class="ow">in</span> <span class="n">metergroup</span><span class="o">.</span><span class="n">meters</span><span class="p">:</span>
+                        <span class="n">meter</span><span class="o">.</span><span class="n">appliances</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">appliance</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">meter</span><span class="o">.</span><span class="n">appliances</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">appliance</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="c"># DualSupply or 3-phase appliance so need a meter group</span>
                 <span class="n">metergroup</span> <span class="o">=</span> <span class="n">MeterGroup</span><span class="p">()</span>
@@ -223,6 +235,14 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">meters</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">meter</span><span class="p">)</span>
                     <span class="n">meter</span><span class="o">.</span><span class="n">appliances</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">appliance</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">meters</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">metergroup</span><span class="p">)</span>
+
+        <span class="c"># disable disabled meters</span>
+        <span class="n">meters_to_disable</span> <span class="o">=</span> <span class="p">[</span><span class="n">m</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">meters</span> 
+                             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">ElecMeter</span><span class="p">)</span> 
+                             <span class="ow">and</span> <span class="n">m</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;disabled&#39;</span><span class="p">)]</span>
+        <span class="k">for</span> <span class="n">meter</span> <span class="ow">in</span> <span class="n">meters_to_disable</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">meters</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">meter</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">disabled_meters</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">meter</span><span class="p">)</span>
 </div>
 <div class="viewcode-block" id="MeterGroup.union"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.metergroup.MeterGroup.union">[docs]</a>    <span class="k">def</span> <span class="nf">union</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -301,6 +321,10 @@
                             <span class="n">group</span><span class="o">.</span><span class="n">building</span><span class="p">()</span> <span class="o">==</span> <span class="n">key</span><span class="o">.</span><span class="n">building</span> <span class="ow">and</span>
                             <span class="n">group</span><span class="o">.</span><span class="n">dataset</span><span class="p">()</span> <span class="o">==</span> <span class="n">key</span><span class="o">.</span><span class="n">dataset</span><span class="p">):</span>
                         <span class="k">return</span> <span class="n">group</span>
+                <span class="c"># Else try to find an ElecMeter with instance=(1,2)</span>
+                <span class="k">for</span> <span class="n">meter</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">meters</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">meter</span><span class="o">.</span><span class="n">identifier</span> <span class="o">==</span> <span class="n">key</span><span class="p">:</span>
+                        <span class="k">return</span> <span class="n">meter</span>
             <span class="k">elif</span> <span class="n">key</span><span class="o">.</span><span class="n">instance</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="n">metergroup_of_building</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">select</span><span class="p">(</span>
                     <span class="n">building</span><span class="o">=</span><span class="n">key</span><span class="o">.</span><span class="n">building</span><span class="p">,</span> <span class="n">dataset</span><span class="o">=</span><span class="n">key</span><span class="o">.</span><span class="n">dataset</span><span class="p">)</span>
@@ -324,7 +348,11 @@
             <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="p">[{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="n">key</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s">&#39;instance&#39;</span><span class="p">:</span> <span class="n">key</span><span class="p">[</span><span class="mi">1</span><span class="p">]}]</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">str</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="bp">self</span><span class="p">[{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="n">key</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s">&#39;instance&#39;</span><span class="p">:</span> <span class="n">key</span><span class="p">[</span><span class="mi">1</span><span class="p">]}]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c"># Assume we&#39;re dealing with a request for 2 ElecMeters</span>
+                    <span class="k">return</span> <span class="n">MeterGroup</span><span class="p">([</span><span class="bp">self</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">key</span><span class="p">])</span>
             <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
                 <span class="k">return</span> <span class="bp">self</span><span class="p">[</span><span class="n">ElecMeterID</span><span class="p">(</span><span class="o">*</span><span class="n">key</span><span class="p">)]</span>
             <span class="k">else</span><span class="p">:</span>
@@ -349,13 +377,16 @@
                         <span class="n">meters_found</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">meter</span><span class="p">)</span>
                 <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">meter</span><span class="o">.</span><span class="n">instance</span><span class="p">(),</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">)):</span>
                     <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">meter</span><span class="o">.</span><span class="n">instance</span><span class="p">():</span>
-                        <span class="k">print</span><span class="p">(</span><span class="s">&quot;Meter&quot;</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="s">&quot;is in a nested meter group.&quot;</span>
-                              <span class="s">&quot; Retrieving just the ElecMeter.&quot;</span><span class="p">)</span>
-                        <span class="n">meters_found</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">meter</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+                        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">meter</span><span class="p">,</span> <span class="n">MeterGroup</span><span class="p">):</span>
+                            <span class="k">print</span><span class="p">(</span><span class="s">&quot;Meter&quot;</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="s">&quot;is in a nested meter group.&quot;</span>
+                                  <span class="s">&quot; Retrieving just the ElecMeter.&quot;</span><span class="p">)</span>
+                            <span class="n">meters_found</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">meter</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">meters_found</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">meter</span><span class="p">)</span>
             <span class="n">n_meters_found</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">meters_found</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">n_meters_found</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&#39;{} meters found with instance == {}&#39;</span>
-                                <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">n_meters_found</span><span class="p">,</span> <span class="n">key</span><span class="p">))</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&#39;{} meters found with instance == {}: {}&#39;</span>
+                                <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">n_meters_found</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">meters_found</span><span class="p">))</span>
             <span class="k">elif</span> <span class="n">n_meters_found</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span>
                     <span class="s">&#39;No meters found with instance == {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
@@ -562,6 +593,17 @@
         <span class="n">buildings</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="n">meter</span><span class="o">.</span><span class="n">building</span><span class="p">()</span> <span class="k">for</span> <span class="n">meter</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">meters</span><span class="p">])</span>
         <span class="k">return</span> <span class="n">simplest_type_for</span><span class="p">(</span><span class="n">buildings</span><span class="p">)</span>
 </div>
+<div class="viewcode-block" id="MeterGroup.contains_meters_from_multiple_buildings"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.metergroup.MeterGroup.contains_meters_from_multiple_buildings">[docs]</a>    <span class="k">def</span> <span class="nf">contains_meters_from_multiple_buildings</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns True if this MeterGroup contains meters from </span>
+<span class="sd">        more than one building.&quot;&quot;&quot;</span>
+        <span class="n">building</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">building</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">building</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">n</span> <span class="o">&gt;</span> <span class="mi">1</span>
+</div>
 <div class="viewcode-block" id="MeterGroup.dataset"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.metergroup.MeterGroup.dataset">[docs]</a>    <span class="k">def</span> <span class="nf">dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Returns dataset string(s).&quot;&quot;&quot;</span>
         <span class="n">datasets</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="n">meter</span><span class="o">.</span><span class="n">dataset</span><span class="p">()</span> <span class="k">for</span> <span class="n">meter</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">meters</span><span class="p">])</span>
@@ -673,6 +715,12 @@
 <span class="sd">        -------</span>
 <span class="sd">        ElecMeter or MeterGroup or None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">contains_meters_from_multiple_buildings</span><span class="p">():</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span><span class="s">&quot;This MeterGroup contains meters from buildings &#39;{}&#39;.&quot;</span>
+                   <span class="s">&quot; It only makes sense to get `mains` if the MeterGroup&quot;</span>
+                   <span class="s">&quot; contains meters from a single building.&quot;</span>
+                   <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">building</span><span class="p">()))</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
         <span class="n">site_meters</span> <span class="o">=</span> <span class="p">[</span><span class="n">meter</span> <span class="k">for</span> <span class="n">meter</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">meters</span> <span class="k">if</span> <span class="n">meter</span><span class="o">.</span><span class="n">is_site_meter</span><span class="p">()]</span>
         <span class="n">n_site_meters</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">site_meters</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">n_site_meters</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
@@ -681,6 +729,22 @@
             <span class="k">return</span> <span class="n">site_meters</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">MeterGroup</span><span class="p">(</span><span class="n">meters</span><span class="o">=</span><span class="n">site_meters</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="MeterGroup.use_alternative_mains"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.metergroup.MeterGroup.use_alternative_mains">[docs]</a>    <span class="k">def</span> <span class="nf">use_alternative_mains</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Swap present mains meter(s) for mains meter(s) in `disabled_meters`.</span>
+<span class="sd">        This is useful if the dataset has multiple, redundant mains meters</span>
+<span class="sd">        (e.g. in UK-DALE buildings 1, 2 and 5).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">present_mains</span> <span class="o">=</span> <span class="p">[</span><span class="n">m</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">meters</span> <span class="k">if</span> <span class="n">m</span><span class="o">.</span><span class="n">is_site_meter</span><span class="p">()]</span>
+        <span class="n">alternative_mains</span> <span class="o">=</span> <span class="p">[</span><span class="n">m</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">disabled_meters</span> <span class="k">if</span> <span class="n">m</span><span class="o">.</span><span class="n">is_site_meter</span><span class="p">()]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">alternative_mains</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s">&quot;No site meters found in `self.disabled_meters`&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">meter</span> <span class="ow">in</span> <span class="n">present_mains</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">meters</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">meter</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">disabled_meters</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">meter</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">meter</span> <span class="ow">in</span> <span class="n">alternative_mains</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">meters</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">meter</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">disabled_meters</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">meter</span><span class="p">)</span>
 </div>
 <div class="viewcode-block" id="MeterGroup.upstream_meter"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.metergroup.MeterGroup.upstream_meter">[docs]</a>    <span class="k">def</span> <span class="nf">upstream_meter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Returns single upstream meter.</span>
@@ -721,8 +785,7 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        if `full_results` is True then return TotalEnergyResults object</span>
-<span class="sd">        else return either a single number or, if there are multiple</span>
-<span class="sd">        AC types, then return a pd.Series with a row for each AC type.</span>
+<span class="sd">        else return a pd.Series with a row for each AC type.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_check_kwargs</span><span class="p">(</span><span class="n">load_kwargs</span><span class="p">)</span>
         <span class="n">full_results</span> <span class="o">=</span> <span class="n">load_kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s">&#39;full_results&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
@@ -876,8 +939,11 @@
         <span class="n">submetered_energy</span> <span class="o">=</span> <span class="mf">0.0</span>
         <span class="n">common_ac_types</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="k">for</span> <span class="n">meter</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">meters_directly_downstream_of_mains</span><span class="p">():</span>
-            <span class="n">energy</span> <span class="o">=</span> <span class="n">meter</span><span class="o">.</span><span class="n">total_energy</span><span class="p">(</span><span class="n">sections</span><span class="o">=</span><span class="n">good_mains_sections</span><span class="p">,</span>
-                                        <span class="n">full_results</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span><span class="o">.</span><span class="n">combined</span><span class="p">()</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">&quot;Getting total energy for&quot;</span><span class="p">,</span> <span class="n">meter</span><span class="o">.</span><span class="n">appliance_label</span><span class="p">())</span>
+            <span class="n">energy</span> <span class="o">=</span> <span class="n">meter</span><span class="o">.</span><span class="n">total_energy</span><span class="p">(</span><span class="n">sections</span><span class="o">=</span><span class="n">good_mains_sections</span><span class="p">)</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">&quot;  total energy =&quot;</span><span class="p">,</span> <span class="n">energy</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">energy</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+                <span class="k">continue</span>
             <span class="n">ac_types</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">energy</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
             <span class="n">ac_type</span> <span class="o">=</span> <span class="n">select_best_ac_type</span><span class="p">(</span><span class="n">ac_types</span><span class="p">,</span>
                                           <span class="n">mains</span><span class="o">.</span><span class="n">available_power_ac_types</span><span class="p">())</span>
@@ -886,8 +952,9 @@
                 <span class="n">common_ac_types</span> <span class="o">=</span> <span class="n">ac_types</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">common_ac_types</span> <span class="o">=</span> <span class="n">common_ac_types</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">ac_types</span><span class="p">)</span>
-        <span class="n">mains_energy</span> <span class="o">=</span> <span class="n">mains</span><span class="o">.</span><span class="n">total_energy</span><span class="p">(</span><span class="n">full_results</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span><span class="o">.</span><span class="n">combined</span><span class="p">()</span>
+        <span class="n">mains_energy</span> <span class="o">=</span> <span class="n">mains</span><span class="o">.</span><span class="n">total_energy</span><span class="p">()</span>
         <span class="n">ac_type</span> <span class="o">=</span> <span class="n">select_best_ac_type</span><span class="p">(</span><span class="n">mains_energy</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="n">common_ac_types</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&quot;Using AC type &#39;{}&#39; from mains.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ac_type</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">submetered_energy</span> <span class="o">/</span> <span class="n">mains_energy</span><span class="p">[</span><span class="n">ac_type</span><span class="p">]</span>
 </div>
 <div class="viewcode-block" id="MeterGroup.available_power_ac_types"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.metergroup.MeterGroup.available_power_ac_types">[docs]</a>    <span class="k">def</span> <span class="nf">available_power_ac_types</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -908,8 +975,8 @@
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">meter</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">meters</span><span class="p">):</span>
             <span class="k">print</span><span class="p">(</span><span class="s">&#39;</span><span class="se">\r</span><span class="s">{:d}/{:d} {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_meters</span><span class="p">,</span> <span class="n">meter</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">)</span>
             <span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
-            <span class="n">meter_energy</span> <span class="o">=</span> <span class="n">meter</span><span class="o">.</span><span class="n">total_energy</span><span class="p">(</span><span class="n">full_results</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="o">**</span><span class="n">load_kwargs</span><span class="p">)</span>
-            <span class="n">energy_per_meter</span><span class="p">[</span><span class="n">meter</span><span class="o">.</span><span class="n">identifier</span><span class="p">]</span> <span class="o">=</span> <span class="n">meter_energy</span><span class="o">.</span><span class="n">combined</span><span class="p">()</span>
+            <span class="n">meter_energy</span> <span class="o">=</span> <span class="n">meter</span><span class="o">.</span><span class="n">total_energy</span><span class="p">(</span><span class="o">**</span><span class="n">load_kwargs</span><span class="p">)</span>
+            <span class="n">energy_per_meter</span><span class="p">[</span><span class="n">meter</span><span class="o">.</span><span class="n">identifier</span><span class="p">]</span> <span class="o">=</span> <span class="n">meter_energy</span>
         <span class="k">return</span> <span class="n">energy_per_meter</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">how</span><span class="o">=</span><span class="s">&#39;all&#39;</span><span class="p">)</span>
 </div>
 <div class="viewcode-block" id="MeterGroup.fraction_per_meter"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.metergroup.MeterGroup.fraction_per_meter">[docs]</a>    <span class="k">def</span> <span class="nf">fraction_per_meter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">load_kwargs</span><span class="p">):</span>
@@ -1094,11 +1161,13 @@
         <span class="k">for</span> <span class="n">meter</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">meters</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">timeframe</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
                 <span class="n">timeframe</span> <span class="o">=</span> <span class="n">meter</span><span class="o">.</span><span class="n">get_timeframe</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">meter</span><span class="o">.</span><span class="n">get_timeframe</span><span class="p">()</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+                <span class="k">pass</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">timeframe</span> <span class="o">=</span> <span class="n">timeframe</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="n">meter</span><span class="o">.</span><span class="n">get_timeframe</span><span class="p">())</span>
         <span class="k">return</span> <span class="n">timeframe</span>
 </div>
-<div class="viewcode-block" id="MeterGroup.plot"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.metergroup.MeterGroup.plot">[docs]</a>    <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">800</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="MeterGroup.plot"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.metergroup.MeterGroup.plot">[docs]</a>    <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">800</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">plot_legend</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -1106,6 +1175,8 @@
 <span class="sd">        width : int, optional</span>
 <span class="sd">            Number of points on the x axis required</span>
 <span class="sd">        ax : matplotlib.axes, optional</span>
+<span class="sd">        plot_legend : boolean, optional</span>
+<span class="sd">            Defaults to True.  Set to False to not plot legend.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c"># Get start and end times for the plot</span>
         <span class="n">start</span> <span class="o">=</span> <span class="n">convert_to_timestamp</span><span class="p">(</span><span class="n">start</span><span class="p">)</span>
@@ -1121,7 +1192,7 @@
         <span class="c"># Calculate the resolution for the x axis</span>
         <span class="n">duration</span> <span class="o">=</span> <span class="p">(</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span>
         <span class="n">secs_per_pixel</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">duration</span> <span class="o">/</span> <span class="n">width</span><span class="p">))</span>
-        
+
         <span class="c"># Define a resample function</span>
         <span class="n">resample_func</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">resample</span><span class="p">(</span>
             <span class="n">df</span><span class="p">,</span> <span class="n">rule</span><span class="o">=</span><span class="s">&#39;{:d}S&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">secs_per_pixel</span><span class="p">))</span>
@@ -1132,7 +1203,8 @@
                 <span class="n">sections</span><span class="o">=</span><span class="p">[</span><span class="n">timeframe</span><span class="p">],</span> <span class="n">preprocessing</span><span class="o">=</span><span class="p">[</span><span class="n">Apply</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">resample_func</span><span class="p">)])</span>
             <span class="n">ax</span> <span class="o">=</span> <span class="n">plot_series</span><span class="p">(</span><span class="n">power_series</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">meter</span><span class="o">.</span><span class="n">appliance_label</span><span class="p">())</span>
 
-        <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">plot_legend</span><span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">ax</span>
 </div>
 <div class="viewcode-block" id="MeterGroup.appliance_label"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.metergroup.MeterGroup.appliance_label">[docs]</a>    <span class="k">def</span> <span class="nf">appliance_label</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -1175,7 +1247,7 @@
     </p>
     <p>
         &copy; Copyright 2014, NILMTK Authors.<br/>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.1.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.3.<br/>
     </p>
   </div>
 </footer>
