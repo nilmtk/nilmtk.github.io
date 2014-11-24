@@ -160,9 +160,6 @@
 <div class="viewcode-block" id="TestHDFDataStore.tearDownClass"><a class="viewcode-back" href="../../../nilmtk.tests.html#nilmtk.tests.test_datastore.TestHDFDataStore.tearDownClass">[docs]</a>    <span class="k">def</span> <span class="nf">tearDownClass</span><span class="p">(</span><span class="n">cls</span><span class="p">):</span>
         <span class="n">cls</span><span class="o">.</span><span class="n">datastore</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 </div>
-<div class="viewcode-block" id="TestHDFDataStore.test_keys"><a class="viewcode-back" href="../../../nilmtk.tests.html#nilmtk.tests.test_datastore.TestHDFDataStore.test_keys">[docs]</a>    <span class="k">def</span> <span class="nf">test_keys</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">datastore</span><span class="o">.</span><span class="n">_keys</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">keys</span><span class="p">)</span>
-</div>
 <div class="viewcode-block" id="TestHDFDataStore.test_column_names"><a class="viewcode-back" href="../../../nilmtk.tests.html#nilmtk.tests.test_datastore.TestHDFDataStore.test_column_names">[docs]</a>    <span class="k">def</span> <span class="nf">test_column_names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">keys</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">datastore</span><span class="o">.</span><span class="n">_column_names</span><span class="p">(</span><span class="n">key</span><span class="p">),</span> 
@@ -282,7 +279,7 @@
     </p>
     <p>
         &copy; Copyright 2014, NILMTK Authors.<br/>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.3.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.1.<br/>
     </p>
   </div>
 </footer>

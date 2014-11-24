@@ -497,8 +497,21 @@ Returns True if key is empty dict.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="nilmtk.datastore.CSVDataStore.get_timeframe">
+<tt class="descname">get_timeframe</tt><big>(</big><em>key</em><big>)</big><a class="reference internal" href="_modules/nilmtk/datastore.html#CSVDataStore.get_timeframe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.datastore.CSVDataStore.get_timeframe" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">nilmtk.TimeFrame of entire table after intersecting with self.window.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="nilmtk.datastore.CSVDataStore.load">
-<tt class="descname">load</tt><big>(</big><em>key</em>, <em>cols=None</em>, <em>chunksize=1000000</em><big>)</big><a class="reference internal" href="_modules/nilmtk/datastore.html#CSVDataStore.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.datastore.CSVDataStore.load" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">load</tt><big>(</big><em>key</em>, <em>cols=None</em>, <em>sections=None</em>, <em>n_look_ahead_rows=0</em>, <em>chunksize=536870912</em><big>)</big><a class="reference internal" href="_modules/nilmtk/datastore.html#CSVDataStore.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.datastore.CSVDataStore.load" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -509,10 +522,12 @@ Returns True if key is empty dict.</p>
 <div><p>e.g. [(&#8216;power&#8217;, &#8216;active&#8217;), (&#8216;power&#8217;, &#8216;reactive&#8217;), (&#8216;voltage&#8217;)]
 if not provided then will return all columns from the table.</p>
 </div></blockquote>
+<p><strong>n_look_ahead_rows</strong> : not used yet</p>
 <p><strong>chunksize</strong> : int, optional</p>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">TextFileReader of DataFrame objects</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">TextFileReader of DataFrame objects</p>
+<p class="last">TODO: do something with args: sections and n_look_ahead_rows</p>
 </td>
 </tr>
 </tbody>
@@ -599,12 +614,22 @@ feed etc.</li>
 
 <dl class="class">
 <dt id="nilmtk.datastore.HDFDataStore">
-<em class="property">class </em><tt class="descclassname">nilmtk.datastore.</tt><tt class="descname">HDFDataStore</tt><big>(</big><em>filename</em>, <em>mode='r'</em><big>)</big><a class="reference internal" href="_modules/nilmtk/datastore.html#HDFDataStore"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.datastore.HDFDataStore" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">nilmtk.datastore.</tt><tt class="descname">HDFDataStore</tt><big>(</big><em>filename</em>, <em>mode='a'</em><big>)</big><a class="reference internal" href="_modules/nilmtk/datastore.html#HDFDataStore"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.datastore.HDFDataStore" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#nilmtk.datastore.DataStore" title="nilmtk.datastore.DataStore"><tt class="xref py py-class docutils literal"><span class="pre">nilmtk.datastore.DataStore</span></tt></a></p>
 <dl class="method">
 <dt id="nilmtk.datastore.HDFDataStore.append">
 <tt class="descname">append</tt><big>(</big><em>key</em>, <em>value</em><big>)</big><a class="reference internal" href="_modules/nilmtk/datastore.html#HDFDataStore.append"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.datastore.HDFDataStore.append" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>key</strong> : str</p>
+<p class="last"><strong>value</strong> : pd.DataFrame</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="method">
 <dt id="nilmtk.datastore.HDFDataStore.close">
@@ -665,7 +690,7 @@ of the data immediately in front of the data in the main DataFrame.</p>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">generator of DataFrame objects</p>
-<blockquote class="last">
+<blockquote>
 <div><dl class="docutils">
 <dt>Each DataFrame is has extra attributes:</dt>
 <dd><ul class="first last">
@@ -687,6 +712,9 @@ the next <cite>section.start</cite>.</p>
 specified section (or if the section.intersect(self.window)
 is empty).</p>
 </div></blockquote>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><strong>KeyError if `key` is not in store.</strong></p>
 </td>
 </tr>
 </tbody>
@@ -762,7 +790,7 @@ is empty).</p>
 
 <dl class="function">
 <dt id="nilmtk.datastore.get_datastore">
-<tt class="descclassname">nilmtk.datastore.</tt><tt class="descname">get_datastore</tt><big>(</big><em>filename</em>, <em>format</em>, <em>mode='r'</em><big>)</big><a class="reference internal" href="_modules/nilmtk/datastore.html#get_datastore"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.datastore.get_datastore" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">nilmtk.datastore.</tt><tt class="descname">get_datastore</tt><big>(</big><em>filename</em>, <em>format</em>, <em>mode='a'</em><big>)</big><a class="reference internal" href="_modules/nilmtk/datastore.html#get_datastore"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.datastore.get_datastore" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">
@@ -895,6 +923,11 @@ if there are no appliances on this meter.</p>
 <dd></dd></dl>
 
 <dl class="method">
+<dt id="nilmtk.elecmeter.ElecMeter.get_cached_stat">
+<tt class="descname">get_cached_stat</tt><big>(</big><em>key_for_stat</em><big>)</big><a class="reference internal" href="_modules/nilmtk/elecmeter.html#ElecMeter.get_cached_stat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.elecmeter.ElecMeter.get_cached_stat" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
 <dt id="nilmtk.elecmeter.ElecMeter.get_metadata">
 <tt class="descname">get_metadata</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/elecmeter.html#ElecMeter.get_metadata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.elecmeter.ElecMeter.get_metadata" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -902,11 +935,6 @@ if there are no appliances on this meter.</p>
 <dl class="method">
 <dt id="nilmtk.elecmeter.ElecMeter.get_source_node">
 <tt class="descname">get_source_node</tt><big>(</big><em>**loader_kwargs</em><big>)</big><a class="reference internal" href="_modules/nilmtk/elecmeter.html#ElecMeter.get_source_node"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.elecmeter.ElecMeter.get_source_node" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="nilmtk.elecmeter.ElecMeter.get_stat_from_metadata">
-<tt class="descname">get_stat_from_metadata</tt><big>(</big><em>stat_name</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/nilmtk/elecmeter.html#ElecMeter.get_stat_from_metadata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.elecmeter.ElecMeter.get_stat_from_metadata" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -948,16 +976,15 @@ if there are no appliances on this meter.</p>
 <tt class="descname">key</tt><a class="reference internal" href="_modules/nilmtk/elecmeter.html#ElecMeter.key"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.elecmeter.ElecMeter.key" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="method">
+<dt id="nilmtk.elecmeter.ElecMeter.key_for_cached_stat">
+<tt class="descname">key_for_cached_stat</tt><big>(</big><em>stat_name</em><big>)</big><a class="reference internal" href="_modules/nilmtk/elecmeter.html#ElecMeter.key_for_cached_stat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.elecmeter.ElecMeter.key_for_cached_stat" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="classmethod">
 <dt id="nilmtk.elecmeter.ElecMeter.load_meter_devices">
 <em class="property">classmethod </em><tt class="descname">load_meter_devices</tt><big>(</big><em>store</em><big>)</big><a class="reference internal" href="_modules/nilmtk/elecmeter.html#ElecMeter.load_meter_devices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.elecmeter.ElecMeter.load_meter_devices" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
-
-<dl class="method">
-<dt id="nilmtk.elecmeter.ElecMeter.masked_timeframes">
-<tt class="descname">masked_timeframes</tt><big>(</big><em>timeframes</em><big>)</big><a class="reference internal" href="_modules/nilmtk/elecmeter.html#ElecMeter.masked_timeframes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.elecmeter.ElecMeter.masked_timeframes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns list of TimeFrames masked by self.get_timeframe()</p>
-</dd></dl>
 
 <dl class="method">
 <dt id="nilmtk.elecmeter.ElecMeter.matches">
@@ -1028,11 +1055,6 @@ by key</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="nilmtk.elecmeter.ElecMeter.save_stat_in_metadata">
-<tt class="descname">save_stat_in_metadata</tt><big>(</big><em>results_dict</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/nilmtk/elecmeter.html#ElecMeter.save_stat_in_metadata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.elecmeter.ElecMeter.save_stat_in_metadata" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
 <dt id="nilmtk.elecmeter.ElecMeter.total_energy">
 <tt class="descname">total_energy</tt><big>(</big><em>**loader_kwargs</em><big>)</big><a class="reference internal" href="_modules/nilmtk/elecmeter.html#ElecMeter.total_energy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.elecmeter.ElecMeter.total_energy" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
@@ -1101,14 +1123,23 @@ by key</p>
 <dl class="method">
 <dt id="nilmtk.electric.Electric.average_energy_per_period">
 <tt class="descname">average_energy_per_period</tt><big>(</big><em>offset_alias='D'</em>, <em>**load_kwargs</em><big>)</big><a class="reference internal" href="_modules/nilmtk/electric.html#Electric.average_energy_per_period"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.electric.Electric.average_energy_per_period" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
+<dd><p>Calculate the average energy per period.  e.g. the average 
+energy per day.</p>
+<table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>offset_alias</strong> : str</p>
-<blockquote class="last">
+<blockquote>
 <div><p>A Pandas <cite>offset alias</cite>.  See:
 pandas.pydata.org/pandas-docs/stable/timeseries.html#offset-aliases</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">pd.Series</p>
+<blockquote class="last">
+<div><p>Keys are AC types.
+Values are energy in kWh per period.</p>
 </div></blockquote>
 </td>
 </tr>
@@ -2483,6 +2514,12 @@ will have empty == True.</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="nilmtk.utils.dependencies_diagnostics">
+<tt class="descclassname">nilmtk.utils.</tt><tt class="descname">dependencies_diagnostics</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/utils.html#dependencies_diagnostics"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.utils.dependencies_diagnostics" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prints versions of various dependencies</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="nilmtk.utils.dict_to_html">
 <tt class="descclassname">nilmtk.utils.</tt><tt class="descname">dict_to_html</tt><big>(</big><em>dictionary</em><big>)</big><a class="reference internal" href="_modules/nilmtk/utils.html#dict_to_html"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.utils.dict_to_html" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -2624,7 +2661,7 @@ value in <cite>known_array</cite>.</p>
     </p>
     <p>
         &copy; Copyright 2014, NILMTK Authors.<br/>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.3.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.1.<br/>
     </p>
   </div>
 </footer>

@@ -103,10 +103,13 @@
       aria-labelledby="dLabelLocalToc"><ul>
 <li><a class="reference internal" href="#">Change log</a><ul>
 <li><a class="reference internal" href="#development-version-will-become-v0-3">Development version (will become v0.3)</a><ul>
-<li><a class="reference internal" href="#new-features">New features</a></li>
+<li><a class="reference internal" href="#new-features">New features</a><ul>
+<li><a class="reference internal" href="#new-dataset-converters">New dataset converters</a></li>
+<li><a class="reference internal" href="#disaggregation-algorithms">Disaggregation algorithms</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#performance-improvements">Performance improvements</a></li>
 <li><a class="reference internal" href="#api-changes">API changes</a></li>
-<li><a class="reference internal" href="#new-dataset-converters">New dataset converters</a></li>
 <li><a class="reference internal" href="#bug-fixes">Bug fixes</a></li>
 </ul>
 </li>
@@ -172,6 +175,31 @@
 <li><tt class="docutils literal"><span class="pre">MeterGroup.plot()</span></tt></li>
 <li><tt class="docutils literal"><span class="pre">CSVDataStore</span></tt></li>
 </ul>
+<div class="section" id="new-dataset-converters">
+<h4>New dataset converters<a class="headerlink" href="#new-dataset-converters" title="Permalink to this headline">¶</a></h4>
+<ul class="simple">
+<li>AMPds</li>
+<li>COMBED</li>
+<li>ECO</li>
+<li>GREEND</li>
+<li>iAWE</li>
+<li>UK-DALE</li>
+<li>WikiEnergy</li>
+</ul>
+</div>
+<div class="section" id="disaggregation-algorithms">
+<h4>Disaggregation algorithms<a class="headerlink" href="#disaggregation-algorithms" title="Permalink to this headline">¶</a></h4>
+<ul class="simple">
+<li>An implementation of George Hart&#8217;s 1985 algorithm</li>
+<li>The combinatorial optimisation algorithm has received several
+updates including:<ul>
+<li>it takes the &#8216;vampire power&#8217; into account during disaggregation</li>
+</ul>
+</li>
+<li>Disaggregation output now includes basic metadata such as the
+appliance types.</li>
+</ul>
+</div>
 </div>
 <div class="section" id="performance-improvements">
 <h3>Performance improvements<a class="headerlink" href="#performance-improvements" title="Permalink to this headline">¶</a></h3>
@@ -188,18 +216,6 @@ speed up should be felt throughout much of NILMTK.</li>
 returns a <tt class="docutils literal"><span class="pre">pd.Series</span></tt> if <tt class="docutils literal"><span class="pre">full_results=False</span></tt> (it used to return a
 scalar if the meter only had a single AC type, or a Series if there
 were multiple AC types).</li>
-</ul>
-</div>
-<div class="section" id="new-dataset-converters">
-<h3>New dataset converters<a class="headerlink" href="#new-dataset-converters" title="Permalink to this headline">¶</a></h3>
-<ul class="simple">
-<li>AMPds</li>
-<li>COMBED</li>
-<li>ECO</li>
-<li>GREEND</li>
-<li>iAWE</li>
-<li>UK-DALE</li>
-<li>WikiEnergy</li>
 </ul>
 </div>
 <div class="section" id="bug-fixes">
@@ -269,7 +285,7 @@ chance to port.</li>
     </p>
     <p>
         &copy; Copyright 2014, NILMTK Authors.<br/>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.3.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.1.<br/>
     </p>
   </div>
 </footer>

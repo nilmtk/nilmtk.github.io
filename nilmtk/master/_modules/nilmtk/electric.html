@@ -207,7 +207,7 @@
 </div>
 <div class="viewcode-block" id="Electric.plot"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.electric.Electric.plot">[docs]</a>    <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">loader_kwargs</span><span class="p">):</span>
         <span class="n">all_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">power_series_all_data</span><span class="p">(</span><span class="o">**</span><span class="n">loader_kwargs</span><span class="p">)</span>
-        <span class="n">all_data</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">all_data</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
         <span class="sd">&quot;&quot;&quot; TODO:</span>
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -250,12 +250,20 @@
         <span class="k">return</span> <span class="n">uptime</span>
 </div>
 <div class="viewcode-block" id="Electric.average_energy_per_period"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.electric.Electric.average_energy_per_period">[docs]</a>    <span class="k">def</span> <span class="nf">average_energy_per_period</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">offset_alias</span><span class="o">=</span><span class="s">&#39;D&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">load_kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Calculate the average energy per period.  e.g. the average </span>
+<span class="sd">        energy per day.</span>
+
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        offset_alias : str</span>
 <span class="sd">            A Pandas `offset alias`.  See:</span>
 <span class="sd">            pandas.pydata.org/pandas-docs/stable/timeseries.html#offset-aliases</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        pd.Series</span>
+<span class="sd">            Keys are AC types.</span>
+<span class="sd">            Values are energy in kWh per period.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">uptime_secs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">uptime</span><span class="p">(</span><span class="o">**</span><span class="n">load_kwargs</span><span class="p">)</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span>
         <span class="n">periods</span> <span class="o">=</span> <span class="n">uptime_secs</span> <span class="o">/</span> <span class="n">offset_alias_to_seconds</span><span class="p">(</span><span class="n">offset_alias</span><span class="p">)</span>
@@ -295,8 +303,7 @@
             <span class="k">return</span>
         <span class="n">chunk_timeframe</span> <span class="o">=</span> <span class="n">TimeFrame</span><span class="p">(</span><span class="n">master_chunk</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
                                     <span class="n">master_chunk</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
-        <span class="n">slave_generator</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">slave</span><span class="p">,</span> <span class="n">func</span><span class="p">)(</span><span class="n">sections</span><span class="o">=</span><span class="p">[</span><span class="n">chunk_timeframe</span><span class="p">],</span>
-                                               <span class="n">chunksize</span><span class="o">=</span><span class="mf">1E9</span><span class="p">)</span>
+        <span class="n">slave_generator</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">slave</span><span class="p">,</span> <span class="n">func</span><span class="p">)(</span><span class="n">sections</span><span class="o">=</span><span class="p">[</span><span class="n">chunk_timeframe</span><span class="p">])</span>
         <span class="n">slave_chunk</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">slave_generator</span><span class="p">)</span>
 
         <span class="c"># TODO: do this resampling in the pipeline?</span>
@@ -318,7 +325,7 @@
     </p>
     <p>
         &copy; Copyright 2014, NILMTK Authors.<br/>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.3.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.1.<br/>
     </p>
   </div>
 </footer>

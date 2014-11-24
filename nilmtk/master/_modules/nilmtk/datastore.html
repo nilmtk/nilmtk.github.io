@@ -183,16 +183,19 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">window</span> <span class="o">=</span> <span class="n">TimeFrame</span><span class="p">()</span>
 </div>
 <div class="viewcode-block" id="HDFDataStore"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.datastore.HDFDataStore">[docs]</a><span class="k">class</span> <span class="nc">HDFDataStore</span><span class="p">(</span><span class="n">DataStore</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s">&#39;r&#39;</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s">&#39;a&#39;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        filename : string</span>
-<span class="sd">        mode : string</span>
-<span class="sd">            File open mode.  e.g. &#39;r&#39; or &#39;w&#39;</span>
+<span class="sd">        mode : string, default=&#39;a&#39;</span>
+<span class="sd">            File open mode.  e.g. &#39;a&#39;, &#39;r&#39; or &#39;w&#39;</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">store</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">HDFStore</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">mode</span><span class="p">,</span> <span class="n">complevel</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span> <span class="n">complib</span><span class="o">=</span><span class="s">&#39;blosc&#39;</span><span class="p">)</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">HDFDataStore</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">store</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
 
 <div class="viewcode-block" id="HDFDataStore.load"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.datastore.HDFDataStore.load">[docs]</a>    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">sections</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">n_look_ahead_rows</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
              <span class="n">chunksize</span><span class="o">=</span><span class="n">MAX_MEM_ALLOWANCE_IN_BYTES</span><span class="p">):</span>
@@ -226,6 +229,10 @@
 <span class="sd">            Returns an empty DataFrame if no data is available for the</span>
 <span class="sd">            specified section (or if the section.intersect(self.window)</span>
 <span class="sd">            is empty).</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        KeyError if `key` is not in store.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c"># TODO: calculate chunksize default based on physical </span>
         <span class="c"># memory installed and number of columns</span>
@@ -248,7 +255,14 @@
             <span class="k">if</span> <span class="n">window_intersect</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
                 <span class="k">continue</span>
             <span class="n">terms</span> <span class="o">=</span> <span class="n">window_intersect</span><span class="o">.</span><span class="n">query_terms</span><span class="p">(</span><span class="s">&#39;window_intersect&#39;</span><span class="p">)</span>
-            <span class="n">coords</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">select_as_coordinates</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span> <span class="n">where</span><span class="o">=</span><span class="n">terms</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">coords</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">select_as_coordinates</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span> <span class="n">where</span><span class="o">=</span><span class="n">terms</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">AttributeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="o">==</span> <span class="p">(</span><span class="s">&quot;&#39;NoneType&#39; object has no attribute &quot;</span>
+                              <span class="s">&quot;&#39;read_coordinates&#39;&quot;</span><span class="p">):</span>
+                    <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s">&quot;key &#39;{}&#39; not found&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">raise</span>
             <span class="n">n_coords</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">coords</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">n_coords</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="k">continue</span>
@@ -313,7 +327,18 @@
                 <span class="k">yield</span> <span class="n">data</span>
 </div>
 <div class="viewcode-block" id="HDFDataStore.append"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.datastore.HDFDataStore.append">[docs]</a>    <span class="k">def</span> <span class="nf">append</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_store_put</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">key</span><span class="p">),</span> <span class="n">value</span><span class="p">)</span>
+        <span class="c"># TODO: perhaps we should rename this method to &#39;put&#39; or &#39;write&#39;</span>
+        <span class="c"># because it doesn&#39;t really *append* as such?? - Jack</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        key : str</span>
+<span class="sd">        value : pd.DataFrame</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="s">&#39;table&#39;</span><span class="p">,</span> 
+                       <span class="n">expectedrows</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">),</span> <span class="n">index</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">create_table_index</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;index&#39;</span><span class="p">],</span> 
+                                      <span class="n">kind</span><span class="o">=</span><span class="s">&#39;full&#39;</span><span class="p">,</span> <span class="n">optlevel</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
 </div>
 <div class="viewcode-block" id="HDFDataStore.load_metadata"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.datastore.HDFDataStore.load_metadata">[docs]</a>    <span class="k">def</span> <span class="nf">load_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s">&#39;/&#39;</span><span class="p">):</span>
@@ -368,6 +393,17 @@
 </div>
 <div class="viewcode-block" id="HDFDataStore.open"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.datastore.HDFDataStore.open">[docs]</a>    <span class="k">def</span> <span class="nf">open</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        </div>
+<div class="viewcode-block" id="HDFDataStore.get_timeframe"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.datastore.HDFDataStore.get_timeframe">[docs]</a>    <span class="k">def</span> <span class="nf">get_timeframe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        nilmtk.TimeFrame of entire table after intersecting with self.window.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">data_start_date</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">data_end_date</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">start</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">timeframe</span> <span class="o">=</span> <span class="n">TimeFrame</span><span class="p">(</span><span class="n">data_start_date</span><span class="p">,</span> <span class="n">data_end_date</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">intersect</span><span class="p">(</span><span class="n">timeframe</span><span class="p">)</span>
     </div>
     <span class="k">def</span> <span class="nf">_check_columns</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">columns</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">columns</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
@@ -443,18 +479,7 @@
             <span class="n">storer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_storer</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
             <span class="n">nrows</span> <span class="o">=</span> <span class="n">storer</span><span class="o">.</span><span class="n">nrows</span>
         <span class="k">return</span> <span class="n">nrows</span>
-        
-<div class="viewcode-block" id="HDFDataStore.get_timeframe"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.datastore.HDFDataStore.get_timeframe">[docs]</a>    <span class="k">def</span> <span class="nf">get_timeframe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        nilmtk.TimeFrame of entire table after intersecting with self.window.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">data_start_date</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">data_end_date</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">start</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">timeframe</span> <span class="o">=</span> <span class="n">TimeFrame</span><span class="p">(</span><span class="n">data_start_date</span><span class="p">,</span> <span class="n">data_end_date</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">intersect</span><span class="p">(</span><span class="n">timeframe</span><span class="p">)</span>
-    </div>
+    
     <span class="k">def</span> <span class="nf">_keys</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
 
@@ -472,17 +497,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_keys</span><span class="p">():</span>
             <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="n">key</span> <span class="o">+</span> <span class="s">&#39; not in store&#39;</span><span class="p">)</span>
-            
-    <span class="k">def</span> <span class="nf">_store_put</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">df</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        store : HDFStore</span>
-<span class="sd">        key : str</span>
-<span class="sd">        df : pd.DataFrame</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="s">&#39;table&#39;</span><span class="p">,</span> <span class="n">expectedrows</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">),</span> <span class="n">index</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">create_table_index</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;index&#39;</span><span class="p">],</span> <span class="n">kind</span><span class="o">=</span><span class="s">&#39;full&#39;</span><span class="p">,</span> <span class="n">optlevel</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
+
 </div>
 <div class="viewcode-block" id="CSVDataStore"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.datastore.CSVDataStore">[docs]</a><span class="k">class</span> <span class="nc">CSVDataStore</span><span class="p">(</span><span class="n">DataStore</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
@@ -502,7 +517,8 @@
             <span class="n">makedirs</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">CSVDataStore</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
 
-<div class="viewcode-block" id="CSVDataStore.load"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.datastore.CSVDataStore.load">[docs]</a>    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">chunksize</span><span class="o">=</span><span class="mi">1000000</span><span class="p">):</span>
+<div class="viewcode-block" id="CSVDataStore.load"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.datastore.CSVDataStore.load">[docs]</a>    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">sections</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">n_look_ahead_rows</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+             <span class="n">chunksize</span><span class="o">=</span><span class="n">MAX_MEM_ALLOWANCE_IN_BYTES</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -510,13 +526,15 @@
 <span class="sd">        cols : list of Measurements, optional</span>
 <span class="sd">            e.g. [(&#39;power&#39;, &#39;active&#39;), (&#39;power&#39;, &#39;reactive&#39;), (&#39;voltage&#39;)]</span>
 <span class="sd">            if not provided then will return all columns from the table.</span>
+<span class="sd">        n_look_ahead_rows : not used yet</span>
 <span class="sd">        chunksize : int, optional</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        ------- </span>
 <span class="sd">        TextFileReader of DataFrame objects</span>
+<span class="sd">        TODO: do something with args: sections and n_look_ahead_rows</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c"># TODO: add optional args to match HDFDataStore?</span>
+        
         <span class="n">relative_path</span> <span class="o">=</span> <span class="n">key</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
         <span class="n">file_path</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span> <span class="n">relative_path</span> <span class="o">+</span> <span class="s">&#39;.csv&#39;</span><span class="p">)</span>
         <span class="n">text_file_reader</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> 
@@ -525,6 +543,8 @@
                                         <span class="n">parse_dates</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> 
                                         <span class="n">usecols</span><span class="o">=</span><span class="n">cols</span><span class="p">,</span>
                                         <span class="n">chunksize</span><span class="o">=</span><span class="n">chunksize</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">text_file_reader</span><span class="p">:</span>
+            <span class="n">data</span><span class="o">.</span><span class="n">timeframe</span> <span class="o">=</span> <span class="n">TimeFrame</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">data</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
         <span class="k">return</span> <span class="n">text_file_reader</span>
 </div>
 <div class="viewcode-block" id="CSVDataStore.append"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.datastore.CSVDataStore.append">[docs]</a>    <span class="k">def</span> <span class="nf">append</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">dataframe</span><span class="p">):</span>
@@ -562,7 +582,7 @@
                 <span class="c"># set data_location</span>
                 <span class="k">for</span> <span class="n">meter_instance</span> <span class="ow">in</span> <span class="n">metadata</span><span class="p">[</span><span class="s">&#39;elec_meters&#39;</span><span class="p">]:</span>
                     <span class="c"># not sure why I need to use meter_instance-1</span>
-                    <span class="n">data_location</span> <span class="o">=</span> <span class="s">&#39;/building{:d}/elec/meter{:d}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key_object</span><span class="o">.</span><span class="n">building</span><span class="p">,</span> <span class="n">meter_instance</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+                    <span class="n">data_location</span> <span class="o">=</span> <span class="s">&#39;/building{:d}/elec/meter{:d}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key_object</span><span class="o">.</span><span class="n">building</span><span class="p">,</span> <span class="n">meter_instance</span><span class="p">)</span>
                     <span class="n">metadata</span><span class="p">[</span><span class="s">&#39;elec_meters&#39;</span><span class="p">][</span><span class="n">meter_instance</span><span class="p">][</span><span class="s">&#39;data_location&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data_location</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s">&quot;NotImplementedError&quot;</span><span class="p">)</span>        
@@ -628,6 +648,22 @@
         <span class="c"># not needed for CSV data store</span>
         <span class="k">pass</span>
         </div>
+<div class="viewcode-block" id="CSVDataStore.get_timeframe"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.datastore.CSVDataStore.get_timeframe">[docs]</a>    <span class="k">def</span> <span class="nf">get_timeframe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        nilmtk.TimeFrame of entire table after intersecting with self.window.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">generator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="n">end</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="k">for</span> <span class="n">df</span> <span class="ow">in</span> <span class="n">generator</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">start</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="n">start</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">timeframe</span><span class="o">.</span><span class="n">start</span>
+            <span class="n">end</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">timeframe</span><span class="o">.</span><span class="n">end</span>
+        <span class="n">timeframe</span> <span class="o">=</span> <span class="n">TimeFrame</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">intersect</span><span class="p">(</span><span class="n">timeframe</span><span class="p">)</span>
+        </div>
     <span class="k">def</span> <span class="nf">_get_metadata_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span> <span class="s">&#39;metadata&#39;</span><span class="p">)</span>
         
@@ -668,7 +704,7 @@
         <span class="n">key</span> <span class="o">=</span> <span class="n">key</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="c"># remove last trailing slash</span>
     <span class="k">return</span> <span class="n">key</span>
     </div>
-<div class="viewcode-block" id="get_datastore"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.datastore.get_datastore">[docs]</a><span class="k">def</span> <span class="nf">get_datastore</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">format</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s">&#39;r&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="get_datastore"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.datastore.get_datastore">[docs]</a><span class="k">def</span> <span class="nf">get_datastore</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">format</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s">&#39;a&#39;</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">filename</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">format</span> <span class="o">==</span> <span class="s">&#39;HDF&#39;</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">HDFDataStore</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">mode</span><span class="p">)</span>
@@ -746,7 +782,7 @@
     </p>
     <p>
         &copy; Copyright 2014, NILMTK Authors.<br/>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.3.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.1.<br/>
     </p>
   </div>
 </footer>
