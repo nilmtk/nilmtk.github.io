@@ -105,9 +105,9 @@
 <li><a class="reference internal" href="#">nilmtk.preprocessing package</a><ul>
 <li><a class="reference internal" href="#subpackages">Subpackages</a></li>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#module-nilmtk.preprocessing.apply">nilmtk.preprocessing.apply module</a></li>
-<li><a class="reference internal" href="#module-nilmtk.preprocessing.clip">nilmtk.preprocessing.clip module</a></li>
-<li><a class="reference internal" href="#module-nilmtk.preprocessing">Module contents</a></li>
+<li><a class="reference internal" href="#nilmtk-preprocessing-apply-module">nilmtk.preprocessing.apply module</a></li>
+<li><a class="reference internal" href="#nilmtk-preprocessing-clip-module">nilmtk.preprocessing.clip module</a></li>
+<li><a class="reference internal" href="#module-contents">Module contents</a></li>
 </ul>
 </li>
 </ul>
@@ -169,55 +169,14 @@
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="module-nilmtk.preprocessing.apply">
-<span id="nilmtk-preprocessing-apply-module"></span><h2>nilmtk.preprocessing.apply module<a class="headerlink" href="#module-nilmtk.preprocessing.apply" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="nilmtk.preprocessing.apply.Apply">
-<em class="property">class </em><tt class="descclassname">nilmtk.preprocessing.apply.</tt><tt class="descname">Apply</tt><big>(</big><em>upstream=None</em>, <em>generator=None</em>, <em>func=None</em><big>)</big><a class="reference internal" href="_modules/nilmtk/preprocessing/apply.html#Apply"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.preprocessing.apply.Apply" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="nilmtk.html#nilmtk.node.Node" title="nilmtk.node.Node"><tt class="xref py py-class docutils literal"><span class="pre">nilmtk.node.Node</span></tt></a></p>
-<p>Apply an arbitrary function to each pd.Series chunk.</p>
-<dl class="method">
-<dt id="nilmtk.preprocessing.apply.Apply.process">
-<tt class="descname">process</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/preprocessing/apply.html#Apply.process"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.preprocessing.apply.Apply.process" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
+<div class="section" id="nilmtk-preprocessing-apply-module">
+<h2>nilmtk.preprocessing.apply module<a class="headerlink" href="#nilmtk-preprocessing-apply-module" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="module-nilmtk.preprocessing.clip">
-<span id="nilmtk-preprocessing-clip-module"></span><h2>nilmtk.preprocessing.clip module<a class="headerlink" href="#module-nilmtk.preprocessing.clip" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="nilmtk.preprocessing.clip.Clip">
-<em class="property">class </em><tt class="descclassname">nilmtk.preprocessing.clip.</tt><tt class="descname">Clip</tt><big>(</big><em>upstream=None</em>, <em>generator=None</em><big>)</big><a class="reference internal" href="_modules/nilmtk/preprocessing/clip.html#Clip"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.preprocessing.clip.Clip" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="nilmtk.html#nilmtk.node.Node" title="nilmtk.node.Node"><tt class="xref py py-class docutils literal"><span class="pre">nilmtk.node.Node</span></tt></a></p>
-<p>Ensures that no value is below a lower limit or above an upper limit.
-If self.lower and self.upper are None then will use clip settings from
-&#8216;device&#8217;: {&#8216;measurements&#8217;: {&#8216;upper_limit&#8217; and &#8216;lower_limit&#8217;}}.</p>
-<dl class="attribute">
-<dt id="nilmtk.preprocessing.clip.Clip.postconditions">
-<tt class="descname">postconditions</tt><em class="property"> = {'preprocessing_applied': {'clip': {}}}</em><a class="headerlink" href="#nilmtk.preprocessing.clip.Clip.postconditions" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="nilmtk.preprocessing.clip.Clip.process">
-<tt class="descname">process</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/preprocessing/clip.html#Clip.process"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.preprocessing.clip.Clip.process" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="nilmtk.preprocessing.clip.Clip.requirements">
-<tt class="descname">requirements</tt><em class="property"> = {'device': {'measurements': 'ANY VALUE'}}</em><a class="headerlink" href="#nilmtk.preprocessing.clip.Clip.requirements" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="nilmtk.preprocessing.clip.Clip.reset">
-<tt class="descname">reset</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/preprocessing/clip.html#Clip.reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.preprocessing.clip.Clip.reset" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
+<div class="section" id="nilmtk-preprocessing-clip-module">
+<h2>nilmtk.preprocessing.clip module<a class="headerlink" href="#nilmtk-preprocessing-clip-module" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="module-nilmtk.preprocessing">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-nilmtk.preprocessing" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-contents">
+<h2>Module contents<a class="headerlink" href="#module-contents" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 
@@ -234,7 +193,7 @@ If self.lower and self.upper are None then will use clip settings from
     </p>
     <p>
         &copy; Copyright 2014, NILMTK Authors.<br/>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.1.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.3.<br/>
     </p>
   </div>
 </footer>

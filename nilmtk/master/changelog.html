@@ -110,6 +110,7 @@
 </li>
 <li><a class="reference internal" href="#performance-improvements">Performance improvements</a></li>
 <li><a class="reference internal" href="#api-changes">API changes</a></li>
+<li><a class="reference internal" href="#statistics">Statistics</a></li>
 <li><a class="reference internal" href="#bug-fixes">Bug fixes</a></li>
 </ul>
 </li>
@@ -173,7 +174,12 @@
 <h3>New features<a class="headerlink" href="#new-features" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><tt class="docutils literal"><span class="pre">MeterGroup.plot()</span></tt></li>
+<li>Correlation between different Elecmeters and corresponding plot; Issue #160</li>
+<li>Finding number of simultaneous appliance switches; Issue #163</li>
 <li><tt class="docutils literal"><span class="pre">CSVDataStore</span></tt></li>
+<li>Finding entropy of an ElecMeter. Issue #250</li>
+<li><tt class="docutils literal"><span class="pre">ElecMeter.plot_lag()</span></tt>.  Issue #255.  See <a class="reference external" href="http://nipunbatra.github.io/2014/12/nilmtk-new-plots/">Nipun&#8217;s blog post</a>.</li>
+<li><tt class="docutils literal"><span class="pre">ElecMeter.plot_autocorrelation()</span></tt>.  See <a class="reference external" href="http://nipunbatra.github.io/2014/12/nilmtk-new-plots/">Nipun&#8217;s blog post</a>.</li>
 </ul>
 <div class="section" id="new-dataset-converters">
 <h4>New dataset converters<a class="headerlink" href="#new-dataset-converters" title="Permalink to this headline">¶</a></h4>
@@ -216,6 +222,16 @@ speed up should be felt throughout much of NILMTK.</li>
 returns a <tt class="docutils literal"><span class="pre">pd.Series</span></tt> if <tt class="docutils literal"><span class="pre">full_results=False</span></tt> (it used to return a
 scalar if the meter only had a single AC type, or a Series if there
 were multiple AC types).</li>
+<li><tt class="docutils literal"><span class="pre">HDFDataStore.append()</span></tt> actually appends now!  (It used to
+<tt class="docutils literal"><span class="pre">put</span></tt>).  We now have separate <tt class="docutils literal"><span class="pre">DataStore.append</span></tt> and
+<tt class="docutils literal"><span class="pre">DataStore.put</span></tt> methods.</li>
+</ul>
+</div>
+<div class="section" id="statistics">
+<h3>Statistics<a class="headerlink" href="#statistics" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">MeterGroup.proportion_of_energy_submetered()</span></tt> does a better job
+of comparing AC types.</li>
 </ul>
 </div>
 <div class="section" id="bug-fixes">
@@ -285,7 +301,7 @@ chance to port.</li>
     </p>
     <p>
         &copy; Copyright 2014, NILMTK Authors.<br/>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.1.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.3.<br/>
     </p>
   </div>
 </footer>

@@ -71,7 +71,8 @@
      href="index.html">Site <b class="caret"></b></a>
   <ul class="dropdown-menu globaltoc"
       role="menu"
-      aria-labelledby="dLabelGlobalToc"><ul class="simple">
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="intro_nilmtk_v0_2.html">Intro to NILMTK v0.2</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="convert_data_to_NILMTK_format.html">Convert data to NILMTK format and load into NILMTK</a></li>
@@ -82,6 +83,9 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="contribute.html">Contributing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="writing_a_dataset_converter.html">Writing a dataset converter</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Change log</a></li>
 </ul>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="nilmtk.html">nilmtk package</a></li>
@@ -100,8 +104,8 @@
       aria-labelledby="dLabelLocalToc"><ul>
 <li><a class="reference internal" href="#">nilmtk.feature_detectors package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#module-nilmtk.feature_detectors.cluster">nilmtk.feature_detectors.cluster module</a></li>
-<li><a class="reference internal" href="#module-nilmtk.feature_detectors">Module contents</a></li>
+<li><a class="reference internal" href="#nilmtk-feature-detectors-cluster-module">nilmtk.feature_detectors.cluster module</a></li>
+<li><a class="reference internal" href="#module-contents">Module contents</a></li>
 </ul>
 </li>
 </ul>
@@ -156,39 +160,11 @@
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="module-nilmtk.feature_detectors.cluster">
-<span id="nilmtk-feature-detectors-cluster-module"></span><h2>nilmtk.feature_detectors.cluster module<a class="headerlink" href="#module-nilmtk.feature_detectors.cluster" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
-<dt id="nilmtk.feature_detectors.cluster.cluster">
-<tt class="descclassname">nilmtk.feature_detectors.cluster.</tt><tt class="descname">cluster</tt><big>(</big><em>X</em>, <em>max_num_clusters=3</em><big>)</big><a class="reference internal" href="_modules/nilmtk/feature_detectors/cluster.html#cluster"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.feature_detectors.cluster.cluster" title="Permalink to this definition">¶</a></dt>
-<dd><p>Applies clustering on reduced data, 
-i.e. data where power is greater than threshold.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>X</strong> : pd.Series or single-column pd.DataFrame</p>
-<p><strong>max_num_clusters</strong> : int</p>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>centroids</strong> : ndarray of int32s</p>
-<blockquote class="last">
-<div><p>Power in different states of an appliance, sorted</p>
-</div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="nilmtk.feature_detectors.cluster.hart85_means_shift_cluster">
-<tt class="descclassname">nilmtk.feature_detectors.cluster.</tt><tt class="descname">hart85_means_shift_cluster</tt><big>(</big><em>pair_buffer_df</em>, <em>features</em><big>)</big><a class="reference internal" href="_modules/nilmtk/feature_detectors/cluster.html#hart85_means_shift_cluster"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.feature_detectors.cluster.hart85_means_shift_cluster" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
+<div class="section" id="nilmtk-feature-detectors-cluster-module">
+<h2>nilmtk.feature_detectors.cluster module<a class="headerlink" href="#nilmtk-feature-detectors-cluster-module" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="module-nilmtk.feature_detectors">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-nilmtk.feature_detectors" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-contents">
+<h2>Module contents<a class="headerlink" href="#module-contents" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 

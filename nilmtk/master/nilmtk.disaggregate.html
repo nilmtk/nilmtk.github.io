@@ -71,7 +71,8 @@
      href="index.html">Site <b class="caret"></b></a>
   <ul class="dropdown-menu globaltoc"
       role="menu"
-      aria-labelledby="dLabelGlobalToc"><ul class="simple">
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="intro_nilmtk_v0_2.html">Intro to NILMTK v0.2</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="convert_data_to_NILMTK_format.html">Convert data to NILMTK format and load into NILMTK</a></li>
@@ -82,6 +83,9 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="contribute.html">Contributing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="writing_a_dataset_converter.html">Writing a dataset converter</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Change log</a></li>
 </ul>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="nilmtk.html">nilmtk package</a></li>
@@ -100,8 +104,8 @@
       aria-labelledby="dLabelLocalToc"><ul>
 <li><a class="reference internal" href="#">nilmtk.disaggregate package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#module-nilmtk.disaggregate.combinatorial_optimisation">nilmtk.disaggregate.combinatorial_optimisation module</a></li>
-<li><a class="reference internal" href="#module-nilmtk.disaggregate">Module contents</a></li>
+<li><a class="reference internal" href="#nilmtk-disaggregate-combinatorial-optimisation-module">nilmtk.disaggregate.combinatorial_optimisation module</a></li>
+<li><a class="reference internal" href="#module-contents">Module contents</a></li>
 </ul>
 </li>
 </ul>
@@ -156,81 +160,11 @@
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="module-nilmtk.disaggregate.combinatorial_optimisation">
-<span id="nilmtk-disaggregate-combinatorial-optimisation-module"></span><h2>nilmtk.disaggregate.combinatorial_optimisation module<a class="headerlink" href="#module-nilmtk.disaggregate.combinatorial_optimisation" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="nilmtk.disaggregate.combinatorial_optimisation.CombinatorialOptimisation">
-<em class="property">class </em><tt class="descclassname">nilmtk.disaggregate.combinatorial_optimisation.</tt><tt class="descname">CombinatorialOptimisation</tt><a class="reference internal" href="_modules/nilmtk/disaggregate/combinatorial_optimisation.html#CombinatorialOptimisation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.disaggregate.combinatorial_optimisation.CombinatorialOptimisation" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
-<p>1 dimensional combinatorial optimisation NILM algorithm.</p>
-<p class="rubric">Attributes</p>
-<table border="1" class="docutils">
-<colgroup>
-<col width="2%" />
-<col width="98%" />
-</colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td>model</td>
-<td>(list of dicts) Each dict has these keys: states : list of ints (the power (Watts) used in different states) training_metadata : ElecMeter or MeterGroup object used for training this set of states.  We need this information because we need the appliance type (and perhaps some other metadata) for each model.</td>
-</tr>
-</tbody>
-</table>
-<dl class="method">
-<dt id="nilmtk.disaggregate.combinatorial_optimisation.CombinatorialOptimisation.disaggregate">
-<tt class="descname">disaggregate</tt><big>(</big><em>mains</em>, <em>output_datastore</em>, <em>**load_kwargs</em><big>)</big><a class="reference internal" href="_modules/nilmtk/disaggregate/combinatorial_optimisation.html#CombinatorialOptimisation.disaggregate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.disaggregate.combinatorial_optimisation.CombinatorialOptimisation.disaggregate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Disaggregate mains according to the model learnt previously.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>mains</strong> : nilmtk.ElecMeter or nilmtk.MeterGroup</p>
-<p><strong>output_datastore</strong> : instance of nilmtk.DataStore subclass</p>
-<blockquote>
-<div><p>For storing power predictions from disaggregation algorithm.</p>
-</div></blockquote>
-<p><strong>output_name</strong> : string, optional</p>
-<blockquote>
-<div><p>The <cite>name</cite> to use in the metadata for the <cite>output_datastore</cite>.
-e.g. some sort of name for this experiment.  Defaults to 
-&#8220;NILMTK_CO_&lt;date&gt;&#8221;</p>
-</div></blockquote>
-<p><strong>resample_seconds</strong> : number, optional</p>
-<blockquote>
-<div><p>The desired sample period in seconds.</p>
-</div></blockquote>
-<p><strong>**load_kwargs</strong> : key word arguments</p>
-<blockquote class="last">
-<div><p>Passed to <cite>mains.power_series(**kwargs)</cite></p>
-</div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="nilmtk.disaggregate.combinatorial_optimisation.CombinatorialOptimisation.train">
-<tt class="descname">train</tt><big>(</big><em>metergroup</em><big>)</big><a class="reference internal" href="_modules/nilmtk/disaggregate/combinatorial_optimisation.html#CombinatorialOptimisation.train"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.disaggregate.combinatorial_optimisation.CombinatorialOptimisation.train" title="Permalink to this definition">¶</a></dt>
-<dd><p>Train using 1D CO. Places the learnt model in the <cite>model</cite> attribute.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>metergroup</strong> : a nilmtk.MeterGroup object</td>
-</tr>
-</tbody>
-</table>
-<p class="rubric">Notes</p>
-<ul class="simple">
-<li>only uses first chunk for each meter (TODO: handle all chunks).</li>
-</ul>
-</dd></dl>
-
-</dd></dl>
-
+<div class="section" id="nilmtk-disaggregate-combinatorial-optimisation-module">
+<h2>nilmtk.disaggregate.combinatorial_optimisation module<a class="headerlink" href="#nilmtk-disaggregate-combinatorial-optimisation-module" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="module-nilmtk.disaggregate">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-nilmtk.disaggregate" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-contents">
+<h2>Module contents<a class="headerlink" href="#module-contents" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 
