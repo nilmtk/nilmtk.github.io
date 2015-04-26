@@ -9,8 +9,8 @@
     
     <link rel="stylesheet" href="_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="_static/bootstrap-3.1.0/css/bootstrap.min.css" type="text/css" />
-    <link rel="stylesheet" href="_static/bootstrap-3.1.0/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-3.2.0/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-3.2.0/css/bootstrap-theme.min.css" type="text/css" />
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     
     <script type="text/javascript">
@@ -28,7 +28,7 @@
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="_static/bootstrap-3.1.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-3.2.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
     <link rel="top" title="NILMTK 0.2 documentation" href="index.html" />
     <link rel="up" title="nilmtk package" href="nilmtk.html" />
@@ -57,7 +57,6 @@
 
         <div class="collapse navbar-collapse nav-collapse">
           <ul class="nav navbar-nav">
-            <li class="divider-vertical"></li>
             
                 <li><a href="https://github.com/nilmtk/nilmtk">github</a></li>
             
@@ -103,15 +102,18 @@
       aria-labelledby="dLabelLocalToc"><ul>
 <li><a class="reference internal" href="#">nilmtk.tests package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#nilmtk-tests-generate-test-data-module">nilmtk.tests.generate_test_data module</a></li>
-<li><a class="reference internal" href="#nilmtk-tests-test-datastore-module">nilmtk.tests.test_datastore module</a></li>
-<li><a class="reference internal" href="#nilmtk-tests-test-elecmeter-module">nilmtk.tests.test_elecmeter module</a></li>
-<li><a class="reference internal" href="#nilmtk-tests-test-measurement-module">nilmtk.tests.test_measurement module</a></li>
-<li><a class="reference internal" href="#nilmtk-tests-test-metergroup-module">nilmtk.tests.test_metergroup module</a></li>
-<li><a class="reference internal" href="#nilmtk-tests-test-node-module">nilmtk.tests.test_node module</a></li>
-<li><a class="reference internal" href="#nilmtk-tests-test-timeframe-module">nilmtk.tests.test_timeframe module</a></li>
-<li><a class="reference internal" href="#nilmtk-tests-testingtools-module">nilmtk.tests.testingtools module</a></li>
-<li><a class="reference internal" href="#module-contents">Module contents</a></li>
+<li><a class="reference internal" href="#module-nilmtk.tests.generate_data">nilmtk.tests.generate_data module</a></li>
+<li><a class="reference internal" href="#module-nilmtk.tests.test_combinatorial_optimisation">nilmtk.tests.test_combinatorial_optimisation module</a></li>
+<li><a class="reference internal" href="#module-nilmtk.tests.test_datastore">nilmtk.tests.test_datastore module</a></li>
+<li><a class="reference internal" href="#nilmtk-tests-test-datastore-converter-module">nilmtk.tests.test_datastore_converter module</a></li>
+<li><a class="reference internal" href="#module-nilmtk.tests.test_elecmeter">nilmtk.tests.test_elecmeter module</a></li>
+<li><a class="reference internal" href="#module-nilmtk.tests.test_measurement">nilmtk.tests.test_measurement module</a></li>
+<li><a class="reference internal" href="#module-nilmtk.tests.test_metergroup">nilmtk.tests.test_metergroup module</a></li>
+<li><a class="reference internal" href="#module-nilmtk.tests.test_metrics">nilmtk.tests.test_metrics module</a></li>
+<li><a class="reference internal" href="#module-nilmtk.tests.test_node">nilmtk.tests.test_node module</a></li>
+<li><a class="reference internal" href="#module-nilmtk.tests.test_timeframe">nilmtk.tests.test_timeframe module</a></li>
+<li><a class="reference internal" href="#module-nilmtk.tests.testingtools">nilmtk.tests.testingtools module</a></li>
+<li><a class="reference internal" href="#module-nilmtk.tests">Module contents</a></li>
 </ul>
 </li>
 </ul>
@@ -123,7 +125,7 @@
               
                 
   <li>
-    <a href="nilmtk.stats.tests.html" title="Previous Chapter: nilmtk.stats.tests package"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm">&laquo; nilmtk.stats.tes...</span>
+    <a href="nilmtk.stats.tests.html" title="Previous Chapter: nilmtk.stats.tests package"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; nilmtk.stats.tes...</span>
     </a>
   </li>
               
@@ -162,32 +164,413 @@
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="nilmtk-tests-generate-test-data-module">
-<h2>nilmtk.tests.generate_test_data module<a class="headerlink" href="#nilmtk-tests-generate-test-data-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-nilmtk.tests.generate_data">
+<span id="nilmtk-tests-generate-data-module"></span><h2>nilmtk.tests.generate_data module<a class="headerlink" href="#module-nilmtk.tests.generate_data" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="nilmtk.tests.generate_data.add_building_metadata">
+<tt class="descclassname">nilmtk.tests.generate_data.</tt><tt class="descname">add_building_metadata</tt><big>(</big><em>store</em>, <em>elec_meters</em>, <em>key='building1'</em>, <em>appliances=[]</em><big>)</big><a class="reference internal" href="_modules/nilmtk/tests/generate_data.html#add_building_metadata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.tests.generate_data.add_building_metadata" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="nilmtk.tests.generate_data.create_all">
+<tt class="descclassname">nilmtk.tests.generate_data.</tt><tt class="descname">create_all</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/tests/generate_data.html#create_all"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.tests.generate_data.create_all" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="nilmtk.tests.generate_data.create_co_test_hdf5">
+<tt class="descclassname">nilmtk.tests.generate_data.</tt><tt class="descname">create_co_test_hdf5</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/tests/generate_data.html#create_co_test_hdf5"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.tests.generate_data.create_co_test_hdf5" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="nilmtk.tests.generate_data.create_energy_hdf5">
+<tt class="descclassname">nilmtk.tests.generate_data.</tt><tt class="descname">create_energy_hdf5</tt><big>(</big><em>simple=True</em><big>)</big><a class="reference internal" href="_modules/nilmtk/tests/generate_data.html#create_energy_hdf5"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.tests.generate_data.create_energy_hdf5" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="nilmtk.tests.generate_data.create_random_df">
+<tt class="descclassname">nilmtk.tests.generate_data.</tt><tt class="descname">create_random_df</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/tests/generate_data.html#create_random_df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.tests.generate_data.create_random_df" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="nilmtk.tests.generate_data.create_random_df_hierarchical_column_index">
+<tt class="descclassname">nilmtk.tests.generate_data.</tt><tt class="descname">create_random_df_hierarchical_column_index</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/tests/generate_data.html#create_random_df_hierarchical_column_index"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.tests.generate_data.create_random_df_hierarchical_column_index" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="nilmtk.tests.generate_data.create_random_hdf5">
+<tt class="descclassname">nilmtk.tests.generate_data.</tt><tt class="descname">create_random_hdf5</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/tests/generate_data.html#create_random_hdf5"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.tests.generate_data.create_random_hdf5" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="nilmtk.tests.generate_data.power_data">
+<tt class="descclassname">nilmtk.tests.generate_data.</tt><tt class="descname">power_data</tt><big>(</big><em>simple=True</em><big>)</big><a class="reference internal" href="_modules/nilmtk/tests/generate_data.html#power_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.tests.generate_data.power_data" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">DataFrame</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </div>
-<div class="section" id="nilmtk-tests-test-datastore-module">
-<h2>nilmtk.tests.test_datastore module<a class="headerlink" href="#nilmtk-tests-test-datastore-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-nilmtk.tests.test_combinatorial_optimisation">
+<span id="nilmtk-tests-test-combinatorial-optimisation-module"></span><h2>nilmtk.tests.test_combinatorial_optimisation module<a class="headerlink" href="#module-nilmtk.tests.test_combinatorial_optimisation" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="nilmtk.tests.test_combinatorial_optimisation.TestCO">
+<em class="property">class </em><tt class="descclassname">nilmtk.tests.test_combinatorial_optimisation.</tt><tt class="descname">TestCO</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="reference internal" href="_modules/nilmtk/tests/test_combinatorial_optimisation.html#TestCO"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.tests.test_combinatorial_optimisation.TestCO" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></tt></p>
+<dl class="classmethod">
+<dt id="nilmtk.tests.test_combinatorial_optimisation.TestCO.setUpClass">
+<em class="property">classmethod </em><tt class="descname">setUpClass</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/tests/test_combinatorial_optimisation.html#TestCO.setUpClass"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.tests.test_combinatorial_optimisation.TestCO.setUpClass" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="nilmtk.tests.test_combinatorial_optimisation.TestCO.tearDownClass">
+<em class="property">classmethod </em><tt class="descname">tearDownClass</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/tests/test_combinatorial_optimisation.html#TestCO.tearDownClass"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.tests.test_combinatorial_optimisation.TestCO.tearDownClass" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.tests.test_combinatorial_optimisation.TestCO.test_co_correctness">
+<tt class="descname">test_co_correctness</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/tests/test_combinatorial_optimisation.html#TestCO.test_co_correctness"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.tests.test_combinatorial_optimisation.TestCO.test_co_correctness" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </div>
-<div class="section" id="nilmtk-tests-test-elecmeter-module">
-<h2>nilmtk.tests.test_elecmeter module<a class="headerlink" href="#nilmtk-tests-test-elecmeter-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-nilmtk.tests.test_datastore">
+<span id="nilmtk-tests-test-datastore-module"></span><h2>nilmtk.tests.test_datastore module<a class="headerlink" href="#module-nilmtk.tests.test_datastore" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="nilmtk.tests.test_datastore.SuperTestDataStore">
+<em class="property">class </em><tt class="descclassname">nilmtk.tests.test_datastore.</tt><tt class="descname">SuperTestDataStore</tt><a class="reference internal" href="_modules/nilmtk/tests/test_datastore.html#SuperTestDataStore"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.tests.test_datastore.SuperTestDataStore" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<dl class="attribute">
+<dt id="nilmtk.tests.test_datastore.SuperTestDataStore.END_DATE">
+<tt class="descname">END_DATE</tt><em class="property"> = Timestamp('2012-01-01 02:46:39')</em><a class="headerlink" href="#nilmtk.tests.test_datastore.SuperTestDataStore.END_DATE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="nilmtk.tests.test_datastore.SuperTestDataStore.NROWS">
+<tt class="descname">NROWS</tt><em class="property"> = 10000.0</em><a class="headerlink" href="#nilmtk.tests.test_datastore.SuperTestDataStore.NROWS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="nilmtk.tests.test_datastore.SuperTestDataStore.START_DATE">
+<tt class="descname">START_DATE</tt><em class="property"> = Timestamp('2012-01-01 00:00:00')</em><a class="headerlink" href="#nilmtk.tests.test_datastore.SuperTestDataStore.START_DATE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="nilmtk.tests.test_datastore.SuperTestDataStore.TIMEFRAME">
+<tt class="descname">TIMEFRAME</tt><em class="property"> = TimeFrame(start='2012-01-01 00:00:00', end='2012-01-01 02:46:39', empty=False)</em><a class="headerlink" href="#nilmtk.tests.test_datastore.SuperTestDataStore.TIMEFRAME" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.tests.test_datastore.SuperTestDataStore.test_load">
+<tt class="descname">test_load</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/tests/test_datastore.html#SuperTestDataStore.test_load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.tests.test_datastore.SuperTestDataStore.test_load" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.tests.test_datastore.SuperTestDataStore.test_load_chunks">
+<tt class="descname">test_load_chunks</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/tests/test_datastore.html#SuperTestDataStore.test_load_chunks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.tests.test_datastore.SuperTestDataStore.test_load_chunks" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.tests.test_datastore.SuperTestDataStore.test_load_chunks_small_chunksize">
+<tt class="descname">test_load_chunks_small_chunksize</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/tests/test_datastore.html#SuperTestDataStore.test_load_chunks_small_chunksize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.tests.test_datastore.SuperTestDataStore.test_load_chunks_small_chunksize" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.tests.test_datastore.SuperTestDataStore.test_timeframe">
+<tt class="descname">test_timeframe</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/tests/test_datastore.html#SuperTestDataStore.test_timeframe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.tests.test_datastore.SuperTestDataStore.test_timeframe" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="nilmtk.tests.test_datastore.TestCSVDataStore">
+<em class="property">class </em><tt class="descclassname">nilmtk.tests.test_datastore.</tt><tt class="descname">TestCSVDataStore</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="reference internal" href="_modules/nilmtk/tests/test_datastore.html#TestCSVDataStore"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.tests.test_datastore.TestCSVDataStore" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></tt>, <a class="reference internal" href="#nilmtk.tests.test_datastore.SuperTestDataStore" title="nilmtk.tests.test_datastore.SuperTestDataStore"><tt class="xref py py-class docutils literal"><span class="pre">nilmtk.tests.test_datastore.SuperTestDataStore</span></tt></a></p>
+<dl class="classmethod">
+<dt id="nilmtk.tests.test_datastore.TestCSVDataStore.setUpClass">
+<em class="property">classmethod </em><tt class="descname">setUpClass</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/tests/test_datastore.html#TestCSVDataStore.setUpClass"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.tests.test_datastore.TestCSVDataStore.setUpClass" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="nilmtk.tests.test_datastore.TestCSVDataStore.tearDownClass">
+<em class="property">classmethod </em><tt class="descname">tearDownClass</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/tests/test_datastore.html#TestCSVDataStore.tearDownClass"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.tests.test_datastore.TestCSVDataStore.tearDownClass" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="nilmtk.tests.test_datastore.TestHDFDataStore">
+<em class="property">class </em><tt class="descclassname">nilmtk.tests.test_datastore.</tt><tt class="descname">TestHDFDataStore</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="reference internal" href="_modules/nilmtk/tests/test_datastore.html#TestHDFDataStore"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.tests.test_datastore.TestHDFDataStore" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></tt>, <a class="reference internal" href="#nilmtk.tests.test_datastore.SuperTestDataStore" title="nilmtk.tests.test_datastore.SuperTestDataStore"><tt class="xref py py-class docutils literal"><span class="pre">nilmtk.tests.test_datastore.SuperTestDataStore</span></tt></a></p>
+<dl class="classmethod">
+<dt id="nilmtk.tests.test_datastore.TestHDFDataStore.setUpClass">
+<em class="property">classmethod </em><tt class="descname">setUpClass</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/tests/test_datastore.html#TestHDFDataStore.setUpClass"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.tests.test_datastore.TestHDFDataStore.setUpClass" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="nilmtk.tests.test_datastore.TestHDFDataStore.tearDownClass">
+<em class="property">classmethod </em><tt class="descname">tearDownClass</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/tests/test_datastore.html#TestHDFDataStore.tearDownClass"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.tests.test_datastore.TestHDFDataStore.tearDownClass" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.tests.test_datastore.TestHDFDataStore.test_column_names">
+<tt class="descname">test_column_names</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/tests/test_datastore.html#TestHDFDataStore.test_column_names"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.tests.test_datastore.TestHDFDataStore.test_column_names" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.tests.test_datastore.TestHDFDataStore.test_estimate_memory_requirement">
+<tt class="descname">test_estimate_memory_requirement</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/tests/test_datastore.html#TestHDFDataStore.test_estimate_memory_requirement"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.tests.test_datastore.TestHDFDataStore.test_estimate_memory_requirement" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.tests.test_datastore.TestHDFDataStore.test_n_rows">
+<tt class="descname">test_n_rows</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/tests/test_datastore.html#TestHDFDataStore.test_n_rows"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.tests.test_datastore.TestHDFDataStore.test_n_rows" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </div>
-<div class="section" id="nilmtk-tests-test-measurement-module">
-<h2>nilmtk.tests.test_measurement module<a class="headerlink" href="#nilmtk-tests-test-measurement-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="nilmtk-tests-test-datastore-converter-module">
+<h2>nilmtk.tests.test_datastore_converter module<a class="headerlink" href="#nilmtk-tests-test-datastore-converter-module" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="nilmtk-tests-test-metergroup-module">
-<h2>nilmtk.tests.test_metergroup module<a class="headerlink" href="#nilmtk-tests-test-metergroup-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-nilmtk.tests.test_elecmeter">
+<span id="nilmtk-tests-test-elecmeter-module"></span><h2>nilmtk.tests.test_elecmeter module<a class="headerlink" href="#module-nilmtk.tests.test_elecmeter" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="nilmtk.tests.test_elecmeter.TestElecMeter">
+<em class="property">class </em><tt class="descclassname">nilmtk.tests.test_elecmeter.</tt><tt class="descname">TestElecMeter</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="reference internal" href="_modules/nilmtk/tests/test_elecmeter.html#TestElecMeter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.tests.test_elecmeter.TestElecMeter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#nilmtk.tests.testingtools.WarningTestMixin" title="nilmtk.tests.testingtools.WarningTestMixin"><tt class="xref py py-class docutils literal"><span class="pre">nilmtk.tests.testingtools.WarningTestMixin</span></tt></a>, <tt class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></tt></p>
+<dl class="method">
+<dt id="nilmtk.tests.test_elecmeter.TestElecMeter.correlation">
+<tt class="descname">correlation</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/tests/test_elecmeter.html#TestElecMeter.correlation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.tests.test_elecmeter.TestElecMeter.correlation" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="nilmtk.tests.test_elecmeter.TestElecMeter.setUpClass">
+<em class="property">classmethod </em><tt class="descname">setUpClass</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/tests/test_elecmeter.html#TestElecMeter.setUpClass"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.tests.test_elecmeter.TestElecMeter.setUpClass" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="nilmtk.tests.test_elecmeter.TestElecMeter.tearDownClass">
+<em class="property">classmethod </em><tt class="descname">tearDownClass</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/tests/test_elecmeter.html#TestElecMeter.tearDownClass"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.tests.test_elecmeter.TestElecMeter.tearDownClass" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.tests.test_elecmeter.TestElecMeter.test_load">
+<tt class="descname">test_load</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/tests/test_elecmeter.html#TestElecMeter.test_load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.tests.test_elecmeter.TestElecMeter.test_load" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.tests.test_elecmeter.TestElecMeter.test_proportion_of_energy">
+<tt class="descname">test_proportion_of_energy</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/tests/test_elecmeter.html#TestElecMeter.test_proportion_of_energy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.tests.test_elecmeter.TestElecMeter.test_proportion_of_energy" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.tests.test_elecmeter.TestElecMeter.test_total_energy">
+<tt class="descname">test_total_energy</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/tests/test_elecmeter.html#TestElecMeter.test_total_energy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.tests.test_elecmeter.TestElecMeter.test_total_energy" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.tests.test_elecmeter.TestElecMeter.test_upstream_meter">
+<tt class="descname">test_upstream_meter</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/tests/test_elecmeter.html#TestElecMeter.test_upstream_meter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.tests.test_elecmeter.TestElecMeter.test_upstream_meter" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </div>
-<div class="section" id="nilmtk-tests-test-node-module">
-<h2>nilmtk.tests.test_node module<a class="headerlink" href="#nilmtk-tests-test-node-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-nilmtk.tests.test_measurement">
+<span id="nilmtk-tests-test-measurement-module"></span><h2>nilmtk.tests.test_measurement module<a class="headerlink" href="#module-nilmtk.tests.test_measurement" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="nilmtk.tests.test_measurement.TestMeasurement">
+<em class="property">class </em><tt class="descclassname">nilmtk.tests.test_measurement.</tt><tt class="descname">TestMeasurement</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="reference internal" href="_modules/nilmtk/tests/test_measurement.html#TestMeasurement"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.tests.test_measurement.TestMeasurement" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></tt></p>
+<dl class="method">
+<dt id="nilmtk.tests.test_measurement.TestMeasurement.test_as_dataframe_columns">
+<tt class="descname">test_as_dataframe_columns</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/tests/test_measurement.html#TestMeasurement.test_as_dataframe_columns"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.tests.test_measurement.TestMeasurement.test_as_dataframe_columns" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.tests.test_measurement.TestMeasurement.test_check_ac_type">
+<tt class="descname">test_check_ac_type</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/tests/test_measurement.html#TestMeasurement.test_check_ac_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.tests.test_measurement.TestMeasurement.test_check_ac_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.tests.test_measurement.TestMeasurement.test_select_best_ac_type">
+<tt class="descname">test_select_best_ac_type</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/tests/test_measurement.html#TestMeasurement.test_select_best_ac_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.tests.test_measurement.TestMeasurement.test_select_best_ac_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </div>
-<div class="section" id="nilmtk-tests-test-timeframe-module">
-<h2>nilmtk.tests.test_timeframe module<a class="headerlink" href="#nilmtk-tests-test-timeframe-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-nilmtk.tests.test_metergroup">
+<span id="nilmtk-tests-test-metergroup-module"></span><h2>nilmtk.tests.test_metergroup module<a class="headerlink" href="#module-nilmtk.tests.test_metergroup" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="nilmtk.tests.test_metergroup.TestMeterGroup">
+<em class="property">class </em><tt class="descclassname">nilmtk.tests.test_metergroup.</tt><tt class="descname">TestMeterGroup</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="reference internal" href="_modules/nilmtk/tests/test_metergroup.html#TestMeterGroup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.tests.test_metergroup.TestMeterGroup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></tt></p>
+<dl class="classmethod">
+<dt id="nilmtk.tests.test_metergroup.TestMeterGroup.setUpClass">
+<em class="property">classmethod </em><tt class="descname">setUpClass</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/tests/test_metergroup.html#TestMeterGroup.setUpClass"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.tests.test_metergroup.TestMeterGroup.setUpClass" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="nilmtk.tests.test_metergroup.TestMeterGroup.tearDownClass">
+<em class="property">classmethod </em><tt class="descname">tearDownClass</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/tests/test_metergroup.html#TestMeterGroup.tearDownClass"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.tests.test_metergroup.TestMeterGroup.tearDownClass" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.tests.test_metergroup.TestMeterGroup.test_dual_supply">
+<tt class="descname">test_dual_supply</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/tests/test_metergroup.html#TestMeterGroup.test_dual_supply"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.tests.test_metergroup.TestMeterGroup.test_dual_supply" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.tests.test_metergroup.TestMeterGroup.test_from_list">
+<tt class="descname">test_from_list</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/tests/test_metergroup.html#TestMeterGroup.test_from_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.tests.test_metergroup.TestMeterGroup.test_from_list" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.tests.test_metergroup.TestMeterGroup.test_full_results_with_no_sections_raises_runtime_error">
+<tt class="descname">test_full_results_with_no_sections_raises_runtime_error</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/tests/test_metergroup.html#TestMeterGroup.test_full_results_with_no_sections_raises_runtime_error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.tests.test_metergroup.TestMeterGroup.test_full_results_with_no_sections_raises_runtime_error" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.tests.test_metergroup.TestMeterGroup.test_getitem">
+<tt class="descname">test_getitem</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/tests/test_metergroup.html#TestMeterGroup.test_getitem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.tests.test_metergroup.TestMeterGroup.test_getitem" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.tests.test_metergroup.TestMeterGroup.test_load">
+<tt class="descname">test_load</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/tests/test_metergroup.html#TestMeterGroup.test_load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.tests.test_metergroup.TestMeterGroup.test_load" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.tests.test_metergroup.TestMeterGroup.test_proportion_of_energy_submetered">
+<tt class="descname">test_proportion_of_energy_submetered</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/tests/test_metergroup.html#TestMeterGroup.test_proportion_of_energy_submetered"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.tests.test_metergroup.TestMeterGroup.test_proportion_of_energy_submetered" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.tests.test_metergroup.TestMeterGroup.test_select">
+<tt class="descname">test_select</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/tests/test_metergroup.html#TestMeterGroup.test_select"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.tests.test_metergroup.TestMeterGroup.test_select" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.tests.test_metergroup.TestMeterGroup.test_total_energy">
+<tt class="descname">test_total_energy</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/tests/test_metergroup.html#TestMeterGroup.test_total_energy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.tests.test_metergroup.TestMeterGroup.test_total_energy" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.tests.test_metergroup.TestMeterGroup.test_wiring_graph">
+<tt class="descname">test_wiring_graph</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/tests/test_metergroup.html#TestMeterGroup.test_wiring_graph"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.tests.test_metergroup.TestMeterGroup.test_wiring_graph" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </div>
-<div class="section" id="nilmtk-tests-testingtools-module">
-<h2>nilmtk.tests.testingtools module<a class="headerlink" href="#nilmtk-tests-testingtools-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-nilmtk.tests.test_metrics">
+<span id="nilmtk-tests-test-metrics-module"></span><h2>nilmtk.tests.test_metrics module<a class="headerlink" href="#module-nilmtk.tests.test_metrics" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="nilmtk.tests.test_metrics.TestMetrics">
+<em class="property">class </em><tt class="descclassname">nilmtk.tests.test_metrics.</tt><tt class="descname">TestMetrics</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="reference internal" href="_modules/nilmtk/tests/test_metrics.html#TestMetrics"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.tests.test_metrics.TestMetrics" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></tt></p>
+<dl class="classmethod">
+<dt id="nilmtk.tests.test_metrics.TestMetrics.setUpClass">
+<em class="property">classmethod </em><tt class="descname">setUpClass</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/tests/test_metrics.html#TestMetrics.setUpClass"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.tests.test_metrics.TestMetrics.setUpClass" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="nilmtk.tests.test_metrics.TestMetrics.tearDownClass">
+<em class="property">classmethod </em><tt class="descname">tearDownClass</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/tests/test_metrics.html#TestMetrics.tearDownClass"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.tests.test_metrics.TestMetrics.tearDownClass" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.tests.test_metrics.TestMetrics.test_f1">
+<tt class="descname">test_f1</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/tests/test_metrics.html#TestMetrics.test_f1"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.tests.test_metrics.TestMetrics.test_f1" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </div>
-<div class="section" id="module-contents">
-<h2>Module contents<a class="headerlink" href="#module-contents" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-nilmtk.tests.test_node">
+<span id="nilmtk-tests-test-node-module"></span><h2>nilmtk.tests.test_node module<a class="headerlink" href="#module-nilmtk.tests.test_node" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="nilmtk.tests.test_node.TestNode">
+<em class="property">class </em><tt class="descclassname">nilmtk.tests.test_node.</tt><tt class="descname">TestNode</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="reference internal" href="_modules/nilmtk/tests/test_node.html#TestNode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.tests.test_node.TestNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></tt></p>
+<dl class="method">
+<dt id="nilmtk.tests.test_node.TestNode.test_unsatisfied_requirements">
+<tt class="descname">test_unsatisfied_requirements</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/tests/test_node.html#TestNode.test_unsatisfied_requirements"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.tests.test_node.TestNode.test_unsatisfied_requirements" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-nilmtk.tests.test_timeframe">
+<span id="nilmtk-tests-test-timeframe-module"></span><h2>nilmtk.tests.test_timeframe module<a class="headerlink" href="#module-nilmtk.tests.test_timeframe" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="nilmtk.tests.test_timeframe.TestTimeFrame">
+<em class="property">class </em><tt class="descclassname">nilmtk.tests.test_timeframe.</tt><tt class="descname">TestTimeFrame</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="reference internal" href="_modules/nilmtk/tests/test_timeframe.html#TestTimeFrame"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.tests.test_timeframe.TestTimeFrame" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></tt></p>
+<dl class="method">
+<dt id="nilmtk.tests.test_timeframe.TestTimeFrame.test_adjacent">
+<tt class="descname">test_adjacent</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/tests/test_timeframe.html#TestTimeFrame.test_adjacent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.tests.test_timeframe.TestTimeFrame.test_adjacent" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.tests.test_timeframe.TestTimeFrame.test_date_setting">
+<tt class="descname">test_date_setting</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/tests/test_timeframe.html#TestTimeFrame.test_date_setting"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.tests.test_timeframe.TestTimeFrame.test_date_setting" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.tests.test_timeframe.TestTimeFrame.test_intersection">
+<tt class="descname">test_intersection</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/tests/test_timeframe.html#TestTimeFrame.test_intersection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.tests.test_timeframe.TestTimeFrame.test_intersection" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.tests.test_timeframe.TestTimeFrame.test_merge_timeframes">
+<tt class="descname">test_merge_timeframes</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/tests/test_timeframe.html#TestTimeFrame.test_merge_timeframes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.tests.test_timeframe.TestTimeFrame.test_merge_timeframes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.tests.test_timeframe.TestTimeFrame.test_time_delta">
+<tt class="descname">test_time_delta</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/tests/test_timeframe.html#TestTimeFrame.test_time_delta"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.tests.test_timeframe.TestTimeFrame.test_time_delta" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.tests.test_timeframe.TestTimeFrame.test_union">
+<tt class="descname">test_union</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/tests/test_timeframe.html#TestTimeFrame.test_union"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.tests.test_timeframe.TestTimeFrame.test_union" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-nilmtk.tests.testingtools">
+<span id="nilmtk-tests-testingtools-module"></span><h2>nilmtk.tests.testingtools module<a class="headerlink" href="#module-nilmtk.tests.testingtools" title="Permalink to this headline">¶</a></h2>
+<p>Tools to help with testing.</p>
+<dl class="class">
+<dt id="nilmtk.tests.testingtools.WarningTestMixin">
+<em class="property">class </em><tt class="descclassname">nilmtk.tests.testingtools.</tt><tt class="descname">WarningTestMixin</tt><a class="reference internal" href="_modules/nilmtk/tests/testingtools.html#WarningTestMixin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.tests.testingtools.WarningTestMixin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>A test which checks if the specified warning was raised.</p>
+<p>Taken from <a class="reference external" href="http://stackoverflow.com/a/12935176/732596">http://stackoverflow.com/a/12935176/732596</a></p>
+<dl class="method">
+<dt id="nilmtk.tests.testingtools.WarningTestMixin.assertWarns">
+<tt class="descname">assertWarns</tt><big>(</big><em>warning</em>, <em>callable</em>, <em>*args</em>, <em>**kwds</em><big>)</big><a class="reference internal" href="_modules/nilmtk/tests/testingtools.html#WarningTestMixin.assertWarns"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.tests.testingtools.WarningTestMixin.assertWarns" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="nilmtk.tests.testingtools.data_dir">
+<tt class="descclassname">nilmtk.tests.testingtools.</tt><tt class="descname">data_dir</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/tests/testingtools.html#data_dir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.tests.testingtools.data_dir" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-nilmtk.tests">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-nilmtk.tests" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 

@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>nilmtk.disaggregate.hart_85 &mdash; NILMTK 0.2 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/bootstrap-3.2.0/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/bootstrap-3.2.0/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.2',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../../../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../../_static/bootstrap-3.2.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../../_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="NILMTK 0.2 documentation" href="../../../index.html" />
+    <link rel="up" title="nilmtk" href="../../nilmtk.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../index.html">
+          NILMTK</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.2</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="https://github.com/nilmtk/nilmtk">github</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro_nilmtk_v0_2.html">Intro to NILMTK v0.2</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../convert_data_to_NILMTK_format.html">Convert data to NILMTK format and load into NILMTK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../elecmeter_and_metergroup.html">MeterGroup, ElecMeter, selection and basic statistics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pipeline_preprocessing_more_stats.html">Processing pipeline, preprocessing and more stats</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../disaggregation_and_metrics.html">Disaggregation and Metrics</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../writing_a_dataset_converter.html">Writing a dataset converter</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Change log</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../nilmtk.html">nilmtk package</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      
+  <h1>Source code for nilmtk.disaggregate.hart_85</h1><div class="highlight"><pre>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">division</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span><span class="p">,</span> <span class="n">deque</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">..feature_detectors.cluster</span> <span class="kn">import</span> <span class="n">hart85_means_shift_cluster</span>
+<span class="kn">from</span> <span class="nn">..feature_detectors.steady_states</span> <span class="kn">import</span> <span class="n">find_steady_states_transients</span>
+<span class="kn">from</span> <span class="nn">..timeframe</span> <span class="kn">import</span> <span class="n">merge_timeframes</span><span class="p">,</span> <span class="n">list_of_timeframe_dicts</span><span class="p">,</span> <span class="n">TimeFrame</span>
+
+<span class="c"># Fix the seed for repeatability of experiments</span>
+<span class="n">SEED</span> <span class="o">=</span> <span class="mi">42</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">SEED</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="MyDeque"><a class="viewcode-back" href="../../../nilmtk.disaggregate.html#nilmtk.disaggregate.hart_85.MyDeque">[docs]</a><span class="k">class</span> <span class="nc">MyDeque</span><span class="p">(</span><span class="n">deque</span><span class="p">):</span>
+<div class="viewcode-block" id="MyDeque.popmiddle"><a class="viewcode-back" href="../../../nilmtk.disaggregate.html#nilmtk.disaggregate.hart_85.MyDeque.popmiddle">[docs]</a>    <span class="k">def</span> <span class="nf">popmiddle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pos</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="o">-</span><span class="n">pos</span><span class="p">)</span>
+        <span class="n">ret</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">popleft</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ret</span>
+
+</div></div>
+<div class="viewcode-block" id="PairBuffer"><a class="viewcode-back" href="../../../nilmtk.disaggregate.html#nilmtk.disaggregate.hart_85.PairBuffer">[docs]</a><span class="k">class</span> <span class="nc">PairBuffer</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Attributes:</span>
+<span class="sd">    * transitionList (list of tuples)</span>
+<span class="sd">    * matchedPairs (dataframe containing matched pairs of transitions)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">buffer_size</span><span class="p">,</span> <span class="n">min_tolerance</span><span class="p">,</span> <span class="n">percent_tolerance</span><span class="p">,</span>
+                 <span class="n">large_transition</span><span class="p">,</span> <span class="n">num_measurements</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        buffer_size: int, optional</span>
+<span class="sd">            size of the buffer to use for finding edges</span>
+<span class="sd">        min_tolerance: int, optional</span>
+<span class="sd">            variance in power draw allowed for pairing a match</span>
+<span class="sd">        percent_tolerance: float, optional</span>
+<span class="sd">            if transition is greater than large_transition, then use percent of large_transition</span>
+<span class="sd">        large_transition: float, optional</span>
+<span class="sd">            power draw of a Large transition</span>
+<span class="sd">        num_measurements: int, optional</span>
+<span class="sd">            2 if only active power</span>
+<span class="sd">            3 if both active and reactive power</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c"># We use a deque here, because it allows us quick access to start and end popping</span>
+        <span class="c"># and additionally, we can set a maxlen which drops oldest items. This nicely</span>
+        <span class="c"># suits Hart&#39;s recomendation that the size should be tunable.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_buffer_size</span> <span class="o">=</span> <span class="n">buffer_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_min_tol</span> <span class="o">=</span> <span class="n">min_tolerance</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_percent_tol</span> <span class="o">=</span> <span class="n">percent_tolerance</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_large_transition</span> <span class="o">=</span> <span class="n">large_transition</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transition_list</span> <span class="o">=</span> <span class="n">MyDeque</span><span class="p">([],</span> <span class="n">maxlen</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_buffer_size</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_num_measurements</span> <span class="o">=</span> <span class="n">num_measurements</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_num_measurements</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="c"># Both active and reactive power is available</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pair_columns</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;T1 Time&#39;</span><span class="p">,</span> <span class="s">&#39;T1 Active&#39;</span><span class="p">,</span> <span class="s">&#39;T1 Reactive&#39;</span><span class="p">,</span>
+                                <span class="s">&#39;T2 Time&#39;</span><span class="p">,</span> <span class="s">&#39;T2 Active&#39;</span><span class="p">,</span> <span class="s">&#39;T2 Reactive&#39;</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_num_measurements</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="c"># Only active power is available</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pair_columns</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;T1 Time&#39;</span><span class="p">,</span> <span class="s">&#39;T1 Active&#39;</span><span class="p">,</span>
+                                <span class="s">&#39;T2 Time&#39;</span><span class="p">,</span> <span class="s">&#39;T2 Active&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">matched_pairs</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">pair_columns</span><span class="p">)</span>
+    
+<div class="viewcode-block" id="PairBuffer.clean_buffer"><a class="viewcode-back" href="../../../nilmtk.disaggregate.html#nilmtk.disaggregate.hart_85.PairBuffer.clean_buffer">[docs]</a>    <span class="k">def</span> <span class="nf">clean_buffer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c"># Remove any matched transactions</span>
+        <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">entry</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transition_list</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">entry</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_num_measurements</span><span class="p">]:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">transition_list</span><span class="o">.</span><span class="n">popmiddle</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">clean_buffer</span><span class="p">()</span>
+                <span class="k">break</span>
+        <span class="c"># Remove oldest transaction if buffer cleaning didn&#39;t remove anything</span>
+        <span class="c"># if len(self.transitionList) == self._bufferSize:</span>
+        <span class="c">#    self.transitionList.popleft()</span>
+</div>
+<div class="viewcode-block" id="PairBuffer.add_transition"><a class="viewcode-back" href="../../../nilmtk.disaggregate.html#nilmtk.disaggregate.hart_85.PairBuffer.add_transition">[docs]</a>    <span class="k">def</span> <span class="nf">add_transition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transition</span><span class="p">):</span>
+        <span class="c"># Check transition is as expected.</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">transition</span><span class="p">,</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">))</span>
+        <span class="c"># Check that we have both active and reactive powers.</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">transition</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_num_measurements</span>
+        <span class="c"># Convert as appropriate</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">transition</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+            <span class="n">mtransition</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">transition</span><span class="p">)</span>
+        <span class="c"># Add transition to List of transitions (set marker as unpaired)</span>
+        <span class="n">mtransition</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transition_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mtransition</span><span class="p">)</span>
+        <span class="c"># checking for pairs</span>
+        <span class="c"># self.pairTransitions()</span>
+        <span class="c"># self.cleanBuffer()</span>
+</div>
+<div class="viewcode-block" id="PairBuffer.pair_transitions"><a class="viewcode-back" href="../../../nilmtk.disaggregate.html#nilmtk.disaggregate.hart_85.PairBuffer.pair_transitions">[docs]</a>    <span class="k">def</span> <span class="nf">pair_transitions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Hart 85, P 33.</span>
+<span class="sd">        When searching the working buffer for pairs, the order in which </span>
+<span class="sd">        entries are examined is very important. If an Appliance has </span>
+<span class="sd">        on and off several times in succession, there can be many </span>
+<span class="sd">        pairings between entries in the buffer. The algorithm must not</span>
+<span class="sd">        allow an 0N transition to match an OFF which occurred at the end </span>
+<span class="sd">        of a different cycle, so that only ON/OFF pairs which truly belong </span>
+<span class="sd">        together are paired up. Otherwise the energy consumption of the </span>
+<span class="sd">        appliance will be greatly overestimated. The most straightforward </span>
+<span class="sd">        search procedures can make errors of this nature when faced with </span>
+<span class="sd">        types of transition sequences.</span>
+
+<span class="sd">        Hart 85, P 32.</span>
+<span class="sd">        For the two-state load monitor, a pair is defined as two entries</span>
+<span class="sd">        which meet the following four conditions:</span>
+<span class="sd">        (1) They are on the same leg, or are both 240 V,</span>
+<span class="sd">        (2) They are both unmarked, </span>
+<span class="sd">        (3) The earlier has a positive real power component, and </span>
+<span class="sd">        (4) When added together, they result in a vector in which the </span>
+<span class="sd">        absolute value of the real power component is less than 35 </span>
+<span class="sd">        Watts (or 3.5% of the real power, if the transitions are </span>
+<span class="sd">        over 1000 W) and the absolute value of the reactive power </span>
+<span class="sd">        component is less than 35 VAR (or 3.5%).</span>
+
+<span class="sd">        ... the correct way to search the buffer is to start by checking </span>
+<span class="sd">        elements which are close together in the buffer, and gradually </span>
+<span class="sd">        increase the distance. First, adjacent  elements are checked for </span>
+<span class="sd">        pairs which meet all four requirements above; if any are found </span>
+<span class="sd">        they are processed and marked. Then elements two entries apart </span>
+<span class="sd">        are checked, then three, and so on, until the first and last </span>
+<span class="sd">        element are checked...</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">tlength</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transition_list</span><span class="p">)</span>
+        <span class="n">pairmatched</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="k">if</span> <span class="n">tlength</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">pairmatched</span>
+
+        <span class="c"># Can we reduce the running time of this algorithm?</span>
+        <span class="c"># My gut feeling is no, because we can&#39;t re-order the list...</span>
+        <span class="c"># I wonder if we sort but then check the time... maybe. TO DO</span>
+        <span class="c"># (perhaps!).</span>
+
+        <span class="c"># Start the element distance at 1, go up to current length of buffer</span>
+        <span class="k">for</span> <span class="n">eDistance</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">tlength</span><span class="p">):</span>
+            <span class="n">idx</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">while</span> <span class="n">idx</span> <span class="o">&lt;</span> <span class="n">tlength</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="c"># We don&#39;t want to go beyond length of array</span>
+                <span class="n">compindex</span> <span class="o">=</span> <span class="n">idx</span> <span class="o">+</span> <span class="n">eDistance</span>
+                <span class="k">if</span> <span class="n">compindex</span> <span class="o">&lt;</span> <span class="n">tlength</span><span class="p">:</span>
+                    <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transition_list</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+                    <span class="c"># val[1] is the active power and</span>
+                    <span class="c"># val[self._num_measurements] is match status</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">val</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">val</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_num_measurements</span><span class="p">]</span> <span class="ow">is</span> <span class="bp">False</span><span class="p">):</span>
+                        <span class="n">compval</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transition_list</span><span class="p">[</span><span class="n">compindex</span><span class="p">]</span>
+                        <span class="k">if</span> <span class="n">compval</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_num_measurements</span><span class="p">]</span> <span class="ow">is</span> <span class="bp">False</span><span class="p">:</span>
+                            <span class="c"># Add the two elements for comparison</span>
+                            <span class="n">vsum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
+                                <span class="n">val</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">_num_measurements</span><span class="p">],</span>
+                                <span class="n">compval</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">_num_measurements</span><span class="p">])</span>
+                            <span class="c"># Set the allowable tolerance for reactive and</span>
+                            <span class="c"># active</span>
+                            <span class="n">matchtols</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_min_tol</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_min_tol</span><span class="p">]</span>
+                            <span class="k">for</span> <span class="n">ix</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_num_measurements</span><span class="p">):</span>
+                                <span class="n">matchtols</span><span class="p">[</span><span class="n">ix</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_min_tol</span> <span class="k">if</span> <span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fabs</span><span class="p">([</span><span class="n">val</span><span class="p">[</span><span class="n">ix</span><span class="p">],</span> <span class="n">compval</span><span class="p">[</span><span class="n">ix</span><span class="p">]]))</span>
+                                                                     <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_large_transition</span><span class="p">)</span> <span class="k">else</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_percent_tol</span>
+                                                                                                     <span class="o">*</span> <span class="nb">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fabs</span><span class="p">([</span><span class="n">val</span><span class="p">[</span><span class="n">ix</span><span class="p">],</span> <span class="n">compval</span><span class="p">[</span><span class="n">ix</span><span class="p">]])))</span>
+                            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_num_measurements</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+                                <span class="n">condition</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fabs</span><span class="p">(</span><span class="n">vsum</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">matchtols</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="ow">and</span> <span class="p">(</span>
+                                    <span class="n">np</span><span class="o">.</span><span class="n">fabs</span><span class="p">(</span><span class="n">vsum</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">matchtols</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+                            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_num_measurements</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                                <span class="n">condition</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fabs</span><span class="p">(</span><span class="n">vsum</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">matchtols</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+                            <span class="k">if</span> <span class="n">condition</span><span class="p">:</span>
+                                <span class="c"># Mark the transition as complete</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">transition_list</span><span class="p">[</span><span class="n">idx</span><span class="p">][</span>
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">_num_measurements</span><span class="p">]</span> <span class="o">=</span> <span class="bp">True</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">transition_list</span><span class="p">[</span><span class="n">compindex</span><span class="p">][</span>
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">_num_measurements</span><span class="p">]</span> <span class="o">=</span> <span class="bp">True</span>
+                                <span class="n">pairmatched</span> <span class="o">=</span> <span class="bp">True</span>
+
+                                <span class="c"># Append the OFF transition to the ON. Add to</span>
+                                <span class="c"># dataframe.</span>
+                                <span class="n">matchedpair</span> <span class="o">=</span> <span class="n">val</span><span class="p">[</span>
+                                    <span class="mi">0</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">_num_measurements</span><span class="p">]</span> <span class="o">+</span> <span class="n">compval</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">_num_measurements</span><span class="p">]</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">matched_pairs</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span>
+                                    <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">matched_pairs</span><span class="p">)]</span> <span class="o">=</span> <span class="n">matchedpair</span>
+
+                    <span class="c"># Iterate Index</span>
+                    <span class="n">idx</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">break</span>
+
+        <span class="k">return</span> <span class="n">pairmatched</span>
+
+</div></div>
+<div class="viewcode-block" id="Hart85"><a class="viewcode-back" href="../../../nilmtk.disaggregate.html#nilmtk.disaggregate.hart_85.Hart85">[docs]</a><span class="k">class</span> <span class="nc">Hart85</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    1 or 2 dimensional Hart 1985 algorithm.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    model : dict</span>
+<span class="sd">        Each key is either the instance integer for an ElecMeter, </span>
+<span class="sd">        or a tuple of instances for a MeterGroup.</span>
+<span class="sd">        Each value is a sorted list of power in different states.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="p">{}</span>
+
+<div class="viewcode-block" id="Hart85.train"><a class="viewcode-back" href="../../../nilmtk.disaggregate.html#nilmtk.disaggregate.hart_85.Hart85.train">[docs]</a>    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metergroup</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="p">[(</span><span class="s">&#39;power&#39;</span><span class="p">,</span><span class="s">&#39;active&#39;</span><span class="p">)],</span>
+                <span class="n">buffer_size</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">noise_level</span><span class="o">=</span><span class="mi">70</span><span class="p">,</span> <span class="n">state_threshold</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>  <span class="n">min_tolerance</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">percent_tolerance</span><span class="o">=</span><span class="mf">0.035</span><span class="p">,</span>
+                <span class="n">large_transition</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Train using Hart85. Places the learnt model in `model` attribute.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        metergroup : a nilmtk.MeterGroup object</span>
+<span class="sd">        cols: nilmtk.Measurement, should be one of the following</span>
+<span class="sd">            [(&#39;power&#39;,&#39;active&#39;)]</span>
+<span class="sd">            [(&#39;power&#39;,&#39;apparent&#39;)]</span>
+<span class="sd">            [(&#39;power&#39;,&#39;reactive&#39;)]</span>
+<span class="sd">            [(&#39;power&#39;,&#39;active&#39;), (&#39;power&#39;, &#39;reactive&#39;)]</span>
+<span class="sd">        buffer_size: int, optional</span>
+<span class="sd">            size of the buffer to use for finding edges</span>
+<span class="sd">        min_tolerance: int, optional</span>
+<span class="sd">            variance in power draw allowed for pairing a match</span>
+<span class="sd">        percent_tolerance: float, optional</span>
+<span class="sd">            if transition is greater than large_transition, then use percent of large_transition</span>
+<span class="sd">        large_transition: float, optional</span>
+<span class="sd">            power draw of a Large transition</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cols</span> <span class="o">=</span> <span class="n">cols</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state_threshold</span> <span class="o">=</span> <span class="n">state_threshold</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">noise_level</span> <span class="o">=</span> <span class="n">noise_level</span>
+        <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">steady_states</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">transients</span><span class="p">]</span> <span class="o">=</span> <span class="n">find_steady_states_transients</span><span class="p">(</span><span class="n">metergroup</span><span class="p">,</span>  <span class="n">cols</span><span class="p">,</span> <span class="n">noise_level</span><span class="p">,</span> <span class="n">state_threshold</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pair_df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pair</span><span class="p">(</span><span class="n">buffer_size</span><span class="p">,</span> <span class="n">min_tolerance</span><span class="p">,</span> <span class="n">percent_tolerance</span><span class="p">,</span> <span class="n">large_transition</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">centroids</span> <span class="o">=</span> <span class="n">hart85_means_shift_cluster</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pair_df</span><span class="p">,</span> <span class="n">cols</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Hart85.pair"><a class="viewcode-back" href="../../../nilmtk.disaggregate.html#nilmtk.disaggregate.hart_85.Hart85.pair">[docs]</a>    <span class="k">def</span> <span class="nf">pair</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">buffer_size</span><span class="p">,</span> <span class="n">min_tolerance</span><span class="p">,</span> <span class="n">percent_tolerance</span><span class="p">,</span> <span class="n">large_transition</span><span class="p">):</span>
+        <span class="n">subset</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transients</span><span class="o">.</span><span class="n">itertuples</span><span class="p">())</span>
+        <span class="nb">buffer</span> <span class="o">=</span> <span class="n">PairBuffer</span><span class="p">(</span><span class="n">min_tolerance</span><span class="o">=</span><span class="n">min_tolerance</span><span class="p">,</span>
+                            <span class="n">buffer_size</span><span class="o">=</span><span class="n">buffer_size</span><span class="p">,</span> <span class="n">percent_tolerance</span><span class="o">=</span><span class="n">percent_tolerance</span><span class="p">,</span>
+                            <span class="n">large_transition</span><span class="o">=</span><span class="n">large_transition</span><span class="p">,</span>
+                            <span class="n">num_measurements</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transients</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">subset</span><span class="p">:</span>
+            <span class="c"># if len(buffer.transitionList) &lt; bsize</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">buffer</span><span class="o">.</span><span class="n">transition_list</span><span class="p">)</span> <span class="o">==</span> <span class="n">buffer_size</span><span class="p">:</span>
+                <span class="nb">buffer</span><span class="o">.</span><span class="n">clean_buffer</span><span class="p">()</span>
+            <span class="nb">buffer</span><span class="o">.</span><span class="n">add_transition</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+            <span class="nb">buffer</span><span class="o">.</span><span class="n">pair_transitions</span><span class="p">()</span>
+        <span class="k">return</span> <span class="nb">buffer</span><span class="o">.</span><span class="n">matched_pairs</span>
+
+  
+</div>
+<div class="viewcode-block" id="Hart85.hart85_disaggregate_single_chunk"><a class="viewcode-back" href="../../../nilmtk.disaggregate.html#nilmtk.disaggregate.hart_85.Hart85.hart85_disaggregate_single_chunk">[docs]</a>    <span class="k">def</span> <span class="nf">hart85_disaggregate_single_chunk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">chunk</span><span class="p">,</span> <span class="n">prev</span><span class="p">,</span> <span class="n">transients</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">states</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">chunk</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">centroids</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">transient_tuple</span> <span class="ow">in</span> <span class="n">transients</span><span class="o">.</span><span class="n">itertuples</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">transient_tuple</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">chunk</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+                <span class="c"># Transient occurs before chunk has started; do nothing</span>
+                <span class="k">pass</span> 
+            <span class="k">elif</span> <span class="n">transient_tuple</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">chunk</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+                <span class="c"># Transient occurs after chunk has ended; do nothing</span>
+                <span class="k">pass</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c"># Absolute value of transient</span>
+                <span class="n">abs_value</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">transient_tuple</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+                <span class="n">positive</span> <span class="o">=</span> <span class="n">transient_tuple</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span>
+                <span class="n">absolute_value_transient_minus_centroid</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">centroids</span> <span class="o">-</span> <span class="n">abs_value</span><span class="p">)</span><span class="o">.</span><span class="n">abs</span><span class="p">())</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">transient_tuple</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                    <span class="c"># 1d data</span>
+                    <span class="n">index_least_delta</span> <span class="o">=</span> <span class="n">absolute_value_transient_minus_centroid</span><span class="o">.</span><span class="n">idxmin</span><span class="p">()</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c"># 2d data. Need to find absolute value before computing minimum</span>
+                    <span class="n">columns</span> <span class="o">=</span> <span class="n">absolute_value_transient_minus_centroid</span><span class="o">.</span><span class="n">columns</span>
+                    <span class="n">absolute_value_transient_minus_centroid</span><span class="p">[</span><span class="s">&quot;multidim&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">absolute_value_transient_minus_centroid</span><span class="p">[[</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]]]</span><span class="o">*</span><span class="n">absolute_value_transient_minus_centroid</span><span class="p">[[</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]]]</span> <span class="o">+</span> <span class="n">absolute_value_transient_minus_centroid</span><span class="p">[[</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">]]]</span><span class="o">*</span><span class="n">absolute_value_transient_minus_centroid</span><span class="p">[[</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">]]]</span>
+                    <span class="n">index_least_delta</span> <span class="o">=</span> <span class="n">absolute_value_transient_minus_centroid</span><span class="p">[</span><span class="s">&quot;multidim&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">argmin</span><span class="p">()</span>
+                <span class="c">#print(&quot;Index_least&quot;,index_least_delta)</span>
+                <span class="k">if</span> <span class="n">positive</span><span class="p">:</span>
+                    <span class="c"># Turned on</span>
+                    <span class="n">states</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">transient_tuple</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="n">index_least_delta</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c"># Turned off</span>
+                    <span class="n">states</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">transient_tuple</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="n">index_least_delta</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">return</span> <span class="n">states</span>
+</div>
+<div class="viewcode-block" id="Hart85.assign_power_from_states"><a class="viewcode-back" href="../../../nilmtk.disaggregate.html#nilmtk.disaggregate.hart_85.Hart85.assign_power_from_states">[docs]</a>    <span class="k">def</span> <span class="nf">assign_power_from_states</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">states_chunk</span><span class="p">,</span> <span class="n">prev</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">schunk</span> <span class="o">=</span> <span class="n">states_chunk</span>
+        <span class="n">di</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">ndim</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">centroids</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">appliance</span> <span class="ow">in</span> <span class="n">states_chunk</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">index</span> <span class="o">=</span> <span class="n">states_chunk</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+            <span class="n">values</span> <span class="o">=</span> <span class="n">states_chunk</span><span class="p">[[</span><span class="n">appliance</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">ndim</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
+                <span class="n">power</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">power</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">),</span> <span class="mi">2</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+            <span class="n">on</span> <span class="o">=</span> <span class="bp">False</span>
+            <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span><span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span>                     
+                <span class="k">if</span> <span class="n">values</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="c">#print(&quot;A&quot;, values[i], i)</span>
+                    <span class="n">on</span> <span class="o">=</span> <span class="bp">True</span>
+                    <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span><span class="mi">1</span> 
+                    <span class="n">power</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">centroids</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="n">appliance</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+                    <span class="k">while</span> <span class="n">values</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">!=</span><span class="mi">0</span> <span class="ow">and</span> <span class="n">i</span><span class="o">&lt;</span><span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                        <span class="c">#print(&quot;B&quot;, values[i], i)</span>
+                        <span class="n">power</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">centroids</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="n">appliance</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+                        <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+                <span class="k">elif</span> <span class="n">values</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="c">#print(&quot;C&quot;, values[i], i)</span>
+                    <span class="n">on</span> <span class="o">=</span> <span class="bp">False</span>
+                    <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span><span class="mi">1</span> 
+                    <span class="n">power</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+                    <span class="k">while</span> <span class="n">values</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">!=</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">i</span><span class="o">&lt;</span><span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                        <span class="c">#print(&quot;D&quot;, values[i], i)</span>
+                        <span class="k">if</span> <span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                            <span class="n">power</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">power</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+                        <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c">#print(&quot;E&quot;, values[i], i)</span>
+                    <span class="c"># Unknown state. If previously we know about this appliance&#39;s state, we can </span>
+                    <span class="c"># use that. Else, it defaults to 0</span>
+                    <span class="k">if</span> <span class="n">prev</span><span class="p">[</span><span class="n">appliance</span><span class="p">]</span><span class="o">==-</span><span class="mi">1</span> <span class="ow">or</span> <span class="n">prev</span><span class="p">[</span><span class="n">appliance</span><span class="p">]</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+                        <span class="c">#print(&quot;F&quot;, values[i], i)</span>
+                        <span class="n">on</span> <span class="o">=</span> <span class="bp">False</span>
+                        <span class="n">power</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+                        <span class="k">while</span> <span class="n">values</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">!=</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">i</span><span class="o">&lt;</span><span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                            <span class="c">#print(&quot;G&quot;, values[i], i)</span>
+                            <span class="k">if</span> <span class="n">ndim</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
+                                <span class="n">power</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+                            <span class="k">else</span><span class="p">:</span>
+                                <span class="n">power</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+                            <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="c">#print(&quot;H&quot;, values[i], i)</span>
+                        <span class="n">on</span> <span class="o">=</span> <span class="bp">True</span>
+                        <span class="n">power</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">centroids</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="n">appliance</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+                        <span class="k">while</span> <span class="n">values</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">!=</span><span class="mi">0</span> <span class="ow">and</span> <span class="n">i</span><span class="o">&lt;</span><span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                            <span class="c">#print(&quot;I&quot;, values[i], i)</span>
+                            <span class="n">power</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">centroids</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="n">appliance</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+                            <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+                    
+
+            <span class="n">di</span><span class="p">[</span><span class="n">appliance</span><span class="p">]</span> <span class="o">=</span> <span class="n">power</span>
+            <span class="c">#print(power.sum())</span>
+        <span class="k">return</span> <span class="n">di</span>          
+
+</div>
+<div class="viewcode-block" id="Hart85.disaggregate"><a class="viewcode-back" href="../../../nilmtk.disaggregate.html#nilmtk.disaggregate.hart_85.Hart85.disaggregate">[docs]</a>    <span class="k">def</span> <span class="nf">disaggregate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mains</span><span class="p">,</span> <span class="n">output_datastore</span><span class="p">,</span> <span class="o">**</span><span class="n">load_kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Disaggregate mains according to the model learnt previously.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        mains : nilmtk.ElecMeter or nilmtk.MeterGroup</span>
+<span class="sd">        output_datastore : instance of nilmtk.DataStore subclass</span>
+<span class="sd">            For storing power predictions from disaggregation algorithm.</span>
+<span class="sd">        output_name : string, optional</span>
+<span class="sd">            The `name` to use in the metadata for the `output_datastore`.</span>
+<span class="sd">            e.g. some sort of name for this experiment.  Defaults to </span>
+<span class="sd">            &quot;NILMTK_Hart85_&lt;date&gt;&quot;</span>
+<span class="sd">        resample_seconds : number, optional</span>
+<span class="sd">            The desired sample period in seconds.</span>
+<span class="sd">        **load_kwargs : key word arguments</span>
+<span class="sd">            Passed to `mains.power_series(**kwargs)`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">date_now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">output_name</span> <span class="o">=</span> <span class="n">load_kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s">&#39;output_name&#39;</span><span class="p">,</span> <span class="s">&#39;Hart85_&#39;</span> <span class="o">+</span> <span class="n">date_now</span><span class="p">)</span>
+        <span class="n">resample_seconds</span> <span class="o">=</span> <span class="n">load_kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s">&#39;resample_seconds&#39;</span><span class="p">,</span> <span class="mi">60</span><span class="p">)</span>
+
+        <span class="n">building_path</span> <span class="o">=</span> <span class="s">&#39;/building{}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mains</span><span class="o">.</span><span class="n">building</span><span class="p">())</span>
+        <span class="n">mains_data_location</span> <span class="o">=</span> <span class="s">&#39;{}/elec/meter1&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">building_path</span><span class="p">)</span>
+
+        <span class="p">[</span><span class="n">temp</span><span class="p">,</span> <span class="n">transients</span><span class="p">]</span> <span class="o">=</span> <span class="n">find_steady_states_transients</span><span class="p">(</span><span class="n">mains</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cols</span><span class="p">,</span> <span class="n">state_threshold</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">state_threshold</span><span class="p">,</span> <span class="n">noise_level</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">noise_level</span><span class="p">,</span> <span class="o">**</span><span class="n">load_kwargs</span><span class="p">)</span>
+
+        <span class="c"># For now ignoring the first transient</span>
+        <span class="n">transients</span> <span class="o">=</span> <span class="n">transients</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+
+        <span class="c"># Initially all appliances/meters are in unknown state (denoted by -1)</span>
+        <span class="n">prev</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+        <span class="n">learnt_meters</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">centroids</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span>
+        <span class="k">for</span> <span class="n">meter</span> <span class="ow">in</span> <span class="n">learnt_meters</span><span class="p">:</span>
+            <span class="n">prev</span><span class="p">[</span><span class="n">meter</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+
+        <span class="n">states_total</span> <span class="o">=</span> <span class="p">[]</span> 
+        <span class="n">timeframes</span><span class="o">=</span><span class="p">[]</span>
+        <span class="c"># Now iterating over mains data and disaggregating chunk by chunk</span>
+        <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">mains</span><span class="o">.</span><span class="n">power_series</span><span class="p">(</span><span class="o">**</span><span class="n">load_kwargs</span><span class="p">):</span>
+            <span class="c"># Record metadata</span>
+            <span class="n">timeframes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">chunk</span><span class="o">.</span><span class="n">timeframe</span><span class="p">)</span>
+            <span class="n">measurement</span> <span class="o">=</span> <span class="n">chunk</span><span class="o">.</span><span class="n">name</span>
+            <span class="n">states_chunk</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hart85_disaggregate_single_chunk</span><span class="p">(</span><span class="n">chunk</span><span class="p">,</span> <span class="n">prev</span><span class="p">,</span> <span class="n">transients</span><span class="p">)</span>
+            <span class="n">prev</span> <span class="o">=</span> <span class="n">states_chunk</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+            <span class="n">power_chunk_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">assign_power_from_states</span><span class="p">(</span><span class="n">states_chunk</span><span class="p">,</span> <span class="n">prev</span><span class="p">)</span>
+            <span class="c">#self.po = power_chunk_dict</span>
+            <span class="n">cols</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">MultiIndex</span><span class="o">.</span><span class="n">from_tuples</span><span class="p">([</span><span class="n">chunk</span><span class="o">.</span><span class="n">name</span><span class="p">])</span>
+            <span class="k">for</span> <span class="n">meter</span> <span class="ow">in</span> <span class="n">power_chunk_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="n">output_datastore</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&#39;{}/elec/meter{:d}&#39;</span>
+                                        <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">building_path</span><span class="p">,</span> <span class="n">meter</span><span class="o">+</span><span class="mi">2</span><span class="p">),</span>
+                                        <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">power_chunk_dict</span><span class="p">[</span><span class="n">meter</span><span class="p">],</span>
+                                                     <span class="n">index</span><span class="o">=</span><span class="n">states_chunk</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
+                                                     <span class="n">columns</span><span class="o">=</span><span class="n">cols</span><span class="p">))</span>
+       
+            <span class="n">output_datastore</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="n">mains_data_location</span><span class="p">,</span>
+                                    <span class="n">value</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">chunk</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">cols</span><span class="p">))</span>
+
+        <span class="c"># DataSet and MeterDevice metadata:</span>
+        <span class="n">meter_devices</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s">&#39;Hart85&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s">&#39;model&#39;</span><span class="p">:</span> <span class="s">&#39;Hart85&#39;</span><span class="p">,</span>
+                <span class="s">&#39;sample_period&#39;</span><span class="p">:</span> <span class="n">resample_seconds</span><span class="p">,</span>
+                <span class="s">&#39;max_sample_period&#39;</span><span class="p">:</span> <span class="n">resample_seconds</span><span class="p">,</span>
+                <span class="s">&#39;measurements&#39;</span><span class="p">:</span> <span class="p">[{</span>
+                    <span class="s">&#39;physical_quantity&#39;</span><span class="p">:</span> <span class="n">measurement</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                    <span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="n">measurement</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="p">}]</span>
+            <span class="p">},</span>
+            <span class="s">&#39;mains&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s">&#39;model&#39;</span><span class="p">:</span> <span class="s">&#39;mains&#39;</span><span class="p">,</span>
+                <span class="s">&#39;sample_period&#39;</span><span class="p">:</span> <span class="n">resample_seconds</span><span class="p">,</span>
+                <span class="s">&#39;max_sample_period&#39;</span><span class="p">:</span> <span class="n">resample_seconds</span><span class="p">,</span>
+                <span class="s">&#39;measurements&#39;</span><span class="p">:</span> <span class="p">[{</span>
+                    <span class="s">&#39;physical_quantity&#39;</span><span class="p">:</span> <span class="n">measurement</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                    <span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="n">measurement</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="p">}]</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="n">merged_timeframes</span> <span class="o">=</span> <span class="n">merge_timeframes</span><span class="p">(</span><span class="n">timeframes</span><span class="p">,</span> <span class="n">gap</span><span class="o">=</span><span class="n">resample_seconds</span><span class="p">)</span>
+        <span class="n">total_timeframe</span> <span class="o">=</span> <span class="n">TimeFrame</span><span class="p">(</span><span class="n">merged_timeframes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">start</span><span class="p">,</span>
+                                    <span class="n">merged_timeframes</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">end</span><span class="p">)</span>
+
+        <span class="n">dataset_metadata</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;name&#39;</span><span class="p">:</span> <span class="n">output_name</span><span class="p">,</span> <span class="s">&#39;date&#39;</span><span class="p">:</span> <span class="n">date_now</span><span class="p">,</span>
+                            <span class="s">&#39;meter_devices&#39;</span><span class="p">:</span> <span class="n">meter_devices</span><span class="p">,</span>
+                            <span class="s">&#39;timeframe&#39;</span><span class="p">:</span> <span class="n">total_timeframe</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()}</span>
+        <span class="n">output_datastore</span><span class="o">.</span><span class="n">save_metadata</span><span class="p">(</span><span class="s">&#39;/&#39;</span><span class="p">,</span> <span class="n">dataset_metadata</span><span class="p">)</span>
+
+        <span class="c"># Building metadata</span>
+
+        <span class="c"># Mains meter:</span>
+        <span class="n">elec_meters</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">mains</span><span class="o">.</span><span class="n">instance</span><span class="p">():</span> <span class="p">{</span>
+                <span class="s">&#39;device_model&#39;</span><span class="p">:</span> <span class="s">&#39;mains&#39;</span><span class="p">,</span>
+                <span class="s">&#39;site_meter&#39;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
+                <span class="s">&#39;data_location&#39;</span><span class="p">:</span> <span class="n">mains_data_location</span><span class="p">,</span>
+                <span class="s">&#39;preprocessing_applied&#39;</span><span class="p">:</span> <span class="p">{},</span>  <span class="c"># TODO</span>
+                <span class="s">&#39;statistics&#39;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s">&#39;timeframe&#39;</span><span class="p">:</span> <span class="n">total_timeframe</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(),</span>
+                    <span class="s">&#39;good_sections&#39;</span><span class="p">:</span> <span class="n">list_of_timeframe_dicts</span><span class="p">(</span><span class="n">merged_timeframes</span><span class="p">)</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="c"># Submeters:</span>
+        <span class="c"># Starts at 2 because meter 1 is mains.</span>
+        <span class="k">for</span> <span class="n">chan</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">centroids</span><span class="p">)</span><span class="o">+</span><span class="mi">2</span><span class="p">):</span>
+            <span class="n">elec_meters</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
+                <span class="n">chan</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s">&#39;device_model&#39;</span><span class="p">:</span> <span class="s">&#39;Hart85&#39;</span><span class="p">,</span>
+                    <span class="s">&#39;submeter_of&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                    <span class="s">&#39;data_location&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;{}/elec/meter{:d}&#39;</span>
+                                      <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">building_path</span><span class="p">,</span> <span class="n">chan</span><span class="p">)),</span>
+                    <span class="s">&#39;preprocessing_applied&#39;</span><span class="p">:</span> <span class="p">{},</span>  <span class="c"># TODO</span>
+                    <span class="s">&#39;statistics&#39;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s">&#39;timeframe&#39;</span><span class="p">:</span> <span class="n">total_timeframe</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(),</span>
+                        <span class="s">&#39;good_sections&#39;</span><span class="p">:</span> <span class="n">list_of_timeframe_dicts</span><span class="p">(</span><span class="n">merged_timeframes</span><span class="p">)</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+            <span class="p">})</span>
+
+       
+        <span class="n">appliances</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">centroids</span><span class="o">.</span><span class="n">index</span><span class="p">)):</span>
+            <span class="n">appliance</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s">&#39;meters&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">2</span><span class="p">],</span>
+                    <span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;unknown&#39;</span><span class="p">,</span>
+                    <span class="s">&#39;instance&#39;</span><span class="p">:</span> <span class="n">i</span>
+                        <span class="c"># TODO this `instance` will only be correct when the</span>
+                        <span class="c"># model is trained on the same house as it is tested on.</span>
+                        <span class="c"># https://github.com/nilmtk/nilmtk/issues/194</span>
+                    <span class="p">}</span>
+            <span class="n">appliances</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">appliance</span><span class="p">)</span>
+
+
+        <span class="n">building_metadata</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s">&#39;instance&#39;</span><span class="p">:</span> <span class="n">mains</span><span class="o">.</span><span class="n">building</span><span class="p">(),</span>
+            <span class="s">&#39;elec_meters&#39;</span><span class="p">:</span> <span class="n">elec_meters</span><span class="p">,</span>
+            <span class="s">&#39;appliances&#39;</span><span class="p">:</span><span class="n">appliances</span>
+        <span class="p">}</span>
+
+        <span class="n">output_datastore</span><span class="o">.</span><span class="n">save_metadata</span><span class="p">(</span><span class="n">building_path</span><span class="p">,</span> <span class="n">building_metadata</span><span class="p">)</span>
+
+</div>
+    <span class="sd">&quot;&quot;&quot;        </span>
+<span class="sd">        </span>
+<span class="sd">    def export_model(self, filename):</span>
+<span class="sd">        model_copy = {}</span>
+<span class="sd">        for appliance, appliance_states in self.model.iteritems():</span>
+<span class="sd">            model_copy[</span>
+<span class="sd">                &quot;{}_{}&quot;.format(appliance.name, appliance.instance)] = appliance_states</span>
+<span class="sd">        j = json.dumps(model_copy)</span>
+<span class="sd">        with open(filename, &#39;w+&#39;) as f:</span>
+<span class="sd">            f.write(j)</span>
+
+<span class="sd">    def import_model(self, filename):</span>
+<span class="sd">        with open(filename, &#39;r&#39;) as f:</span>
+<span class="sd">            temp = json.loads(f.read())</span>
+<span class="sd">        for appliance, centroids in temp.iteritems():</span>
+<span class="sd">            appliance_name = appliance.split(&quot;_&quot;)[0].encode(&quot;ascii&quot;)</span>
+<span class="sd">            appliance_instance = int(appliance.split(&quot;_&quot;)[1])</span>
+<span class="sd">            appliance_name_instance = ApplianceID(</span>
+<span class="sd">                appliance_name, appliance_instance)</span>
+<span class="sd">            self.model[appliance_name_instance] = centroids</span>
+<span class="sd">    &quot;&quot;&quot;</span></div>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2014, NILMTK Authors.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.3.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

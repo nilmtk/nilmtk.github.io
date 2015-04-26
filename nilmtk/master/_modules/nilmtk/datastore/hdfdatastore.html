@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>nilmtk.datastore.hdfdatastore &mdash; NILMTK 0.2 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/bootstrap-3.2.0/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/bootstrap-3.2.0/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.2',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../../../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../../_static/bootstrap-3.2.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../../_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="NILMTK 0.2 documentation" href="../../../index.html" />
+    <link rel="up" title="nilmtk.datastore" href="../datastore.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../index.html">
+          NILMTK</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.2</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="https://github.com/nilmtk/nilmtk">github</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro_nilmtk_v0_2.html">Intro to NILMTK v0.2</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../convert_data_to_NILMTK_format.html">Convert data to NILMTK format and load into NILMTK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../elecmeter_and_metergroup.html">MeterGroup, ElecMeter, selection and basic statistics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pipeline_preprocessing_more_stats.html">Processing pipeline, preprocessing and more stats</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../disaggregation_and_metrics.html">Disaggregation and Metrics</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../writing_a_dataset_converter.html">Writing a dataset converter</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Change log</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../nilmtk.html">nilmtk package</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      
+  <h1>Source code for nilmtk.datastore.hdfdatastore</h1><div class="highlight"><pre>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">division</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">repeat</span><span class="p">,</span> <span class="n">tee</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
+<span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">yaml</span>
+<span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">isdir</span><span class="p">,</span> <span class="n">isfile</span><span class="p">,</span> <span class="n">join</span><span class="p">,</span> <span class="n">exists</span><span class="p">,</span> <span class="n">dirname</span>
+<span class="kn">from</span> <span class="nn">os</span> <span class="kn">import</span> <span class="n">listdir</span><span class="p">,</span> <span class="n">makedirs</span><span class="p">,</span> <span class="n">remove</span>
+<span class="kn">from</span> <span class="nn">shutil</span> <span class="kn">import</span> <span class="n">rmtree</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">nilm_metadata.convert_yaml_to_hdf5</span> <span class="kn">import</span> <span class="n">_load_file</span>
+<span class="kn">from</span> <span class="nn">nilmtk.timeframe</span> <span class="kn">import</span> <span class="n">TimeFrame</span>
+<span class="kn">from</span> <span class="nn">nilmtk.timeframegroup</span> <span class="kn">import</span> <span class="n">TimeFrameGroup</span>
+<span class="kn">from</span> <span class="nn">nilmtk.node</span> <span class="kn">import</span> <span class="n">Node</span>
+<span class="kn">from</span> <span class="nn">.datastore</span> <span class="kn">import</span> <span class="n">DataStore</span><span class="p">,</span> <span class="n">MAX_MEM_ALLOWANCE_IN_BYTES</span>
+<span class="kn">from</span> <span class="nn">nilmtk.docinherit</span> <span class="kn">import</span> <span class="n">doc_inherit</span>
+
+<span class="c"># do not edit! added by PythonBreakpoints</span>
+<span class="kn">from</span> <span class="nn">pdb</span> <span class="kn">import</span> <span class="n">set_trace</span> <span class="k">as</span> <span class="n">_breakpoint</span>
+
+
+<div class="viewcode-block" id="HDFDataStore"><a class="viewcode-back" href="../../../nilmtk.datastore.html#nilmtk.datastore.hdfdatastore.HDFDataStore">[docs]</a><span class="k">class</span> <span class="nc">HDFDataStore</span><span class="p">(</span><span class="n">DataStore</span><span class="p">):</span>
+
+    <span class="nd">@doc_inherit</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s">&#39;a&#39;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s">&#39;a&#39;</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">isfile</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s">&quot;No such file as &quot;</span> <span class="o">+</span> <span class="n">filename</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">store</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">HDFStore</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">mode</span><span class="p">,</span> <span class="n">complevel</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span> <span class="n">complib</span><span class="o">=</span><span class="s">&#39;blosc&#39;</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">HDFDataStore</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
+
+    <span class="nd">@doc_inherit</span>
+    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">store</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+
+    <span class="nd">@doc_inherit</span>
+<div class="viewcode-block" id="HDFDataStore.load"><a class="viewcode-back" href="../../../nilmtk.datastore.html#nilmtk.datastore.hdfdatastore.HDFDataStore.load">[docs]</a>    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">sections</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">n_look_ahead_rows</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+             <span class="n">chunksize</span><span class="o">=</span><span class="n">MAX_MEM_ALLOWANCE_IN_BYTES</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        
+        <span class="c"># TODO: calculate chunksize default based on physical </span>
+        <span class="c"># memory installed and number of columns</span>
+
+        <span class="c"># Make sure key has a slash at the front but not at the end.</span>
+        <span class="k">if</span> <span class="n">key</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="s">&#39;/&#39;</span><span class="p">:</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="s">&#39;/&#39;</span> <span class="o">+</span> <span class="n">key</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">key</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;/&#39;</span><span class="p">:</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="n">key</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="c"># Make sure chunksize is an int otherwise `range` complains later.</span>
+        <span class="n">chunksize</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">(</span><span class="n">chunksize</span><span class="p">)</span>
+
+        <span class="c"># Set `sections` variable</span>
+        <span class="n">sections</span> <span class="o">=</span> <span class="p">[</span><span class="n">TimeFrame</span><span class="p">()]</span> <span class="k">if</span> <span class="n">sections</span> <span class="ow">is</span> <span class="bp">None</span> <span class="k">else</span> <span class="n">sections</span>
+        <span class="n">sections</span> <span class="o">=</span> <span class="n">TimeFrameGroup</span><span class="p">(</span><span class="n">sections</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">&quot;HDFDataStore.load. key=&#39;{}&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">all_sections_smaller_than_chunksize</span> <span class="o">=</span> <span class="bp">True</span>
+
+        <span class="k">for</span> <span class="n">section</span> <span class="ow">in</span> <span class="n">sections</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                <span class="k">print</span><span class="p">(</span><span class="s">&quot;   &quot;</span><span class="p">,</span> <span class="n">section</span><span class="p">)</span>
+            <span class="n">window_intersect</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">section</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">window_intersect</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+                <span class="n">data</span><span class="o">.</span><span class="n">timeframe</span> <span class="o">=</span> <span class="n">section</span>
+                <span class="k">yield</span> <span class="n">data</span>
+                <span class="k">continue</span>
+
+            <span class="n">terms</span> <span class="o">=</span> <span class="n">window_intersect</span><span class="o">.</span><span class="n">query_terms</span><span class="p">(</span><span class="s">&#39;window_intersect&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">terms</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="n">section_start_i</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="n">section_end_i</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">get_storer</span><span class="p">(</span><span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">nrows</span>
+                <span class="k">if</span> <span class="n">section_end_i</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+                    <span class="n">data</span><span class="o">.</span><span class="n">timeframe</span> <span class="o">=</span> <span class="n">section</span>
+                    <span class="k">yield</span> <span class="n">data</span>
+                    <span class="k">continue</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">coords</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">select_as_coordinates</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span> <span class="n">where</span><span class="o">=</span><span class="n">terms</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">AttributeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="o">==</span> <span class="p">(</span><span class="s">&quot;&#39;NoneType&#39; object has no attribute &quot;</span>
+                                  <span class="s">&quot;&#39;read_coordinates&#39;&quot;</span><span class="p">):</span>
+                        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s">&quot;key &#39;{}&#39; not found&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">raise</span>
+                <span class="n">n_coords</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">coords</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">n_coords</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+                    <span class="n">data</span><span class="o">.</span><span class="n">timeframe</span> <span class="o">=</span> <span class="n">window_intersect</span>
+                    <span class="k">yield</span> <span class="n">data</span>
+                    <span class="k">continue</span>
+
+                <span class="n">section_start_i</span> <span class="o">=</span> <span class="n">coords</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">section_end_i</span>   <span class="o">=</span> <span class="n">coords</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                <span class="k">del</span> <span class="n">coords</span>
+            <span class="n">slice_starts</span> <span class="o">=</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">section_start_i</span><span class="p">,</span> <span class="n">section_end_i</span><span class="p">,</span> <span class="n">chunksize</span><span class="p">)</span>
+            <span class="n">n_chunks</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">((</span><span class="n">section_end_i</span> <span class="o">-</span> <span class="n">section_start_i</span><span class="p">)</span> <span class="o">/</span> <span class="n">chunksize</span><span class="p">))</span>
+
+            <span class="k">if</span> <span class="n">n_chunks</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">all_sections_smaller_than_chunksize</span> <span class="o">=</span> <span class="bp">False</span>
+
+            <span class="k">for</span> <span class="n">chunk_i</span><span class="p">,</span> <span class="n">chunk_start_i</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">slice_starts</span><span class="p">):</span>
+                <span class="n">chunk_end_i</span> <span class="o">=</span> <span class="n">chunk_start_i</span> <span class="o">+</span> <span class="n">chunksize</span>
+                <span class="n">there_are_more_subchunks</span> <span class="o">=</span> <span class="p">(</span><span class="n">chunk_i</span> <span class="o">&lt;</span> <span class="n">n_chunks</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">chunk_end_i</span> <span class="o">&gt;</span> <span class="n">section_end_i</span><span class="p">:</span>
+                    <span class="n">chunk_end_i</span> <span class="o">=</span> <span class="n">section_end_i</span>
+                <span class="n">chunk_end_i</span> <span class="o">+=</span> <span class="mi">1</span>
+
+                <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">cols</span><span class="p">,</span> 
+                                         <span class="n">start</span><span class="o">=</span><span class="n">chunk_start_i</span><span class="p">,</span> <span class="n">stop</span><span class="o">=</span><span class="n">chunk_end_i</span><span class="p">)</span>
+
+                <span class="c"># if len(data) &lt;= 2:</span>
+                <span class="c">#     yield pd.DataFrame()</span>
+
+                <span class="c"># Load look ahead if necessary</span>
+                <span class="k">if</span> <span class="n">n_look_ahead_rows</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">index</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="n">look_ahead_start_i</span> <span class="o">=</span> <span class="n">chunk_end_i</span>
+                        <span class="n">look_ahead_end_i</span> <span class="o">=</span> <span class="n">look_ahead_start_i</span> <span class="o">+</span> <span class="n">n_look_ahead_rows</span>
+                        <span class="k">try</span><span class="p">:</span>
+                            <span class="n">data</span><span class="o">.</span><span class="n">look_ahead</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">select</span><span class="p">(</span>
+                                <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">cols</span><span class="p">,</span> 
+                                <span class="n">start</span><span class="o">=</span><span class="n">look_ahead_start_i</span><span class="p">,</span>
+                                <span class="n">stop</span><span class="o">=</span><span class="n">look_ahead_end_i</span><span class="p">)</span>
+                        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                            <span class="n">data</span><span class="o">.</span><span class="n">look_ahead</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">data</span><span class="o">.</span><span class="n">look_ahead</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+
+                <span class="n">data</span><span class="o">.</span><span class="n">timeframe</span> <span class="o">=</span> <span class="n">_timeframe_for_chunk</span><span class="p">(</span><span class="n">there_are_more_subchunks</span><span class="p">,</span> 
+                                                      <span class="n">chunk_i</span><span class="p">,</span> <span class="n">window_intersect</span><span class="p">,</span>
+                                                      <span class="n">data</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+                <span class="k">yield</span> <span class="n">data</span>
+                <span class="k">del</span> <span class="n">data</span>
+</div>
+    <span class="nd">@doc_inherit</span>
+<div class="viewcode-block" id="HDFDataStore.append"><a class="viewcode-back" href="../../../nilmtk.datastore.html#nilmtk.datastore.hdfdatastore.HDFDataStore.append">[docs]</a>    <span class="k">def</span> <span class="nf">append</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        key : str</span>
+<span class="sd">        value : pd.DataFrame</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        To quote the Pandas documentation for pandas.io.pytables.HDFStore.append:</span>
+<span class="sd">        Append does *not* check if data being appended overlaps with existing</span>
+<span class="sd">        data in the table, so be careful.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">value</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+</div>
+    <span class="nd">@doc_inherit</span>
+<div class="viewcode-block" id="HDFDataStore.put"><a class="viewcode-back" href="../../../nilmtk.datastore.html#nilmtk.datastore.hdfdatastore.HDFDataStore.put">[docs]</a>    <span class="k">def</span> <span class="nf">put</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="s">&#39;table&#39;</span><span class="p">,</span> 
+                       <span class="n">expectedrows</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">),</span> <span class="n">index</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">create_table_index</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;index&#39;</span><span class="p">],</span> 
+                                      <span class="n">kind</span><span class="o">=</span><span class="s">&#39;full&#39;</span><span class="p">,</span> <span class="n">optlevel</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+</div>
+    <span class="nd">@doc_inherit</span>
+<div class="viewcode-block" id="HDFDataStore.remove"><a class="viewcode-back" href="../../../nilmtk.datastore.html#nilmtk.datastore.hdfdatastore.HDFDataStore.remove">[docs]</a>    <span class="k">def</span> <span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+</div>
+    <span class="nd">@doc_inherit</span>
+<div class="viewcode-block" id="HDFDataStore.load_metadata"><a class="viewcode-back" href="../../../nilmtk.datastore.html#nilmtk.datastore.hdfdatastore.HDFDataStore.load_metadata">[docs]</a>    <span class="k">def</span> <span class="nf">load_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s">&#39;/&#39;</span><span class="p">):</span>    
+        <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s">&#39;/&#39;</span><span class="p">:</span>
+            <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">root</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">get_node</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+
+        <span class="n">metadata</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">_v_attrs</span><span class="o">.</span><span class="n">metadata</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">metadata</span>
+</div>
+    <span class="nd">@doc_inherit</span>
+<div class="viewcode-block" id="HDFDataStore.save_metadata"><a class="viewcode-back" href="../../../nilmtk.datastore.html#nilmtk.datastore.hdfdatastore.HDFDataStore.save_metadata">[docs]</a>    <span class="k">def</span> <span class="nf">save_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">metadata</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s">&#39;/&#39;</span><span class="p">:</span>
+            <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">root</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">get_node</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+
+        <span class="n">node</span><span class="o">.</span><span class="n">_v_attrs</span><span class="o">.</span><span class="n">metadata</span> <span class="o">=</span> <span class="n">metadata</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+</div>
+    <span class="nd">@doc_inherit</span>
+<div class="viewcode-block" id="HDFDataStore.elements_below_key"><a class="viewcode-back" href="../../../nilmtk.datastore.html#nilmtk.datastore.hdfdatastore.HDFDataStore.elements_below_key">[docs]</a>    <span class="k">def</span> <span class="nf">elements_below_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s">&#39;/&#39;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s">&#39;/&#39;</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">key</span><span class="p">:</span>
+            <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">root</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">get_node</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">node</span><span class="o">.</span><span class="n">_v_children</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+</div>
+    <span class="nd">@doc_inherit</span>
+<div class="viewcode-block" id="HDFDataStore.close"><a class="viewcode-back" href="../../../nilmtk.datastore.html#nilmtk.datastore.hdfdatastore.HDFDataStore.close">[docs]</a>    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</div>
+    <span class="nd">@doc_inherit</span>
+<div class="viewcode-block" id="HDFDataStore.open"><a class="viewcode-back" href="../../../nilmtk.datastore.html#nilmtk.datastore.hdfdatastore.HDFDataStore.open">[docs]</a>    <span class="k">def</span> <span class="nf">open</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s">&#39;a&#39;</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="n">mode</span><span class="p">)</span>
+        </div>
+    <span class="nd">@doc_inherit</span>
+<div class="viewcode-block" id="HDFDataStore.get_timeframe"><a class="viewcode-back" href="../../../nilmtk.datastore.html#nilmtk.datastore.hdfdatastore.HDFDataStore.get_timeframe">[docs]</a>    <span class="k">def</span> <span class="nf">get_timeframe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        nilmtk.TimeFrame of entire table after intersecting with self.window.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">data_start_date</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">data_end_date</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">start</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">timeframe</span> <span class="o">=</span> <span class="n">TimeFrame</span><span class="p">(</span><span class="n">data_start_date</span><span class="p">,</span> <span class="n">data_end_date</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">timeframe</span><span class="p">)</span>
+    </div>
+    <span class="k">def</span> <span class="nf">_check_columns</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">columns</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">columns</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_table_has_column_names</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">columns</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s">&#39;at least one of &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">columns</span><span class="p">)</span> <span class="o">+</span> 
+                           <span class="s">&#39; is not a valid column&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_table_has_column_names</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">cols</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        cols : string or list of strings</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        boolean</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">cols</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_key</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cols</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">cols</span><span class="p">]</span>
+        <span class="n">query_cols</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">cols</span><span class="p">)</span>
+        <span class="n">table_cols</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_column_names</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span><span class="s">&#39;index&#39;</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">query_cols</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="n">table_cols</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_column_names</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_key</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="n">storer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_storer</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="n">col_names</span> <span class="o">=</span> <span class="n">storer</span><span class="o">.</span><span class="n">non_index_axes</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">:][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">col_names</span>
+
+    <span class="k">def</span> <span class="nf">_check_data_will_fit_in_memory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">nrows</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="c"># Check we won&#39;t use too much memory</span>
+        <span class="n">mem_requirement</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_estimate_memory_requirement</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">nrows</span><span class="p">,</span> <span class="n">cols</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">mem_requirement</span> <span class="o">&gt;</span> <span class="n">MAX_MEM_ALLOWANCE_IN_BYTES</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">MemoryError</span><span class="p">(</span><span class="s">&#39;Requested data would use {:.3f}MBytes:&#39;</span>
+                              <span class="s">&#39; too much memory.&#39;</span>
+                              <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mem_requirement</span> <span class="o">/</span> <span class="mf">1E6</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">_estimate_memory_requirement</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">nrows</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">paranoid</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns estimated mem requirement in bytes.&quot;&quot;&quot;</span>
+        <span class="n">BYTES_PER_ELEMENT</span> <span class="o">=</span> <span class="mi">4</span>
+        <span class="n">BYTES_PER_TIMESTAMP</span> <span class="o">=</span> <span class="mi">8</span>
+        <span class="k">if</span> <span class="n">paranoid</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_check_key</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">cols</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">cols</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_column_names</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">paranoid</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_check_columns</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">cols</span><span class="p">)</span>
+        <span class="n">ncols</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">cols</span><span class="p">)</span>
+        <span class="n">est_mem_usage_for_data</span> <span class="o">=</span> <span class="n">nrows</span> <span class="o">*</span> <span class="n">ncols</span> <span class="o">*</span> <span class="n">BYTES_PER_ELEMENT</span>
+        <span class="n">est_mem_usage_for_index</span> <span class="o">=</span> <span class="n">nrows</span> <span class="o">*</span> <span class="n">BYTES_PER_TIMESTAMP</span>
+        <span class="k">if</span> <span class="n">cols</span> <span class="o">==</span> <span class="p">[</span><span class="s">&#39;index&#39;</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="n">est_mem_usage_for_index</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">est_mem_usage_for_data</span> <span class="o">+</span> <span class="n">est_mem_usage_for_index</span>
+       
+    <span class="k">def</span> <span class="nf">_nrows</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">timeframe</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        nrows : int</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">timeframe_intersect</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">timeframe</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">timeframe_intersect</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+            <span class="n">nrows</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">elif</span> <span class="n">timeframe_intersect</span><span class="p">:</span>
+            <span class="n">terms</span> <span class="o">=</span> <span class="n">timeframe_intersect</span><span class="o">.</span><span class="n">query_terms</span><span class="p">(</span><span class="s">&#39;timeframe_intersect&#39;</span><span class="p">)</span>
+            <span class="n">coords</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">select_as_coordinates</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">terms</span><span class="p">)</span>
+            <span class="n">nrows</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">coords</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">storer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_storer</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+            <span class="n">nrows</span> <span class="o">=</span> <span class="n">storer</span><span class="o">.</span><span class="n">nrows</span>
+        <span class="k">return</span> <span class="n">nrows</span>
+    
+    <span class="k">def</span> <span class="nf">_keys</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_get_storer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_key</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="n">storer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">get_storer</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">storer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">,</span> <span class="s">&quot;cannot get storer for key = &quot;</span> <span class="o">+</span> <span class="n">key</span>
+        <span class="k">return</span> <span class="n">storer</span>
+    
+    <span class="k">def</span> <span class="nf">_check_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        key : string</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_keys</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="n">key</span> <span class="o">+</span> <span class="s">&#39; not in store&#39;</span><span class="p">)</span>
+        
+</div>
+<span class="k">def</span> <span class="nf">_timeframe_for_chunk</span><span class="p">(</span><span class="n">there_are_more_subchunks</span><span class="p">,</span> <span class="n">chunk_i</span><span class="p">,</span> <span class="n">window_intersect</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
+    <span class="n">start</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">end</span> <span class="o">=</span> <span class="bp">None</span>
+
+    <span class="c"># Test if there are any more subchunks</span>
+    <span class="k">if</span> <span class="n">there_are_more_subchunks</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">chunk_i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">start</span> <span class="o">=</span> <span class="n">window_intersect</span><span class="o">.</span><span class="n">start</span>
+    <span class="k">elif</span> <span class="n">chunk_i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="c"># This is the last subchunk</span>
+        <span class="n">end</span> <span class="o">=</span> <span class="n">window_intersect</span><span class="o">.</span><span class="n">end</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c"># Just a single &#39;subchunk&#39;</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="n">window_intersect</span><span class="o">.</span><span class="n">start</span>
+        <span class="n">end</span> <span class="o">=</span> <span class="n">window_intersect</span><span class="o">.</span><span class="n">end</span>
+
+    <span class="k">if</span> <span class="n">start</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">end</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">end</span> <span class="o">=</span> <span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">TimeFrame</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2014, NILMTK Authors.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.3.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>nilmtk.timeframegroup &mdash; NILMTK 0.2 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/bootstrap-3.2.0/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/bootstrap-3.2.0/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.2',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-3.2.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="NILMTK 0.2 documentation" href="../../index.html" />
+    <link rel="up" title="nilmtk" href="../nilmtk.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../index.html">
+          NILMTK</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.2</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="https://github.com/nilmtk/nilmtk">github</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../intro_nilmtk_v0_2.html">Intro to NILMTK v0.2</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../convert_data_to_NILMTK_format.html">Convert data to NILMTK format and load into NILMTK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../elecmeter_and_metergroup.html">MeterGroup, ElecMeter, selection and basic statistics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../pipeline_preprocessing_more_stats.html">Processing pipeline, preprocessing and more stats</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../disaggregation_and_metrics.html">Disaggregation and Metrics</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../writing_a_dataset_converter.html">Writing a dataset converter</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Change log</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../nilmtk.html">nilmtk package</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      
+  <h1>Source code for nilmtk.timeframegroup</h1><div class="highlight"><pre>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">division</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">timedelta</span>
+
+<span class="c"># NILMTK imports</span>
+<span class="kn">from</span> <span class="nn">nilmtk.consts</span> <span class="kn">import</span> <span class="n">SECS_PER_DAY</span>
+<span class="kn">from</span> <span class="nn">nilmtk.timeframe</span> <span class="kn">import</span> <span class="n">TimeFrame</span>
+
+<div class="viewcode-block" id="TimeFrameGroup"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.timeframegroup.TimeFrameGroup">[docs]</a><span class="k">class</span> <span class="nc">TimeFrameGroup</span><span class="p">(</span><span class="nb">list</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A collection of nilmtk.TimeFrame objects.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeframes</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">timeframes</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">tseries</span><span class="o">.</span><span class="n">period</span><span class="o">.</span><span class="n">PeriodIndex</span><span class="p">):</span>
+            <span class="n">periods</span> <span class="o">=</span> <span class="n">timeframes</span>
+            <span class="n">timeframes</span> <span class="o">=</span> <span class="p">[</span><span class="n">TimeFrame</span><span class="p">(</span><span class="n">period</span><span class="o">.</span><span class="n">start_time</span><span class="p">,</span> <span class="n">period</span><span class="o">.</span><span class="n">end_time</span><span class="p">)</span> 
+                          <span class="k">for</span> <span class="n">period</span> <span class="ow">in</span> <span class="n">periods</span><span class="p">]</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="n">timeframes</span><span class="p">]</span> <span class="k">if</span> <span class="n">timeframes</span> <span class="k">else</span> <span class="p">[]</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">TimeFrameGroup</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+
+<div class="viewcode-block" id="TimeFrameGroup.plot"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.timeframegroup.TimeFrameGroup.plot">[docs]</a>    <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">gap</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s">&#39;b&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">axis_date</span><span class="p">()</span>
+        <span class="n">height</span> <span class="o">-=</span> <span class="n">gap</span> <span class="o">*</span> <span class="mi">2</span>
+        <span class="k">for</span> <span class="n">timeframe</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="n">length</span> <span class="o">=</span> <span class="n">timeframe</span><span class="o">.</span><span class="n">timedelta</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span> <span class="o">/</span> <span class="n">SECS_PER_DAY</span>
+            <span class="n">bottom_left_corner</span> <span class="o">=</span> <span class="p">(</span><span class="n">timeframe</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="n">gap</span><span class="p">)</span>
+            <span class="n">rect</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">Rectangle</span><span class="p">(</span><span class="n">bottom_left_corner</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> 
+                                 <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">rect</span><span class="p">)</span>
+
+        <span class="n">ax</span><span class="o">.</span><span class="n">autoscale_view</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">ax</span>
+</div>
+<div class="viewcode-block" id="TimeFrameGroup.intersection"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.timeframegroup.TimeFrameGroup.intersection">[docs]</a>    <span class="k">def</span> <span class="nf">intersection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns a new TimeFrameGroup of self masked by other.</span>
+
+<span class="sd">        Illustrated example:</span>
+
+<span class="sd">         self.good_sections():  |######----#####-----######|</span>
+<span class="sd">        other.good_sections():  |---##---####----##-----###|</span>
+<span class="sd">               intersection():  |---##-----##-----------###|</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="p">(</span><span class="n">TimeFrameGroup</span><span class="p">,</span> <span class="nb">list</span><span class="p">))</span>
+        <span class="n">new_tfg</span> <span class="o">=</span> <span class="n">TimeFrameGroup</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">self_timeframe</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">other_timeframe</span> <span class="ow">in</span> <span class="n">other</span><span class="p">:</span>
+                <span class="n">intersect</span> <span class="o">=</span> <span class="n">self_timeframe</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">other_timeframe</span><span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">intersect</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+                    <span class="n">new_tfg</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">intersect</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">new_tfg</span>
+</div>
+<div class="viewcode-block" id="TimeFrameGroup.uptime"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.timeframegroup.TimeFrameGroup.uptime">[docs]</a>    <span class="k">def</span> <span class="nf">uptime</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns total timedelta of all timeframes joined together.&quot;&quot;&quot;</span>
+        <span class="n">uptime</span> <span class="o">=</span> <span class="n">timedelta</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">timeframe</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="n">uptime</span> <span class="o">+=</span> <span class="n">timeframe</span><span class="o">.</span><span class="n">timedelta</span>
+        <span class="k">return</span> <span class="n">uptime</span>
+    </div></div>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2014, NILMTK Authors.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.3.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

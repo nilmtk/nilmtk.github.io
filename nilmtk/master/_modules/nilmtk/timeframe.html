@@ -9,8 +9,8 @@
     
     <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/bootstrap-3.1.0/css/bootstrap.min.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/bootstrap-3.1.0/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/bootstrap-3.2.0/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/bootstrap-3.2.0/css/bootstrap-theme.min.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     
     <script type="text/javascript">
@@ -28,10 +28,10 @@
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="../../_static/bootstrap-3.1.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-3.2.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
     <link rel="top" title="NILMTK 0.2 documentation" href="../../index.html" />
-    <link rel="up" title="Module code" href="../index.html" />
+    <link rel="up" title="nilmtk" href="../nilmtk.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -56,7 +56,6 @@
 
         <div class="collapse navbar-collapse nav-collapse">
           <ul class="nav navbar-nav">
-            <li class="divider-vertical"></li>
             
                 <li><a href="https://github.com/nilmtk/nilmtk">github</a></li>
             
@@ -136,8 +135,10 @@
   <h1>Source code for nilmtk.timeframe</h1><div class="highlight"><pre>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">division</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">pytz</span>
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">timedelta</span>
 <span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
+<span class="kn">from</span> <span class="nn">warnings</span> <span class="kn">import</span> <span class="n">warn</span>
 
 <div class="viewcode-block" id="TimeFrame"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.timeframe.TimeFrame">[docs]</a><span class="k">class</span> <span class="nc">TimeFrame</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;A TimeFrame is a single time span or period,</span>
@@ -158,12 +159,24 @@
 <span class="sd">    include_end : boolean</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">tz</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">start</span> <span class="o">=</span> <span class="n">start</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">end</span> <span class="o">=</span> <span class="n">end</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">include_end</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">TimeFrame</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">copy_constructor</span><span class="p">(</span><span class="n">start</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">start</span> <span class="o">=</span> <span class="n">start</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">end</span> <span class="o">=</span> <span class="n">end</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">include_end</span> <span class="o">=</span> <span class="bp">False</span>
+            <span class="k">if</span> <span class="n">tz</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_start</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_start</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_start</span><span class="o">.</span><span class="n">tz_localize</span><span class="p">(</span><span class="n">tz</span><span class="p">)</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_end</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_end</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_end</span><span class="o">.</span><span class="n">tz_localize</span><span class="p">(</span><span class="n">tz</span><span class="p">)</span>
 
+<div class="viewcode-block" id="TimeFrame.copy_constructor"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.timeframe.TimeFrame.copy_constructor">[docs]</a>    <span class="k">def</span> <span class="nf">copy_constructor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">other</span><span class="o">.</span><span class="n">__dict__</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+</div>
 <div class="viewcode-block" id="TimeFrame.clear"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.timeframe.TimeFrame.clear">[docs]</a>    <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="bp">True</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_start</span> <span class="o">=</span> <span class="bp">None</span>
@@ -195,6 +208,7 @@
           </div>
     <span class="nd">@start.setter</span>
 <div class="viewcode-block" id="TimeFrame.start"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.timeframe.TimeFrame.start">[docs]</a>    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_start</span><span class="p">):</span>
+        <span class="n">new_start</span> <span class="o">=</span> <span class="n">convert_nat_to_none</span><span class="p">(</span><span class="n">new_start</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">new_start</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_start</span> <span class="o">=</span> <span class="bp">None</span>
             <span class="k">return</span>
@@ -206,6 +220,7 @@
 </div>
     <span class="nd">@end.setter</span>
 <div class="viewcode-block" id="TimeFrame.end"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.timeframe.TimeFrame.end">[docs]</a>    <span class="k">def</span> <span class="nf">end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_end</span><span class="p">):</span>
+        <span class="n">new_end</span> <span class="o">=</span> <span class="n">convert_nat_to_none</span><span class="p">(</span><span class="n">new_end</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">new_end</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_end</span> <span class="o">=</span> <span class="bp">None</span>
             <span class="k">return</span>
@@ -246,8 +261,10 @@
 <div class="viewcode-block" id="TimeFrame.timedelta"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.timeframe.TimeFrame.timedelta">[docs]</a>    <span class="k">def</span> <span class="nf">timedelta</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">end</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">end</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">start</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">timedelta</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 </div>
-<div class="viewcode-block" id="TimeFrame.intersect"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.timeframe.TimeFrame.intersect">[docs]</a>    <span class="k">def</span> <span class="nf">intersect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+<div class="viewcode-block" id="TimeFrame.intersection"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.timeframe.TimeFrame.intersection">[docs]</a>    <span class="k">def</span> <span class="nf">intersection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Returns a new TimeFrame of the intersection between</span>
 <span class="sd">        this TimeFrame and `other` TimeFrame.</span>
 <span class="sd">        If the intersect is empty then the returned TimeFrame</span>
@@ -356,8 +373,62 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">end</span><span class="p">:</span>
             <span class="n">dct</span><span class="p">[</span><span class="s">&#39;end&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">end</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">dct</span>
+</div>
+<div class="viewcode-block" id="TimeFrame.check_tz"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.timeframe.TimeFrame.check_tz">[docs]</a>    <span class="k">def</span> <span class="nf">check_tz</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">any</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">tz</span><span class="p">,</span> <span class="n">pytz</span><span class="o">.</span><span class="n">_FixedOffset</span><span class="p">)</span> 
+                <span class="k">for</span> <span class="n">tf</span> <span class="ow">in</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">end</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">tf</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">]):</span>
+            <span class="n">warn</span><span class="p">(</span><span class="s">&quot;Using a pytz._FixedOffset timezone may cause issues&quot;</span>
+                 <span class="s">&quot; (e.g. might cause Pandas to raise &#39;TypeError: too many&quot;</span>
+                 <span class="s">&quot; timezones in this block, create separate data columns&#39;). &quot;</span>
+                 <span class="s">&quot; It is better to set the timezone to a geographical location&quot;</span>
+                 <span class="s">&quot; e.g. &#39;Europe/London&#39;.&quot;</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="TimeFrame.check_for_overlap"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.timeframe.TimeFrame.check_for_overlap">[docs]</a>    <span class="k">def</span> <span class="nf">check_for_overlap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="n">intersect</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">intersect</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;Periods overlap: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">+</span> 
+                             <span class="s">&quot; &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">other</span><span class="p">))</span>
+</div>
+<div class="viewcode-block" id="TimeFrame.split"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.timeframe.TimeFrame.split">[docs]</a>    <span class="k">def</span> <span class="nf">split</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">duration_threshold</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Splits this TimeFrame into smaller adjacent TimeFrames no</span>
+<span class="sd">        longer in duration than duration_threshold.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        duration_threshold : int, seconds</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        generator of new TimeFrame objects</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;Cannot split a TimeFrame if `start` or `end`&quot;</span>
+                             <span class="s">&quot; is None&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">duration_threshold</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">timedelta</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">():</span>
+            <span class="k">yield</span> <span class="bp">self</span>
+            <span class="k">return</span>
+
+        <span class="n">duration_threshold_td</span> <span class="o">=</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">duration_threshold</span><span class="p">)</span>
+        <span class="n">timeframe</span> <span class="o">=</span> <span class="bp">self</span>
+        <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+            <span class="n">allowed_end</span> <span class="o">=</span> <span class="n">timeframe</span><span class="o">.</span><span class="n">start</span> <span class="o">+</span> <span class="n">duration_threshold_td</span>
+            <span class="k">if</span> <span class="n">timeframe</span><span class="o">.</span><span class="n">end</span> <span class="o">&lt;=</span> <span class="n">allowed_end</span><span class="p">:</span>
+                <span class="k">yield</span> <span class="n">timeframe</span>
+                <span class="k">break</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">yield</span> <span class="n">TimeFrame</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="n">timeframe</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="n">allowed_end</span><span class="p">)</span>
+                <span class="n">timeframe</span> <span class="o">=</span> <span class="n">TimeFrame</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="n">allowed_end</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="n">timeframe</span><span class="o">.</span><span class="n">end</span><span class="p">)</span>
 
 </div></div>
+<div class="viewcode-block" id="split_timeframes"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.timeframe.split_timeframes">[docs]</a><span class="k">def</span> <span class="nf">split_timeframes</span><span class="p">(</span><span class="n">timeframes</span><span class="p">,</span> <span class="n">duration_threshold</span><span class="p">):</span>
+    <span class="c"># TODO: put this into TimeFrameGroup. #316</span>
+    <span class="k">for</span> <span class="n">timeframe</span> <span class="ow">in</span> <span class="n">timeframes</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">split</span> <span class="ow">in</span> <span class="n">timeframe</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">duration_threshold</span><span class="p">):</span>
+            <span class="k">yield</span> <span class="n">split</span>
+
+</div>
 <div class="viewcode-block" id="merge_timeframes"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.timeframe.merge_timeframes">[docs]</a><span class="k">def</span> <span class="nf">merge_timeframes</span><span class="p">(</span><span class="n">timeframes</span><span class="p">,</span> <span class="n">gap</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Parameters</span>
@@ -369,6 +440,7 @@
 <span class="sd">    merged : list of TimeFrame objects </span>
 <span class="sd">        Where adjacent timeframes have been merged.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c"># TODO: put this into TimeFrameGroup. #316</span>
     <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">timeframes</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span>
     <span class="k">assert</span> <span class="nb">all</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">timeframe</span><span class="p">,</span> <span class="n">TimeFrame</span><span class="p">)</span> <span class="k">for</span> <span class="n">timeframe</span> <span class="ow">in</span> <span class="n">timeframes</span><span class="p">])</span>
     <span class="n">n_timeframes</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">timeframes</span><span class="p">)</span>
@@ -397,6 +469,7 @@
 <span class="sd">    -------</span>
 <span class="sd">    list of dicts</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c"># TODO: put this into TimeFrameGroup. #316</span>
     <span class="k">return</span> <span class="p">[</span><span class="n">timeframe</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span> <span class="k">for</span> <span class="n">timeframe</span> <span class="ow">in</span> <span class="n">timeframes</span><span class="p">]</span>
 
 </div>
@@ -405,25 +478,16 @@
 
 </div>
 <div class="viewcode-block" id="list_of_timeframes_from_list_of_dicts"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.timeframe.list_of_timeframes_from_list_of_dicts">[docs]</a><span class="k">def</span> <span class="nf">list_of_timeframes_from_list_of_dicts</span><span class="p">(</span><span class="n">dicts</span><span class="p">):</span>
+    <span class="c"># TODO: put this into TimeFrameGroup. #316</span>
     <span class="k">return</span> <span class="p">[</span><span class="n">timeframe_from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">dicts</span><span class="p">]</span>
 
 </div>
-<div class="viewcode-block" id="timeframes_from_periodindex"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.timeframe.timeframes_from_periodindex">[docs]</a><span class="k">def</span> <span class="nf">timeframes_from_periodindex</span><span class="p">(</span><span class="n">periods</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    periods : pd.PeriodIndex</span>
+<div class="viewcode-block" id="convert_none_to_nat"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.timeframe.convert_none_to_nat">[docs]</a><span class="k">def</span> <span class="nf">convert_none_to_nat</span><span class="p">(</span><span class="n">timestamp</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">NaT</span> <span class="k">if</span> <span class="n">timestamp</span> <span class="ow">is</span> <span class="bp">None</span> <span class="k">else</span> <span class="n">timestamp</span>
 
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    list of TimeFrames</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">periods</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">tseries</span><span class="o">.</span><span class="n">period</span><span class="o">.</span><span class="n">PeriodIndex</span><span class="p">)</span>
-    <span class="n">timeframes</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">period</span> <span class="ow">in</span> <span class="n">periods</span><span class="p">:</span>
-        <span class="n">timeframe</span> <span class="o">=</span> <span class="n">TimeFrame</span><span class="p">(</span><span class="n">period</span><span class="o">.</span><span class="n">start_time</span><span class="p">,</span> <span class="n">period</span><span class="o">.</span><span class="n">end_time</span><span class="p">)</span>
-        <span class="n">timeframes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">timeframe</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">timeframes</span></div>
+</div>
+<div class="viewcode-block" id="convert_nat_to_none"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.timeframe.convert_nat_to_none">[docs]</a><span class="k">def</span> <span class="nf">convert_nat_to_none</span><span class="p">(</span><span class="n">timestamp</span><span class="p">):</span>
+    <span class="k">return</span> <span class="bp">None</span> <span class="k">if</span> <span class="n">timestamp</span> <span class="ow">is</span> <span class="n">pd</span><span class="o">.</span><span class="n">NaT</span> <span class="k">else</span> <span class="n">timestamp</span></div>
 </pre></div>
 
     </div>

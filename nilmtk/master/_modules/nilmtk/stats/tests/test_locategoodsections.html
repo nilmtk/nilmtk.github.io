@@ -9,8 +9,8 @@
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../../../../_static/bootstrap-3.1.0/css/bootstrap.min.css" type="text/css" />
-    <link rel="stylesheet" href="../../../../_static/bootstrap-3.1.0/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/bootstrap-3.2.0/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/bootstrap-3.2.0/css/bootstrap-theme.min.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     
     <script type="text/javascript">
@@ -28,10 +28,10 @@
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="../../../../_static/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="../../../../_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="../../../../_static/bootstrap-3.1.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../../../_static/bootstrap-3.2.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="top" title="NILMTK 0.2 documentation" href="../../../../index.html" />
-    <link rel="up" title="Module code" href="../../../index.html" />
+    <link rel="up" title="nilmtk" href="../../../nilmtk.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -56,7 +56,6 @@
 
         <div class="collapse navbar-collapse nav-collapse">
           <ul class="nav navbar-nav">
-            <li class="divider-vertical"></li>
             
                 <li><a href="https://github.com/nilmtk/nilmtk">github</a></li>
             
@@ -144,7 +143,8 @@
 <span class="kn">from</span> <span class="nn">..</span> <span class="kn">import</span> <span class="n">TotalEnergy</span><span class="p">,</span> <span class="n">GoodSections</span>
 <span class="kn">from</span> <span class="nn">..goodsectionsresults</span> <span class="kn">import</span> <span class="n">GoodSectionsResults</span>
 <span class="kn">from</span> <span class="nn">..totalenergy</span> <span class="kn">import</span> <span class="n">_energy_for_power_series</span>
-<span class="kn">from</span> <span class="nn">...</span> <span class="kn">import</span> <span class="n">TimeFrame</span><span class="p">,</span> <span class="n">ElecMeter</span><span class="p">,</span> <span class="n">HDFDataStore</span>
+<span class="kn">from</span> <span class="nn">...</span> <span class="kn">import</span> <span class="n">TimeFrame</span><span class="p">,</span> <span class="n">ElecMeter</span><span class="p">,</span> <span class="n">DataSet</span>
+<span class="kn">from</span> <span class="nn">...datastore</span> <span class="kn">import</span> <span class="n">HDFDataStore</span>
 <span class="kn">from</span> <span class="nn">...elecmeter</span> <span class="kn">import</span> <span class="n">ElecMeterID</span>
 <span class="kn">from</span> <span class="nn">...consts</span> <span class="kn">import</span> <span class="n">JOULES_PER_KWH</span>
 <span class="kn">from</span> <span class="nn">...tests.testingtools</span> <span class="kn">import</span> <span class="n">data_dir</span>
@@ -159,13 +159,36 @@
         <span class="n">cls</span><span class="o">.</span><span class="n">datastore</span> <span class="o">=</span> <span class="n">HDFDataStore</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
         <span class="n">ElecMeter</span><span class="o">.</span><span class="n">load_meter_devices</span><span class="p">(</span><span class="n">cls</span><span class="o">.</span><span class="n">datastore</span><span class="p">)</span>
         <span class="n">cls</span><span class="o">.</span><span class="n">meter_meta</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">datastore</span><span class="o">.</span><span class="n">load_metadata</span><span class="p">(</span><span class="s">&#39;building1&#39;</span><span class="p">)[</span><span class="s">&#39;elec_meters&#39;</span><span class="p">][</span><span class="n">METER_ID</span><span class="o">.</span><span class="n">instance</span><span class="p">]</span>
+        </div>
+    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="TestLocateGoodSections.tearDownClass"><a class="viewcode-back" href="../../../../nilmtk.stats.tests.html#nilmtk.stats.tests.test_locategoodsections.TestLocateGoodSections.tearDownClass">[docs]</a>    <span class="k">def</span> <span class="nf">tearDownClass</span><span class="p">(</span><span class="n">cls</span><span class="p">):</span>
+        <span class="n">cls</span><span class="o">.</span><span class="n">datastore</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 </div>
 <div class="viewcode-block" id="TestLocateGoodSections.test_pipeline"><a class="viewcode-back" href="../../../../nilmtk.stats.tests.html#nilmtk.stats.tests.test_locategoodsections.TestLocateGoodSections.test_pipeline">[docs]</a>    <span class="k">def</span> <span class="nf">test_pipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">meter</span> <span class="o">=</span> <span class="n">ElecMeter</span><span class="p">(</span><span class="n">store</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">datastore</span><span class="p">,</span> <span class="n">metadata</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">meter_meta</span><span class="p">,</span> 
-                          <span class="n">meter_id</span><span class="o">=</span><span class="n">METER_ID</span><span class="p">)</span>
-        <span class="n">source_node</span> <span class="o">=</span> <span class="n">meter</span><span class="o">.</span><span class="n">get_source_node</span><span class="p">()</span>
-        <span class="n">good_sections</span> <span class="o">=</span> <span class="n">GoodSections</span><span class="p">(</span><span class="n">source_node</span><span class="p">)</span>
-        <span class="n">good_sections</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+        <span class="n">meter1</span> <span class="o">=</span> <span class="n">ElecMeter</span><span class="p">(</span><span class="n">store</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">datastore</span><span class="p">,</span> <span class="n">metadata</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">meter_meta</span><span class="p">,</span> 
+                           <span class="n">meter_id</span><span class="o">=</span><span class="n">METER_ID</span><span class="p">)</span>
+        
+        <span class="c"># load co_test.h5</span>
+        <span class="n">dataset</span> <span class="o">=</span> <span class="n">DataSet</span><span class="p">(</span><span class="n">join</span><span class="p">(</span><span class="n">data_dir</span><span class="p">(),</span> <span class="s">&#39;co_test.h5&#39;</span><span class="p">))</span>
+        <span class="n">meter2</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">buildings</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">elec</span><span class="o">.</span><span class="n">mains</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">meter</span> <span class="ow">in</span> <span class="p">[</span><span class="n">meter1</span><span class="p">,</span> <span class="n">meter2</span><span class="p">]:</span>
+            <span class="k">for</span> <span class="n">chunksize</span> <span class="ow">in</span> <span class="p">[</span><span class="bp">None</span><span class="p">,</span> <span class="mi">2</span><span class="o">**</span><span class="mi">10</span><span class="p">,</span> <span class="mi">2</span><span class="o">**</span><span class="mi">29</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="n">chunksize</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                    <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;chunksize&#39;</span><span class="p">:</span> <span class="n">chunksize</span><span class="p">}</span>
+                              
+                <span class="n">source_node</span> <span class="o">=</span> <span class="n">meter</span><span class="o">.</span><span class="n">get_source_node</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+                <span class="n">good_sections</span> <span class="o">=</span> <span class="n">GoodSections</span><span class="p">(</span><span class="n">source_node</span><span class="p">)</span>
+                <span class="n">good_sections</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+                <span class="n">combined</span> <span class="o">=</span> <span class="n">good_sections</span><span class="o">.</span><span class="n">results</span><span class="o">.</span><span class="n">simple</span><span class="p">()</span>
+                <span class="n">meter</span><span class="o">.</span><span class="n">clear_cache</span><span class="p">()</span>
+                <span class="n">meter</span><span class="o">.</span><span class="n">good_sections</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+                <span class="n">meter</span><span class="o">.</span><span class="n">good_sections</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+                <span class="n">meter</span><span class="o">.</span><span class="n">clear_cache</span><span class="p">()</span>
+
+        <span class="n">dataset</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 </div>
 <div class="viewcode-block" id="TestLocateGoodSections.test_process_chunk"><a class="viewcode-back" href="../../../../nilmtk.stats.tests.html#nilmtk.stats.tests.test_locategoodsections.TestLocateGoodSections.test_process_chunk">[docs]</a>    <span class="k">def</span> <span class="nf">test_process_chunk</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">MAX_SAMPLE_PERIOD</span> <span class="o">=</span> <span class="mi">10</span>

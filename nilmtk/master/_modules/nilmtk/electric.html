@@ -9,8 +9,8 @@
     
     <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/bootstrap-3.1.0/css/bootstrap.min.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/bootstrap-3.1.0/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/bootstrap-3.2.0/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/bootstrap-3.2.0/css/bootstrap-theme.min.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     
     <script type="text/javascript">
@@ -28,10 +28,10 @@
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="../../_static/bootstrap-3.1.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-3.2.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
     <link rel="top" title="NILMTK 0.2 documentation" href="../../index.html" />
-    <link rel="up" title="Module code" href="../index.html" />
+    <link rel="up" title="nilmtk" href="../nilmtk.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -56,7 +56,6 @@
 
         <div class="collapse navbar-collapse nav-collapse">
           <ul class="nav navbar-nav">
-            <li class="divider-vertical"></li>
             
                 <li><a href="https://github.com/nilmtk/nilmtk">github</a></li>
             
@@ -134,23 +133,47 @@
     <div class="col-md-12">
       
   <h1>Source code for nilmtk.electric</h1><div class="highlight"><pre>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">division</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Counter</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">izip</span>
+<span class="kn">from</span> <span class="nn">warnings</span> <span class="kn">import</span> <span class="n">warn</span>
+<span class="kn">import</span> <span class="nn">scipy.spatial</span> <span class="kn">as</span> <span class="nn">ss</span>
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">fft</span>
+<span class="kn">from</span> <span class="nn">pandas.tools.plotting</span> <span class="kn">import</span> <span class="n">lag_plot</span><span class="p">,</span> <span class="n">autocorrelation_plot</span>
+<span class="kn">from</span> <span class="nn">scipy.special</span> <span class="kn">import</span> <span class="n">digamma</span><span class="p">,</span><span class="n">gamma</span>
+<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">log</span><span class="p">,</span><span class="n">pi</span>
+<span class="kn">import</span> <span class="nn">numpy.random</span> <span class="kn">as</span> <span class="nn">nr</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">timedelta</span>
+<span class="kn">import</span> <span class="nn">gc</span>
+
 <span class="kn">from</span> <span class="nn">.timeframe</span> <span class="kn">import</span> <span class="n">TimeFrame</span>
 <span class="kn">from</span> <span class="nn">.measurement</span> <span class="kn">import</span> <span class="n">select_best_ac_type</span>
-<span class="kn">from</span> <span class="nn">nilmtk.utils</span> <span class="kn">import</span> <span class="n">offset_alias_to_seconds</span>
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="p">(</span><span class="n">offset_alias_to_seconds</span><span class="p">,</span> <span class="n">convert_to_timestamp</span><span class="p">,</span> 
+                    <span class="n">flatten_2d_list</span><span class="p">,</span> <span class="n">append_or_extend_list</span><span class="p">,</span>
+                    <span class="n">timedelta64_to_secs</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.plots</span> <span class="kn">import</span> <span class="n">plot_series</span>
+<span class="kn">from</span> <span class="nn">.preprocessing</span> <span class="kn">import</span> <span class="n">Apply</span>
+<span class="kn">from</span> <span class="nn">nilmtk.stats.histogram</span> <span class="kn">import</span> <span class="n">histogram_from_generator</span>
+<span class="kn">from</span> <span class="nn">nilmtk.appliance</span> <span class="kn">import</span> <span class="n">DEFAULT_ON_POWER_THRESHOLD</span>
+
+<span class="n">MAX_SIZE_ENTROPY</span> <span class="o">=</span> <span class="mi">10000</span>
 
 <div class="viewcode-block" id="Electric"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.electric.Electric">[docs]</a><span class="k">class</span> <span class="nc">Electric</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Common implementations of methods shared by ElecMeter and MeterGroup.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    
-<div class="viewcode-block" id="Electric.when_on"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.electric.Electric.when_on">[docs]</a>    <span class="k">def</span> <span class="nf">when_on</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">load_kwargs</span><span class="p">):</span>
+<span class="sd">    &quot;&quot;&quot;</span>   
+<div class="viewcode-block" id="Electric.when_on"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.electric.Electric.when_on">[docs]</a>    <span class="k">def</span> <span class="nf">when_on</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">on_power_threshold</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">load_kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Are the connected appliances appliance is on (True) or off (False)?</span>
 
-<span class="sd">        Uses `self.min_on_power_threshold()` if `on_power_threshold` not provided.</span>
+<span class="sd">        Uses `self.on_power_threshold()` if `on_power_threshold` not provided.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        on_power_threshold : number, optional</span>
+<span class="sd">            Defaults to self.on_power_threshold()</span>
 <span class="sd">        **load_kwargs : key word arguments</span>
 <span class="sd">            Passed to self.power_series()</span>
 
@@ -160,23 +183,19 @@
 <span class="sd">            index is the same as for chunk returned by `self.power_series()`</span>
 <span class="sd">            values are booleans</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">on_power_threshold</span> <span class="o">=</span> <span class="n">load_kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s">&#39;on_power_threshold&#39;</span><span class="p">,</span> 
-                                             <span class="bp">self</span><span class="o">.</span><span class="n">min_on_power_threshold</span><span class="p">())</span>
+        <span class="k">if</span> <span class="n">on_power_threshold</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">on_power_threshold</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">on_power_threshold</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">power_series</span><span class="p">(</span><span class="o">**</span><span class="n">load_kwargs</span><span class="p">):</span>
-            <span class="k">yield</span> <span class="n">chunk</span> <span class="o">&gt;</span> <span class="n">on_power_threshold</span>
-        </div>
-<div class="viewcode-block" id="Electric.min_on_power_threshold"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.electric.Electric.min_on_power_threshold">[docs]</a>    <span class="k">def</span> <span class="nf">min_on_power_threshold</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">yield</span> <span class="n">chunk</span> <span class="o">&gt;=</span> <span class="n">on_power_threshold</span>
+            </div>
+<div class="viewcode-block" id="Electric.on_power_threshold"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.electric.Electric.on_power_threshold">[docs]</a>    <span class="k">def</span> <span class="nf">on_power_threshold</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Returns the minimum `on_power_threshold` across all appliances </span>
 <span class="sd">        immediately downstream of this meter.  If any appliance </span>
 <span class="sd">        does not have an `on_power_threshold` then default to 10 watts.&quot;&quot;&quot;</span>
-        <span class="n">DEFAULT_ON_POWER_THRESHOLD</span> <span class="o">=</span> <span class="mi">10</span>
-        <span class="n">on_power_thresholds</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="n">appl</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;on_power_threshold&#39;</span><span class="p">,</span> <span class="n">DEFAULT_ON_POWER_THRESHOLD</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">appl</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">appliances</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">on_power_thresholds</span><span class="p">:</span>
-            <span class="k">return</span> <span class="nb">min</span><span class="p">(</span><span class="n">on_power_thresholds</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">appliances</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">DEFAULT_ON_POWER_THRESHOLD</span>
+        <span class="n">on_power_thresholds</span> <span class="o">=</span> <span class="p">[</span><span class="n">a</span><span class="o">.</span><span class="n">on_power_threshold</span><span class="p">()</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">appliances</span><span class="p">]</span>
+        <span class="k">return</span> <span class="nb">min</span><span class="p">(</span><span class="n">on_power_thresholds</span><span class="p">)</span>
 </div>
 <div class="viewcode-block" id="Electric.matches_appliances"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.electric.Electric.matches_appliances">[docs]</a>    <span class="k">def</span> <span class="nf">matches_appliances</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -205,18 +224,83 @@
             <span class="n">all_data</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="k">return</span> <span class="n">all_data</span>
 </div>
-<div class="viewcode-block" id="Electric.plot"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.electric.Electric.plot">[docs]</a>    <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">loader_kwargs</span><span class="p">):</span>
-        <span class="n">all_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">power_series_all_data</span><span class="p">(</span><span class="o">**</span><span class="n">loader_kwargs</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">all_data</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
-        <span class="sd">&quot;&quot;&quot; TODO:</span>
+    <span class="k">def</span> <span class="nf">_prep_kwargs_for_sample_period_and_resample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sample_period</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> 
+                                                    <span class="n">resample</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+                                                    <span class="n">resample_kwargs</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                                                    <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">if</span> <span class="s">&#39;preprocessing&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="n">warn</span><span class="p">(</span><span class="s">&quot;If you are using `preprocessing` to resample then please&quot;</span>
+                 <span class="s">&quot; do not!  Instead, please use the `sample_period` parameter&quot;</span>
+                 <span class="s">&quot; and set `resample=True`.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">sample_period</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">sample_period</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_period</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">resample</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="n">sample_period</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">sample_period</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">resample</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">resample_kwargs</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="n">resample_kwargs</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">resample_func</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">df</span><span class="p">:</span> <span class="n">df</span><span class="o">.</span><span class="n">resample</span><span class="p">(</span><span class="n">rule</span><span class="o">=</span><span class="s">&#39;{:d}S&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sample_period</span><span class="p">),</span>
+                                                   <span class="o">**</span><span class="n">resample_kwargs</span><span class="p">)</span>
+            <span class="n">kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s">&#39;preprocessing&#39;</span><span class="p">,</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Apply</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">resample_func</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">kwargs</span>
+
+    <span class="k">def</span> <span class="nf">_replace_none_with_meter_timeframe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">start</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">or</span> <span class="n">end</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">timeframe_for_meter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_timeframe</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">start</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="n">start</span> <span class="o">=</span> <span class="n">timeframe_for_meter</span><span class="o">.</span><span class="n">start</span>
+            <span class="k">if</span> <span class="n">end</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="n">end</span> <span class="o">=</span> <span class="n">timeframe_for_meter</span><span class="o">.</span><span class="n">end</span>
+        <span class="k">return</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span>
+
+<div class="viewcode-block" id="Electric.plot"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.electric.Electric.plot">[docs]</a>    <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">timeframe</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">plot_legend</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s">&#39;W&#39;</span><span class="p">,</span> 
+             <span class="n">plot_kwargs</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        stacked : {&#39;stacked&#39;, &#39;heatmap&#39;, &#39;lines&#39;, &#39;snakey&#39;}</span>
-
-<span class="sd">        pretty snakey:</span>
-<span class="sd">        http://www.cl.cam.ac.uk/research/srg/netos/c-aware/joule/V4.00/</span>
+<span class="sd">        width : int, optional</span>
+<span class="sd">            Number of points on the x axis required</span>
+<span class="sd">        ax : matplotlib.axes, optional</span>
+<span class="sd">        plot_legend : boolean, optional</span>
+<span class="sd">            Defaults to True.  Set to False to not plot legend.</span>
+<span class="sd">        unit : {&#39;W&#39;, &#39;kW&#39;}</span>
+<span class="sd">        **kwargs</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c"># Get start and end times for the plot</span>
+        <span class="n">timeframe</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_timeframe</span><span class="p">()</span> <span class="k">if</span> <span class="n">timeframe</span> <span class="ow">is</span> <span class="bp">None</span> <span class="k">else</span> <span class="n">timeframe</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">timeframe</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ax</span>
+
+        <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;sections&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">timeframe</span><span class="p">]</span>
+        <span class="n">kwargs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_set_sample_period</span><span class="p">(</span><span class="n">timeframe</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">power_series</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">power_series_all_data</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">power_series</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">or</span> <span class="n">power_series</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ax</span>
+
+        <span class="k">if</span> <span class="n">unit</span> <span class="o">==</span> <span class="s">&#39;kW&#39;</span><span class="p">:</span>
+            <span class="n">power_series</span> <span class="o">/=</span> <span class="mi">1000</span>
+
+        <span class="k">if</span> <span class="n">plot_kwargs</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">plot_kwargs</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">plot_kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s">&#39;label&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">())</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">power_series</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="o">**</span><span class="n">plot_kwargs</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s">&#39;Power ({})&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">unit</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">plot_legend</span><span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">ax</span>
 </div>
+    <span class="k">def</span> <span class="nf">_set_sample_period</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeframe</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">800</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="c"># Calculate the resolution for the x axis</span>
+        <span class="n">duration</span> <span class="o">=</span> <span class="n">timeframe</span><span class="o">.</span><span class="n">timedelta</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span>
+        <span class="n">secs_per_pixel</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">duration</span> <span class="o">/</span> <span class="n">width</span><span class="p">))</span>
+        <span class="n">kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s">&#39;sample_period&#39;</span><span class="p">:</span> <span class="n">secs_per_pixel</span><span class="p">,</span> <span class="s">&#39;resample&#39;</span><span class="p">:</span> <span class="bp">True</span><span class="p">})</span>
+        <span class="k">return</span> <span class="n">kwargs</span>
+
 <div class="viewcode-block" id="Electric.proportion_of_upstream"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.electric.Electric.proportion_of_upstream">[docs]</a>    <span class="k">def</span> <span class="nf">proportion_of_upstream</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">load_kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Returns a value in the range [0,1] specifying the proportion of</span>
 <span class="sd">        the upstream meter&#39;s total energy used by this meter.</span>
@@ -242,14 +326,9 @@
 <span class="sd">        timedelta: total duration of all good sections.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">good_sections</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">good_sections</span><span class="p">(</span><span class="o">**</span><span class="n">load_kwargs</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">good_sections</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">good_sections</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">return</span>
-        <span class="n">uptime</span> <span class="o">=</span> <span class="n">good_sections</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">timedelta</span>
-        <span class="k">for</span> <span class="n">good_section</span> <span class="ow">in</span> <span class="n">good_sections</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
-            <span class="n">uptime</span> <span class="o">+=</span> <span class="n">good_section</span><span class="o">.</span><span class="n">timedelta</span>
-        <span class="k">return</span> <span class="n">uptime</span>
+        <span class="k">return</span> <span class="n">good_sections</span><span class="o">.</span><span class="n">uptime</span><span class="p">()</span>
 </div>
-<div class="viewcode-block" id="Electric.average_energy_per_period"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.electric.Electric.average_energy_per_period">[docs]</a>    <span class="k">def</span> <span class="nf">average_energy_per_period</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">offset_alias</span><span class="o">=</span><span class="s">&#39;D&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">load_kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Electric.average_energy_per_period"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.electric.Electric.average_energy_per_period">[docs]</a>    <span class="k">def</span> <span class="nf">average_energy_per_period</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">offset_alias</span><span class="o">=</span><span class="s">&#39;D&#39;</span><span class="p">,</span> <span class="n">use_uptime</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="o">**</span><span class="n">load_kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Calculate the average energy per period.  e.g. the average </span>
 <span class="sd">        energy per day.</span>
 
@@ -258,6 +337,7 @@
 <span class="sd">        offset_alias : str</span>
 <span class="sd">            A Pandas `offset alias`.  See:</span>
 <span class="sd">            pandas.pydata.org/pandas-docs/stable/timeseries.html#offset-aliases</span>
+<span class="sd">        use_uptime : bool</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -265,23 +345,564 @@
 <span class="sd">            Keys are AC types.</span>
 <span class="sd">            Values are energy in kWh per period.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">uptime_secs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">uptime</span><span class="p">(</span><span class="o">**</span><span class="n">load_kwargs</span><span class="p">)</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span>
+        <span class="k">if</span> <span class="s">&#39;sections&#39;</span> <span class="ow">in</span> <span class="n">load_kwargs</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s">&quot;Please do not pass in &#39;sections&#39; into&quot;</span>
+                               <span class="s">&quot; &#39;average_energy_per_period&#39;.  Instead&quot;</span>
+                               <span class="s">&quot; use &#39;use_uptime&#39; param.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">use_uptime</span><span class="p">:</span>
+            <span class="n">td</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">uptime</span><span class="p">(</span><span class="o">**</span><span class="n">load_kwargs</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">td</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_timeframe</span><span class="p">()</span><span class="o">.</span><span class="n">timedelta</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">td</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">NaN</span>
+        <span class="n">uptime_secs</span> <span class="o">=</span> <span class="n">td</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span>
         <span class="n">periods</span> <span class="o">=</span> <span class="n">uptime_secs</span> <span class="o">/</span> <span class="n">offset_alias_to_seconds</span><span class="p">(</span><span class="n">offset_alias</span><span class="p">)</span>
         <span class="n">energy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">total_energy</span><span class="p">(</span><span class="o">**</span><span class="n">load_kwargs</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">energy</span> <span class="o">/</span> <span class="n">periods</span>
-        
+        </div>
+<div class="viewcode-block" id="Electric.proportion_of_energy"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.electric.Electric.proportion_of_energy">[docs]</a>    <span class="k">def</span> <span class="nf">proportion_of_energy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">,</span> <span class="o">**</span><span class="n">loader_kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Compute the proportion of energy of self compared to `other`.</span>
 
-  <span class="c">#   def activity_distribution(self):</span>
-  <span class="c"># * activity distribution:</span>
-  <span class="c">#   - use ElecMeter.get_timeframe() to get start and end</span>
-  <span class="c">#   - use pd.period_range to make daily period index</span>
-  <span class="c">#   - load daily chunks</span>
-  <span class="c">#   - downsample using Apply</span>
-  <span class="c">#   - when_on</span>
-  <span class="c">#   - answers = zeros(n_timeslices_per_chunk)</span>
-  <span class="c">#   - add each chunk to answers</span>
-  <span class="c">#   - answer is now the histogram!</span>
+<span class="sd">        By default, only uses other.good_sections().  You may want to set </span>
+<span class="sd">        `sections=self.good_sections().intersection(other.good_sections())`</span>
 
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        other : nilmtk.MeteGroup or ElecMeter</span>
+<span class="sd">            Typically this will be mains.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float [0,1] or NaN if other.total_energy == 0</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">good_other_sections</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="n">good_sections</span><span class="p">(</span><span class="o">**</span><span class="n">loader_kwargs</span><span class="p">)</span>
+        <span class="n">loader_kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s">&#39;sections&#39;</span><span class="p">,</span> <span class="n">good_other_sections</span><span class="p">)</span>
+
+        <span class="c"># TODO test effect of setting `sections` for other</span>
+        <span class="n">other_total_energy</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="n">total_energy</span><span class="p">(</span><span class="o">**</span><span class="n">loader_kwargs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">other_total_energy</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">NaN</span>
+
+        <span class="n">total_energy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">total_energy</span><span class="p">(</span><span class="o">**</span><span class="n">loader_kwargs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">total_energy</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mf">0.0</span>
+
+        <span class="n">other_ac_types</span> <span class="o">=</span> <span class="n">other_total_energy</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+        <span class="n">self_ac_types</span> <span class="o">=</span> <span class="n">total_energy</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+        <span class="n">shared_ac_types</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">other_ac_types</span><span class="p">)</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">self_ac_types</span><span class="p">)</span>
+        <span class="n">n_shared_ac_types</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">shared_ac_types</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">n_shared_ac_types</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span><span class="n">total_energy</span><span class="p">[</span><span class="n">shared_ac_types</span><span class="p">]</span> <span class="o">/</span> 
+                    <span class="n">other_total_energy</span><span class="p">[</span><span class="n">shared_ac_types</span><span class="p">])</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">n_shared_ac_types</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">ac_type</span> <span class="o">=</span> <span class="n">select_best_ac_type</span><span class="p">(</span><span class="n">self_ac_types</span><span class="p">)</span>
+            <span class="n">other_ac_type</span> <span class="o">=</span> <span class="n">select_best_ac_type</span><span class="p">(</span><span class="n">other_ac_types</span><span class="p">)</span>
+            <span class="n">warn</span><span class="p">(</span><span class="s">&quot;No shared AC types.  Using &#39;{:s}&#39; for submeter&quot;</span>
+                 <span class="s">&quot; and &#39;{:s}&#39; for other.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ac_type</span><span class="p">,</span> <span class="n">other_ac_type</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="n">n_shared_ac_types</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">ac_type</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">shared_ac_types</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">other_ac_type</span> <span class="o">=</span> <span class="n">ac_type</span>
+        <span class="k">return</span> <span class="n">total_energy</span><span class="p">[</span><span class="n">ac_type</span><span class="p">]</span> <span class="o">/</span> <span class="n">other_total_energy</span><span class="p">[</span><span class="n">other_ac_type</span><span class="p">]</span>
+</div>
+<div class="viewcode-block" id="Electric.correlation"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.electric.Electric.correlation">[docs]</a>    <span class="k">def</span> <span class="nf">correlation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">,</span> <span class="o">**</span><span class="n">load_kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Finds the correlation between the two ElecMeters. Both the ElecMeters </span>
+<span class="sd">        should be perfectly aligned</span>
+<span class="sd">        Adapted from: </span>
+<span class="sd">        http://www.johndcook.com/blog/2008/11/05/how-to-calculate-pearson-correlation-accurately/</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        other : an ElecMeter or MeterGroup object</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float : [-1, 1]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">sample_period</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sample_period</span><span class="p">(),</span> <span class="n">other</span><span class="o">.</span><span class="n">sample_period</span><span class="p">())</span>
+        <span class="n">load_kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s">&#39;sample_period&#39;</span><span class="p">,</span> <span class="n">sample_period</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">sum_and_count</span><span class="p">(</span><span class="n">electric</span><span class="p">):</span>
+            <span class="n">n</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">cumulator</span> <span class="o">=</span> <span class="mf">0.0</span>
+            <span class="k">for</span> <span class="n">power</span> <span class="ow">in</span> <span class="n">electric</span><span class="o">.</span><span class="n">power_series</span><span class="p">(</span><span class="o">**</span><span class="n">load_kwargs</span><span class="p">):</span>
+                <span class="n">n</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">power</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+                <span class="n">cumulator</span> <span class="o">+=</span> <span class="n">power</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">n</span><span class="p">,</span> <span class="n">cumulator</span>
+
+        <span class="n">x_n</span><span class="p">,</span> <span class="n">x_sum</span> <span class="o">=</span> <span class="n">sum_and_count</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">x_n</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">NaN</span>
+
+        <span class="n">y_n</span><span class="p">,</span> <span class="n">y_sum</span> <span class="o">=</span> <span class="n">sum_and_count</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">y_n</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">NaN</span>
+
+        <span class="c"># we&#39;re using Python 3&#39;s division (which returns a float)</span>
+        <span class="n">x_bar</span> <span class="o">=</span> <span class="n">x_sum</span> <span class="o">/</span> <span class="n">x_n</span> 
+        <span class="n">y_bar</span> <span class="o">=</span> <span class="n">y_sum</span> <span class="o">/</span> <span class="n">y_n</span>
+
+        <span class="c"># Second pass is used to find x_s and y_s (std.devs)</span>
+        <span class="k">def</span> <span class="nf">stdev</span><span class="p">(</span><span class="n">electric</span><span class="p">,</span> <span class="n">mean</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+            <span class="n">s_square_sum</span> <span class="o">=</span> <span class="mf">0.0</span>
+            <span class="k">for</span> <span class="n">power</span> <span class="ow">in</span> <span class="n">electric</span><span class="o">.</span><span class="n">power_series</span><span class="p">(</span><span class="o">**</span><span class="n">load_kwargs</span><span class="p">):</span>
+                <span class="n">s_square_sum</span> <span class="o">+=</span> <span class="p">((</span><span class="n">power</span> <span class="o">-</span> <span class="n">mean</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">power</span> <span class="o">-</span> <span class="n">mean</span><span class="p">))</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+            <span class="n">s_square</span> <span class="o">=</span> <span class="n">s_square_sum</span> <span class="o">/</span> <span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">s_square</span><span class="p">)</span>
+
+        <span class="n">x_s</span> <span class="o">=</span> <span class="n">stdev</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x_bar</span><span class="p">,</span> <span class="n">x_n</span><span class="p">)</span>
+        <span class="n">y_s</span> <span class="o">=</span> <span class="n">stdev</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">y_bar</span><span class="p">,</span> <span class="n">y_n</span><span class="p">)</span>
+
+        <span class="n">numerator</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">x_power</span><span class="p">,</span> <span class="n">y_power</span><span class="p">)</span> <span class="ow">in</span> <span class="n">izip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">power_series</span><span class="p">(</span><span class="o">**</span><span class="n">load_kwargs</span><span class="p">),</span> 
+                                       <span class="n">other</span><span class="o">.</span><span class="n">power_series</span><span class="p">(</span><span class="o">**</span><span class="n">load_kwargs</span><span class="p">)):</span>
+            <span class="n">xi_minus_xbar</span> <span class="o">=</span> <span class="n">x_power</span> <span class="o">-</span> <span class="n">x_bar</span>
+            <span class="k">del</span> <span class="n">x_power</span>
+            <span class="n">gc</span><span class="o">.</span><span class="n">collect</span><span class="p">()</span>
+            <span class="n">yi_minus_ybar</span> <span class="o">=</span> <span class="n">y_power</span> <span class="o">-</span> <span class="n">y_bar</span>
+            <span class="k">del</span> <span class="n">y_power</span>
+            <span class="n">gc</span><span class="o">.</span><span class="n">collect</span><span class="p">()</span>
+            <span class="n">numerator</span> <span class="o">+=</span> <span class="p">(</span><span class="n">xi_minus_xbar</span> <span class="o">*</span> <span class="n">yi_minus_ybar</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+            <span class="k">del</span> <span class="n">xi_minus_xbar</span>
+            <span class="k">del</span> <span class="n">yi_minus_ybar</span>
+            <span class="n">gc</span><span class="o">.</span><span class="n">collect</span><span class="p">()</span>
+        <span class="n">denominator</span> <span class="o">=</span> <span class="p">(</span><span class="n">x_n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">x_s</span> <span class="o">*</span> <span class="n">y_s</span>
+        <span class="n">corr</span> <span class="o">=</span> <span class="n">numerator</span> <span class="o">/</span> <span class="n">denominator</span>
+        <span class="k">return</span> <span class="n">corr</span>
+</div>
+<div class="viewcode-block" id="Electric.plot_lag"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.electric.Electric.plot_lag">[docs]</a>    <span class="k">def</span> <span class="nf">plot_lag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lag</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plots a lag plot of power data</span>
+<span class="sd">        http://www.itl.nist.gov/div898/handbook/eda/section3/lagplot.htm</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        matplotlib.axis</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">power</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">power_series</span><span class="p">():</span>
+            <span class="n">lag_plot</span><span class="p">(</span><span class="n">power</span><span class="p">,</span> <span class="n">lag</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ax</span>
+</div>
+<div class="viewcode-block" id="Electric.plot_spectrum"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.electric.Electric.plot_spectrum">[docs]</a>    <span class="k">def</span> <span class="nf">plot_spectrum</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plots spectral plot of power data</span>
+<span class="sd">        http://www.itl.nist.gov/div898/handbook/eda/section3/spectrum.htm</span>
+
+<span class="sd">        Code borrowed from:</span>
+<span class="sd">        http://glowingpython.blogspot.com/2011/08/how-to-plot-frequency-spectrum-with.html</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        matplotlib.axis</span>
+<span class="sd">        &quot;&quot;&quot;</span> 
+        <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+        <span class="n">Fs</span> <span class="o">=</span> <span class="mf">1.0</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">sample_period</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">power</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">power_series</span><span class="p">():</span>
+            <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">power</span><span class="o">.</span><span class="n">values</span><span class="p">)</span> <span class="c"># length of the signal</span>
+            <span class="n">k</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+            <span class="n">T</span> <span class="o">=</span> <span class="n">n</span><span class="o">/</span><span class="n">Fs</span>
+            <span class="n">frq</span> <span class="o">=</span> <span class="n">k</span><span class="o">/</span><span class="n">T</span> <span class="c"># two sides frequency range</span>
+            <span class="n">frq</span> <span class="o">=</span> <span class="n">frq</span><span class="p">[</span><span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="o">//</span><span class="mi">2</span><span class="p">)]</span> <span class="c"># one side frequency range</span>
+
+            <span class="n">Y</span> <span class="o">=</span> <span class="n">fft</span><span class="p">(</span><span class="n">power</span><span class="p">)</span><span class="o">/</span><span class="n">n</span> <span class="c"># fft computing and normalization</span>
+            <span class="n">Y</span> <span class="o">=</span> <span class="n">Y</span><span class="p">[</span><span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="o">//</span><span class="mi">2</span><span class="p">)]</span>
+
+            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">frq</span><span class="p">,</span><span class="nb">abs</span><span class="p">(</span><span class="n">Y</span><span class="p">))</span> <span class="c"># plotting the spectrum</span>
+
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s">&#39;Freq (Hz)&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s">&#39;|Y(freq)|&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ax</span>
+          </div>
+<div class="viewcode-block" id="Electric.plot_autocorrelation"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.electric.Electric.plot_autocorrelation">[docs]</a>    <span class="k">def</span> <span class="nf">plot_autocorrelation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plots autocorrelation of power data </span>
+<span class="sd">        Reference: </span>
+<span class="sd">        http://www.itl.nist.gov/div898/handbook/eda/section3/autocopl.htm</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        matplotlib.axis </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">power</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">power_series</span><span class="p">():</span>
+            <span class="n">autocorrelation_plot</span><span class="p">(</span><span class="n">power</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ax</span>
+</div>
+<div class="viewcode-block" id="Electric.plot_power_histogram"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.electric.Electric.plot_power_histogram">[docs]</a>    <span class="k">def</span> <span class="nf">plot_power_histogram</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">load_kwargs</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> 
+                             <span class="n">plot_kwargs</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="nb">range</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">hist_kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        ax : axes</span>
+<span class="sd">        load_kwargs : dict</span>
+<span class="sd">        plot_kwargs : dict</span>
+<span class="sd">        range : None or tuple</span>
+<span class="sd">            if range=(None, x) then on_power_threshold will be used as minimum.</span>
+<span class="sd">        **hist_kwargs</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        ax</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">load_kwargs</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">load_kwargs</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="n">plot_kwargs</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">plot_kwargs</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">generator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">power_series</span><span class="p">(</span><span class="o">**</span><span class="n">load_kwargs</span><span class="p">)</span>
+
+        <span class="c"># set range</span>
+        <span class="k">if</span> <span class="nb">range</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">or</span> <span class="nb">range</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">maximum</span> <span class="o">=</span> <span class="bp">None</span> <span class="k">if</span> <span class="nb">range</span> <span class="ow">is</span> <span class="bp">None</span> <span class="k">else</span> <span class="nb">range</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="nb">range</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">on_power_threshold</span><span class="p">(),</span> <span class="n">maximum</span><span class="p">)</span>
+
+        <span class="n">hist</span><span class="p">,</span> <span class="n">bins</span> <span class="o">=</span> <span class="n">histogram_from_generator</span><span class="p">(</span><span class="n">generator</span><span class="p">,</span> <span class="nb">range</span><span class="o">=</span><span class="nb">range</span><span class="p">,</span> 
+                                              <span class="o">**</span><span class="n">hist_kwargs</span><span class="p">)</span>
+
+        <span class="c"># Plot</span>
+        <span class="n">plot_kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s">&#39;linewidth&#39;</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">bins</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span> <span class="n">hist</span><span class="p">,</span> <span class="o">**</span><span class="n">plot_kwargs</span><span class="p">)</span>
+        <span class="n">first_bin_width</span> <span class="o">=</span> <span class="n">bins</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">bins</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="n">bins</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="p">(</span><span class="n">first_bin_width</span><span class="o">/</span><span class="mi">2</span><span class="p">),</span> <span class="n">bins</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]])</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s">&#39;Power (watts)&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s">&#39;Count&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ax</span>
+</div>
+<div class="viewcode-block" id="Electric.switch_times"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.electric.Electric.switch_times">[docs]</a>    <span class="k">def</span> <span class="nf">switch_times</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="mi">40</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns an array of pd.DateTime when a switch occurs as defined by threshold</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        threshold: int, threshold in Watts between succcessive readings </span>
+<span class="sd">        to amount for an appliance state change</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">datetime_switches</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">power</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">power_series</span><span class="p">():</span>
+            <span class="n">delta_power</span> <span class="o">=</span> <span class="n">power</span><span class="o">.</span><span class="n">diff</span><span class="p">()</span>
+            <span class="n">delta_power_absolute</span> <span class="o">=</span> <span class="n">delta_power</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span>
+            <span class="n">datetime_switches</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">delta_power_absolute</span><span class="p">[(</span><span class="n">delta_power_absolute</span><span class="o">&gt;</span><span class="n">threshold</span><span class="p">)]</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">flatten_2d_list</span><span class="p">(</span><span class="n">datetime_switches</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Electric.entropy"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.electric.Electric.entropy">[docs]</a>    <span class="k">def</span> <span class="nf">entropy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">        This implementation is provided courtesy NPEET toolbox,</span>
+<span class="sd">        the authors kindly allowed us to directly use their code.</span>
+<span class="sd">        As a courtesy procedure, you may wish to cite their paper, </span>
+<span class="sd">        in case you use this function.</span>
+<span class="sd">        This fails if there is a large number of records. Need to</span>
+<span class="sd">        ask the authors what to do about the same! </span>
+<span class="sd">        The classic K-L k-nearest neighbor continuous entropy estimator</span>
+<span class="sd">        x should be a list of vectors, e.g. x = [[1.3],[3.7],[5.1],[2.4]]</span>
+<span class="sd">        if x is a one-dimensional scalar and we have four samples</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="nf">kdtree_entropy</span><span class="p">(</span><span class="n">z</span><span class="p">):</span>
+            <span class="k">assert</span> <span class="n">k</span> <span class="o">&lt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">z</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s">&quot;Set k smaller than num. samples - 1&quot;</span>
+            <span class="n">d</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">z</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+            <span class="c">#small noise to break degeneracy, see doc.</span>
+            <span class="n">intens</span> <span class="o">=</span> <span class="mf">1e-10</span>
+            <span class="n">z</span> <span class="o">=</span> <span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="n">p</span> <span class="o">+</span> <span class="n">intens</span><span class="o">*</span><span class="n">nr</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">z</span><span class="p">[</span><span class="mi">0</span><span class="p">])))</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">z</span><span class="p">]</span>
+            <span class="n">tree</span> <span class="o">=</span> <span class="n">ss</span><span class="o">.</span><span class="n">cKDTree</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+            <span class="n">nn</span> <span class="o">=</span> <span class="p">[</span><span class="n">tree</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">point</span><span class="p">,</span> <span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="s">&#39;inf&#39;</span><span class="p">))[</span><span class="mi">0</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">point</span> <span class="ow">in</span> <span class="n">z</span><span class="p">]</span>
+            <span class="n">const</span> <span class="o">=</span> <span class="n">digamma</span><span class="p">(</span><span class="n">N</span><span class="p">)</span><span class="o">-</span><span class="n">digamma</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="o">+</span> <span class="n">d</span><span class="o">*</span><span class="n">log</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+            <span class="k">return</span> <span class="p">(</span><span class="n">const</span> <span class="o">+</span> <span class="n">d</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">log</span><span class="p">,</span> <span class="n">nn</span><span class="p">)))</span><span class="o">/</span><span class="n">log</span><span class="p">(</span><span class="n">base</span><span class="p">)</span>
+
+        <span class="n">out</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">power</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">power_series</span><span class="p">():</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">power</span><span class="o">.</span><span class="n">values</span>
+            <span class="n">num_elements</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">num_elements</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>            
+            <span class="k">if</span> <span class="n">num_elements</span> <span class="o">&gt;</span> <span class="n">MAX_SIZE_ENTROPY</span><span class="p">:</span>
+
+                <span class="n">splits</span> <span class="o">=</span> <span class="n">num_elements</span><span class="o">/</span><span class="n">MAX_SIZE_ENTROPY</span> <span class="o">+</span> <span class="mi">1</span>
+                <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array_split</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">splits</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">z</span> <span class="ow">in</span> <span class="n">y</span><span class="p">:</span>            
+                    <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">kdtree_entropy</span><span class="p">(</span><span class="n">z</span><span class="p">))</span>                    
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">kdtree_entropy</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+        <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Electric.mutual_information"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.electric.Electric.mutual_information">[docs]</a>    <span class="k">def</span> <span class="nf">mutual_information</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">        Mutual information of two ElecMeters</span>
+<span class="sd">        x,y should be a list of vectors, e.g. x = [[1.3],[3.7],[5.1],[2.4]]</span>
+<span class="sd">        if x is a one-dimensional scalar and we have four samples</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        other : ElecMeter or MeterGroup</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="nf">kdtree_mi</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">base</span><span class="p">):</span>
+            <span class="n">intens</span> <span class="o">=</span> <span class="mf">1e-10</span> <span class="c">#small noise to break degeneracy, see doc.</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="n">p</span> <span class="o">+</span> <span class="n">intens</span><span class="o">*</span><span class="n">nr</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])))</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">x</span><span class="p">]</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="n">p</span> <span class="o">+</span> <span class="n">intens</span><span class="o">*</span><span class="n">nr</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">])))</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">y</span><span class="p">]</span>
+            <span class="n">points</span> <span class="o">=</span> <span class="n">zip2</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
+            <span class="c"># Find nearest neighbors in joint space, p=inf means max-norm</span>
+            <span class="n">tree</span> <span class="o">=</span> <span class="n">ss</span><span class="o">.</span><span class="n">cKDTree</span><span class="p">(</span><span class="n">points</span><span class="p">)</span>
+            <span class="n">dvec</span> <span class="o">=</span> <span class="p">[</span><span class="n">tree</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">point</span><span class="p">,</span> <span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="s">&#39;inf&#39;</span><span class="p">))[</span><span class="mi">0</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">point</span> <span class="ow">in</span> <span class="n">points</span><span class="p">]</span>
+            <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">d</span> <span class="o">=</span> <span class="n">avgdigamma</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">dvec</span><span class="p">),</span> <span class="n">avgdigamma</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">dvec</span><span class="p">),</span> <span class="n">digamma</span><span class="p">(</span><span class="n">k</span><span class="p">),</span> <span class="n">digamma</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+            <span class="k">return</span> <span class="p">(</span><span class="o">-</span><span class="n">a</span><span class="o">-</span><span class="n">b</span><span class="o">+</span><span class="n">c</span><span class="o">+</span><span class="n">d</span><span class="p">)</span><span class="o">/</span><span class="n">log</span><span class="p">(</span><span class="n">base</span><span class="p">)</span>
+            
+        <span class="k">def</span> <span class="nf">zip2</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+            <span class="c"># zip2(x,y) takes the lists of vectors and makes it a list of vectors in a joint space</span>
+            <span class="c"># E.g. zip2([[1],[2],[3]],[[4],[5],[6]]) = [[1,4],[2,5],[3,6]]</span>
+            <span class="k">return</span> <span class="p">[</span><span class="nb">sum</span><span class="p">(</span><span class="n">sublist</span><span class="p">,</span> <span class="p">[])</span> <span class="k">for</span> <span class="n">sublist</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)]</span>
+
+        <span class="k">def</span> <span class="nf">avgdigamma</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">dvec</span><span class="p">):</span>
+            <span class="c">#This part finds number of neighbors in some radius in the marginal space</span>
+            <span class="c">#returns expectation value of &lt;psi(nx)&gt;</span>
+            <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">points</span><span class="p">)</span>
+            <span class="n">tree</span> <span class="o">=</span> <span class="n">ss</span><span class="o">.</span><span class="n">cKDTree</span><span class="p">(</span><span class="n">points</span><span class="p">)</span>
+            <span class="n">avg</span> <span class="o">=</span> <span class="mf">0.</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+                <span class="n">dist</span> <span class="o">=</span> <span class="n">dvec</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="c">#subtlety, we don&#39;t include the boundary point, </span>
+                <span class="c">#but we are implicitly adding 1 to kraskov def bc center point is included</span>
+                <span class="n">num_points</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">tree</span><span class="o">.</span><span class="n">query_ball_point</span><span class="p">(</span><span class="n">points</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">dist</span><span class="o">-</span><span class="mf">1e-15</span><span class="p">,</span><span class="n">p</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="s">&#39;inf&#39;</span><span class="p">)))</span> 
+                <span class="n">avg</span> <span class="o">+=</span> <span class="n">digamma</span><span class="p">(</span><span class="n">num_points</span><span class="p">)</span><span class="o">/</span><span class="n">N</span>
+            <span class="k">return</span> <span class="n">avg</span>
+
+        <span class="n">out</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">power_x</span><span class="p">,</span> <span class="n">power_y</span> <span class="ow">in</span> <span class="n">izip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">power_series</span><span class="p">(),</span> <span class="n">other</span><span class="o">.</span><span class="n">power_series</span><span class="p">()):</span>
+            <span class="n">power_x_val</span> <span class="o">=</span> <span class="n">power_x</span><span class="o">.</span><span class="n">values</span>
+            <span class="n">power_y_val</span> <span class="o">=</span> <span class="n">power_y</span><span class="o">.</span><span class="n">values</span> 
+            <span class="n">num_elements</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">power_x_val</span><span class="p">)</span>
+            <span class="n">power_x_val</span> <span class="o">=</span> <span class="n">power_x_val</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">num_elements</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+            <span class="n">power_y_val</span> <span class="o">=</span> <span class="n">power_y_val</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">num_elements</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>            
+            <span class="k">if</span> <span class="n">num_elements</span><span class="o">&gt;</span><span class="n">MAX_SIZE_ENTROPY</span><span class="p">:</span>
+                <span class="n">splits</span> <span class="o">=</span> <span class="n">num_elements</span><span class="o">/</span><span class="n">MAX_SIZE_ENTROPY</span> <span class="o">+</span> <span class="mi">1</span>
+                <span class="n">x_split</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array_split</span><span class="p">(</span><span class="n">power_x_val</span><span class="p">,</span> <span class="n">splits</span><span class="p">)</span>
+                <span class="n">y_split</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array_split</span><span class="p">(</span><span class="n">power_y_val</span><span class="p">,</span> <span class="n">splits</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span>  <span class="ow">in</span> <span class="n">izip</span><span class="p">(</span><span class="n">x_split</span><span class="p">,</span> <span class="n">y_split</span><span class="p">):</span>            
+                    <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">kdtree_mi</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">base</span><span class="p">))</span>                    
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">kdtree_mi</span><span class="p">(</span><span class="n">power_x_val</span><span class="p">,</span> <span class="n">power_y_val</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">base</span><span class="p">))</span>
+        <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Electric.available_power_ac_types"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.electric.Electric.available_power_ac_types">[docs]</a>    <span class="k">def</span> <span class="nf">available_power_ac_types</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Finds available alternating current types from power measurements.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list of strings e.g. [&#39;apparent&#39;, &#39;active&#39;]</span>
+
+<span class="sd">        .. note:: Deprecated in NILMTK v0.3</span>
+<span class="sd">                  `available_power_ac_types` should not be used.  Instead please</span>
+<span class="sd">                  use `available_ac_types(&#39;power&#39;).`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">warn</span><span class="p">(</span><span class="s">&quot;`available_power_ac_types` is deprecated.  Please use&quot;</span>
+             <span class="s">&quot; `available_ac_types(&#39;power&#39;)` instead.&quot;</span><span class="p">,</span> <span class="ne">DeprecationWarning</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">available_ac_types</span><span class="p">(</span><span class="s">&#39;power&#39;</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Electric.load_series"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.electric.Electric.load_series">[docs]</a>    <span class="k">def</span> <span class="nf">load_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        ac_type : str</span>
+<span class="sd">        physical_quantity : str</span>
+<span class="sd">            We sum across ac_types of this physical quantity.</span>
+<span class="sd">        **kwargs : passed through to load().</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        generator of pd.Series.  If a single ac_type is found for the </span>
+<span class="sd">        physical_quantity then the series.name will be a normal tuple.</span>
+<span class="sd">        If more than 1 ac_type is found then the ac_type will be a string</span>
+<span class="sd">        of the ac_types with &#39;+&#39; in between.  e.g. &#39;active+apparent&#39;.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c"># Pull data through preprocessing pipeline</span>
+        <span class="n">physical_quantity</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;physical_quantity&#39;</span><span class="p">]</span>
+        <span class="n">generator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">generator</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">chunk</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+                <span class="k">yield</span> <span class="n">chunk</span>
+                <span class="k">continue</span>
+            <span class="n">chunk_to_yield</span> <span class="o">=</span> <span class="n">chunk</span><span class="p">[</span><span class="n">physical_quantity</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">ac_types</span> <span class="o">=</span> <span class="s">&#39;+&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">chunk</span><span class="p">[</span><span class="n">physical_quantity</span><span class="p">]</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+            <span class="n">chunk_to_yield</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="p">(</span><span class="n">physical_quantity</span><span class="p">,</span> <span class="n">ac_types</span><span class="p">)</span>
+            <span class="n">chunk_to_yield</span><span class="o">.</span><span class="n">timeframe</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">chunk</span><span class="p">,</span> <span class="s">&#39;timeframe&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+            <span class="n">chunk_to_yield</span><span class="o">.</span><span class="n">look_ahead</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">chunk</span><span class="p">,</span> <span class="s">&#39;look_ahead&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+            <span class="k">yield</span> <span class="n">chunk_to_yield</span>
+</div>
+<div class="viewcode-block" id="Electric.power_series"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.electric.Electric.power_series">[docs]</a>    <span class="k">def</span> <span class="nf">power_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get power Series.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        ac_type : str, defaults to &#39;best&#39;</span>
+<span class="sd">        **kwargs :</span>
+<span class="sd">            Any other key word arguments are passed to self.load()</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        generator of pd.Series of power measurements.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c"># Select power column:</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;physical_quantity&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;power&#39;</span>
+        <span class="n">kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s">&#39;ac_type&#39;</span><span class="p">,</span> <span class="s">&#39;best&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_series</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Electric.activity_histogram"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.electric.Electric.activity_histogram">[docs]</a>    <span class="k">def</span> <span class="nf">activity_histogram</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">period</span><span class="o">=</span><span class="s">&#39;D&#39;</span><span class="p">,</span> <span class="n">bin_duration</span><span class="o">=</span><span class="s">&#39;H&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a histogram vector showing when activity occurs.</span>
+
+<span class="sd">        e.g. to see when, over the course of an average day, activity occurs</span>
+<span class="sd">        then use `bin_duration=&#39;H&#39;` and `period=&#39;D&#39;`.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        period : str. Pandas period alias.</span>
+<span class="sd">        bin_duration : str. Pandas period alias e.g. &#39;H&#39; = hourly; &#39;D&#39; = daily.</span>
+<span class="sd">            Width of each bin of the histogram.  `bin_duration` must exactly</span>
+<span class="sd">            divide the chosen `period`.</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        hist : np.ndarray</span>
+<span class="sd">            length will be `period / bin_duration`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">n_bins</span> <span class="o">=</span> <span class="p">(</span><span class="n">offset_alias_to_seconds</span><span class="p">(</span><span class="n">period</span><span class="p">)</span> <span class="o">/</span> 
+                  <span class="n">offset_alias_to_seconds</span><span class="p">(</span><span class="n">bin_duration</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">n_bins</span> <span class="o">!=</span> <span class="nb">int</span><span class="p">(</span><span class="n">n_bins</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;`bin_duration` must exactly divide the&#39;</span>
+                             <span class="s">&#39; chosen `period`&#39;</span><span class="p">)</span>
+        <span class="n">n_bins</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">n_bins</span><span class="p">)</span>
+
+        <span class="c"># Resample to `bin_duration` and load</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;sample_period&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">offset_alias_to_seconds</span><span class="p">(</span><span class="n">bin_duration</span><span class="p">)</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;resample_kwargs&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;how&#39;</span><span class="p">:</span> <span class="s">&#39;max&#39;</span><span class="p">}</span>
+        <span class="n">when_on</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">when_on</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="c"># Calculate histogram...</span>
+        <span class="n">hist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_bins</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">on_chunk</span> <span class="ow">in</span> <span class="n">when_on</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">on_chunk</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">5</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="n">on_chunk</span> <span class="o">=</span> <span class="n">on_chunk</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+
+            <span class="c"># Trick using resample to &#39;normalise&#39; start and end dates</span>
+            <span class="c"># to natural boundaries of &#39;period&#39;.</span>
+            <span class="n">resampled_to_period</span> <span class="o">=</span> <span class="n">on_chunk</span><span class="o">.</span><span class="n">iloc</span><span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]]</span><span class="o">.</span><span class="n">resample</span><span class="p">(</span><span class="n">period</span><span class="p">)</span><span class="o">.</span><span class="n">index</span>
+            <span class="n">start</span> <span class="o">=</span> <span class="n">resampled_to_period</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">end</span> <span class="o">=</span> <span class="n">resampled_to_period</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span>
+
+            <span class="c"># Reindex chunk</span>
+            <span class="n">new_index</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">date_range</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="n">bin_duration</span><span class="p">,</span> <span class="n">closed</span><span class="o">=</span><span class="s">&#39;left&#39;</span><span class="p">)</span>
+            <span class="n">on_chunk</span> <span class="o">=</span> <span class="n">on_chunk</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">new_index</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+
+            <span class="c"># reshape</span>
+            <span class="n">matrix</span> <span class="o">=</span> <span class="n">on_chunk</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_bins</span><span class="p">))</span>
+
+            <span class="c"># histogram</span>
+            <span class="n">hist</span> <span class="o">+=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">hist</span>
+</div>
+<div class="viewcode-block" id="Electric.plot_activity_histogram"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.electric.Electric.plot_activity_histogram">[docs]</a>    <span class="k">def</span> <span class="nf">plot_activity_histogram</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">period</span><span class="o">=</span><span class="s">&#39;D&#39;</span><span class="p">,</span> <span class="n">bin_duration</span><span class="o">=</span><span class="s">&#39;H&#39;</span><span class="p">,</span>
+                                <span class="n">plot_kwargs</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+        <span class="n">hist</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">activity_histogram</span><span class="p">(</span><span class="n">bin_duration</span><span class="o">=</span><span class="n">bin_duration</span><span class="p">,</span>
+                                       <span class="n">period</span><span class="o">=</span><span class="n">period</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">plot_kwargs</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">plot_kwargs</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">n_bins</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">hist</span><span class="p">)</span>
+        <span class="n">plot_kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s">&#39;align&#39;</span><span class="p">,</span> <span class="s">&#39;center&#39;</span><span class="p">)</span>
+        <span class="n">plot_kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s">&#39;linewidth&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n_bins</span><span class="p">),</span> <span class="n">hist</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n_bins</span><span class="p">),</span> <span class="o">**</span><span class="n">plot_kwargs</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">n_bins</span><span class="p">])</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s">&#39;Activity distribution&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="n">bin_duration</span> <span class="o">+</span> <span class="s">&#39; of &#39;</span> <span class="o">+</span> <span class="n">period</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s">&#39;Count&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ax</span>
+</div>
+<div class="viewcode-block" id="Electric.activation_series"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.electric.Electric.activation_series">[docs]</a>    <span class="k">def</span> <span class="nf">activation_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">min_off_duration</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">min_on_duration</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">border</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                          <span class="n">on_power_threshold</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns runs of an appliance.</span>
+
+<span class="sd">        Most appliances spend a lot of their time off.  This function finds</span>
+<span class="sd">        periods when the appliance is on.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        min_off_duration : int</span>
+<span class="sd">            If min_off_duration &gt; 0 then ignore &#39;off&#39; periods less than</span>
+<span class="sd">            min_off_duration seconds of sub-threshold power consumption </span>
+<span class="sd">            (e.g. a washing machine might draw no power for a short</span>
+<span class="sd">            period while the clothes soak.)  Defaults to 0.</span>
+<span class="sd">        min_on_duration : int</span>
+<span class="sd">            Any activation lasting less seconds than min_on_duration will be </span>
+<span class="sd">            ignored.  Defaults to 0.</span>
+<span class="sd">        border : int</span>
+<span class="sd">            Number of rows to include before and after the detected activation</span>
+<span class="sd">        on_power_threshold : int or float</span>
+<span class="sd">            Defaults to self.on_power_threshold()</span>
+<span class="sd">        **kwargs : kwargs for self.power_series()</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list of pd.Series.  Each series contains one activation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s">&#39;resample&#39;</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">on_power_threshold</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">on_power_threshold</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">on_power_threshold</span><span class="p">()</span>
+
+        <span class="n">activations</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">power_series</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+            <span class="n">when_on</span> <span class="o">=</span> <span class="n">chunk</span> <span class="o">&gt;=</span> <span class="n">on_power_threshold</span>
+
+            <span class="c"># Find state changes</span>
+            <span class="n">state_changes</span> <span class="o">=</span> <span class="n">when_on</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int8</span><span class="p">)</span><span class="o">.</span><span class="n">diff</span><span class="p">()</span>
+            <span class="k">del</span> <span class="n">when_on</span>
+            <span class="n">switch_on_events</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">state_changes</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">switch_off_events</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">state_changes</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">del</span> <span class="n">state_changes</span>
+
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">switch_on_events</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">switch_off_events</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">continue</span>
+            
+            <span class="c"># Make sure events align</span>
+            <span class="k">if</span> <span class="n">switch_off_events</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">switch_on_events</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+                <span class="n">switch_off_events</span> <span class="o">=</span> <span class="n">switch_off_events</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+            <span class="k">if</span> <span class="n">switch_on_events</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">switch_off_events</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+                <span class="n">switch_on_events</span> <span class="o">=</span> <span class="n">switch_on_events</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">switch_on_events</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">switch_off_events</span><span class="p">)</span>
+                
+            <span class="c"># Smooth over off-durations less than min_off_duration</span>
+            <span class="k">if</span> <span class="n">min_off_duration</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">off_durations</span> <span class="o">=</span> <span class="p">(</span><span class="n">chunk</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">switch_on_events</span><span class="p">[</span><span class="mi">1</span><span class="p">:]]</span><span class="o">.</span><span class="n">values</span> <span class="o">-</span> 
+                                 <span class="n">chunk</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">switch_off_events</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+
+                <span class="n">off_durations</span> <span class="o">=</span> <span class="n">timedelta64_to_secs</span><span class="p">(</span><span class="n">off_durations</span><span class="p">)</span>
+
+                <span class="n">above_threshold_off_durations</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
+                    <span class="n">off_durations</span> <span class="o">&gt;=</span> <span class="n">min_off_duration</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+                <span class="c"># Now remove off_events and on_events</span>
+                <span class="n">switch_off_events</span> <span class="o">=</span> <span class="n">switch_off_events</span><span class="p">[</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">above_threshold_off_durations</span><span class="p">,</span> 
+                                    <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">switch_off_events</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">]])]</span>
+                <span class="n">switch_on_events</span> <span class="o">=</span> <span class="n">switch_on_events</span><span class="p">[</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([[</span><span class="mi">0</span><span class="p">],</span> <span class="n">above_threshold_off_durations</span><span class="o">+</span><span class="mi">1</span><span class="p">])]</span>
+            <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">switch_on_events</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">switch_off_events</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">on</span><span class="p">,</span> <span class="n">off</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">switch_on_events</span><span class="p">,</span> <span class="n">switch_off_events</span><span class="p">):</span>
+                <span class="n">duration</span> <span class="o">=</span> <span class="p">(</span><span class="n">chunk</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">off</span><span class="p">]</span> <span class="o">-</span> <span class="n">chunk</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">on</span><span class="p">])</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">duration</span> <span class="o">&lt;</span> <span class="n">min_on_duration</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="n">on</span> <span class="o">-=</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">border</span>
+                <span class="k">if</span> <span class="n">on</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">on</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="n">off</span> <span class="o">+=</span> <span class="n">border</span>
+                <span class="n">activations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">chunk</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">on</span><span class="p">:</span><span class="n">off</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">activations</span>
 
 </div></div>
 <div class="viewcode-block" id="align_two_meters"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.electric.align_two_meters">[docs]</a><span class="k">def</span> <span class="nf">align_two_meters</span><span class="p">(</span><span class="n">master</span><span class="p">,</span> <span class="n">slave</span><span class="p">,</span> <span class="n">func</span><span class="o">=</span><span class="s">&#39;power_series&#39;</span><span class="p">):</span>
@@ -308,6 +929,8 @@
 
         <span class="c"># TODO: do this resampling in the pipeline?</span>
         <span class="n">slave_chunk</span> <span class="o">=</span> <span class="n">slave_chunk</span><span class="o">.</span><span class="n">resample</span><span class="p">(</span><span class="n">period_alias</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">slave_chunk</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+            <span class="k">continue</span>
         <span class="n">master_chunk</span> <span class="o">=</span> <span class="n">master_chunk</span><span class="o">.</span><span class="n">resample</span><span class="p">(</span><span class="n">period_alias</span><span class="p">)</span>
 
         <span class="k">yield</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s">&#39;master&#39;</span><span class="p">:</span> <span class="n">master_chunk</span><span class="p">,</span> <span class="s">&#39;slave&#39;</span><span class="p">:</span> <span class="n">slave_chunk</span><span class="p">})</span>

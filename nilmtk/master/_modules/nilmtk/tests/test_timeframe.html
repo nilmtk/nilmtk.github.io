@@ -9,8 +9,8 @@
     
     <link rel="stylesheet" href="../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../../../_static/bootstrap-3.1.0/css/bootstrap.min.css" type="text/css" />
-    <link rel="stylesheet" href="../../../_static/bootstrap-3.1.0/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/bootstrap-3.2.0/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/bootstrap-3.2.0/css/bootstrap-theme.min.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
     
     <script type="text/javascript">
@@ -28,10 +28,10 @@
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="../../../_static/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="../../../_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="../../../_static/bootstrap-3.1.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../../_static/bootstrap-3.2.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../_static/bootstrap-sphinx.js"></script>
     <link rel="top" title="NILMTK 0.2 documentation" href="../../../index.html" />
-    <link rel="up" title="Module code" href="../../index.html" />
+    <link rel="up" title="nilmtk" href="../../nilmtk.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -56,7 +56,6 @@
 
         <div class="collapse navbar-collapse nav-collapse">
           <ul class="nav navbar-nav">
-            <li class="divider-vertical"></li>
             
                 <li><a href="https://github.com/nilmtk/nilmtk">github</a></li>
             
@@ -166,60 +165,60 @@
         <span class="n">tf</span> <span class="o">=</span> <span class="n">TimeFrame</span><span class="p">(</span><span class="s">&quot;2012-01-01 00:00:00&quot;</span><span class="p">,</span> <span class="s">&quot;2013-01-01 00:00:00&quot;</span><span class="p">)</span>        
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">timedelta</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">(),</span> <span class="mi">60</span><span class="o">*</span><span class="mi">60</span><span class="o">*</span><span class="mi">24</span><span class="o">*</span><span class="mi">366</span><span class="p">)</span>
 </div>
-<div class="viewcode-block" id="TestTimeFrame.test_intersect"><a class="viewcode-back" href="../../../nilmtk.tests.html#nilmtk.tests.test_timeframe.TestTimeFrame.test_intersect">[docs]</a>    <span class="k">def</span> <span class="nf">test_intersect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="TestTimeFrame.test_intersection"><a class="viewcode-back" href="../../../nilmtk.tests.html#nilmtk.tests.test_timeframe.TestTimeFrame.test_intersection">[docs]</a>    <span class="k">def</span> <span class="nf">test_intersection</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">tf</span> <span class="o">=</span> <span class="n">TimeFrame</span><span class="p">(</span><span class="s">&quot;2012-01-01 00:00:00&quot;</span><span class="p">,</span> <span class="s">&quot;2013-01-01 00:00:00&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">empty</span><span class="p">)</span>
 
-        <span class="n">new_tf</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">intersect</span><span class="p">(</span><span class="n">tf</span><span class="p">)</span>
+        <span class="n">new_tf</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">tf</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">tf</span><span class="p">,</span> <span class="n">new_tf</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">new_tf</span><span class="o">.</span><span class="n">empty</span><span class="p">)</span>
 
-        <span class="n">new_tf</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">intersect</span><span class="p">(</span><span class="n">TimeFrame</span><span class="p">())</span>
+        <span class="n">new_tf</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">TimeFrame</span><span class="p">())</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">tf</span><span class="p">,</span> <span class="n">new_tf</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">new_tf</span><span class="o">.</span><span class="n">empty</span><span class="p">)</span>
 
-        <span class="n">new_tf</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">intersect</span><span class="p">(</span><span class="n">TimeFrame</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="s">&quot;1990-01-01&quot;</span><span class="p">))</span>
+        <span class="n">new_tf</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">TimeFrame</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="s">&quot;1990-01-01&quot;</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">tf</span><span class="p">,</span> <span class="n">new_tf</span><span class="p">)</span>        
         <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">new_tf</span><span class="o">.</span><span class="n">empty</span><span class="p">)</span>
 
-        <span class="n">new_tf</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">intersect</span><span class="p">(</span><span class="n">TimeFrame</span><span class="p">(</span><span class="n">end</span><span class="o">=</span><span class="s">&quot;2100-01-01&quot;</span><span class="p">))</span>
+        <span class="n">new_tf</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">TimeFrame</span><span class="p">(</span><span class="n">end</span><span class="o">=</span><span class="s">&quot;2100-01-01&quot;</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">tf</span><span class="p">,</span> <span class="n">new_tf</span><span class="p">)</span>        
         <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">new_tf</span><span class="o">.</span><span class="n">empty</span><span class="p">)</span>
 
         <span class="n">small_tf</span> <span class="o">=</span> <span class="n">TimeFrame</span><span class="p">(</span><span class="s">&quot;2012-01-05 00:00:00&quot;</span><span class="p">,</span> <span class="s">&quot;2012-01-06 00:00:00&quot;</span><span class="p">)</span>
-        <span class="n">new_tf</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">intersect</span><span class="p">(</span><span class="n">small_tf</span><span class="p">)</span>
+        <span class="n">new_tf</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">small_tf</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">small_tf</span><span class="p">,</span> <span class="n">new_tf</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">new_tf</span><span class="o">.</span><span class="n">empty</span><span class="p">)</span>
 
         <span class="n">large_tf</span> <span class="o">=</span> <span class="n">TimeFrame</span><span class="p">(</span><span class="s">&quot;2010-01-01 00:00:00&quot;</span><span class="p">,</span> <span class="s">&quot;2014-01-01 00:00:00&quot;</span><span class="p">)</span>
-        <span class="n">new_tf</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">intersect</span><span class="p">(</span><span class="n">large_tf</span><span class="p">)</span>
+        <span class="n">new_tf</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">large_tf</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">tf</span><span class="p">,</span> <span class="n">new_tf</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">new_tf</span><span class="o">.</span><span class="n">empty</span><span class="p">)</span>
 
         <span class="n">disjoint</span> <span class="o">=</span> <span class="n">TimeFrame</span><span class="p">(</span><span class="s">&quot;2015-01-01&quot;</span><span class="p">,</span> <span class="s">&quot;2016-01-01&quot;</span><span class="p">)</span>
-        <span class="n">new_tf</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">intersect</span><span class="p">(</span><span class="n">disjoint</span><span class="p">)</span>
+        <span class="n">new_tf</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">disjoint</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">new_tf</span><span class="o">.</span><span class="n">empty</span><span class="p">)</span>
 
         <span class="c"># try intersecting with emtpy TF</span>
-        <span class="n">new_tf</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">intersect</span><span class="p">(</span><span class="n">new_tf</span><span class="p">)</span>
+        <span class="n">new_tf</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">new_tf</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">new_tf</span><span class="o">.</span><span class="n">empty</span><span class="p">)</span>
 
         <span class="n">disjoint</span> <span class="o">=</span> <span class="n">TimeFrame</span><span class="p">(</span><span class="s">&quot;2015-01-01&quot;</span><span class="p">,</span> <span class="s">&quot;2016-01-01&quot;</span><span class="p">)</span>
         <span class="n">tf</span><span class="o">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="bp">False</span>
-        <span class="n">new_tf</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">intersect</span><span class="p">(</span><span class="n">disjoint</span><span class="p">)</span>
+        <span class="n">new_tf</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">disjoint</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">new_tf</span><span class="p">,</span> <span class="n">disjoint</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">new_tf</span><span class="o">.</span><span class="n">empty</span><span class="p">)</span>
         <span class="n">tf</span><span class="o">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="bp">True</span>
 
         <span class="c"># crop into the start of tf</span>
         <span class="n">new_start</span> <span class="o">=</span> <span class="s">&quot;2012-01-05 04:05:06&quot;</span>
-        <span class="n">new_tf</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">intersect</span><span class="p">(</span><span class="n">TimeFrame</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="n">new_start</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s">&quot;2014-01-01&quot;</span><span class="p">))</span>
+        <span class="n">new_tf</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">TimeFrame</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="n">new_start</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s">&quot;2014-01-01&quot;</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">new_tf</span><span class="p">,</span> <span class="n">TimeFrame</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="n">new_start</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">end</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">new_tf</span><span class="o">.</span><span class="n">empty</span><span class="p">)</span>
 
         <span class="c"># crop into the end of tf</span>
         <span class="n">new_end</span> <span class="o">=</span> <span class="s">&quot;2012-01-07 04:05:06&quot;</span>
-        <span class="n">new_tf</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">intersect</span><span class="p">(</span><span class="n">TimeFrame</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="s">&quot;2011-01-01&quot;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="n">new_end</span><span class="p">))</span>
+        <span class="n">new_tf</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">TimeFrame</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="s">&quot;2011-01-01&quot;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="n">new_end</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">new_tf</span><span class="p">,</span> <span class="n">TimeFrame</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="n">new_end</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">new_tf</span><span class="o">.</span><span class="n">empty</span><span class="p">)</span>        
 </div>

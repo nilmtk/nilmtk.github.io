@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>nilmtk.dataset_converters.eco.convert_eco &mdash; NILMTK 0.2 documentation</title>
+    
+    <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/bootstrap-3.2.0/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/bootstrap-3.2.0/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '0.2',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../../../../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../../../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../../../_static/bootstrap-3.2.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="NILMTK 0.2 documentation" href="../../../../index.html" />
+    <link rel="up" title="nilmtk" href="../../../nilmtk.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../../index.html">
+          NILMTK</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.2</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="https://github.com/nilmtk/nilmtk">github</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../intro_nilmtk_v0_2.html">Intro to NILMTK v0.2</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../convert_data_to_NILMTK_format.html">Convert data to NILMTK format and load into NILMTK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../elecmeter_and_metergroup.html">MeterGroup, ElecMeter, selection and basic statistics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../pipeline_preprocessing_more_stats.html">Processing pipeline, preprocessing and more stats</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../disaggregation_and_metrics.html">Disaggregation and Metrics</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../contribute.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../writing_a_dataset_converter.html">Writing a dataset converter</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../changelog.html">Change log</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../nilmtk.html">nilmtk package</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      
+  <h1>Source code for nilmtk.dataset_converters.eco.convert_eco</h1><div class="highlight"><pre>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">os</span> <span class="kn">import</span> <span class="n">listdir</span><span class="p">,</span> <span class="n">getcwd</span>
+<span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">isdir</span><span class="p">,</span> <span class="n">join</span><span class="p">,</span> <span class="n">dirname</span><span class="p">,</span> <span class="n">abspath</span>
+<span class="kn">from</span> <span class="nn">pandas.tools.merge</span> <span class="kn">import</span> <span class="n">concat</span>
+<span class="kn">from</span> <span class="nn">nilmtk.utils</span> <span class="kn">import</span> <span class="n">get_module_directory</span><span class="p">,</span> <span class="n">check_directory_exists</span>
+<span class="kn">from</span> <span class="nn">nilmtk.datastore</span> <span class="kn">import</span> <span class="n">Key</span>
+<span class="kn">from</span> <span class="nn">nilmtk.measurement</span> <span class="kn">import</span> <span class="n">LEVEL_NAMES</span>
+<span class="kn">from</span> <span class="nn">nilm_metadata</span> <span class="kn">import</span> <span class="n">convert_yaml_to_hdf5</span>
+<span class="kn">from</span> <span class="nn">inspect</span> <span class="kn">import</span> <span class="n">currentframe</span><span class="p">,</span> <span class="n">getfile</span><span class="p">,</span> <span class="n">getsourcefile</span>
+<span class="kn">from</span> <span class="nn">sys</span> <span class="kn">import</span> <span class="n">getfilesystemencoding</span>
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">DATASET STRUCTURE:</span>
+<span class="sd">------------------</span>
+<span class="sd">On extracting all the dataset values, we should arrive at a similar directory structure as</span>
+<span class="sd">mentioned.</span>
+
+<span class="sd">ECO Dataset will have a folder &#39;&lt;i&gt;_sm_csv&#39; and &#39;&lt;i&gt;_plug_csv&#39; where i is the building no.</span>
+
+<span class="sd">&lt;i&gt;_sm_csv has a folder 01</span>
+<span class="sd">&lt;i&gt;_plug_csv has a folder 01, 02,....&lt;n&gt; where n is the plug numbers.</span>
+
+<span class="sd">Each folder has a CSV file as per each day, with each day csv file containing</span>
+<span class="sd">	86400 entries.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">plugs_column_name</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">:(</span><span class="s">&#39;power&#39;</span><span class="p">,</span> <span class="s">&#39;active&#39;</span><span class="p">),</span>
+                    <span class="p">};</span>
+
+<div class="viewcode-block" id="convert_eco"><a class="viewcode-back" href="../../../../nilmtk.dataset_converters.eco.html#nilmtk.dataset_converters.eco.convert_eco.convert_eco">[docs]</a><span class="k">def</span> <span class="nf">convert_eco</span><span class="p">(</span><span class="n">dataset_loc</span><span class="p">,</span> <span class="n">hdf_filename</span><span class="p">,</span> <span class="n">timezone</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+<span class="sd">    dataset_loc: str</span>
+<span class="sd">        The root directory where the dataset is located.</span>
+<span class="sd">    hdf_filename: str</span>
+<span class="sd">        The location where the hdf_filename is present. </span>
+<span class="sd">        The directory location has to contain the </span>
+<span class="sd">        hdf5file name for the converter to work.</span>
+<span class="sd">    timezone: str</span>
+<span class="sd">        specifies the timezone of the dataset.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c"># Creating a new HDF File</span>
+    <span class="n">store</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">HDFStore</span><span class="p">(</span><span class="n">hdf_filename</span><span class="p">,</span> <span class="s">&#39;w&#39;</span><span class="p">,</span> <span class="n">complevel</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span> <span class="n">complib</span><span class="o">=</span><span class="s">&#39;blosc&#39;</span><span class="p">)</span>    
+    
+    <span class="n">check_directory_exists</span><span class="p">(</span><span class="n">dataset_loc</span><span class="p">)</span>
+    <span class="n">directory_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">listdir</span><span class="p">(</span><span class="n">dataset_loc</span><span class="p">)</span> <span class="k">if</span> <span class="s">&#39;.txt&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">i</span><span class="p">]</span>
+    <span class="n">directory_list</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+    <span class="k">print</span> <span class="n">directory_list</span>
+
+    <span class="c"># Traversing every folder</span>
+    <span class="k">for</span> <span class="n">folder</span> <span class="ow">in</span> <span class="n">directory_list</span><span class="p">:</span>
+
+        <span class="k">if</span> <span class="n">folder</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;.&#39;</span> <span class="ow">or</span> <span class="n">folder</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">:]</span> <span class="o">==</span> <span class="s">&#39;.h5&#39;</span><span class="p">:</span>
+            <span class="k">print</span> <span class="s">&#39;Skipping &#39;</span><span class="p">,</span> <span class="n">folder</span>
+            <span class="k">continue</span>
+        <span class="k">print</span> <span class="s">&#39;Computing for folder&#39;</span><span class="p">,</span><span class="n">folder</span>
+
+        <span class="c">#Building number and meter_flag</span>
+        <span class="n">building_no</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">folder</span><span class="p">[:</span><span class="mi">2</span><span class="p">])</span>
+        <span class="n">meter_flag</span> <span class="o">=</span> <span class="s">&#39;sm&#39;</span> <span class="k">if</span> <span class="s">&#39;sm_csv&#39;</span> <span class="ow">in</span> <span class="n">folder</span> <span class="k">else</span> <span class="s">&#39;plugs&#39;</span>
+
+        <span class="n">dir_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">listdir</span><span class="p">(</span><span class="n">join</span><span class="p">(</span><span class="n">dataset_loc</span><span class="p">,</span> <span class="n">folder</span><span class="p">))</span> <span class="k">if</span> <span class="n">isdir</span><span class="p">(</span><span class="n">join</span><span class="p">(</span><span class="n">dataset_loc</span><span class="p">,</span><span class="n">folder</span><span class="p">,</span><span class="n">i</span><span class="p">))]</span>
+        <span class="n">dir_list</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+        <span class="k">print</span> <span class="s">&#39;Current dir list:&#39;</span><span class="p">,</span><span class="n">dir_list</span>
+
+        <span class="k">for</span> <span class="n">fl</span> <span class="ow">in</span> <span class="n">dir_list</span><span class="p">:</span>
+            
+            <span class="k">print</span> <span class="s">&#39;Computing for folder &#39;</span><span class="p">,</span><span class="n">fl</span>
+            
+            <span class="n">fl_dir_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">listdir</span><span class="p">(</span><span class="n">join</span><span class="p">(</span><span class="n">dataset_loc</span><span class="p">,</span><span class="n">folder</span><span class="p">,</span><span class="n">fl</span><span class="p">))</span> <span class="k">if</span> <span class="s">&#39;.csv&#39;</span> <span class="ow">in</span> <span class="n">i</span><span class="p">]</span>
+            <span class="n">fl_dir_list</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="n">meter_flag</span> <span class="o">==</span> <span class="s">&#39;sm&#39;</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">fi</span> <span class="ow">in</span> <span class="n">fl_dir_list</span><span class="p">:</span>
+                    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">join</span><span class="p">(</span><span class="n">dataset_loc</span><span class="p">,</span><span class="n">folder</span><span class="p">,</span><span class="n">fl</span><span class="p">,</span><span class="n">fi</span><span class="p">),</span> <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">17</span><span class="p">)],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+                    
+                    <span class="k">for</span> <span class="n">phase</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">):</span>
+                        <span class="n">key</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">Key</span><span class="p">(</span><span class="n">building</span><span class="o">=</span><span class="n">building_no</span><span class="p">,</span> <span class="n">meter</span><span class="o">=</span><span class="n">phase</span><span class="p">))</span>
+                        <span class="n">df_phase</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">ix</span><span class="p">[:,[</span><span class="mi">1</span><span class="o">+</span><span class="n">phase</span><span class="p">,</span> <span class="mi">5</span><span class="o">+</span><span class="n">phase</span><span class="p">,</span> <span class="mi">8</span><span class="o">+</span><span class="n">phase</span><span class="p">,</span> <span class="mi">13</span><span class="o">+</span><span class="n">phase</span><span class="p">]]</span>
+
+                        <span class="c"># get reactive power</span>
+                        <span class="n">power</span> <span class="o">=</span> <span class="n">df_phase</span><span class="o">.</span><span class="n">as_matrix</span><span class="p">([</span><span class="mi">1</span><span class="o">+</span><span class="n">phase</span><span class="p">,</span> <span class="mi">13</span><span class="o">+</span><span class="n">phase</span><span class="p">])</span>
+                        <span class="n">reactive</span> <span class="o">=</span> <span class="n">power</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">tan</span><span class="p">(</span><span class="n">power</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">180</span><span class="p">)</span>
+                        <span class="n">df_phase</span><span class="p">[</span><span class="s">&#39;Q&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">reactive</span>
+                        
+                        <span class="n">df_phase</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DatetimeIndex</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="n">fi</span><span class="p">[:</span><span class="o">-</span><span class="mi">4</span><span class="p">],</span> <span class="n">freq</span><span class="o">=</span><span class="s">&#39;s&#39;</span><span class="p">,</span> <span class="n">periods</span><span class="o">=</span><span class="mi">86400</span><span class="p">,</span> <span class="n">tz</span><span class="o">=</span><span class="s">&#39;GMT&#39;</span><span class="p">)</span>
+                        <span class="n">df_phase</span> <span class="o">=</span> <span class="n">df_phase</span><span class="o">.</span><span class="n">tz_convert</span><span class="p">(</span><span class="n">timezone</span><span class="p">)</span>
+                        
+                        <span class="n">sm_column_name</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="o">+</span><span class="n">phase</span><span class="p">:(</span><span class="s">&#39;power&#39;</span><span class="p">,</span> <span class="s">&#39;active&#39;</span><span class="p">),</span>
+                                            <span class="mi">5</span><span class="o">+</span><span class="n">phase</span><span class="p">:(</span><span class="s">&#39;current&#39;</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">),</span>
+                                            <span class="mi">8</span><span class="o">+</span><span class="n">phase</span><span class="p">:(</span><span class="s">&#39;voltage&#39;</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">),</span>
+                                            <span class="mi">13</span><span class="o">+</span><span class="n">phase</span><span class="p">:(</span><span class="s">&#39;phase_angle&#39;</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">),</span>
+                                            <span class="s">&#39;Q&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;power&#39;</span><span class="p">,</span> <span class="s">&#39;reactive&#39;</span><span class="p">),</span>
+                                            <span class="p">};</span>
+                        <span class="n">df_phase</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">sm_column_name</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+                        
+                        <span class="n">tmp_before</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">df_phase</span><span class="o">.</span><span class="n">power</span><span class="o">.</span><span class="n">active</span><span class="p">)</span>
+                        <span class="n">df_phase</span> <span class="o">=</span> <span class="n">df_phase</span><span class="p">[</span><span class="n">df_phase</span><span class="o">.</span><span class="n">power</span><span class="o">.</span><span class="n">active</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                        <span class="n">tmp_after</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">df_phase</span><span class="o">.</span><span class="n">power</span><span class="o">.</span><span class="n">active</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="p">(</span><span class="n">tmp_before</span> <span class="o">!=</span> <span class="n">tmp_after</span><span class="p">):</span>
+                            <span class="k">print</span><span class="p">(</span><span class="s">&#39;Removed missing measurements - Size before: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">tmp_before</span><span class="p">)</span> <span class="o">+</span> <span class="s">&#39;, size after: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">tmp_after</span><span class="p">))</span>
+                        
+                        <span class="n">df_phase</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">set_names</span><span class="p">(</span><span class="n">LEVEL_NAMES</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="ow">not</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">store</span><span class="p">:</span>
+                            <span class="n">store</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">df_phase</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="s">&#39;Table&#39;</span><span class="p">)</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">store</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">df_phase</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="s">&#39;Table&#39;</span><span class="p">)</span>
+                            <span class="n">store</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+                        <span class="k">print</span> <span class="s">&#39;Building&#39;</span><span class="p">,</span><span class="n">building_no</span><span class="p">,</span><span class="s">&#39;, Meter no.&#39;</span><span class="p">,</span><span class="n">phase</span><span class="p">,</span><span class="s">&#39;=&gt; Done for &#39;</span><span class="p">,</span><span class="n">fi</span><span class="p">[:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span>
+                
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c">#Meter number to be used in key</span>
+                <span class="n">meter_num</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">fl</span><span class="p">)</span> <span class="o">+</span> <span class="mi">3</span>
+                
+                <span class="n">key</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">Key</span><span class="p">(</span><span class="n">building</span><span class="o">=</span><span class="n">building_no</span><span class="p">,</span> <span class="n">meter</span><span class="o">=</span><span class="n">meter_num</span><span class="p">))</span>
+                
+                <span class="c">#Getting dataframe for each csv file seperately</span>
+                <span class="k">for</span> <span class="n">fi</span> <span class="ow">in</span> <span class="n">fl_dir_list</span><span class="p">:</span>
+                    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">join</span><span class="p">(</span><span class="n">dataset_loc</span><span class="p">,</span><span class="n">folder</span><span class="p">,</span><span class="n">fl</span> <span class="p">,</span><span class="n">fi</span><span class="p">),</span> <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+                    <span class="n">df</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DatetimeIndex</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="n">fi</span><span class="p">[:</span><span class="o">-</span><span class="mi">4</span><span class="p">],</span> <span class="n">freq</span><span class="o">=</span><span class="s">&#39;s&#39;</span><span class="p">,</span> <span class="n">periods</span><span class="o">=</span><span class="mi">86400</span><span class="p">,</span> <span class="n">tz</span> <span class="o">=</span> <span class="s">&#39;GMT&#39;</span><span class="p">)</span>
+                    <span class="n">df</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">plugs_column_name</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+                    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">tz_convert</span><span class="p">(</span><span class="n">timezone</span><span class="p">)</span>
+                    <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">set_names</span><span class="p">(</span><span class="n">LEVEL_NAMES</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+                    <span class="n">tmp_before</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">power</span><span class="o">.</span><span class="n">active</span><span class="p">)</span>
+                    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">power</span><span class="o">.</span><span class="n">active</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                    <span class="n">tmp_after</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">power</span><span class="o">.</span><span class="n">active</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">tmp_before</span> <span class="o">!=</span> <span class="n">tmp_after</span><span class="p">):</span>
+                        <span class="k">print</span><span class="p">(</span><span class="s">&#39;Removed missing measurements - Size before: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">tmp_before</span><span class="p">)</span> <span class="o">+</span> <span class="s">&#39;, size after: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">tmp_after</span><span class="p">))</span>
+                    
+                    <span class="c"># If table not present in hdf5, create or else append to existing data</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">store</span><span class="p">:</span>
+                        <span class="n">store</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="s">&#39;Table&#39;</span><span class="p">)</span>
+                        <span class="k">print</span> <span class="s">&#39;Building&#39;</span><span class="p">,</span><span class="n">building_no</span><span class="p">,</span><span class="s">&#39;, Meter no.&#39;</span><span class="p">,</span><span class="n">meter_num</span><span class="p">,</span><span class="s">&#39;=&gt; Done for &#39;</span><span class="p">,</span><span class="n">fi</span><span class="p">[:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">store</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="s">&#39;Table&#39;</span><span class="p">)</span>
+                        <span class="n">store</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+                        <span class="k">print</span> <span class="s">&#39;Building&#39;</span><span class="p">,</span><span class="n">building_no</span><span class="p">,</span><span class="s">&#39;, Meter no.&#39;</span><span class="p">,</span><span class="n">meter_num</span><span class="p">,</span><span class="s">&#39;=&gt; Done for &#39;</span><span class="p">,</span><span class="n">fi</span><span class="p">[:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span>
+            
+    <span class="k">print</span> <span class="s">&quot;Data storage completed.&quot;</span>
+    <span class="n">store</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="c"># Adding the metadata to the HDF5file</span>
+    <span class="k">print</span> <span class="s">&quot;Proceeding to Metadata conversion...&quot;</span>
+    <span class="n">meta_path</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="n">_get_module_directory</span><span class="p">(),</span> <span class="s">&#39;metadata&#39;</span><span class="p">)</span>
+    <span class="n">convert_yaml_to_hdf5</span><span class="p">(</span><span class="n">meta_path</span><span class="p">,</span> <span class="n">hdf_filename</span><span class="p">)</span>
+    <span class="k">print</span> <span class="s">&quot;Completed Metadata conversion.&quot;</span>
+</div>
+<span class="k">def</span> <span class="nf">_get_module_directory</span><span class="p">():</span>
+    <span class="c"># Taken from http://stackoverflow.com/a/6098238/732596</span>
+    <span class="n">path_to_this_file</span> <span class="o">=</span> <span class="n">dirname</span><span class="p">(</span><span class="n">getfile</span><span class="p">(</span><span class="n">currentframe</span><span class="p">()))</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">isdir</span><span class="p">(</span><span class="n">path_to_this_file</span><span class="p">):</span>
+        <span class="n">encoding</span> <span class="o">=</span> <span class="n">getfilesystemencoding</span><span class="p">()</span>
+        <span class="n">path_to_this_file</span> <span class="o">=</span> <span class="n">dirname</span><span class="p">(</span><span class="nb">unicode</span><span class="p">(</span><span class="n">__file__</span><span class="p">,</span> <span class="n">encoding</span><span class="p">))</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">isdir</span><span class="p">(</span><span class="n">path_to_this_file</span><span class="p">):</span>
+        <span class="n">abspath</span><span class="p">(</span><span class="n">getsourcefile</span><span class="p">(</span><span class="k">lambda</span> <span class="n">_</span><span class="p">:</span> <span class="bp">None</span><span class="p">))</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">isdir</span><span class="p">(</span><span class="n">path_to_this_file</span><span class="p">):</span>
+        <span class="n">path_to_this_file</span> <span class="o">=</span> <span class="n">getcwd</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="n">isdir</span><span class="p">(</span><span class="n">path_to_this_file</span><span class="p">),</span> <span class="n">path_to_this_file</span> <span class="o">+</span> <span class="s">&#39; is not a directory&#39;</span>
+    <span class="k">return</span> <span class="n">path_to_this_file</span>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2014, NILMTK Authors.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.3.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

@@ -9,8 +9,8 @@
     
     <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/bootstrap-3.1.0/css/bootstrap.min.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/bootstrap-3.1.0/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/bootstrap-3.2.0/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/bootstrap-3.2.0/css/bootstrap-theme.min.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     
     <script type="text/javascript">
@@ -28,10 +28,10 @@
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="../../_static/bootstrap-3.1.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-3.2.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
     <link rel="top" title="NILMTK 0.2 documentation" href="../../index.html" />
-    <link rel="up" title="Module code" href="../index.html" />
+    <link rel="up" title="nilmtk" href="../nilmtk.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -56,7 +56,6 @@
 
         <div class="collapse navbar-collapse nav-collapse">
           <ul class="nav navbar-nav">
-            <li class="divider-vertical"></li>
             
                 <li><a href="https://github.com/nilmtk/nilmtk">github</a></li>
             
@@ -135,9 +134,10 @@
       
   <h1>Source code for nilmtk.building</h1><div class="highlight"><pre>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">division</span>
-<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">namedtuple</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">namedtuple</span><span class="p">,</span> <span class="n">OrderedDict</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
 <span class="kn">from</span> <span class="nn">.metergroup</span> <span class="kn">import</span> <span class="n">MeterGroup</span>
-<span class="kn">from</span> <span class="nn">.datastore</span> <span class="kn">import</span> <span class="n">join_key</span>
+<span class="kn">from</span> <span class="nn">.datastore.datastore</span> <span class="kn">import</span> <span class="n">join_key</span>
 <span class="kn">from</span> <span class="nn">.hashable</span> <span class="kn">import</span> <span class="n">Hashable</span>
 
 <span class="n">BuildingID</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s">&#39;BuildingID&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s">&#39;instance&#39;</span><span class="p">,</span> <span class="s">&#39;dataset&#39;</span><span class="p">])</span>
@@ -158,13 +158,13 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">elec</span> <span class="o">=</span> <span class="n">MeterGroup</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span> <span class="o">=</span> <span class="p">{}</span>
     
-<div class="viewcode-block" id="Building.load"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.building.Building.load">[docs]</a>    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">store</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">dataset_name</span><span class="p">):</span>
+<div class="viewcode-block" id="Building.import_metadata"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.building.Building.import_metadata">[docs]</a>    <span class="k">def</span> <span class="nf">import_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">store</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">dataset_name</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">load_metadata</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">has_key</span><span class="p">(</span><span class="s">&#39;dataset&#39;</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s">&#39;dataset&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dataset_name</span>
         <span class="n">elec_meters</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s">&#39;elec_meters&#39;</span><span class="p">,</span> <span class="p">{})</span>
         <span class="n">appliances</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s">&#39;appliances&#39;</span><span class="p">,</span> <span class="p">[])</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">elec</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="n">elec_meters</span><span class="p">,</span> <span class="n">appliances</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">identifier</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">elec</span><span class="o">.</span><span class="n">import_metadata</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="n">elec_meters</span><span class="p">,</span> <span class="n">appliances</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">identifier</span><span class="p">)</span>
                 </div>
 <div class="viewcode-block" id="Building.save"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.building.Building.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">destination</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
         <span class="n">destination</span><span class="o">.</span><span class="n">write_metadata</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">)</span>
@@ -174,7 +174,21 @@
 <div class="viewcode-block" id="Building.identifier"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.building.Building.identifier">[docs]</a>    <span class="k">def</span> <span class="nf">identifier</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">md</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span>
         <span class="k">return</span> <span class="n">BuildingID</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="n">md</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;instance&#39;</span><span class="p">),</span> 
-                          <span class="n">dataset</span><span class="o">=</span><span class="n">md</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;dataset&#39;</span><span class="p">))</span></div></div>
+                          <span class="n">dataset</span><span class="o">=</span><span class="n">md</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;dataset&#39;</span><span class="p">))</span>
+</div>
+<div class="viewcode-block" id="Building.describe"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.building.Building.describe">[docs]</a>    <span class="k">def</span> <span class="nf">describe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns a Series describing this building.&quot;&quot;&quot;</span>
+        <span class="n">md</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span>
+        <span class="n">series</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">identifier</span><span class="o">.</span><span class="n">instance</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s">&#39;instance&#39;</span><span class="p">,</span> <span class="s">&#39;building_type&#39;</span><span class="p">,</span>
+                    <span class="s">&#39;construction_year&#39;</span><span class="p">,</span> <span class="s">&#39;energy_improvements&#39;</span><span class="p">,</span> <span class="s">&#39;heating&#39;</span><span class="p">,</span> 
+                    <span class="s">&#39;ownership&#39;</span><span class="p">,</span> <span class="s">&#39;n_occupants&#39;</span><span class="p">,</span> <span class="s">&#39;description_of_occupants&#39;</span><span class="p">]:</span>
+            <span class="n">series</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">md</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+
+        <span class="n">series</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">series</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">elec</span><span class="o">.</span><span class="n">describe</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)])</span>
+
+        <span class="k">return</span> <span class="n">series</span></div></div>
 </pre></div>
 
     </div>

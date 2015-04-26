@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>nilmtk.dataset_converters.dataport.download_dataport &mdash; NILMTK 0.2 documentation</title>
+    
+    <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/bootstrap-3.2.0/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/bootstrap-3.2.0/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '0.2',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../../../../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../../../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../../../_static/bootstrap-3.2.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="NILMTK 0.2 documentation" href="../../../../index.html" />
+    <link rel="up" title="nilmtk" href="../../../nilmtk.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../../index.html">
+          NILMTK</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.2</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="https://github.com/nilmtk/nilmtk">github</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../intro_nilmtk_v0_2.html">Intro to NILMTK v0.2</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../convert_data_to_NILMTK_format.html">Convert data to NILMTK format and load into NILMTK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../elecmeter_and_metergroup.html">MeterGroup, ElecMeter, selection and basic statistics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../pipeline_preprocessing_more_stats.html">Processing pipeline, preprocessing and more stats</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../disaggregation_and_metrics.html">Disaggregation and Metrics</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../contribute.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../writing_a_dataset_converter.html">Writing a dataset converter</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../changelog.html">Change log</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../nilmtk.html">nilmtk package</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      
+  <h1>Source code for nilmtk.dataset_converters.dataport.download_dataport</h1><div class="highlight"><pre>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">division</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">join</span><span class="p">,</span> <span class="n">isdir</span><span class="p">,</span> <span class="n">isfile</span><span class="p">,</span> <span class="n">dirname</span><span class="p">,</span> <span class="n">abspath</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">yaml</span>
+<span class="kn">import</span> <span class="nn">psycopg2</span> <span class="kn">as</span> <span class="nn">db</span>
+<span class="kn">from</span> <span class="nn">nilmtk.measurement</span> <span class="kn">import</span> <span class="n">measurement_columns</span>
+<span class="kn">from</span> <span class="nn">nilmtk.measurement</span> <span class="kn">import</span> <span class="n">LEVEL_NAMES</span>
+<span class="kn">from</span> <span class="nn">nilmtk.datastore</span> <span class="kn">import</span> <span class="n">Key</span>
+<span class="kn">from</span> <span class="nn">nilm_metadata</span> <span class="kn">import</span> <span class="n">convert_yaml_to_hdf5</span>
+<span class="kn">from</span> <span class="nn">inspect</span> <span class="kn">import</span> <span class="n">currentframe</span><span class="p">,</span> <span class="n">getfile</span><span class="p">,</span> <span class="n">getsourcefile</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">MANUAL:</span>
+
+<span class="sd">dataport is a large dataset hosted in a remote SQL database. This</span>
+<span class="sd">file provides a function to download the dataset and save it to disk</span>
+<span class="sd">as NILMTK-DF. Since downloading the entire dataset will likely take &gt;</span>
+<span class="sd">24 hours, this function provides some options to allow you to download</span>
+<span class="sd">only a subset of the data.</span>
+
+<span class="sd">For example, to only load house 26 for April 2014:</span>
+
+<span class="sd">dataport.download_dataset(</span>
+<span class="sd">           &#39;username&#39;,</span>
+<span class="sd">           &#39;password&#39;,</span>
+<span class="sd">           &#39;/path/output_filename.h5&#39;</span>
+<span class="sd">           periods_to_load = {26: (&#39;2014-04-01&#39;, &#39;2014-05-01&#39;)}</span>
+<span class="sd">           )</span>
+
+<span class="sd">REQUIREMENTS:</span>
+
+<span class="sd">On Ubuntu:</span>
+<span class="sd">* sudo apt-get install libpq-dev</span>
+<span class="sd">* sudo pip install psycopg2</span>
+
+<span class="sd">TODO:</span>
+<span class="sd">* intelligently handle queries that fail due to network</span>
+<span class="sd">* integrate &#39;grid&#39; (use - gen) and &#39;gen&#39;</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">feed_mapping</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s">&#39;use&#39;</span><span class="p">:</span> <span class="p">{},</span>
+                <span class="s">&#39;air1&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;air conditioner&#39;</span><span class="p">},</span>
+                <span class="s">&#39;air2&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;air conditioner&#39;</span><span class="p">},</span>
+                <span class="s">&#39;air3&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;air conditioner&#39;</span><span class="p">},</span>
+                <span class="s">&#39;airwindowunit1&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;air conditioner&#39;</span><span class="p">},</span>
+                <span class="s">&#39;aquarium1&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;appliance&#39;</span><span class="p">},</span>
+                <span class="s">&#39;bathroom1&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;sockets&#39;</span><span class="p">,</span> <span class="s">&#39;room&#39;</span><span class="p">:</span> <span class="s">&#39;bathroom&#39;</span><span class="p">},</span>
+                <span class="s">&#39;bathroom2&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;sockets&#39;</span><span class="p">,</span> <span class="s">&#39;room&#39;</span><span class="p">:</span> <span class="s">&#39;bathroom&#39;</span><span class="p">},</span>
+                <span class="s">&#39;bedroom1&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;sockets&#39;</span><span class="p">,</span> <span class="s">&#39;room&#39;</span><span class="p">:</span> <span class="s">&#39;bedroom&#39;</span><span class="p">},</span>
+                <span class="s">&#39;bedroom2&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;sockets&#39;</span><span class="p">,</span> <span class="s">&#39;room&#39;</span><span class="p">:</span> <span class="s">&#39;bedroom&#39;</span><span class="p">},</span>
+                <span class="s">&#39;bedroom3&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;sockets&#39;</span><span class="p">,</span> <span class="s">&#39;room&#39;</span><span class="p">:</span> <span class="s">&#39;bedroom&#39;</span><span class="p">},</span>
+                <span class="s">&#39;bedroom4&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;sockets&#39;</span><span class="p">,</span> <span class="s">&#39;room&#39;</span><span class="p">:</span> <span class="s">&#39;bedroom&#39;</span><span class="p">},</span>
+                <span class="s">&#39;bedroom5&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;sockets&#39;</span><span class="p">,</span> <span class="s">&#39;room&#39;</span><span class="p">:</span> <span class="s">&#39;bedroom&#39;</span><span class="p">},</span>
+                <span class="s">&#39;car1&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;electric vehicle&#39;</span><span class="p">},</span>
+                <span class="s">&#39;clotheswasher1&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;washing machine&#39;</span><span class="p">},</span>
+                <span class="s">&#39;clotheswasher_dryg1&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;washer dryer&#39;</span><span class="p">},</span>
+                <span class="s">&#39;diningroom1&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;sockets&#39;</span><span class="p">,</span> <span class="s">&#39;room&#39;</span><span class="p">:</span> <span class="s">&#39;dining room&#39;</span><span class="p">},</span>
+                <span class="s">&#39;diningroom2&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;sockets&#39;</span><span class="p">,</span> <span class="s">&#39;room&#39;</span><span class="p">:</span> <span class="s">&#39;dining room&#39;</span><span class="p">},</span>
+                <span class="s">&#39;dishwasher1&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;dish washer&#39;</span><span class="p">},</span>
+                <span class="s">&#39;disposal1&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;waste disposal unit&#39;</span><span class="p">},</span>
+                <span class="s">&#39;drye1&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;spin dryer&#39;</span><span class="p">},</span>
+                <span class="s">&#39;dryg1&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;spin dryer&#39;</span><span class="p">},</span>
+                <span class="s">&#39;freezer1&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;freezer&#39;</span><span class="p">},</span>
+                <span class="s">&#39;furnace1&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;electric furnace&#39;</span><span class="p">},</span>
+                <span class="s">&#39;furnace2&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;electric furnace&#39;</span><span class="p">},</span>
+                <span class="s">&#39;garage1&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;sockets&#39;</span><span class="p">,</span> <span class="s">&#39;room&#39;</span><span class="p">:</span> <span class="s">&#39;dining room&#39;</span><span class="p">},</span>
+                <span class="s">&#39;garage2&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;sockets&#39;</span><span class="p">,</span> <span class="s">&#39;room&#39;</span><span class="p">:</span> <span class="s">&#39;dining room&#39;</span><span class="p">},</span>
+                <span class="s">&#39;gen&#39;</span><span class="p">:</span> <span class="p">{},</span>
+                <span class="s">&#39;grid&#39;</span><span class="p">:</span> <span class="p">{},</span>
+                <span class="s">&#39;heater1&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;electric space heater&#39;</span><span class="p">},</span>
+                <span class="s">&#39;housefan1&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;electric space heater&#39;</span><span class="p">},</span>
+                <span class="s">&#39;icemaker1&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;appliance&#39;</span><span class="p">},</span>
+                <span class="s">&#39;jacuzzi1&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;electric hot tub heater&#39;</span><span class="p">},</span>
+                <span class="s">&#39;kitchen1&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;sockets&#39;</span><span class="p">,</span> <span class="s">&#39;room&#39;</span><span class="p">:</span> <span class="s">&#39;kitchen&#39;</span><span class="p">},</span>
+                <span class="s">&#39;kitchen2&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;sockets&#39;</span><span class="p">,</span> <span class="s">&#39;room&#39;</span><span class="p">:</span> <span class="s">&#39;kitchen&#39;</span><span class="p">},</span>
+                <span class="s">&#39;kitchenapp1&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;sockets&#39;</span><span class="p">,</span> <span class="s">&#39;room&#39;</span><span class="p">:</span> <span class="s">&#39;kitchen&#39;</span><span class="p">},</span>
+                <span class="s">&#39;kitchenapp2&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;sockets&#39;</span><span class="p">,</span> <span class="s">&#39;room&#39;</span><span class="p">:</span> <span class="s">&#39;kitchen&#39;</span><span class="p">},</span>
+                <span class="s">&#39;lights_plugs1&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;light&#39;</span><span class="p">},</span>
+                <span class="s">&#39;lights_plugs2&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;light&#39;</span><span class="p">},</span>
+                <span class="s">&#39;lights_plugs3&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;light&#39;</span><span class="p">},</span>
+                <span class="s">&#39;lights_plugs4&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;light&#39;</span><span class="p">},</span>
+                <span class="s">&#39;lights_plugs5&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;light&#39;</span><span class="p">},</span>
+                <span class="s">&#39;lights_plugs6&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;light&#39;</span><span class="p">},</span>
+                <span class="s">&#39;livingroom1&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;sockets&#39;</span><span class="p">,</span> <span class="s">&#39;room&#39;</span><span class="p">:</span> <span class="s">&#39;living room&#39;</span><span class="p">},</span>
+                <span class="s">&#39;livingroom2&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;sockets&#39;</span><span class="p">,</span> <span class="s">&#39;room&#39;</span><span class="p">:</span> <span class="s">&#39;living room&#39;</span><span class="p">},</span>
+                <span class="s">&#39;microwave1&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;microwave&#39;</span><span class="p">},</span>
+                <span class="s">&#39;office1&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;sockets&#39;</span><span class="p">,</span> <span class="s">&#39;room&#39;</span><span class="p">:</span> <span class="s">&#39;office&#39;</span><span class="p">},</span>
+                <span class="s">&#39;outsidelights_plugs1&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;sockets&#39;</span><span class="p">,</span> <span class="s">&#39;room&#39;</span><span class="p">:</span> <span class="s">&#39;outside&#39;</span><span class="p">},</span>
+                <span class="s">&#39;outsidelights_plugs2&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;sockets&#39;</span><span class="p">,</span> <span class="s">&#39;room&#39;</span><span class="p">:</span> <span class="s">&#39;outside&#39;</span><span class="p">},</span>
+                <span class="s">&#39;oven1&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;oven&#39;</span><span class="p">},</span>
+                <span class="s">&#39;oven2&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;oven&#39;</span><span class="p">},</span>
+                <span class="s">&#39;pool1&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;electric swimming pool heater&#39;</span><span class="p">},</span>
+                <span class="s">&#39;pool2&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;electric swimming pool heater&#39;</span><span class="p">},</span>
+                <span class="s">&#39;poollight1&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;light&#39;</span><span class="p">},</span>
+                <span class="s">&#39;poolpump1&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;electric swimming pool heater&#39;</span><span class="p">},</span>
+                <span class="s">&#39;pump1&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;appliance&#39;</span><span class="p">},</span>
+                <span class="s">&#39;range1&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;stove&#39;</span><span class="p">},</span>
+                <span class="s">&#39;refrigerator1&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;fridge&#39;</span><span class="p">},</span>
+                <span class="s">&#39;refrigerator2&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;fridge&#39;</span><span class="p">},</span>
+                <span class="s">&#39;security1&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;security alarm&#39;</span><span class="p">},</span>
+                <span class="s">&#39;shed1&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;sockets&#39;</span><span class="p">,</span> <span class="s">&#39;room&#39;</span><span class="p">:</span> <span class="s">&#39;shed&#39;</span><span class="p">},</span>
+                <span class="s">&#39;sprinkler1&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;appliance&#39;</span><span class="p">},</span>
+                <span class="s">&#39;unknown1&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;unknown&#39;</span><span class="p">},</span>
+                <span class="s">&#39;unknown2&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;unknown&#39;</span><span class="p">},</span>
+                <span class="s">&#39;unknown3&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;unknown&#39;</span><span class="p">},</span>
+                <span class="s">&#39;unknown4&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;unknown&#39;</span><span class="p">},</span>
+                <span class="s">&#39;utilityroom1&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;sockets&#39;</span><span class="p">,</span> <span class="s">&#39;room&#39;</span><span class="p">:</span> <span class="s">&#39;utility room&#39;</span><span class="p">},</span>
+                <span class="s">&#39;venthood1&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;appliance&#39;</span><span class="p">},</span>
+                <span class="s">&#39;waterheater1&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;electric water heating appliance&#39;</span><span class="p">},</span>
+                <span class="s">&#39;waterheater2&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;electric water heating appliance&#39;</span><span class="p">},</span>
+                <span class="s">&#39;winecooler1&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;appliance&#39;</span><span class="p">},</span>
+                <span class="p">}</span>
+
+<span class="n">feed_ignore</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;gen&#39;</span><span class="p">,</span> <span class="s">&#39;grid&#39;</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="download_dataport"><a class="viewcode-back" href="../../../../nilmtk.dataset_converters.dataport.html#nilmtk.dataset_converters.dataport.download_dataport.download_dataport">[docs]</a><span class="k">def</span> <span class="nf">download_dataport</span><span class="p">(</span><span class="n">database_username</span><span class="p">,</span> <span class="n">database_password</span><span class="p">,</span> 
+                     <span class="n">hdf_filename</span><span class="p">,</span> <span class="n">periods_to_load</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Downloads data from dataport database into an HDF5 file.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    hdf_filename : str</span>
+<span class="sd">        Output HDF filename.  If file exists already then will be deleted.</span>
+<span class="sd">    database_username, database_password : str</span>
+<span class="sd">    periods_to_load : dict of tuples, optional</span>
+<span class="sd">       Key of dict is the building number (int).</span>
+<span class="sd">       Values are (&lt;start date&gt;, &lt;end date&gt;)</span>
+<span class="sd">       e.g. (&quot;2013-04-01&quot;, None) or (&quot;2013-04-01&quot;, &quot;2013-08-01&quot;)</span>
+<span class="sd">       defaults to all buildings and all date ranges</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c"># dataport database settings</span>
+    <span class="n">database_host</span> <span class="o">=</span> <span class="s">&#39;dataport.pecanstreet.org&#39;</span>
+    <span class="n">database_port</span> <span class="o">=</span> <span class="s">&#39;5434&#39;</span>
+    <span class="n">database_name</span> <span class="o">=</span> <span class="s">&#39;postgres&#39;</span>
+    <span class="n">database_schema</span> <span class="o">=</span> <span class="s">&#39;university&#39;</span>
+
+    <span class="c"># try to connect to database</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">conn</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">&#39;host=&#39;</span> <span class="o">+</span> <span class="n">database_host</span> <span class="o">+</span> 
+                          <span class="s">&#39; port=&#39;</span> <span class="o">+</span> <span class="n">database_port</span> <span class="o">+</span> 
+                          <span class="s">&#39; dbname=&#39;</span> <span class="o">+</span> <span class="n">database_name</span> <span class="o">+</span> 
+                          <span class="s">&#39; user=&#39;</span> <span class="o">+</span> <span class="n">database_username</span> <span class="o">+</span> 
+                          <span class="s">&#39; password=&#39;</span> <span class="o">+</span> <span class="n">database_password</span><span class="p">)</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&#39;Could not connect to remote database&#39;</span><span class="p">)</span>
+        <span class="k">raise</span>
+
+    <span class="c"># set up a new HDF5 datastore (overwrites existing store)</span>
+    <span class="n">store</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">HDFStore</span><span class="p">(</span><span class="n">hdf_filename</span><span class="p">,</span> <span class="s">&#39;w&#39;</span><span class="p">,</span> <span class="n">complevel</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span> <span class="n">complib</span><span class="o">=</span><span class="s">&#39;zlib&#39;</span><span class="p">)</span>
+    
+    <span class="c"># remove existing building yaml files in module dir</span>
+    <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">join</span><span class="p">(</span><span class="n">_get_module_directory</span><span class="p">(),</span> <span class="s">&#39;metadata&#39;</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s">&#39;^building&#39;</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">join</span><span class="p">(</span><span class="n">_get_module_directory</span><span class="p">(),</span> <span class="s">&#39;metadata&#39;</span><span class="p">,</span> <span class="n">f</span><span class="p">))</span>
+
+    <span class="c"># get tables in database schema</span>
+    <span class="n">sql_query</span> <span class="o">=</span> <span class="p">(</span><span class="s">&quot;SELECT TABLE_NAME&quot;</span> <span class="o">+</span> 
+                 <span class="s">&quot; FROM INFORMATION_SCHEMA.TABLES&quot;</span> <span class="o">+</span> 
+                 <span class="s">&quot; WHERE TABLE_TYPE = &#39;BASE TABLE&#39;&quot;</span> <span class="o">+</span> 
+                 <span class="s">&quot; AND TABLE_SCHEMA=&#39;&quot;</span> <span class="o">+</span> <span class="n">database_schema</span> <span class="o">+</span> <span class="s">&quot;&#39;&quot;</span> <span class="o">+</span> 
+                 <span class="s">&quot; ORDER BY TABLE_NAME&quot;</span><span class="p">)</span>
+    <span class="n">database_tables</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql</span><span class="p">(</span><span class="n">sql_query</span><span class="p">,</span> <span class="n">conn</span><span class="p">)[</span><span class="s">&#39;table_name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="n">database_tables</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">database_tables</span> <span class="k">if</span> <span class="s">&#39;electricity_egauge_minutes&#39;</span> <span class="ow">in</span> <span class="n">t</span><span class="p">]</span>
+
+    <span class="c"># if user has specified buildings</span>
+    <span class="k">if</span> <span class="n">periods_to_load</span><span class="p">:</span>
+        <span class="n">buildings_to_load</span> <span class="o">=</span> <span class="n">periods_to_load</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c"># get buildings present in all tables</span>
+        <span class="n">sql_query</span> <span class="o">=</span> <span class="s">&#39;&#39;</span>
+        <span class="k">for</span> <span class="n">table</span> <span class="ow">in</span> <span class="n">database_tables</span><span class="p">:</span>
+            <span class="n">sql_query</span> <span class="o">=</span> <span class="p">(</span><span class="n">sql_query</span> <span class="o">+</span> <span class="s">&#39;(SELECT DISTINCT dataid&#39;</span> <span class="o">+</span> 
+                         <span class="s">&#39; FROM &quot;&#39;</span> <span class="o">+</span> <span class="n">database_schema</span> <span class="o">+</span> <span class="s">&#39;&quot;.&#39;</span> <span class="o">+</span> <span class="n">table</span> <span class="o">+</span> 
+                         <span class="s">&#39;) UNION &#39;</span><span class="p">)</span>
+        <span class="n">sql_query</span> <span class="o">=</span> <span class="n">sql_query</span><span class="p">[:</span><span class="o">-</span><span class="mi">7</span><span class="p">]</span>
+        <span class="n">sql_query</span> <span class="o">=</span> <span class="p">(</span><span class="n">sql_query</span> <span class="o">+</span> <span class="s">&#39; ORDER BY dataid&#39;</span><span class="p">)</span> 
+        <span class="n">buildings_to_load</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql</span><span class="p">(</span><span class="n">sql_query</span><span class="p">,</span> <span class="n">conn</span><span class="p">)[</span><span class="s">&#39;dataid&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+    <span class="c"># for each user specified building or all buildings in database</span>
+    <span class="k">for</span> <span class="n">building_id</span> <span class="ow">in</span> <span class="n">buildings_to_load</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&quot;Loading building {:d} @ {}&quot;</span>
+              <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">building_id</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()))</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+
+        <span class="c"># create new list of chunks for concatenating later</span>
+        <span class="n">dataframe_list</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c"># for each table of 1 month data</span>
+        <span class="k">for</span> <span class="n">database_table</span> <span class="ow">in</span> <span class="n">database_tables</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">&quot;  Loading table {:s}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">database_table</span><span class="p">))</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+
+            <span class="c"># get buildings present in this table</span>
+            <span class="n">sql_query</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;SELECT DISTINCT dataid&#39;</span> <span class="o">+</span> 
+                         <span class="s">&#39; FROM &quot;&#39;</span> <span class="o">+</span> <span class="n">database_schema</span> <span class="o">+</span> <span class="s">&#39;&quot;.&#39;</span> <span class="o">+</span> <span class="n">database_table</span> <span class="o">+</span> 
+                         <span class="s">&#39; ORDER BY dataid&#39;</span><span class="p">)</span>
+            <span class="n">buildings_in_table</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql</span><span class="p">(</span><span class="n">sql_query</span><span class="p">,</span> <span class="n">conn</span><span class="p">)[</span><span class="s">&#39;dataid&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="n">building_id</span> <span class="ow">in</span> <span class="n">buildings_in_table</span><span class="p">:</span>
+                <span class="c"># get first and last timestamps for this house in this table</span>
+                <span class="n">sql_query</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;SELECT MIN(localminute) AS minlocalminute,&#39;</span> <span class="o">+</span> 
+                             <span class="s">&#39; MAX(localminute) AS maxlocalminute&#39;</span> <span class="o">+</span> 
+                             <span class="s">&#39; FROM &quot;&#39;</span> <span class="o">+</span> <span class="n">database_schema</span> <span class="o">+</span> <span class="s">&#39;&quot;.&#39;</span> <span class="o">+</span> <span class="n">database_table</span> <span class="o">+</span> 
+                             <span class="s">&#39; WHERE dataid=&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">building_id</span><span class="p">))</span>
+                <span class="nb">range</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql</span><span class="p">(</span><span class="n">sql_query</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+                <span class="n">first_timestamp_in_table</span> <span class="o">=</span> <span class="nb">range</span><span class="p">[</span><span class="s">&#39;minlocalminute&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">last_timestamp_in_table</span> <span class="o">=</span> <span class="nb">range</span><span class="p">[</span><span class="s">&#39;maxlocalminute&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+
+                <span class="c"># get requested start and end and localize them</span>
+                <span class="n">requested_start</span> <span class="o">=</span> <span class="bp">None</span>
+                <span class="n">requested_end</span> <span class="o">=</span> <span class="bp">None</span>
+                <span class="n">database_timezone</span> <span class="o">=</span> <span class="s">&#39;US/Central&#39;</span>
+                <span class="k">if</span> <span class="n">periods_to_load</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">periods_to_load</span><span class="p">[</span><span class="n">building_id</span><span class="p">][</span><span class="mi">0</span><span class="p">]:</span>
+                        <span class="n">requested_start</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="p">(</span><span class="n">periods_to_load</span><span class="p">[</span><span class="n">building_id</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+                        <span class="n">requested_start</span> <span class="o">=</span> <span class="n">requested_start</span><span class="o">.</span><span class="n">tz_localize</span><span class="p">(</span><span class="n">database_timezone</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">periods_to_load</span><span class="p">[</span><span class="n">building_id</span><span class="p">][</span><span class="mi">1</span><span class="p">]:</span>
+                        <span class="n">requested_end</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="p">(</span><span class="n">periods_to_load</span><span class="p">[</span><span class="n">building_id</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span>
+                        <span class="n">requested_end</span> <span class="o">=</span> <span class="n">requested_end</span><span class="o">.</span><span class="n">tz_localize</span><span class="p">(</span><span class="n">database_timezone</span><span class="p">)</span>
+
+                <span class="c"># check user start is not after end</span>
+                <span class="k">if</span> <span class="n">requested_start</span> <span class="o">&gt;</span> <span class="n">requested_end</span><span class="p">:</span>
+                    <span class="k">print</span><span class="p">(</span><span class="s">&#39;requested end is before requested start&#39;</span><span class="p">)</span>
+                    <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+                <span class="k">else</span><span class="p">:</span>                        
+                    <span class="c"># clip data to smallest range</span>
+                    <span class="k">if</span> <span class="n">requested_start</span><span class="p">:</span>
+                        <span class="n">start</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">requested_start</span><span class="p">,</span> <span class="n">first_timestamp_in_table</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">start</span> <span class="o">=</span> <span class="n">first_timestamp_in_table</span>
+                    <span class="k">if</span> <span class="n">requested_end</span><span class="p">:</span>
+                        <span class="n">end</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">requested_end</span><span class="p">,</span> <span class="n">last_timestamp_in_table</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">end</span> <span class="o">=</span> <span class="n">last_timestamp_in_table</span>
+
+                    <span class="c"># download data in chunks</span>
+                    <span class="n">chunk_start</span> <span class="o">=</span> <span class="n">start</span>
+                    <span class="n">chunk_size</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>  <span class="c"># 1 day</span>
+                    <span class="k">while</span> <span class="n">chunk_start</span> <span class="o">&lt;</span> <span class="n">end</span><span class="p">:</span>
+                        <span class="n">chunk_end</span> <span class="o">=</span> <span class="n">chunk_start</span> <span class="o">+</span> <span class="n">chunk_size</span> 
+                        <span class="k">if</span> <span class="n">chunk_end</span> <span class="o">&gt;</span> <span class="n">end</span><span class="p">:</span>
+                            <span class="n">chunk_end</span> <span class="o">=</span> <span class="n">end</span>
+                        <span class="c"># subtract 1 second so end is exclusive</span>
+                        <span class="n">chunk_end</span> <span class="o">=</span> <span class="n">chunk_end</span> <span class="o">-</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+                        <span class="c"># query power data for all channels</span>
+                        <span class="n">format</span> <span class="o">=</span> <span class="s">&#39;%Y-%m-</span><span class="si">%d</span><span class="s"> %H:%M:%S&#39;</span>
+                        <span class="n">sql_query</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;SELECT *&#39;</span> <span class="o">+</span> 
+                                     <span class="s">&#39; FROM &quot;&#39;</span> <span class="o">+</span> <span class="n">database_schema</span> <span class="o">+</span> <span class="s">&#39;&quot;.&#39;</span> <span class="o">+</span> <span class="n">database_table</span> <span class="o">+</span> 
+                                     <span class="s">&#39; WHERE dataid=&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">building_id</span><span class="p">)</span> <span class="o">+</span> 
+                                     <span class="s">&#39;and localminute between &#39;</span> <span class="o">+</span> 
+                                     <span class="s">&quot;&#39;&quot;</span> <span class="o">+</span> <span class="n">chunk_start</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="n">format</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot;&#39;&quot;</span> <span class="o">+</span> 
+                                     <span class="s">&quot; and &quot;</span> <span class="o">+</span> 
+                                     <span class="s">&quot;&#39;&quot;</span> <span class="o">+</span> <span class="n">chunk_end</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="n">format</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot;&#39;&quot;</span><span class="p">)</span>
+                        <span class="n">chunk_dataframe</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql</span><span class="p">(</span><span class="n">sql_query</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+                        
+                        <span class="c"># nilmtk requires building indices to start at 1</span>
+                        <span class="n">nilmtk_building_id</span> <span class="o">=</span> <span class="n">buildings_to_load</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">building_id</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+                        <span class="c"># convert to nilmtk-df and save to disk</span>
+                        <span class="n">nilmtk_dataframe</span> <span class="o">=</span> <span class="n">_dataport_dataframe_to_hdf</span><span class="p">(</span><span class="n">chunk_dataframe</span><span class="p">,</span> <span class="n">store</span><span class="p">,</span>
+                                                                         <span class="n">nilmtk_building_id</span><span class="p">,</span>
+                                                                         <span class="n">building_id</span><span class="p">)</span>
+
+                        <span class="c"># print progress</span>
+                        <span class="k">print</span><span class="p">(</span><span class="s">&#39;    &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">chunk_start</span><span class="p">)</span> <span class="o">+</span> <span class="s">&#39; -&gt; &#39;</span> <span class="o">+</span> 
+                              <span class="nb">str</span><span class="p">(</span><span class="n">chunk_end</span><span class="p">)</span> <span class="o">+</span> <span class="s">&#39;: &#39;</span> <span class="o">+</span> 
+                              <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">chunk_dataframe</span><span class="o">.</span><span class="n">index</span><span class="p">))</span> <span class="o">+</span> <span class="s">&#39; rows&#39;</span><span class="p">)</span>
+                        <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+
+                        <span class="c"># append all chunks into list for csv writing</span>
+                        <span class="c">#dataframe_list.append(chunk_dataframe)</span>
+
+                        <span class="c"># move on to next chunk</span>
+                        <span class="n">chunk_start</span> <span class="o">=</span> <span class="n">chunk_start</span> <span class="o">+</span> <span class="n">chunk_size</span>
+
+        <span class="c"># saves all chunks in list to csv</span>
+        <span class="c">#if len(dataframe_list) &gt; 0:</span>
+            <span class="c">#dataframe_concat = pd.concat(dataframe_list)</span>
+            <span class="c">#dataframe_concat.to_csv(output_directory + str(building_id) + &#39;.csv&#39;)</span>
+            
+    <span class="n">store</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    
+    <span class="c"># write yaml to hdf5</span>
+    <span class="c"># dataset.yaml and meter_devices.yaml are static, building&lt;x&gt;.yaml are dynamic  </span>
+    <span class="n">convert_yaml_to_hdf5</span><span class="p">(</span><span class="n">join</span><span class="p">(</span><span class="n">_get_module_directory</span><span class="p">(),</span> <span class="s">&#39;metadata&#39;</span><span class="p">),</span>
+                         <span class="n">hdf_filename</span><span class="p">)</span>
+                         
+</div>
+<span class="k">def</span> <span class="nf">_dataport_dataframe_to_hdf</span><span class="p">(</span><span class="n">dataport_dataframe</span><span class="p">,</span> 
+                                 <span class="n">store</span><span class="p">,</span> 
+                                 <span class="n">nilmtk_building_id</span><span class="p">,</span>
+                                 <span class="n">dataport_building_id</span><span class="p">):</span>
+    <span class="n">local_dataframe</span> <span class="o">=</span> <span class="n">dataport_dataframe</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    
+    <span class="c"># remove timezone information to avoid append errors</span>
+    <span class="n">local_dataframe</span><span class="p">[</span><span class="s">&#39;localminute&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DatetimeIndex</span><span class="p">([</span><span class="n">i</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">tzinfo</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span> 
+                                                       <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">local_dataframe</span><span class="p">[</span><span class="s">&#39;localminute&#39;</span><span class="p">]])</span>
+    
+    <span class="c"># set timestamp as frame index</span>
+    <span class="n">local_dataframe</span> <span class="o">=</span> <span class="n">local_dataframe</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s">&#39;localminute&#39;</span><span class="p">)</span>
+    
+    <span class="c"># set timezone</span>
+    <span class="n">local_dataframe</span> <span class="o">=</span> <span class="n">local_dataframe</span><span class="o">.</span><span class="n">tz_localize</span><span class="p">(</span><span class="s">&#39;US/Central&#39;</span><span class="p">)</span>
+    
+    <span class="c"># remove timestamp column from dataframe</span>
+    <span class="n">feeds_dataframe</span> <span class="o">=</span> <span class="n">local_dataframe</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s">&#39;dataid&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="c"># Column names for dataframe</span>
+    <span class="n">column_names</span> <span class="o">=</span> <span class="p">[(</span><span class="s">&#39;power&#39;</span><span class="p">,</span> <span class="s">&#39;active&#39;</span><span class="p">)]</span>
+    
+    <span class="c"># convert from kW to W</span>
+    <span class="n">feeds_dataframe</span> <span class="o">=</span> <span class="n">feeds_dataframe</span><span class="o">.</span><span class="n">mul</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
+    
+    <span class="c"># building metadata</span>
+    <span class="n">building_metadata</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">building_metadata</span><span class="p">[</span><span class="s">&#39;instance&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">nilmtk_building_id</span>
+    <span class="n">building_metadata</span><span class="p">[</span><span class="s">&#39;original_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">dataport_building_id</span><span class="p">)</span> <span class="c"># use python int</span>
+    <span class="n">building_metadata</span><span class="p">[</span><span class="s">&#39;elec_meters&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">building_metadata</span><span class="p">[</span><span class="s">&#39;appliances&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    
+    <span class="c"># initialise dict of instances of each appliance type</span>
+    <span class="n">instance_counter</span> <span class="o">=</span> <span class="p">{}</span>
+    
+    <span class="n">meter_id</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">feeds_dataframe</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">feeds_dataframe</span><span class="p">[</span><span class="n">column</span><span class="p">]</span><span class="o">.</span><span class="n">notnull</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">feed_ignore</span><span class="p">:</span>
+
+            <span class="c"># convert timeseries into dataframe</span>
+            <span class="n">feed_dataframe</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">feeds_dataframe</span><span class="p">[</span><span class="n">column</span><span class="p">])</span>
+            
+            <span class="c"># set column names</span>
+            <span class="n">feed_dataframe</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">MultiIndex</span><span class="o">.</span><span class="n">from_tuples</span><span class="p">(</span><span class="n">column_names</span><span class="p">)</span>
+            
+            <span class="c"># Modify the column labels to reflect the power measurements recorded.</span>
+            <span class="n">feed_dataframe</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">set_names</span><span class="p">(</span><span class="n">LEVEL_NAMES</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+            
+            <span class="n">key</span> <span class="o">=</span> <span class="n">Key</span><span class="p">(</span><span class="n">building</span><span class="o">=</span><span class="n">nilmtk_building_id</span><span class="p">,</span> <span class="n">meter</span><span class="o">=</span><span class="n">meter_id</span><span class="p">)</span>
+            
+            <span class="c"># store dataframe</span>
+            <span class="n">store</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">key</span><span class="p">),</span> <span class="n">feed_dataframe</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="s">&#39;table&#39;</span><span class="p">,</span> <span class="n">append</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+            <span class="n">store</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+                        
+            <span class="c"># elec_meter metadata</span>
+            <span class="k">if</span> <span class="n">column</span> <span class="o">==</span> <span class="s">&#39;use&#39;</span><span class="p">:</span>
+                <span class="n">meter_metadata</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;device_model&#39;</span><span class="p">:</span> <span class="s">&#39;eGauge&#39;</span><span class="p">,</span>
+                                  <span class="s">&#39;site_meter&#39;</span><span class="p">:</span> <span class="bp">True</span><span class="p">}</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">meter_metadata</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;device_model&#39;</span><span class="p">:</span> <span class="s">&#39;eGauge&#39;</span><span class="p">,</span>
+                                   <span class="s">&#39;submeter_of&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+            <span class="n">building_metadata</span><span class="p">[</span><span class="s">&#39;elec_meters&#39;</span><span class="p">][</span><span class="n">meter_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">meter_metadata</span>
+                
+            <span class="c"># appliance metadata</span>
+            <span class="k">if</span> <span class="n">column</span> <span class="o">!=</span> <span class="s">&#39;use&#39;</span><span class="p">:</span>
+                <span class="c"># original name and meter id</span>
+                <span class="n">appliance_metadata</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;original_name&#39;</span><span class="p">:</span> <span class="n">column</span><span class="p">,</span> 
+                                      <span class="s">&#39;meters&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">meter_id</span><span class="p">]</span> <span class="p">}</span>
+                <span class="c"># appliance type and room if available</span>
+                <span class="n">appliance_metadata</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">feed_mapping</span><span class="p">[</span><span class="n">column</span><span class="p">])</span>
+                <span class="c"># appliance instance number</span>
+                <span class="k">if</span> <span class="n">instance_counter</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">appliance_metadata</span><span class="p">[</span><span class="s">&#39;type&#39;</span><span class="p">])</span> <span class="o">==</span> <span class="bp">None</span><span class="p">:</span>
+                    <span class="n">instance_counter</span><span class="p">[</span><span class="n">appliance_metadata</span><span class="p">[</span><span class="s">&#39;type&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="n">instance_counter</span><span class="p">[</span><span class="n">appliance_metadata</span><span class="p">[</span><span class="s">&#39;type&#39;</span><span class="p">]]</span> <span class="o">+=</span> <span class="mi">1</span> 
+                <span class="n">appliance_metadata</span><span class="p">[</span><span class="s">&#39;instance&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">instance_counter</span><span class="p">[</span><span class="n">appliance_metadata</span><span class="p">[</span><span class="s">&#39;type&#39;</span><span class="p">]]</span>
+                
+                <span class="n">building_metadata</span><span class="p">[</span><span class="s">&#39;appliances&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">appliance_metadata</span><span class="p">)</span>
+
+            <span class="n">meter_id</span> <span class="o">+=</span> <span class="mi">1</span>
+            
+    <span class="c"># write building yaml to file</span>
+    <span class="n">building</span> <span class="o">=</span> <span class="s">&#39;building{:d}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">nilmtk_building_id</span><span class="p">)</span>
+    <span class="n">yaml_full_filename</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="n">_get_module_directory</span><span class="p">(),</span> <span class="s">&#39;metadata&#39;</span><span class="p">,</span> <span class="n">building</span> <span class="o">+</span> <span class="s">&#39;.yaml&#39;</span><span class="p">)</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">yaml_full_filename</span><span class="p">,</span> <span class="s">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">outfile</span><span class="p">:</span>
+        <span class="n">outfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">building_metadata</span><span class="p">))</span>
+        
+    <span class="k">return</span> <span class="mi">0</span>
+
+<span class="k">def</span> <span class="nf">_get_module_directory</span><span class="p">():</span>
+    <span class="c"># Taken from http://stackoverflow.com/a/6098238/732596</span>
+    <span class="n">path_to_this_file</span> <span class="o">=</span> <span class="n">dirname</span><span class="p">(</span><span class="n">getfile</span><span class="p">(</span><span class="n">currentframe</span><span class="p">()))</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">isdir</span><span class="p">(</span><span class="n">path_to_this_file</span><span class="p">):</span>
+        <span class="n">encoding</span> <span class="o">=</span> <span class="n">getfilesystemencoding</span><span class="p">()</span>
+        <span class="n">path_to_this_file</span> <span class="o">=</span> <span class="n">dirname</span><span class="p">(</span><span class="nb">unicode</span><span class="p">(</span><span class="n">__file__</span><span class="p">,</span> <span class="n">encoding</span><span class="p">))</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">isdir</span><span class="p">(</span><span class="n">path_to_this_file</span><span class="p">):</span>
+        <span class="n">abspath</span><span class="p">(</span><span class="n">getsourcefile</span><span class="p">(</span><span class="k">lambda</span> <span class="n">_</span><span class="p">:</span> <span class="bp">None</span><span class="p">))</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">isdir</span><span class="p">(</span><span class="n">path_to_this_file</span><span class="p">):</span>
+        <span class="n">path_to_this_file</span> <span class="o">=</span> <span class="n">getcwd</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="n">isdir</span><span class="p">(</span><span class="n">path_to_this_file</span><span class="p">),</span> <span class="n">path_to_this_file</span> <span class="o">+</span> <span class="s">&#39; is not a directory&#39;</span>
+    <span class="k">return</span> <span class="n">path_to_this_file</span>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2014, NILMTK Authors.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.3.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

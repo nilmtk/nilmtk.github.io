@@ -9,8 +9,8 @@
     
     <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/bootstrap-3.1.0/css/bootstrap.min.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/bootstrap-3.1.0/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/bootstrap-3.2.0/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/bootstrap-3.2.0/css/bootstrap-theme.min.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     
     <script type="text/javascript">
@@ -28,10 +28,10 @@
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="../../_static/bootstrap-3.1.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-3.2.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
     <link rel="top" title="NILMTK 0.2 documentation" href="../../index.html" />
-    <link rel="up" title="Module code" href="../index.html" />
+    <link rel="up" title="nilmtk" href="../nilmtk.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -56,7 +56,6 @@
 
         <div class="collapse navbar-collapse nav-collapse">
           <ul class="nav navbar-nav">
-            <li class="divider-vertical"></li>
             
                 <li><a href="https://github.com/nilmtk/nilmtk">github</a></li>
             
@@ -143,6 +142,7 @@
 <span class="kn">from</span> <span class="nn">nilm_metadata</span> <span class="kn">import</span> <span class="n">get_appliance_types</span>
 
 <span class="n">ApplianceID</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s">&#39;ApplianceID&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s">&#39;type&#39;</span><span class="p">,</span> <span class="s">&#39;instance&#39;</span><span class="p">])</span>
+<span class="n">DEFAULT_ON_POWER_THRESHOLD</span> <span class="o">=</span> <span class="mi">10</span>
 
 <div class="viewcode-block" id="Appliance"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.appliance.Appliance">[docs]</a><span class="k">class</span> <span class="nc">Appliance</span><span class="p">(</span><span class="n">Hashable</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Represents an appliance instance.</span>
@@ -187,10 +187,25 @@
         <span class="sd">&quot;&quot;&quot;Return number of meters (int) to which this appliance is connected&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s">&#39;meters&#39;</span><span class="p">])</span>
 </div>
-<div class="viewcode-block" id="Appliance.label"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.appliance.Appliance.label">[docs]</a>    <span class="k">def</span> <span class="nf">label</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return string &#39;(&lt;type&gt;, &lt;identifier&gt;)&#39; e.g. &#39;(fridge, 1)&#39;.</span>
-<span class="sd">        If type == &#39;unknown&#39; then also returns `original_name`.&quot;&quot;&quot;</span>
-        <span class="n">label</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">identifier</span><span class="p">))</span>
+<div class="viewcode-block" id="Appliance.on_power_threshold"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.appliance.Appliance.on_power_threshold">[docs]</a>    <span class="k">def</span> <span class="nf">on_power_threshold</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">threshold_from_appliance_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;on_power_threshold&#39;</span><span class="p">,</span> 
+                                                      <span class="n">DEFAULT_ON_POWER_THRESHOLD</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;on_power_threshold&#39;</span><span class="p">,</span> 
+                                 <span class="n">threshold_from_appliance_type</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Appliance.label"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.appliance.Appliance.label">[docs]</a>    <span class="k">def</span> <span class="nf">label</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pretty</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return string &#39;(&lt;type&gt;, &lt;identifier&gt;)&#39; e.g. &#39;(fridge, 1)&#39;</span>
+<span class="sd">        if `pretty=False` else if `pretty=True` then return a string like</span>
+<span class="sd">        &#39;Fridge&#39; or &#39;Fridge 2&#39;. If type == &#39;unknown&#39; then </span>
+<span class="sd">        appends `original_name` to end of label.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">pretty</span><span class="p">:</span>
+            <span class="n">label</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">identifier</span><span class="o">.</span><span class="n">type</span><span class="p">)</span>
+            <span class="n">label</span> <span class="o">=</span> <span class="n">label</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">identifier</span><span class="o">.</span><span class="n">instance</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">label</span> <span class="o">+=</span> <span class="s">&quot; {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">identifier</span><span class="o">.</span><span class="n">instance</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">label</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">identifier</span><span class="p">))</span>
+
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">identifier</span><span class="o">.</span><span class="n">type</span> <span class="ow">is</span> <span class="s">&#39;unknown&#39;</span><span class="p">:</span>
             <span class="n">label</span> <span class="o">+=</span> <span class="s">&#39;, original name = {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;original_name&#39;</span><span class="p">))</span>

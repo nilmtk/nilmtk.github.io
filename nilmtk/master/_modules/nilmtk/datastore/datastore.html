@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>nilmtk.datastore.datastore &mdash; NILMTK 0.2 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/bootstrap-3.2.0/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/bootstrap-3.2.0/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.2',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../../../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../../_static/bootstrap-3.2.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../../_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="NILMTK 0.2 documentation" href="../../../index.html" />
+    <link rel="up" title="nilmtk.datastore" href="../datastore.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../index.html">
+          NILMTK</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.2</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="https://github.com/nilmtk/nilmtk">github</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro_nilmtk_v0_2.html">Intro to NILMTK v0.2</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../convert_data_to_NILMTK_format.html">Convert data to NILMTK format and load into NILMTK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../elecmeter_and_metergroup.html">MeterGroup, ElecMeter, selection and basic statistics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pipeline_preprocessing_more_stats.html">Processing pipeline, preprocessing and more stats</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../disaggregation_and_metrics.html">Disaggregation and Metrics</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../writing_a_dataset_converter.html">Writing a dataset converter</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Change log</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../nilmtk.html">nilmtk package</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      
+  <h1>Source code for nilmtk.datastore.datastore</h1><div class="highlight"><pre>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">division</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">repeat</span><span class="p">,</span> <span class="n">tee</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
+<span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">yaml</span>
+<span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">isdir</span><span class="p">,</span> <span class="n">isfile</span><span class="p">,</span> <span class="n">join</span><span class="p">,</span> <span class="n">exists</span><span class="p">,</span> <span class="n">dirname</span>
+<span class="kn">from</span> <span class="nn">os</span> <span class="kn">import</span> <span class="n">listdir</span><span class="p">,</span> <span class="n">makedirs</span><span class="p">,</span> <span class="n">remove</span>
+<span class="kn">from</span> <span class="nn">shutil</span> <span class="kn">import</span> <span class="n">rmtree</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">nilm_metadata.convert_yaml_to_hdf5</span> <span class="kn">import</span> <span class="n">_load_file</span>
+<span class="kn">from</span> <span class="nn">nilmtk.timeframe</span> <span class="kn">import</span> <span class="n">TimeFrame</span>
+<span class="kn">from</span> <span class="nn">nilmtk.node</span> <span class="kn">import</span> <span class="n">Node</span>
+
+<span class="c"># do not edit! added by PythonBreakpoints</span>
+<span class="kn">from</span> <span class="nn">pdb</span> <span class="kn">import</span> <span class="n">set_trace</span> <span class="k">as</span> <span class="n">_breakpoint</span>
+
+
+<span class="n">MAX_MEM_ALLOWANCE_IN_BYTES</span> <span class="o">=</span> <span class="mi">2</span><span class="o">**</span><span class="mi">28</span>
+
+<div class="viewcode-block" id="DataStore"><a class="viewcode-back" href="../../../nilmtk.datastore.html#nilmtk.datastore.datastore.DataStore">[docs]</a><span class="k">class</span> <span class="nc">DataStore</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Provides a common interface to all physical data stores.  </span>
+<span class="sd">    Supports hierarchical stores.</span>
+<span class="sd">    </span>
+<span class="sd">    The DataStore class lives in the bottom layer of NILMTK.  It loads</span>
+<span class="sd">    a single chunk at a time from physical location and returns a</span>
+<span class="sd">    DataFrame.</span>
+
+<span class="sd">    * Deals with: retrieving data from disk / network / direct from a meter</span>
+<span class="sd">    * Optimised for: handling large amounts of data</span>
+<span class="sd">    * Services it provides: delivering a generator of pd.DataFrames of data given a</span>
+<span class="sd">      specific time span and columns</span>
+<span class="sd">    * Totally agnostic about what the data &#39;means&#39;. It could be voltage,</span>
+<span class="sd">      current, temperature, PIR readings etc.</span>
+<span class="sd">    * could have subclasses for NILMTK HDF5, NILMTK CSV, Xively,</span>
+<span class="sd">      Current Cost meters etc.</span>
+<span class="sd">    * One DataStore per HDF5 file or folder or CSV files or Xively</span>
+<span class="sd">      feed etc.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    window : nilmtk.TimeFrame</span>
+<span class="sd">        Defines the timeframe we are interested in.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        filename : string</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">window</span> <span class="o">=</span> <span class="n">TimeFrame</span><span class="p">()</span>
+        
+    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Loads all of a DataFrame from disk.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        key : str</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        DataFrame</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        KeyError if `key` is not found.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s">&quot;NotImplementedError&quot;</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">window</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_window</span>
+
+    <span class="nd">@window.setter</span>
+<div class="viewcode-block" id="DataStore.window"><a class="viewcode-back" href="../../../nilmtk.datastore.html#nilmtk.datastore.datastore.DataStore.window">[docs]</a>    <span class="k">def</span> <span class="nf">window</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">window</span><span class="p">):</span>
+        <span class="n">window</span><span class="o">.</span><span class="n">check_tz</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_window</span> <span class="o">=</span> <span class="n">window</span>
+        </div>
+<div class="viewcode-block" id="DataStore.load"><a class="viewcode-back" href="../../../nilmtk.datastore.html#nilmtk.datastore.datastore.DataStore.load">[docs]</a>    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">sections</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">n_look_ahead_rows</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+             <span class="n">chunksize</span><span class="o">=</span><span class="n">MAX_MEM_ALLOWANCE_IN_BYTES</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        key : string, the location of a table within the DataStore.</span>
+<span class="sd">        cols : list of Measurements, optional</span>
+<span class="sd">            e.g. [(&#39;power&#39;, &#39;active&#39;), (&#39;power&#39;, &#39;reactive&#39;), (&#39;voltage&#39;)]</span>
+<span class="sd">            if not provided then will return all columns from the table.</span>
+<span class="sd">        sections : TimeFrameGroup; or list of nilmtk.TimeFrame objects;</span>
+<span class="sd">            or a pd.PeriodIndex, optional.</span>
+<span class="sd">            Defines the time sections to load.  If `self.window` is enabled</span>
+<span class="sd">            then each `section` will be intersected with `self.window`.</span>
+<span class="sd">        n_look_ahead_rows : int, optional, defaults to 0</span>
+<span class="sd">            If &gt;0 then each returned DataFrame will have a `look_ahead`</span>
+<span class="sd">            property which will be a DataFrame of length `n_look_ahead_rows`</span>
+<span class="sd">            of the data immediately in front of the data in the main DataFrame.</span>
+<span class="sd">        chunksize : int, optional</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        ------- </span>
+<span class="sd">        generator of DataFrame objects</span>
+<span class="sd">            Each DataFrame is has extra attributes:</span>
+<span class="sd">                - timeframe : TimeFrame of section intersected with self.window</span>
+<span class="sd">                - look_ahead : pd.DataFrame:</span>
+<span class="sd">                    with `n_look_ahead_rows` rows.  The first row will be for</span>
+<span class="sd">                    `section.end`.  `look_ahead` stores data which appears on </span>
+<span class="sd">                    disk immediately after `section.end`; i.e. it ignores</span>
+<span class="sd">                    the next `section.start`.</span>
+
+<span class="sd">            Returns an empty DataFrame if no data is available for the</span>
+<span class="sd">            specified section (or if the section.intersection(self.window)</span>
+<span class="sd">            is empty).</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        KeyError if `key` is not in store.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s">&quot;NotImplementedError&quot;</span><span class="p">)</span>
+        </div>
+<div class="viewcode-block" id="DataStore.append"><a class="viewcode-back" href="../../../nilmtk.datastore.html#nilmtk.datastore.datastore.DataStore.append">[docs]</a>    <span class="k">def</span> <span class="nf">append</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        key : str</span>
+<span class="sd">        value : pd.DataFrame</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        To quote the Pandas documentation for pandas.io.pytables.HDFStore.append:</span>
+<span class="sd">        Append does *not* check if data being appended overlaps with existing</span>
+<span class="sd">        data in the table, so be careful.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s">&quot;NotImplementedError&quot;</span><span class="p">)</span>
+        </div>
+<div class="viewcode-block" id="DataStore.put"><a class="viewcode-back" href="../../../nilmtk.datastore.html#nilmtk.datastore.datastore.DataStore.put">[docs]</a>    <span class="k">def</span> <span class="nf">put</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        key : str</span>
+<span class="sd">        value : pd.DataFrame</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s">&quot;NotImplementedError&quot;</span><span class="p">)</span>
+        </div>
+<div class="viewcode-block" id="DataStore.remove"><a class="viewcode-back" href="../../../nilmtk.datastore.html#nilmtk.datastore.datastore.DataStore.remove">[docs]</a>    <span class="k">def</span> <span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        key : str</span>
+<span class="sd">        value : pd.DataFrame</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s">&quot;NotImplementedError&quot;</span><span class="p">)</span>
+        </div>
+<div class="viewcode-block" id="DataStore.load_metadata"><a class="viewcode-back" href="../../../nilmtk.datastore.html#nilmtk.datastore.datastore.DataStore.load_metadata">[docs]</a>    <span class="k">def</span> <span class="nf">load_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s">&#39;/&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        key : string, optional</span>
+<span class="sd">            if &#39;/&#39; then load metadata for the whole dataset.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        metadata : dict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s">&quot;NotImplementedError&quot;</span><span class="p">)</span>
+        </div>
+<div class="viewcode-block" id="DataStore.save_metadata"><a class="viewcode-back" href="../../../nilmtk.datastore.html#nilmtk.datastore.datastore.DataStore.save_metadata">[docs]</a>    <span class="k">def</span> <span class="nf">save_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">metadata</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        key : string</span>
+<span class="sd">        metadata : dict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s">&quot;NotImplementedError&quot;</span><span class="p">)</span>
+        </div>
+<div class="viewcode-block" id="DataStore.elements_below_key"><a class="viewcode-back" href="../../../nilmtk.datastore.html#nilmtk.datastore.datastore.DataStore.elements_below_key">[docs]</a>    <span class="k">def</span> <span class="nf">elements_below_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s">&#39;/&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list of strings</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+    </div>
+<div class="viewcode-block" id="DataStore.close"><a class="viewcode-back" href="../../../nilmtk.datastore.html#nilmtk.datastore.datastore.DataStore.close">[docs]</a>    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s">&quot;NotImplementedError&quot;</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="DataStore.open"><a class="viewcode-back" href="../../../nilmtk.datastore.html#nilmtk.datastore.datastore.DataStore.open">[docs]</a>    <span class="k">def</span> <span class="nf">open</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s">&quot;NotImplementedError&quot;</span><span class="p">)</span>
+        </div>
+<div class="viewcode-block" id="DataStore.get_timeframe"><a class="viewcode-back" href="../../../nilmtk.datastore.html#nilmtk.datastore.datastore.DataStore.get_timeframe">[docs]</a>    <span class="k">def</span> <span class="nf">get_timeframe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        nilmtk.TimeFrame of entire table after intersecting with self.window.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s">&quot;NotImplementedError&quot;</span><span class="p">)</span>
+</div></div>
+<div class="viewcode-block" id="write_yaml_to_file"><a class="viewcode-back" href="../../../nilmtk.datastore.html#nilmtk.datastore.datastore.write_yaml_to_file">[docs]</a><span class="k">def</span> <span class="nf">write_yaml_to_file</span><span class="p">(</span><span class="n">metadata_filename</span><span class="p">,</span> <span class="n">metadata</span><span class="p">):</span>
+    <span class="n">metadata_file</span> <span class="o">=</span> <span class="nb">file</span><span class="p">(</span><span class="n">metadata_filename</span><span class="p">,</span> <span class="s">&#39;w&#39;</span><span class="p">)</span>
+    <span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">metadata</span><span class="p">,</span> <span class="n">metadata_file</span><span class="p">)</span>
+    <span class="n">metadata_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="join_key"><a class="viewcode-back" href="../../../nilmtk.datastore.html#nilmtk.datastore.datastore.join_key">[docs]</a><span class="k">def</span> <span class="nf">join_key</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; join_key(&#39;building1&#39;, &#39;elec&#39;, &#39;meter1&#39;)</span>
+<span class="sd">    &#39;/building1/elec/meter1&#39;</span>
+
+<span class="sd">    &gt;&gt;&gt; join_key(&#39;/&#39;)</span>
+<span class="sd">    &#39;/&#39;</span>
+
+<span class="sd">    &gt;&gt;&gt; join_key(&#39;&#39;)</span>
+<span class="sd">    &#39;/&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">key</span> <span class="o">=</span> <span class="s">&#39;/&#39;</span>
+    <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
+        <span class="n">arg_stripped</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s">&#39;/&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">arg_stripped</span><span class="p">:</span>
+            <span class="n">key</span> <span class="o">+=</span> <span class="n">arg_stripped</span> <span class="o">+</span> <span class="s">&#39;/&#39;</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="n">key</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="c"># remove last trailing slash</span>
+    <span class="k">return</span> <span class="n">key</span>
+        </div>
+<div class="viewcode-block" id="convert_datastore"><a class="viewcode-back" href="../../../nilmtk.datastore.html#nilmtk.datastore.datastore.convert_datastore">[docs]</a><span class="k">def</span> <span class="nf">convert_datastore</span><span class="p">(</span><span class="n">input_store</span><span class="p">,</span> <span class="n">output_store</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    input_store : nilmtk.DataStore</span>
+<span class="sd">    output_store : nilmtk.DataStore</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c"># dataset metadata</span>
+    <span class="n">metadata</span> <span class="o">=</span> <span class="n">input_store</span><span class="o">.</span><span class="n">load_metadata</span><span class="p">()</span>
+    <span class="n">output_store</span><span class="o">.</span><span class="n">save_metadata</span><span class="p">(</span><span class="s">&#39;/&#39;</span><span class="p">,</span> <span class="n">metadata</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">building</span> <span class="ow">in</span> <span class="n">input_store</span><span class="o">.</span><span class="n">elements_below_key</span><span class="p">():</span>
+        <span class="n">building_key</span> <span class="o">=</span> <span class="s">&#39;/&#39;</span><span class="o">+</span><span class="n">building</span>
+        <span class="c"># building metadata</span>
+        <span class="n">metadata</span> <span class="o">=</span> <span class="n">input_store</span><span class="o">.</span><span class="n">load_metadata</span><span class="p">(</span><span class="n">building_key</span><span class="p">)</span>
+        <span class="n">output_store</span><span class="o">.</span><span class="n">save_metadata</span><span class="p">(</span><span class="n">building_key</span><span class="p">,</span> <span class="n">metadata</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">utility</span> <span class="ow">in</span> <span class="n">input_store</span><span class="o">.</span><span class="n">elements_below_key</span><span class="p">(</span><span class="n">building</span><span class="p">):</span>
+            <span class="n">utility_key</span> <span class="o">=</span> <span class="n">building_key</span><span class="o">+</span><span class="s">&#39;/&#39;</span><span class="o">+</span><span class="n">utility</span>
+            <span class="k">for</span> <span class="n">meter</span> <span class="ow">in</span> <span class="n">input_store</span><span class="o">.</span><span class="n">elements_below_key</span><span class="p">(</span><span class="n">utility_key</span><span class="p">):</span>
+                <span class="c"># ignore cache (should this appear as an element below key?)</span>
+                <span class="k">if</span> <span class="n">meter</span> <span class="o">==</span> <span class="s">&#39;cache&#39;</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="n">meter_key</span> <span class="o">=</span> <span class="n">utility_key</span><span class="o">+</span><span class="s">&#39;/&#39;</span><span class="o">+</span><span class="n">meter</span>
+                <span class="c"># store meter data</span>
+                <span class="k">for</span> <span class="n">df</span> <span class="ow">in</span> <span class="n">input_store</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">meter_key</span><span class="p">):</span>
+                    <span class="n">output_store</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">meter_key</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span>
+</pre></div></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2014, NILMTK Authors.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.3.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

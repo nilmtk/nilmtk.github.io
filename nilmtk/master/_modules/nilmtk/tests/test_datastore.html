@@ -9,8 +9,8 @@
     
     <link rel="stylesheet" href="../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../../../_static/bootstrap-3.1.0/css/bootstrap.min.css" type="text/css" />
-    <link rel="stylesheet" href="../../../_static/bootstrap-3.1.0/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/bootstrap-3.2.0/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/bootstrap-3.2.0/css/bootstrap-theme.min.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
     
     <script type="text/javascript">
@@ -28,10 +28,10 @@
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="../../../_static/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="../../../_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="../../../_static/bootstrap-3.1.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../../_static/bootstrap-3.2.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../_static/bootstrap-sphinx.js"></script>
     <link rel="top" title="NILMTK 0.2 documentation" href="../../../index.html" />
-    <link rel="up" title="Module code" href="../../index.html" />
+    <link rel="up" title="nilmtk" href="../../nilmtk.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -56,7 +56,6 @@
 
         <div class="collapse navbar-collapse nav-collapse">
           <ul class="nav navbar-nav">
-            <li class="divider-vertical"></li>
             
                 <li><a href="https://github.com/nilmtk/nilmtk">github</a></li>
             
@@ -141,32 +140,17 @@
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">timedelta</span>
 <span class="kn">from</span> <span class="nn">testingtools</span> <span class="kn">import</span> <span class="n">data_dir</span>
-<span class="kn">from</span> <span class="nn">nilmtk.datastore</span> <span class="kn">import</span> <span class="n">HDFDataStore</span>
+<span class="kn">from</span> <span class="nn">nilmtk.datastore</span> <span class="kn">import</span> <span class="n">HDFDataStore</span><span class="p">,</span> <span class="n">CSVDataStore</span>
 <span class="kn">from</span> <span class="nn">nilmtk</span> <span class="kn">import</span> <span class="n">TimeFrame</span>
 
-<div class="viewcode-block" id="TestHDFDataStore"><a class="viewcode-back" href="../../../nilmtk.tests.html#nilmtk.tests.test_datastore.TestHDFDataStore">[docs]</a><span class="k">class</span> <span class="nc">TestHDFDataStore</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+<span class="c"># class name can&#39;t begin with test</span>
+<div class="viewcode-block" id="SuperTestDataStore"><a class="viewcode-back" href="../../../nilmtk.tests.html#nilmtk.tests.test_datastore.SuperTestDataStore">[docs]</a><span class="k">class</span> <span class="nc">SuperTestDataStore</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="n">START_DATE</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="p">(</span><span class="s">&#39;2012-01-01 00:00:00&#39;</span><span class="p">,</span> <span class="n">tz</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span>
     <span class="n">NROWS</span> <span class="o">=</span> <span class="mf">1E4</span>
     <span class="n">END_DATE</span> <span class="o">=</span> <span class="n">START_DATE</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">NROWS</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
     <span class="n">TIMEFRAME</span> <span class="o">=</span> <span class="n">TimeFrame</span><span class="p">(</span><span class="n">START_DATE</span><span class="p">,</span> <span class="n">END_DATE</span><span class="p">)</span>
-
-    <span class="nd">@classmethod</span>
-<div class="viewcode-block" id="TestHDFDataStore.setUpClass"><a class="viewcode-back" href="../../../nilmtk.tests.html#nilmtk.tests.test_datastore.TestHDFDataStore.setUpClass">[docs]</a>    <span class="k">def</span> <span class="nf">setUpClass</span><span class="p">(</span><span class="n">cls</span><span class="p">):</span>
-        <span class="n">filename</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="n">data_dir</span><span class="p">(),</span> <span class="s">&#39;random.h5&#39;</span><span class="p">)</span>
-        <span class="n">cls</span><span class="o">.</span><span class="n">datastore</span> <span class="o">=</span> <span class="n">HDFDataStore</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
-        <span class="n">cls</span><span class="o">.</span><span class="n">keys</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;/building1/elec/meter{:d}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">6</span><span class="p">)]</span>
-</div>
-    <span class="nd">@classmethod</span>
-<div class="viewcode-block" id="TestHDFDataStore.tearDownClass"><a class="viewcode-back" href="../../../nilmtk.tests.html#nilmtk.tests.test_datastore.TestHDFDataStore.tearDownClass">[docs]</a>    <span class="k">def</span> <span class="nf">tearDownClass</span><span class="p">(</span><span class="n">cls</span><span class="p">):</span>
-        <span class="n">cls</span><span class="o">.</span><span class="n">datastore</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-</div>
-<div class="viewcode-block" id="TestHDFDataStore.test_column_names"><a class="viewcode-back" href="../../../nilmtk.tests.html#nilmtk.tests.test_datastore.TestHDFDataStore.test_column_names">[docs]</a>    <span class="k">def</span> <span class="nf">test_column_names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">keys</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">datastore</span><span class="o">.</span><span class="n">_column_names</span><span class="p">(</span><span class="n">key</span><span class="p">),</span> 
-                             <span class="p">[(</span><span class="s">&#39;power&#39;</span><span class="p">,</span> <span class="s">&#39;active&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;energy&#39;</span><span class="p">,</span> <span class="s">&#39;reactive&#39;</span><span class="p">),</span>
-                              <span class="p">(</span><span class="s">&#39;voltage&#39;</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">)])</span>
-</div>
-<div class="viewcode-block" id="TestHDFDataStore.test_timeframe"><a class="viewcode-back" href="../../../nilmtk.tests.html#nilmtk.tests.test_datastore.TestHDFDataStore.test_timeframe">[docs]</a>    <span class="k">def</span> <span class="nf">test_timeframe</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        
+<div class="viewcode-block" id="SuperTestDataStore.test_timeframe"><a class="viewcode-back" href="../../../nilmtk.tests.html#nilmtk.tests.test_datastore.SuperTestDataStore.test_timeframe">[docs]</a>    <span class="k">def</span> <span class="nf">test_timeframe</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">datastore</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">keys</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">datastore</span><span class="o">.</span><span class="n">get_timeframe</span><span class="p">(</span><span class="n">key</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">TIMEFRAME</span><span class="p">)</span>
@@ -177,26 +161,8 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">datastore</span><span class="o">.</span><span class="n">get_timeframe</span><span class="p">(</span><span class="n">key</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">TIMEFRAME</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">datastore</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="bp">True</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">datastore</span><span class="o">.</span><span class="n">get_timeframe</span><span class="p">(</span><span class="n">key</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">datastore</span><span class="o">.</span><span class="n">window</span><span class="p">)</span>
-</div>
-<div class="viewcode-block" id="TestHDFDataStore.test_n_rows"><a class="viewcode-back" href="../../../nilmtk.tests.html#nilmtk.tests.test_datastore.TestHDFDataStore.test_n_rows">[docs]</a>    <span class="k">def</span> <span class="nf">test_n_rows</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_apply_mask</span><span class="p">()</span>
-        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">keys</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">datastore</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="bp">True</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">datastore</span><span class="o">.</span><span class="n">_nrows</span><span class="p">(</span><span class="n">key</span><span class="p">),</span> <span class="mi">10</span><span class="o">*</span><span class="mi">60</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">datastore</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="bp">False</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">datastore</span><span class="o">.</span><span class="n">_nrows</span><span class="p">(</span><span class="n">key</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">NROWS</span><span class="p">)</span>
-</div>
-<div class="viewcode-block" id="TestHDFDataStore.test_estimate_memory_requirement"><a class="viewcode-back" href="../../../nilmtk.tests.html#nilmtk.tests.test_datastore.TestHDFDataStore.test_estimate_memory_requirement">[docs]</a>    <span class="k">def</span> <span class="nf">test_estimate_memory_requirement</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_apply_mask</span><span class="p">()</span>
-        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">keys</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">datastore</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="bp">True</span>
-            <span class="n">mem</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">datastore</span><span class="o">.</span><span class="n">_estimate_memory_requirement</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">datastore</span><span class="o">.</span><span class="n">_nrows</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">mem</span><span class="p">,</span> <span class="mi">12000</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">datastore</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="bp">False</span>
-            <span class="n">mem</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">datastore</span><span class="o">.</span><span class="n">_estimate_memory_requirement</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">datastore</span><span class="o">.</span><span class="n">_nrows</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">mem</span><span class="p">,</span> <span class="mi">200000</span><span class="p">)</span>
-</div>
-<div class="viewcode-block" id="TestHDFDataStore.test_load"><a class="viewcode-back" href="../../../nilmtk.tests.html#nilmtk.tests.test_datastore.TestHDFDataStore.test_load">[docs]</a>    <span class="k">def</span> <span class="nf">test_load</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    </div>
+<div class="viewcode-block" id="SuperTestDataStore.test_load"><a class="viewcode-back" href="../../../nilmtk.tests.html#nilmtk.tests.test_datastore.SuperTestDataStore.test_load">[docs]</a>    <span class="k">def</span> <span class="nf">test_load</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">timeframe</span> <span class="o">=</span> <span class="n">TimeFrame</span><span class="p">(</span><span class="s">&#39;2012-01-01 00:00:00&#39;</span><span class="p">,</span> <span class="s">&#39;2012-01-01 00:00:05&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">datastore</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
         <span class="n">gen</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">datastore</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">keys</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> 
@@ -209,7 +175,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">look_ahead</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">timeframe</span><span class="o">.</span><span class="n">end</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">look_ahead</span><span class="p">),</span> <span class="mi">10</span><span class="p">)</span>
 </div>
-<div class="viewcode-block" id="TestHDFDataStore.test_load_chunks"><a class="viewcode-back" href="../../../nilmtk.tests.html#nilmtk.tests.test_datastore.TestHDFDataStore.test_load_chunks">[docs]</a>    <span class="k">def</span> <span class="nf">test_load_chunks</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="SuperTestDataStore.test_load_chunks"><a class="viewcode-back" href="../../../nilmtk.tests.html#nilmtk.tests.test_datastore.SuperTestDataStore.test_load_chunks">[docs]</a>    <span class="k">def</span> <span class="nf">test_load_chunks</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">datastore</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
         <span class="n">chunks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">datastore</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">keys</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
         <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
@@ -236,13 +202,15 @@
         <span class="n">chunks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">datastore</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">keys</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">sections</span><span class="o">=</span><span class="n">timeframes</span><span class="p">)</span>
         <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">chunks</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">chunk</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+                <span class="k">continue</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">chunk</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="p">(</span><span class="s">&#39;2012-01-01 00:10:02&#39;</span><span class="p">))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">chunk</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="p">(</span><span class="s">&#39;2012-01-01 00:10:04&#39;</span><span class="p">))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">chunk</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span>
             <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 </div>
-<div class="viewcode-block" id="TestHDFDataStore.test_load_chunks_small_chunksize"><a class="viewcode-back" href="../../../nilmtk.tests.html#nilmtk.tests.test_datastore.TestHDFDataStore.test_load_chunks_small_chunksize">[docs]</a>    <span class="k">def</span> <span class="nf">test_load_chunks_small_chunksize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="SuperTestDataStore.test_load_chunks_small_chunksize"><a class="viewcode-back" href="../../../nilmtk.tests.html#nilmtk.tests.test_datastore.SuperTestDataStore.test_load_chunks_small_chunksize">[docs]</a>    <span class="k">def</span> <span class="nf">test_load_chunks_small_chunksize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">datastore</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
         <span class="n">timeframes</span> <span class="o">=</span> <span class="p">[</span><span class="n">TimeFrame</span><span class="p">(</span><span class="s">&#39;2012-01-01 00:00:00&#39;</span><span class="p">,</span> <span class="s">&#39;2012-01-01 00:01:00&#39;</span><span class="p">),</span>
                       <span class="n">TimeFrame</span><span class="p">(</span><span class="s">&#39;2012-01-01 00:10:00&#39;</span><span class="p">,</span> <span class="s">&#39;2012-01-01 00:11:00&#39;</span><span class="p">)]</span>
@@ -261,8 +229,55 @@
     <span class="k">def</span> <span class="nf">_apply_mask</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">datastore</span><span class="o">.</span><span class="n">window</span> <span class="o">=</span> <span class="n">TimeFrame</span><span class="p">(</span><span class="s">&#39;2012-01-01 00:10:00&#39;</span><span class="p">,</span>
                                         <span class="s">&#39;2012-01-01 00:20:00&#39;</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="TestHDFDataStore"><a class="viewcode-back" href="../../../nilmtk.tests.html#nilmtk.tests.test_datastore.TestHDFDataStore">[docs]</a><span class="k">class</span> <span class="nc">TestHDFDataStore</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">,</span> <span class="n">SuperTestDataStore</span><span class="p">):</span>
 
-    </div>
+    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="TestHDFDataStore.setUpClass"><a class="viewcode-back" href="../../../nilmtk.tests.html#nilmtk.tests.test_datastore.TestHDFDataStore.setUpClass">[docs]</a>    <span class="k">def</span> <span class="nf">setUpClass</span><span class="p">(</span><span class="n">cls</span><span class="p">):</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="n">data_dir</span><span class="p">(),</span> <span class="s">&#39;random.h5&#39;</span><span class="p">)</span>
+        <span class="n">cls</span><span class="o">.</span><span class="n">datastore</span> <span class="o">=</span> <span class="n">HDFDataStore</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="n">cls</span><span class="o">.</span><span class="n">keys</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;/building1/elec/meter{:d}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">6</span><span class="p">)]</span>
+                                        </div>
+    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="TestHDFDataStore.tearDownClass"><a class="viewcode-back" href="../../../nilmtk.tests.html#nilmtk.tests.test_datastore.TestHDFDataStore.tearDownClass">[docs]</a>    <span class="k">def</span> <span class="nf">tearDownClass</span><span class="p">(</span><span class="n">cls</span><span class="p">):</span>
+        <span class="n">cls</span><span class="o">.</span><span class="n">datastore</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="TestHDFDataStore.test_column_names"><a class="viewcode-back" href="../../../nilmtk.tests.html#nilmtk.tests.test_datastore.TestHDFDataStore.test_column_names">[docs]</a>    <span class="k">def</span> <span class="nf">test_column_names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">keys</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">datastore</span><span class="o">.</span><span class="n">_column_names</span><span class="p">(</span><span class="n">key</span><span class="p">),</span> 
+                             <span class="p">[(</span><span class="s">&#39;power&#39;</span><span class="p">,</span> <span class="s">&#39;active&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;energy&#39;</span><span class="p">,</span> <span class="s">&#39;reactive&#39;</span><span class="p">),</span>
+                              <span class="p">(</span><span class="s">&#39;voltage&#39;</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">)])</span>
+</div>
+<div class="viewcode-block" id="TestHDFDataStore.test_n_rows"><a class="viewcode-back" href="../../../nilmtk.tests.html#nilmtk.tests.test_datastore.TestHDFDataStore.test_n_rows">[docs]</a>    <span class="k">def</span> <span class="nf">test_n_rows</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_apply_mask</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">keys</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">datastore</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="bp">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">datastore</span><span class="o">.</span><span class="n">_nrows</span><span class="p">(</span><span class="n">key</span><span class="p">),</span> <span class="mi">10</span><span class="o">*</span><span class="mi">60</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">datastore</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="bp">False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">datastore</span><span class="o">.</span><span class="n">_nrows</span><span class="p">(</span><span class="n">key</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">NROWS</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="TestHDFDataStore.test_estimate_memory_requirement"><a class="viewcode-back" href="../../../nilmtk.tests.html#nilmtk.tests.test_datastore.TestHDFDataStore.test_estimate_memory_requirement">[docs]</a>    <span class="k">def</span> <span class="nf">test_estimate_memory_requirement</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_apply_mask</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">keys</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">datastore</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="bp">True</span>
+            <span class="n">mem</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">datastore</span><span class="o">.</span><span class="n">_estimate_memory_requirement</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">datastore</span><span class="o">.</span><span class="n">_nrows</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">mem</span><span class="p">,</span> <span class="mi">12000</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">datastore</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="bp">False</span>
+            <span class="n">mem</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">datastore</span><span class="o">.</span><span class="n">_estimate_memory_requirement</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">datastore</span><span class="o">.</span><span class="n">_nrows</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">mem</span><span class="p">,</span> <span class="mi">200000</span><span class="p">)</span>
+</div></div>
+<div class="viewcode-block" id="TestCSVDataStore"><a class="viewcode-back" href="../../../nilmtk.tests.html#nilmtk.tests.test_datastore.TestCSVDataStore">[docs]</a><span class="k">class</span> <span class="nc">TestCSVDataStore</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">,</span> <span class="n">SuperTestDataStore</span><span class="p">):</span>
+
+    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="TestCSVDataStore.setUpClass"><a class="viewcode-back" href="../../../nilmtk.tests.html#nilmtk.tests.test_datastore.TestCSVDataStore.setUpClass">[docs]</a>    <span class="k">def</span> <span class="nf">setUpClass</span><span class="p">(</span><span class="n">cls</span><span class="p">):</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="n">data_dir</span><span class="p">(),</span> <span class="s">&#39;random_csv&#39;</span><span class="p">)</span>
+        <span class="n">cls</span><span class="o">.</span><span class="n">datastore</span> <span class="o">=</span> <span class="n">CSVDataStore</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="n">cls</span><span class="o">.</span><span class="n">keys</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;/building1/elec/meter{:d}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">6</span><span class="p">)]</span>
+                                        </div>
+    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="TestCSVDataStore.tearDownClass"><a class="viewcode-back" href="../../../nilmtk.tests.html#nilmtk.tests.test_datastore.TestCSVDataStore.tearDownClass">[docs]</a>    <span class="k">def</span> <span class="nf">tearDownClass</span><span class="p">(</span><span class="n">cls</span><span class="p">):</span>
+        <span class="n">cls</span><span class="o">.</span><span class="n">datastore</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    </div></div>
 <span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
     <span class="n">unittest</span><span class="o">.</span><span class="n">main</span><span class="p">()</span>
 </pre></div>

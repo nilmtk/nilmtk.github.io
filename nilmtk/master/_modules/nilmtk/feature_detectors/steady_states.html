@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>nilmtk.feature_detectors.steady_states &mdash; NILMTK 0.2 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/bootstrap-3.2.0/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/bootstrap-3.2.0/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.2',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../../../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../../_static/bootstrap-3.2.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../../_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="NILMTK 0.2 documentation" href="../../../index.html" />
+    <link rel="up" title="nilmtk" href="../../nilmtk.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../index.html">
+          NILMTK</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.2</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="https://github.com/nilmtk/nilmtk">github</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro_nilmtk_v0_2.html">Intro to NILMTK v0.2</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../convert_data_to_NILMTK_format.html">Convert data to NILMTK format and load into NILMTK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../elecmeter_and_metergroup.html">MeterGroup, ElecMeter, selection and basic statistics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pipeline_preprocessing_more_stats.html">Processing pipeline, preprocessing and more stats</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../disaggregation_and_metrics.html">Disaggregation and Metrics</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../writing_a_dataset_converter.html">Writing a dataset converter</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Change log</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../nilmtk.html">nilmtk package</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      
+  <h1>Source code for nilmtk.feature_detectors.steady_states</h1><div class="highlight"><pre>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">division</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span> 
+<span class="kn">import</span> <span class="nn">sys</span>
+
+
+<span class="c"># Fix the seed for repeatability of experiments</span>
+<span class="n">SEED</span> <span class="o">=</span> <span class="mi">42</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">SEED</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="find_steady_states_transients"><a class="viewcode-back" href="../../../nilmtk.feature_detectors.html#nilmtk.feature_detectors.steady_states.find_steady_states_transients">[docs]</a><span class="k">def</span> <span class="nf">find_steady_states_transients</span><span class="p">(</span><span class="n">metergroup</span><span class="p">,</span> <span class="n">cols</span><span class="p">,</span> <span class="n">noise_level</span><span class="p">,</span> <span class="n">state_threshold</span><span class="p">,</span>  <span class="o">**</span><span class="n">load_kwargs</span><span class="p">):</span>
+    <span class="n">steady_states_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">transients_list</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">power_df</span> <span class="ow">in</span> <span class="n">metergroup</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">cols</span><span class="o">=</span><span class="n">cols</span><span class="p">,</span> <span class="o">**</span><span class="n">load_kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        if len(power_df.columns) &lt;= 2:</span>
+<span class="sd">            # Use whatever is available</span>
+<span class="sd">            power_dataframe = power_df</span>
+<span class="sd">        else:</span>
+<span class="sd">            # Active, reactive and apparent are available</span>
+<span class="sd">            power_dataframe = power_df[[(&#39;power&#39;, &#39;active&#39;), (&#39;power&#39;, &#39;reactive&#39;)]]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">power_dataframe</span> <span class="o">=</span> <span class="n">power_df</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">find_steady_states</span><span class="p">(</span><span class="n">power_dataframe</span><span class="p">,</span> <span class="n">noise_level</span><span class="o">=</span><span class="n">noise_level</span><span class="p">,</span> <span class="n">stateThreshold</span><span class="o">=</span><span class="n">state_threshold</span><span class="p">)</span>
+        <span class="n">steady_states_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">transients_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">steady_states_list</span><span class="p">),</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">transients_list</span><span class="p">)]</span>
+
+</div>
+<div class="viewcode-block" id="find_steady_states"><a class="viewcode-back" href="../../../nilmtk.feature_detectors.html#nilmtk.feature_detectors.steady_states.find_steady_states">[docs]</a><span class="k">def</span> <span class="nf">find_steady_states</span><span class="p">(</span><span class="n">dataframe</span><span class="p">,</span> <span class="n">min_n_samples</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">stateThreshold</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>
+                       <span class="n">noise_level</span><span class="o">=</span><span class="mi">70</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Finds steady states given a DataFrame of power</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    dataframe: pd.DataFrame with DateTimeIndex</span>
+<span class="sd">    min_n_samples(int): number of samples to consider constituting a</span>
+<span class="sd">             steady state.</span>
+<span class="sd">    stateThreshold: maximum difference between highest and lowest </span>
+<span class="sd">        value in steady state.</span>
+<span class="sd">    noise_level: the level used to define significant </span>
+<span class="sd">        appliances, transitions below this level will be ignored. </span>
+<span class="sd">        See Hart 1985. p27.</span>
+
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c"># Tells whether we have both real and reactive power or only real power</span>
+    <span class="n">num_measurements</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">dataframe</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+    <span class="n">estimatedSteadyPower</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">num_measurements</span><span class="p">)</span>
+    <span class="n">lastSteadyPower</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">num_measurements</span><span class="p">)</span>
+    <span class="n">previousMeasurement</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">num_measurements</span><span class="p">)</span>
+
+    <span class="c"># These flags store state of power</span>
+
+    <span class="n">instantaneousChange</span> <span class="o">=</span> <span class="bp">False</span>  <span class="c"># power changing this second</span>
+    <span class="n">ongoingChange</span> <span class="o">=</span> <span class="bp">False</span>  <span class="c"># power change in progress over multiple seconds</span>
+
+    <span class="n">index_transitions</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c"># Indices to use in returned Dataframe</span>
+    <span class="n">index_steadystates</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">transitions</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c"># holds information on transitions</span>
+    <span class="n">steadyStates</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c"># steadyStates to store in returned Dataframe</span>
+    <span class="n">N</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c"># N stores the number of samples in state</span>
+    <span class="n">time</span> <span class="o">=</span> <span class="n">dataframe</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">name</span>  <span class="c"># first state starts at beginning</span>
+
+    <span class="c"># Iterate over the rows performing algorithm</span>
+    <span class="k">print</span> <span class="p">(</span><span class="s">&quot;Finding Edges, please wait ...&quot;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">dataframe</span><span class="o">.</span><span class="n">itertuples</span><span class="p">():</span>
+
+        <span class="c"># test if either active or reactive moved more than threshold</span>
+        <span class="c"># http://stackoverflow.com/questions/17418108/elegant-way-to-perform-tuple-arithmetic</span>
+        <span class="c"># http://stackoverflow.com/questions/13168943/expression-for-elements-greater-than-x-and-less-than-y-in-python-all-in-one-ret</span>
+
+        <span class="c"># Step 2: this does the threshold test and then we sum the boolean</span>
+        <span class="c"># array.</span>
+        <span class="n">thisMeasurement</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span>
+        <span class="c"># logging.debug(&#39;The current measurement is: %s&#39; % (thisMeasurement,))</span>
+        <span class="c"># logging.debug(&#39;The previous measurement is: %s&#39; %</span>
+        <span class="c"># (previousMeasurement,))</span>
+
+        <span class="n">stateChange</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fabs</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">subtract</span><span class="p">(</span><span class="n">thisMeasurement</span><span class="p">,</span> <span class="n">previousMeasurement</span><span class="p">))</span>
+        <span class="c"># logging.debug(&#39;The State Change is: %s&#39; % (stateChange,))</span>
+
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">stateChange</span> <span class="o">&gt;</span> <span class="n">stateThreshold</span><span class="p">):</span>
+            <span class="n">instantaneousChange</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">instantaneousChange</span> <span class="o">=</span> <span class="bp">False</span>
+
+        <span class="c"># Step 3: Identify if transition is just starting, if so, process it</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">instantaneousChange</span> <span class="ow">and</span> <span class="p">(</span><span class="ow">not</span> <span class="n">ongoingChange</span><span class="p">)):</span>
+
+            <span class="c"># Calculate transition size</span>
+            <span class="n">lastTransition</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">subtract</span><span class="p">(</span><span class="n">estimatedSteadyPower</span><span class="p">,</span> <span class="n">lastSteadyPower</span><span class="p">)</span>
+            <span class="c"># logging.debug(&#39;The steady state transition is: %s&#39; %</span>
+            <span class="c"># (lastTransition,))</span>
+
+            <span class="c"># Sum Boolean array to verify if transition is above noise level</span>
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fabs</span><span class="p">(</span><span class="n">lastTransition</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">noise_level</span><span class="p">):</span>
+                <span class="c"># 3A, C: if so add the index of the transition start and the</span>
+                <span class="c"># power information</span>
+
+                <span class="c"># Avoid outputting first transition from zero</span>
+                <span class="n">index_transitions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">time</span><span class="p">)</span>
+                <span class="c"># logging.debug(&#39;The current row time is: %s&#39; % (time))</span>
+                <span class="n">transitions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lastTransition</span><span class="p">)</span>
+
+                <span class="c"># I think we want this, though not specifically in Hart&#39;s algo notes</span>
+                <span class="c"># We don&#39;t want to append a steady state if it&#39;s less than min samples in length.</span>
+                <span class="c"># if N &gt; min_n_samples:</span>
+                <span class="n">index_steadystates</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">time</span><span class="p">)</span>
+                <span class="c"># logging.debug(&#39;The &#39;&#39;time&#39;&#39; stored is: %s&#39; % (time))</span>
+                <span class="c"># last states steady power</span>
+                <span class="n">steadyStates</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">estimatedSteadyPower</span><span class="p">)</span>
+
+            <span class="c"># 3B</span>
+            <span class="n">lastSteadyPower</span> <span class="o">=</span> <span class="n">estimatedSteadyPower</span>
+            <span class="c"># 3C</span>
+            <span class="n">time</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="c"># Step 4: if a new steady state is starting, zero counter</span>
+        <span class="k">if</span> <span class="n">instantaneousChange</span><span class="p">:</span>
+            <span class="n">N</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="c"># Hart step 5: update our estimate for steady state&#39;s energy</span>
+        <span class="n">estimatedSteadyPower</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">estimatedSteadyPower</span><span class="p">),</span>
+                   <span class="n">thisMeasurement</span><span class="p">),</span> <span class="p">(</span><span class="n">N</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="c"># logging.debug(&#39;The steady power estimate is: %s&#39; %</span>
+        <span class="c">#    (estimatedSteadyPower,))</span>
+        <span class="c"># Step 6: increment counter</span>
+        <span class="n">N</span> <span class="o">=</span> <span class="n">N</span> <span class="o">+</span> <span class="mi">1</span>
+
+        <span class="c"># Step 7</span>
+        <span class="n">ongoingChange</span> <span class="o">=</span> <span class="n">instantaneousChange</span>
+
+        <span class="c"># Step 8</span>
+        <span class="n">previousMeasurement</span> <span class="o">=</span> <span class="n">thisMeasurement</span>
+
+    <span class="k">print</span><span class="p">(</span><span class="s">&quot;Edge detection complete.&quot;</span><span class="p">)</span>
+
+    <span class="k">print</span><span class="p">(</span><span class="s">&quot;Creating transition frame ...&quot;</span><span class="p">)</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+
+    <span class="n">cols_transition</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;active transition&#39;</span><span class="p">],</span>
+                       <span class="mi">2</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;active transition&#39;</span><span class="p">,</span> <span class="s">&#39;reactive transition&#39;</span><span class="p">]}</span>
+
+    <span class="n">cols_steady</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;active average&#39;</span><span class="p">],</span>
+                   <span class="mi">2</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;active average&#39;</span><span class="p">,</span> <span class="s">&#39;reactive average&#39;</span><span class="p">]}</span>
+
+    
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">index_transitions</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+        <span class="c"># No events</span>
+        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(),</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">transitions</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">transitions</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">index_transitions</span><span class="p">,</span>
+                                   <span class="n">columns</span><span class="o">=</span><span class="n">cols_transition</span><span class="p">[</span><span class="n">num_measurements</span><span class="p">])</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&quot;Transition frame created.&quot;</span><span class="p">)</span>
+
+        <span class="k">print</span><span class="p">(</span><span class="s">&quot;Creating states frame ...&quot;</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+        <span class="n">steadyStates</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">steadyStates</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">index_steadystates</span><span class="p">,</span>
+                                    <span class="n">columns</span><span class="o">=</span><span class="n">cols_steady</span><span class="p">[</span><span class="n">num_measurements</span><span class="p">])</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&quot;States frame created.&quot;</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&quot;Finished.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">steadyStates</span><span class="p">,</span> <span class="n">transitions</span>
+
+</div>
+<div class="viewcode-block" id="cluster"><a class="viewcode-back" href="../../../nilmtk.feature_detectors.html#nilmtk.feature_detectors.steady_states.cluster">[docs]</a><span class="k">def</span> <span class="nf">cluster</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">max_num_clusters</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Applies clustering on reduced data, </span>
+<span class="sd">    i.e. data where power is greater than threshold.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    X : pd.Series or single-column pd.DataFrame</span>
+<span class="sd">    max_num_clusters : int</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    centroids : ndarray of int32s</span>
+<span class="sd">        Power in different states of an appliance, sorted</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="c"># Find where power consumption is greater than 10</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">_transform_data</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+    <span class="c"># Find clusters</span>
+    <span class="n">centroids</span> <span class="o">=</span> <span class="n">_apply_clustering</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">max_num_clusters</span><span class="p">)</span>
+    <span class="n">centroids</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">centroids</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>  <span class="c"># add &#39;off&#39; state</span>
+    <span class="n">centroids</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">centroids</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+    <span class="n">centroids</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">centroids</span><span class="p">)</span>  <span class="c"># np.unique also sorts</span>
+    <span class="c"># TODO: Merge similar clusters</span>
+    <span class="k">return</span> <span class="n">centroids</span>
+
+</div>
+<span class="k">def</span> <span class="nf">_transform_data</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Subsamples if needed and converts to column vector (which is what</span>
+<span class="sd">    scikit-learn requires).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    data : pd.Series or single column pd.DataFrame</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    data_above_thresh : ndarray</span>
+<span class="sd">        column vector</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">MAX_NUMBER_OF_SAMPLES</span> <span class="o">=</span> <span class="mi">2000</span>
+    <span class="n">MIN_NUMBER_OF_SAMPLES</span> <span class="o">=</span> <span class="mi">20</span>
+    <span class="n">DATA_THRESHOLD</span> <span class="o">=</span> <span class="mi">10</span>
+
+    <span class="n">data_above_thresh</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">data</span> <span class="o">&gt;</span> <span class="n">DATA_THRESHOLD</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">n_samples</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data_above_thresh</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">n_samples</span> <span class="o">&lt;</span> <span class="n">MIN_NUMBER_OF_SAMPLES</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">MAX_NUMBER_OF_SAMPLES</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="k">elif</span> <span class="n">n_samples</span> <span class="o">&gt;</span> <span class="n">MAX_NUMBER_OF_SAMPLES</span><span class="p">:</span>
+        <span class="c"># Randomly subsample (we don&#39;t want to smoothly downsample</span>
+        <span class="c"># because that is likely to change the values)</span>
+        <span class="n">random_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">,</span> <span class="n">MAX_NUMBER_OF_SAMPLES</span><span class="p">)</span>
+        <span class="n">resampled</span> <span class="o">=</span> <span class="n">data_above_thresh</span><span class="p">[</span><span class="n">random_indices</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">resampled</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">MAX_NUMBER_OF_SAMPLES</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">data_above_thresh</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">n_samples</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_apply_clustering</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">max_num_clusters</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    X : ndarray</span>
+<span class="sd">    max_num_clusters : int</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    centroids : list of numbers</span>
+<span class="sd">        List of power in different states of an appliance</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="c"># If we import sklearn at the top of the file then it makes autodoc fail</span>
+    <span class="kn">from</span> <span class="nn">sklearn.cluster</span> <span class="kn">import</span> <span class="n">KMeans</span>
+    <span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">metrics</span>
+
+    <span class="c"># sklearn produces lots of DepreciationWarnings with PyTables</span>
+    <span class="kn">import</span> <span class="nn">warnings</span>
+    <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">DeprecationWarning</span><span class="p">)</span>
+
+    <span class="c"># Finds whether 2 or 3 gives better Silhouellete coefficient</span>
+    <span class="c"># Whichever is higher serves as the number of clusters for that</span>
+    <span class="c"># appliance</span>
+    <span class="n">num_clus</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="n">sh</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="n">k_means_labels</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">k_means_cluster_centers</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">k_means_labels_unique</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">n_clusters</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_num_clusters</span><span class="p">):</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">k_means</span> <span class="o">=</span> <span class="n">KMeans</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="s">&#39;k-means++&#39;</span><span class="p">,</span> <span class="n">n_clusters</span><span class="o">=</span><span class="n">n_clusters</span><span class="p">)</span>
+            <span class="n">k_means</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+            <span class="n">k_means_labels</span><span class="p">[</span><span class="n">n_clusters</span><span class="p">]</span> <span class="o">=</span> <span class="n">k_means</span><span class="o">.</span><span class="n">labels_</span>
+            <span class="n">k_means_cluster_centers</span><span class="p">[</span><span class="n">n_clusters</span><span class="p">]</span> <span class="o">=</span> <span class="n">k_means</span><span class="o">.</span><span class="n">cluster_centers_</span>
+            <span class="n">k_means_labels_unique</span><span class="p">[</span><span class="n">n_clusters</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">k_means_labels</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">sh_n</span> <span class="o">=</span> <span class="n">metrics</span><span class="o">.</span><span class="n">silhouette_score</span><span class="p">(</span>
+                    <span class="n">X</span><span class="p">,</span> <span class="n">k_means_labels</span><span class="p">[</span><span class="n">n_clusters</span><span class="p">],</span> <span class="n">metric</span><span class="o">=</span><span class="s">&#39;euclidean&#39;</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">sh_n</span> <span class="o">&gt;</span> <span class="n">sh</span><span class="p">:</span>
+                    <span class="n">sh</span> <span class="o">=</span> <span class="n">sh_n</span>
+                    <span class="n">num_clus</span> <span class="o">=</span> <span class="n">n_clusters</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="n">num_clus</span> <span class="o">=</span> <span class="n">n_clusters</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">num_clus</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">k_means_cluster_centers</span><span class="p">[</span><span class="n">num_clus</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">k_means_cluster_centers</span><span class="p">[</span><span class="n">num_clus</span><span class="p">]</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2014, NILMTK Authors.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.3.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

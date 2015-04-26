@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>nilmtk.datastore.csvdatastore &mdash; NILMTK 0.2 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/bootstrap-3.2.0/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/bootstrap-3.2.0/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.2',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../../../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../../_static/bootstrap-3.2.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../../_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="NILMTK 0.2 documentation" href="../../../index.html" />
+    <link rel="up" title="nilmtk.datastore" href="../datastore.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../index.html">
+          NILMTK</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.2</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="https://github.com/nilmtk/nilmtk">github</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro_nilmtk_v0_2.html">Intro to NILMTK v0.2</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../convert_data_to_NILMTK_format.html">Convert data to NILMTK format and load into NILMTK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../elecmeter_and_metergroup.html">MeterGroup, ElecMeter, selection and basic statistics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pipeline_preprocessing_more_stats.html">Processing pipeline, preprocessing and more stats</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../disaggregation_and_metrics.html">Disaggregation and Metrics</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../writing_a_dataset_converter.html">Writing a dataset converter</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Change log</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../nilmtk.html">nilmtk package</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      
+  <h1>Source code for nilmtk.datastore.csvdatastore</h1><div class="highlight"><pre>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">division</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">repeat</span><span class="p">,</span> <span class="n">tee</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
+<span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">yaml</span>
+<span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">isdir</span><span class="p">,</span> <span class="n">isfile</span><span class="p">,</span> <span class="n">join</span><span class="p">,</span> <span class="n">exists</span><span class="p">,</span> <span class="n">dirname</span>
+<span class="kn">from</span> <span class="nn">os</span> <span class="kn">import</span> <span class="n">listdir</span><span class="p">,</span> <span class="n">makedirs</span><span class="p">,</span> <span class="n">remove</span>
+<span class="kn">from</span> <span class="nn">shutil</span> <span class="kn">import</span> <span class="n">rmtree</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">nilm_metadata.convert_yaml_to_hdf5</span> <span class="kn">import</span> <span class="n">_load_file</span>
+<span class="kn">from</span> <span class="nn">nilmtk.timeframe</span> <span class="kn">import</span> <span class="n">TimeFrame</span>
+<span class="kn">from</span> <span class="nn">nilmtk.timeframegroup</span> <span class="kn">import</span> <span class="n">TimeFrameGroup</span>
+<span class="kn">from</span> <span class="nn">nilmtk.node</span> <span class="kn">import</span> <span class="n">Node</span>
+<span class="kn">from</span> <span class="nn">nilmtk.datastore</span> <span class="kn">import</span> <span class="n">DataStore</span><span class="p">,</span> <span class="n">MAX_MEM_ALLOWANCE_IN_BYTES</span>
+<span class="kn">from</span> <span class="nn">nilmtk.datastore.key</span> <span class="kn">import</span> <span class="n">Key</span>
+<span class="kn">from</span> <span class="nn">nilmtk.datastore.datastore</span> <span class="kn">import</span> <span class="n">write_yaml_to_file</span>
+<span class="kn">from</span> <span class="nn">nilmtk.docinherit</span> <span class="kn">import</span> <span class="n">doc_inherit</span>
+
+<span class="c"># do not edit! added by PythonBreakpoints</span>
+<span class="kn">from</span> <span class="nn">pdb</span> <span class="kn">import</span> <span class="n">set_trace</span> <span class="k">as</span> <span class="n">_breakpoint</span>
+
+
+<div class="viewcode-block" id="CSVDataStore"><a class="viewcode-back" href="../../../nilmtk.datastore.html#nilmtk.datastore.csvdatastore.CSVDataStore">[docs]</a><span class="k">class</span> <span class="nc">CSVDataStore</span><span class="p">(</span><span class="n">DataStore</span><span class="p">):</span>
+
+    <span class="nd">@doc_inherit</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">filename</span> <span class="o">=</span> <span class="n">filename</span>
+        <span class="c"># make root directory</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_key_to_abs_path</span><span class="p">(</span><span class="s">&#39;/&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">exists</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+            <span class="n">makedirs</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="c"># make metadata directory</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_metadata_path</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">exists</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+            <span class="n">makedirs</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">CSVDataStore</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
+
+    <span class="nd">@doc_inherit</span>
+    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+    
+        <span class="n">file_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_key_to_abs_path</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">isfile</span><span class="p">(</span><span class="n">file_path</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s">&#39;{} not found&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
+
+    <span class="nd">@doc_inherit</span>
+<div class="viewcode-block" id="CSVDataStore.load"><a class="viewcode-back" href="../../../nilmtk.datastore.html#nilmtk.datastore.csvdatastore.CSVDataStore.load">[docs]</a>    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">sections</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">n_look_ahead_rows</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+             <span class="n">chunksize</span><span class="o">=</span><span class="n">MAX_MEM_ALLOWANCE_IN_BYTES</span><span class="p">):</span>
+             
+        <span class="n">file_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_key_to_abs_path</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        
+        <span class="c"># Set `sections` variable</span>
+        <span class="n">sections</span> <span class="o">=</span> <span class="p">[</span><span class="n">TimeFrame</span><span class="p">()]</span> <span class="k">if</span> <span class="n">sections</span> <span class="ow">is</span> <span class="bp">None</span> <span class="k">else</span> <span class="n">sections</span>
+        <span class="n">sections</span> <span class="o">=</span> <span class="n">TimeFrameGroup</span><span class="p">(</span><span class="n">sections</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">all_sections_smaller_than_chunksize</span> <span class="o">=</span> <span class="bp">True</span>
+        
+        <span class="c"># iterate through parameter sections</span>
+        <span class="c"># requires 1 pass through file for each section</span>
+        <span class="k">for</span> <span class="n">section</span> <span class="ow">in</span> <span class="n">sections</span><span class="p">:</span>
+            <span class="n">window_intersect</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">section</span><span class="p">)</span>
+            <span class="n">header_rows</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">text_file_reader</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> 
+                                            <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> 
+                                            <span class="n">header</span><span class="o">=</span><span class="n">header_rows</span><span class="p">,</span> 
+                                            <span class="n">parse_dates</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+                                            <span class="n">chunksize</span><span class="o">=</span><span class="n">chunksize</span><span class="p">)</span>
+                                            
+            <span class="c"># iterate through all chunks in file</span>
+            <span class="k">for</span> <span class="n">chunk_idx</span><span class="p">,</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">text_file_reader</span><span class="p">):</span>
+                
+                <span class="c"># filter dataframe by specified columns</span>
+                <span class="k">if</span> <span class="n">cols</span><span class="p">:</span>
+                    <span class="n">chunk</span> <span class="o">=</span> <span class="n">chunk</span><span class="p">[</span><span class="n">cols</span><span class="p">]</span>
+                
+                <span class="c"># mask chunk by window and section intersect</span>
+                <span class="n">subchunk_idx</span> <span class="o">=</span> <span class="p">[</span><span class="bp">True</span><span class="p">]</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">window_intersect</span><span class="o">.</span><span class="n">start</span><span class="p">:</span>
+                    <span class="n">subchunk_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">subchunk_idx</span><span class="p">,</span> <span class="p">(</span><span class="n">chunk</span><span class="o">.</span><span class="n">index</span><span class="o">&gt;=</span><span class="n">window_intersect</span><span class="o">.</span><span class="n">start</span><span class="p">))</span>
+                <span class="k">if</span> <span class="n">window_intersect</span><span class="o">.</span><span class="n">end</span><span class="p">:</span>
+                    <span class="n">subchunk_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">subchunk_idx</span><span class="p">,</span> <span class="p">(</span><span class="n">chunk</span><span class="o">.</span><span class="n">index</span><span class="o">&lt;</span><span class="n">window_intersect</span><span class="o">.</span><span class="n">end</span><span class="p">))</span>
+                <span class="k">if</span> <span class="n">window_intersect</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+                    <span class="n">subchunk_idx</span> <span class="o">=</span> <span class="p">[</span><span class="bp">False</span><span class="p">]</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
+                <span class="n">subchunk</span> <span class="o">=</span> <span class="n">chunk</span><span class="p">[</span><span class="n">subchunk_idx</span><span class="p">]</span>
+                
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">subchunk</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+                    <span class="n">subchunk_end</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">subchunk_idx</span><span class="p">))</span>
+                    <span class="n">subchunk</span><span class="o">.</span><span class="n">timeframe</span> <span class="o">=</span> <span class="n">TimeFrame</span><span class="p">(</span><span class="n">subchunk</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">subchunk</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+                    <span class="c"># Load look ahead if necessary</span>
+                    <span class="k">if</span> <span class="n">n_look_ahead_rows</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">subchunk</span><span class="o">.</span><span class="n">index</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                            <span class="n">rows_to_skip</span> <span class="o">=</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">header_rows</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">+</span><span class="p">(</span><span class="n">chunk_idx</span><span class="o">*</span><span class="n">chunksize</span><span class="p">)</span><span class="o">+</span><span class="n">subchunk_end</span><span class="o">+</span><span class="mi">1</span>
+                            <span class="k">try</span><span class="p">:</span>
+                                <span class="n">subchunk</span><span class="o">.</span><span class="n">look_ahead</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> 
+                                                <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> 
+                                                <span class="n">header</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> 
+                                                <span class="n">parse_dates</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+                                                <span class="n">skiprows</span><span class="o">=</span><span class="n">rows_to_skip</span><span class="p">,</span>
+                                                <span class="n">nrows</span><span class="o">=</span><span class="n">n_look_ahead_rows</span><span class="p">)</span>
+                            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                                <span class="n">subchunk</span><span class="o">.</span><span class="n">look_ahead</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">subchunk</span><span class="o">.</span><span class="n">look_ahead</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+                    
+                    <span class="k">yield</span> <span class="n">subchunk</span>
+</div>
+    <span class="nd">@doc_inherit</span>
+<div class="viewcode-block" id="CSVDataStore.append"><a class="viewcode-back" href="../../../nilmtk.datastore.html#nilmtk.datastore.csvdatastore.CSVDataStore.append">[docs]</a>    <span class="k">def</span> <span class="nf">append</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    
+        <span class="n">file_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_key_to_abs_path</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">dirname</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">exists</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+            <span class="n">makedirs</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="n">value</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span>
+                    <span class="n">mode</span><span class="o">=</span><span class="s">&#39;a&#39;</span><span class="p">,</span>
+                    <span class="n">header</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+                    </div>
+    <span class="nd">@doc_inherit</span>
+<div class="viewcode-block" id="CSVDataStore.put"><a class="viewcode-back" href="../../../nilmtk.datastore.html#nilmtk.datastore.csvdatastore.CSVDataStore.put">[docs]</a>    <span class="k">def</span> <span class="nf">put</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    
+        <span class="n">file_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_key_to_abs_path</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">dirname</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">exists</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+            <span class="n">makedirs</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="n">value</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span>
+                    <span class="n">mode</span><span class="o">=</span><span class="s">&#39;w&#39;</span><span class="p">,</span>
+                    <span class="n">header</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+                  </div>
+    <span class="nd">@doc_inherit</span>
+<div class="viewcode-block" id="CSVDataStore.remove"><a class="viewcode-back" href="../../../nilmtk.datastore.html#nilmtk.datastore.csvdatastore.CSVDataStore.remove">[docs]</a>    <span class="k">def</span> <span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+    	<span class="n">file_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_key_to_abs_path</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+    	<span class="k">if</span> <span class="n">isfile</span><span class="p">(</span><span class="n">file_path</span><span class="p">):</span>
+    	    <span class="n">remove</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">rmtree</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
+</div>
+    <span class="nd">@doc_inherit</span>
+<div class="viewcode-block" id="CSVDataStore.load_metadata"><a class="viewcode-back" href="../../../nilmtk.datastore.html#nilmtk.datastore.csvdatastore.CSVDataStore.load_metadata">[docs]</a>    <span class="k">def</span> <span class="nf">load_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s">&#39;/&#39;</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s">&#39;/&#39;</span><span class="p">:</span>
+            <span class="n">filepath</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_metadata_path</span><span class="p">()</span>
+            <span class="n">metadata</span> <span class="o">=</span> <span class="n">_load_file</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s">&#39;dataset.yaml&#39;</span><span class="p">)</span>
+            <span class="n">meter_devices</span> <span class="o">=</span> <span class="n">_load_file</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s">&#39;meter_devices.yaml&#39;</span><span class="p">)</span>
+            <span class="n">metadata</span><span class="p">[</span><span class="s">&#39;meter_devices&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">meter_devices</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">key_object</span> <span class="o">=</span> <span class="n">Key</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">key_object</span><span class="o">.</span><span class="n">building</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">key_object</span><span class="o">.</span><span class="n">meter</span><span class="p">:</span>
+                <span class="c"># load building metadata from file</span>
+                <span class="n">filename</span> <span class="o">=</span> <span class="s">&#39;building&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">key_object</span><span class="o">.</span><span class="n">building</span><span class="p">)</span><span class="o">+</span><span class="s">&#39;.yaml&#39;</span>
+                <span class="n">filepath</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_metadata_path</span><span class="p">()</span>
+                <span class="n">metadata</span> <span class="o">=</span> <span class="n">_load_file</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+                <span class="c"># set data_location</span>
+                <span class="k">for</span> <span class="n">meter_instance</span> <span class="ow">in</span> <span class="n">metadata</span><span class="p">[</span><span class="s">&#39;elec_meters&#39;</span><span class="p">]:</span>
+                    <span class="c"># not sure why I need to use meter_instance-1</span>
+                    <span class="n">data_location</span> <span class="o">=</span> <span class="s">&#39;/building{:d}/elec/meter{:d}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key_object</span><span class="o">.</span><span class="n">building</span><span class="p">,</span> <span class="n">meter_instance</span><span class="p">)</span>
+                    <span class="n">metadata</span><span class="p">[</span><span class="s">&#39;elec_meters&#39;</span><span class="p">][</span><span class="n">meter_instance</span><span class="p">][</span><span class="s">&#39;data_location&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data_location</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s">&quot;NotImplementedError&quot;</span><span class="p">)</span>        
+        
+        <span class="k">return</span> <span class="n">metadata</span>
+</div>
+    <span class="nd">@doc_inherit</span>
+<div class="viewcode-block" id="CSVDataStore.save_metadata"><a class="viewcode-back" href="../../../nilmtk.datastore.html#nilmtk.datastore.csvdatastore.CSVDataStore.save_metadata">[docs]</a>    <span class="k">def</span> <span class="nf">save_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">metadata</span><span class="p">):</span>
+    
+        <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s">&#39;/&#39;</span><span class="p">:</span>
+            <span class="c"># Extract meter_devices</span>
+            <span class="n">meter_devices_metadata</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="s">&#39;meter_devices&#39;</span><span class="p">]</span>
+            <span class="n">dataset_metadata</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">metadata</span><span class="p">)</span>
+            <span class="k">del</span> <span class="n">dataset_metadata</span><span class="p">[</span><span class="s">&#39;meter_devices&#39;</span><span class="p">]</span>
+            <span class="c"># Write dataset metadata</span>
+            <span class="n">metadata_filename</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_metadata_path</span><span class="p">(),</span> <span class="s">&#39;dataset.yaml&#39;</span><span class="p">)</span>
+            <span class="n">write_yaml_to_file</span><span class="p">(</span><span class="n">metadata_filename</span><span class="p">,</span> <span class="n">dataset_metadata</span><span class="p">)</span>
+            <span class="c"># Write meter_devices metadata</span>
+            <span class="n">metadata_filename</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_metadata_path</span><span class="p">(),</span> <span class="s">&#39;meter_devices.yaml&#39;</span><span class="p">)</span>
+            <span class="n">write_yaml_to_file</span><span class="p">(</span><span class="n">metadata_filename</span><span class="p">,</span> <span class="n">meter_devices_metadata</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c"># Write building metadata</span>
+            <span class="n">key_object</span> <span class="o">=</span> <span class="n">Key</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+            <span class="k">assert</span> <span class="n">key_object</span><span class="o">.</span><span class="n">building</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">key_object</span><span class="o">.</span><span class="n">meter</span>
+            <span class="n">metadata_filename</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_metadata_path</span><span class="p">(),</span> <span class="s">&#39;building{:d}.yaml&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key_object</span><span class="o">.</span><span class="n">building</span><span class="p">))</span>
+            <span class="n">write_yaml_to_file</span><span class="p">(</span><span class="n">metadata_filename</span><span class="p">,</span> <span class="n">metadata</span><span class="p">)</span>
+</div>
+    <span class="nd">@doc_inherit</span>
+<div class="viewcode-block" id="CSVDataStore.elements_below_key"><a class="viewcode-back" href="../../../nilmtk.datastore.html#nilmtk.datastore.csvdatastore.CSVDataStore.elements_below_key">[docs]</a>    <span class="k">def</span> <span class="nf">elements_below_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s">&#39;/&#39;</span><span class="p">):</span>
+        
+        <span class="n">elements</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s">&#39;/&#39;</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">directory</span> <span class="ow">in</span> <span class="n">listdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">):</span>
+                <span class="n">dir_path</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span> <span class="n">directory</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">isdir</span><span class="p">(</span><span class="n">dir_path</span><span class="p">)</span> <span class="ow">and</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="s">&#39;building[0-9]*&#39;</span><span class="p">,</span> <span class="n">directory</span><span class="p">):</span>
+                    <span class="n">elements</span><span class="p">[</span><span class="n">directory</span><span class="p">]</span> <span class="o">=</span> <span class="n">join_key</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">directory</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">relative_path</span> <span class="o">=</span> <span class="n">key</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+            <span class="n">dir_path</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span> <span class="n">relative_path</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">isdir</span><span class="p">(</span><span class="n">dir_path</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">listdir</span><span class="p">(</span><span class="n">dir_path</span><span class="p">):</span>
+                    <span class="n">elements</span><span class="p">[</span><span class="n">element</span><span class="p">]</span> <span class="o">=</span> <span class="n">join_key</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">element</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">elements</span>
+</div>
+    <span class="nd">@doc_inherit</span>
+<div class="viewcode-block" id="CSVDataStore.close"><a class="viewcode-back" href="../../../nilmtk.datastore.html#nilmtk.datastore.csvdatastore.CSVDataStore.close">[docs]</a>    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c"># not needed for CSV data store</span>
+        <span class="k">pass</span>
+</div>
+    <span class="nd">@doc_inherit</span>
+<div class="viewcode-block" id="CSVDataStore.open"><a class="viewcode-back" href="../../../nilmtk.datastore.html#nilmtk.datastore.csvdatastore.CSVDataStore.open">[docs]</a>    <span class="k">def</span> <span class="nf">open</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c"># not needed for CSV data store</span>
+        <span class="k">pass</span>
+        </div>
+    <span class="nd">@doc_inherit</span>
+<div class="viewcode-block" id="CSVDataStore.get_timeframe"><a class="viewcode-back" href="../../../nilmtk.datastore.html#nilmtk.datastore.csvdatastore.CSVDataStore.get_timeframe">[docs]</a>    <span class="k">def</span> <span class="nf">get_timeframe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+    
+        <span class="n">file_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_key_to_abs_path</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="n">text_file_reader</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> 
+                                        <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> 
+                                        <span class="n">header</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> 
+                                        <span class="n">parse_dates</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+                                        <span class="n">chunksize</span><span class="o">=</span><span class="n">MAX_MEM_ALLOWANCE_IN_BYTES</span><span class="p">)</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="n">end</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="k">for</span> <span class="n">df</span> <span class="ow">in</span> <span class="n">text_file_reader</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">start</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="n">start</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">end</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">timeframe</span> <span class="o">=</span> <span class="n">TimeFrame</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">timeframe</span><span class="p">)</span>
+        </div>
+    <span class="k">def</span> <span class="nf">_get_metadata_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span> <span class="s">&#39;metadata&#39;</span><span class="p">)</span>
+        
+    <span class="k">def</span> <span class="nf">_key_to_abs_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="n">abs_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">filename</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">relative_path</span> <span class="o">=</span> <span class="n">key</span>
+            <span class="k">if</span> <span class="n">key</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;/&#39;</span><span class="p">:</span>
+                <span class="n">relative_path</span> <span class="o">=</span> <span class="n">relative_path</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+            <span class="n">abs_path</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span> <span class="n">relative_path</span><span class="p">)</span>
+            <span class="n">key_object</span> <span class="o">=</span> <span class="n">Key</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">key_object</span><span class="o">.</span><span class="n">building</span> <span class="ow">and</span> <span class="n">key_object</span><span class="o">.</span><span class="n">meter</span><span class="p">:</span>
+                <span class="n">abs_path</span> <span class="o">+=</span> <span class="s">&#39;.csv&#39;</span>
+        <span class="k">return</span> <span class="n">abs_path</span></div>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2014, NILMTK Authors.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.3.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

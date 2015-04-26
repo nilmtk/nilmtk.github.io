@@ -9,8 +9,8 @@
     
     <link rel="stylesheet" href="../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../../../_static/bootstrap-3.1.0/css/bootstrap.min.css" type="text/css" />
-    <link rel="stylesheet" href="../../../_static/bootstrap-3.1.0/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/bootstrap-3.2.0/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/bootstrap-3.2.0/css/bootstrap-theme.min.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
     
     <script type="text/javascript">
@@ -28,10 +28,10 @@
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="../../../_static/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="../../../_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="../../../_static/bootstrap-3.1.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../../_static/bootstrap-3.2.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../_static/bootstrap-sphinx.js"></script>
     <link rel="top" title="NILMTK 0.2 documentation" href="../../../index.html" />
-    <link rel="up" title="Module code" href="../../index.html" />
+    <link rel="up" title="nilmtk" href="../../nilmtk.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -56,7 +56,6 @@
 
         <div class="collapse navbar-collapse nav-collapse">
           <ul class="nav navbar-nav">
-            <li class="divider-vertical"></li>
             
                 <li><a href="https://github.com/nilmtk/nilmtk">github</a></li>
             
@@ -176,6 +175,17 @@
                           <span class="n">meter_id</span><span class="o">=</span><span class="n">METER_ID</span><span class="p">)</span>
         <span class="n">energy</span> <span class="o">=</span> <span class="n">meter</span><span class="o">.</span><span class="n">total_energy</span><span class="p">()</span>
         <span class="n">check_energy_numbers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">energy</span><span class="p">)</span>
+
+        <span class="c"># Check a second time to check cache</span>
+        <span class="n">energy</span> <span class="o">=</span> <span class="n">meter</span><span class="o">.</span><span class="n">total_energy</span><span class="p">()</span>
+        <span class="n">check_energy_numbers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">energy</span><span class="p">)</span>
+
+        <span class="n">meter</span><span class="o">.</span><span class="n">clear_cache</span><span class="p">()</span>
+
+        <span class="c"># Check period_range</span>
+        <span class="n">period_index</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">period_range</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="n">meter</span><span class="o">.</span><span class="n">get_timeframe</span><span class="p">()</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> 
+                                       <span class="n">periods</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s">&#39;D&#39;</span><span class="p">)</span>
+        <span class="n">meter</span><span class="o">.</span><span class="n">total_energy</span><span class="p">(</span><span class="n">sections</span><span class="o">=</span><span class="n">period_index</span><span class="p">,</span> <span class="n">full_results</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
         </div>
 <div class="viewcode-block" id="TestElecMeter.test_upstream_meter"><a class="viewcode-back" href="../../../nilmtk.tests.html#nilmtk.tests.test_elecmeter.TestElecMeter.test_upstream_meter">[docs]</a>    <span class="k">def</span> <span class="nf">test_upstream_meter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">meter1</span> <span class="o">=</span> <span class="n">ElecMeter</span><span class="p">(</span><span class="n">metadata</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;site_meter&#39;</span><span class="p">:</span> <span class="bp">True</span><span class="p">},</span> <span class="n">meter_id</span><span class="o">=</span><span class="n">METER_ID</span><span class="p">)</span>
@@ -184,6 +194,35 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">meter2</span><span class="o">.</span><span class="n">upstream_meter</span><span class="p">(),</span> <span class="n">meter1</span><span class="p">)</span>
         <span class="n">meter3</span> <span class="o">=</span> <span class="n">ElecMeter</span><span class="p">(</span><span class="n">metadata</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;submeter_of&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">},</span> <span class="n">meter_id</span><span class="o">=</span><span class="n">METER_ID3</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">meter3</span><span class="o">.</span><span class="n">upstream_meter</span><span class="p">(),</span> <span class="n">meter2</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="TestElecMeter.test_proportion_of_energy"><a class="viewcode-back" href="../../../nilmtk.tests.html#nilmtk.tests.test_elecmeter.TestElecMeter.test_proportion_of_energy">[docs]</a>    <span class="k">def</span> <span class="nf">test_proportion_of_energy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">meter</span> <span class="o">=</span> <span class="n">ElecMeter</span><span class="p">(</span><span class="n">store</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">datastore</span><span class="p">,</span> <span class="n">metadata</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">meter_meta</span><span class="p">,</span> 
+                          <span class="n">meter_id</span><span class="o">=</span><span class="n">METER_ID</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">meter</span><span class="o">.</span><span class="n">proportion_of_energy</span><span class="p">(</span><span class="n">meter</span><span class="p">),</span> <span class="mf">1.0</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="TestElecMeter.correlation"><a class="viewcode-back" href="../../../nilmtk.tests.html#nilmtk.tests.test_elecmeter.TestElecMeter.correlation">[docs]</a>    <span class="k">def</span> <span class="nf">correlation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">meter_1</span> <span class="o">=</span> <span class="n">ElecMeter</span><span class="p">(</span><span class="n">store</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">datastore</span><span class="p">,</span> <span class="n">metadata</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">meter_meta</span><span class="p">,</span> 
+                          <span class="n">meter_id</span><span class="o">=</span><span class="n">METER_ID</span><span class="p">)</span>
+        <span class="n">meter_2</span> <span class="o">=</span> <span class="n">ElecMeter</span><span class="p">(</span><span class="n">store</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">datastore</span><span class="p">,</span> <span class="n">metadata</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">meter_meta</span><span class="p">,</span> 
+                          <span class="n">meter_id</span><span class="o">=</span><span class="n">METER_ID2</span><span class="p">)</span>
+
+        <span class="c"># Let us get raw DataFrames </span>
+        <span class="n">df1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">datastore</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;/building1/elec/meter1&#39;</span><span class="p">)</span>
+        <span class="n">df2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">datastore</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;/building1/elec/meter2&#39;</span><span class="p">)</span>
+
+        <span class="c"># Let us compute the value using nilmtk</span>
+        <span class="n">corr12_nilmtk</span> <span class="o">=</span> <span class="n">meter_1</span><span class="o">.</span><span class="n">correlation</span><span class="p">(</span><span class="n">meter_2</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&quot;Correlation using nilmtk:&quot;</span><span class="p">,</span> <span class="n">corr12_nilmtk</span><span class="p">)</span>
+
+        <span class="c"># Let us now compute the value using Pandas functions</span>
+        <span class="n">corr12_pandas</span> <span class="o">=</span> <span class="n">df1</span><span class="o">.</span><span class="n">corr</span><span class="p">(</span><span class="n">df2</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&quot;Correlation using pandas:&quot;</span><span class="p">,</span> <span class="n">corr12_pandas</span><span class="p">)</span>
+        <span class="kn">from</span> <span class="nn">pandas.util.testing</span> <span class="kn">import</span> <span class="n">assert_frame_equal</span>
+        <span class="n">assert_frame_equal</span><span class="p">(</span><span class="n">corr12_nilmtk</span><span class="p">,</span> <span class="n">corr12_pandas</span><span class="p">)</span>
+
+        <span class="c">#self.assertEqual(corr12_nilmtk, corr12_pandas)</span>
+        <span class="c">#print(&quot;Correlation using pandas:&quot;, corr12_pandas)</span>
+
 </div></div>
 <span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
     <span class="n">unittest</span><span class="o">.</span><span class="n">main</span><span class="p">()</span>

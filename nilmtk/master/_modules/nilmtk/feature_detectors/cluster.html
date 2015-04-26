@@ -9,8 +9,8 @@
     
     <link rel="stylesheet" href="../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../../../_static/bootstrap-3.1.0/css/bootstrap.min.css" type="text/css" />
-    <link rel="stylesheet" href="../../../_static/bootstrap-3.1.0/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/bootstrap-3.2.0/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/bootstrap-3.2.0/css/bootstrap-theme.min.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
     
     <script type="text/javascript">
@@ -28,10 +28,10 @@
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="../../../_static/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="../../../_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="../../../_static/bootstrap-3.1.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../../_static/bootstrap-3.2.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../_static/bootstrap-sphinx.js"></script>
     <link rel="top" title="NILMTK 0.2 documentation" href="../../../index.html" />
-    <link rel="up" title="Module code" href="../../index.html" />
+    <link rel="up" title="nilmtk" href="../../nilmtk.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -56,7 +56,6 @@
 
         <div class="collapse navbar-collapse nav-collapse">
           <ul class="nav navbar-nav">
-            <li class="divider-vertical"></li>
             
                 <li><a href="https://github.com/nilmtk/nilmtk">github</a></li>
             
@@ -256,41 +255,27 @@
     <span class="k">return</span> <span class="n">k_means_cluster_centers</span><span class="p">[</span><span class="n">num_clus</span><span class="p">]</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
 
 
-<div class="viewcode-block" id="hart85_means_shift_cluster"><a class="viewcode-back" href="../../../nilmtk.feature_detectors.html#nilmtk.feature_detectors.cluster.hart85_means_shift_cluster">[docs]</a><span class="k">def</span> <span class="nf">hart85_means_shift_cluster</span><span class="p">(</span><span class="n">pair_buffer_df</span><span class="p">,</span> <span class="n">features</span><span class="p">):</span>
+<div class="viewcode-block" id="hart85_means_shift_cluster"><a class="viewcode-back" href="../../../nilmtk.feature_detectors.html#nilmtk.feature_detectors.cluster.hart85_means_shift_cluster">[docs]</a><span class="k">def</span> <span class="nf">hart85_means_shift_cluster</span><span class="p">(</span><span class="n">pair_buffer_df</span><span class="p">,</span> <span class="n">cols</span><span class="p">):</span>
 
-    <span class="kn">from</span> <span class="nn">sklearn.cluster</span> <span class="kn">import</span> <span class="n">MeanShift</span><span class="p">,</span> <span class="n">estimate_bandwidth</span>
 
+    <span class="kn">from</span> <span class="nn">sklearn.cluster</span> <span class="kn">import</span> <span class="n">MeanShift</span>
     <span class="c"># Creating feature vector</span>
     <span class="n">cluster_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
-    <span class="k">if</span> <span class="s">&#39;active&#39;</span> <span class="ow">in</span> <span class="n">features</span><span class="p">:</span>
+    <span class="n">power_types</span> <span class="o">=</span> <span class="p">[</span><span class="n">col</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">cols</span><span class="p">]</span>
+    <span class="k">if</span> <span class="s">&#39;active&#39;</span> <span class="ow">in</span> <span class="n">power_types</span><span class="p">:</span>
         <span class="n">cluster_df</span><span class="p">[</span><span class="s">&#39;active&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">pair_buffer_df</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">row</span><span class="p">:</span>
                                                                    <span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">fabs</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s">&#39;T1 Active&#39;</span><span class="p">])</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">fabs</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s">&#39;T2 Active&#39;</span><span class="p">]))</span> <span class="o">/</span> <span class="mi">2</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">index</span><span class="o">=</span><span class="n">pair_buffer_df</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
-    <span class="k">if</span> <span class="s">&#39;reactive&#39;</span> <span class="ow">in</span> <span class="n">features</span><span class="p">:</span>
+    <span class="k">if</span> <span class="s">&#39;reactive&#39;</span> <span class="ow">in</span> <span class="n">power_types</span><span class="p">:</span>
         <span class="n">cluster_df</span><span class="p">[</span><span class="s">&#39;reactive&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">pair_buffer_df</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">row</span><span class="p">:</span>
                                                                      <span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">fabs</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s">&#39;T1 Reactive&#39;</span><span class="p">])</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">fabs</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s">&#39;T2 Reactive&#39;</span><span class="p">]))</span> <span class="o">/</span> <span class="mi">2</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">index</span><span class="o">=</span><span class="n">pair_buffer_df</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
-    <span class="k">if</span> <span class="s">&#39;delta&#39;</span> <span class="ow">in</span> <span class="n">features</span><span class="p">:</span>
-        <span class="n">cluster_df</span><span class="p">[</span><span class="s">&#39;delta&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">pair_buffer_df</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">row</span><span class="p">:</span>
-                                                                  <span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s">&#39;T2 Time&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">row</span><span class="p">[</span><span class="s">&#39;T1 Time&#39;</span><span class="p">]),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">index</span><span class="o">=</span><span class="n">pair_buffer_df</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
-        <span class="n">cluster_df</span><span class="p">[</span><span class="s">&#39;delta&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cluster_df</span><span class="p">[</span>
-            <span class="s">&#39;delta&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="mf">6e10</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="s">&#39;hour_of_use&#39;</span> <span class="ow">in</span> <span class="n">features</span><span class="p">:</span>
-        <span class="n">cluster_df</span><span class="p">[</span><span class="s">&#39;hour_of_use&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DatetimeIndex</span><span class="p">(</span>
-            <span class="n">pair_buffer_df</span><span class="p">[</span><span class="s">&#39;T1 Time&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">hour</span>
-
-    <span class="k">if</span> <span class="s">&#39;sd_event&#39;</span> <span class="ow">in</span> <span class="n">features</span><span class="p">:</span>
-        <span class="n">cluster_df</span><span class="p">[</span><span class="s">&#39;sd_event&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">pair_buffer_df</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">row</span><span class="p">:</span>
-                                                                     <span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">power</span><span class="p">[</span><span class="n">row</span><span class="p">[</span><span class="s">&#39;T1 Time&#39;</span><span class="p">]:</span><span class="n">row</span><span class="p">[</span><span class="s">&#39;T2 Time&#39;</span><span class="p">]])</span><span class="o">.</span><span class="n">std</span><span class="p">(),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">index</span><span class="o">=</span><span class="n">pair_buffer_df</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
-
-    <span class="n">X</span> <span class="o">=</span> <span class="n">cluster_df</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">cluster_df</span><span class="o">.</span><span class="n">index</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">features</span><span class="p">)))</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">cluster_df</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">cluster_df</span><span class="o">.</span><span class="n">index</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">cols</span><span class="p">)))</span>
     <span class="n">ms</span> <span class="o">=</span> <span class="n">MeanShift</span><span class="p">(</span><span class="n">bin_seeding</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
     <span class="n">ms</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
     <span class="n">labels</span> <span class="o">=</span> <span class="n">ms</span><span class="o">.</span><span class="n">labels_</span>
     <span class="n">cluster_centers</span> <span class="o">=</span> <span class="n">ms</span><span class="o">.</span><span class="n">cluster_centers_</span>
     <span class="n">labels_unique</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span>
-    <span class="n">n_clusters_</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels_unique</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">cluster_centers</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">features</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">cluster_centers</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">cols</span><span class="p">)</span></div>
 </pre></div>
 
     </div>

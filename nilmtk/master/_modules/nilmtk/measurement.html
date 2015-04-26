@@ -9,8 +9,8 @@
     
     <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/bootstrap-3.1.0/css/bootstrap.min.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/bootstrap-3.1.0/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/bootstrap-3.2.0/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/bootstrap-3.2.0/css/bootstrap-theme.min.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     
     <script type="text/javascript">
@@ -28,10 +28,10 @@
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="../../_static/bootstrap-3.1.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-3.2.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
     <link rel="top" title="NILMTK 0.2 documentation" href="../../index.html" />
-    <link rel="up" title="Module code" href="../index.html" />
+    <link rel="up" title="nilmtk" href="../nilmtk.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -56,7 +56,6 @@
 
         <div class="collapse navbar-collapse nav-collapse">
           <ul class="nav navbar-nav">
-            <li class="divider-vertical"></li>
             
                 <li><a href="https://github.com/nilmtk/nilmtk">github</a></li>
             
@@ -137,27 +136,35 @@
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">division</span>
 <span class="kn">from</span> <span class="nn">warnings</span> <span class="kn">import</span> <span class="n">warn</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">nilmtk.exceptions</span> <span class="kn">import</span> <span class="n">MeasurementError</span>
 
 <span class="n">AC_TYPES</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;active&#39;</span><span class="p">,</span> <span class="s">&#39;apparent&#39;</span><span class="p">,</span> <span class="s">&#39;reactive&#39;</span><span class="p">]</span>
 <span class="c"># AC is short for &#39;Alternating Current&#39;.</span>
 <span class="c"># AC_TYPES is in order of preference (favourite first).</span>
+<span class="c"># Note that &#39;pf&#39; is deprecated. Please use &#39;power factor&#39;.  See issue #289.</span>
 <span class="n">PHYSICAL_QUANTITIES</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;power&#39;</span><span class="p">,</span> <span class="s">&#39;energy&#39;</span><span class="p">,</span> <span class="s">&#39;cumulative energy&#39;</span><span class="p">,</span> 
-                       <span class="s">&#39;voltage&#39;</span><span class="p">,</span> <span class="s">&#39;current&#39;</span><span class="p">]</span>
+                       <span class="s">&#39;voltage&#39;</span><span class="p">,</span> <span class="s">&#39;current&#39;</span><span class="p">,</span> <span class="s">&#39;pf&#39;</span><span class="p">,</span> <span class="s">&#39;frequency&#39;</span><span class="p">,</span> <span class="s">&#39;power factor&#39;</span><span class="p">,</span> 
+                       <span class="s">&#39;state&#39;</span><span class="p">,</span> <span class="s">&#39;phase angle&#39;</span><span class="p">]</span>
+<span class="n">PHYSICAL_QUANTITIES_WITH_AC_TYPES</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;power&#39;</span><span class="p">,</span> <span class="s">&#39;energy&#39;</span><span class="p">,</span> <span class="s">&#39;cumulative energy&#39;</span><span class="p">]</span>
+<span class="n">PHYSICAL_QUANTITIES_TO_AVERAGE</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;voltage&#39;</span><span class="p">,</span> <span class="s">&#39;pf&#39;</span><span class="p">,</span> <span class="s">&#39;frequency&#39;</span><span class="p">,</span> <span class="s">&#39;power factor&#39;</span><span class="p">]</span>
 <span class="n">LEVEL_NAMES</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;physical_quantity&#39;</span><span class="p">,</span> <span class="s">&#39;type&#39;</span><span class="p">]</span>
 
 <div class="viewcode-block" id="check_ac_type"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.measurement.check_ac_type">[docs]</a><span class="k">def</span> <span class="nf">check_ac_type</span><span class="p">(</span><span class="n">ac_type</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">ac_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">AC_TYPES</span><span class="p">:</span>
-        <span class="n">msg</span> <span class="o">=</span> <span class="s">&quot;&#39;ac_type&#39; must be one of {}, not &#39;{}&#39;.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">AC_TYPES</span><span class="p">,</span> <span class="n">ac_type</span><span class="p">)</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span><span class="s">&quot;&#39;{}&#39; is not a valid AC type.&quot;</span>
+               <span class="s">&quot; Valid AC types = {}.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ac_type</span><span class="p">,</span> <span class="n">AC_TYPES</span><span class="p">))</span>
+        <span class="k">raise</span> <span class="n">MeasurementError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 </div>
 <div class="viewcode-block" id="check_physical_quantity"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.measurement.check_physical_quantity">[docs]</a><span class="k">def</span> <span class="nf">check_physical_quantity</span><span class="p">(</span><span class="n">physical_quantity</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">physical_quantity</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">PHYSICAL_QUANTITIES</span><span class="p">:</span>
-        <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span><span class="s">&quot;&#39;physical_quantity&#39; must be one of {}, not &#39;{}&#39;.&quot;</span>
-               <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">PHYSICAL_QUANTITIES</span><span class="p">,</span> <span class="n">physical_quantity</span><span class="p">))</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span><span class="s">&quot;&#39;{}&#39; is not a valid physical quantity.&quot;</span>
+               <span class="s">&quot; Valid physical quantities = {}.&quot;</span>
+               <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">physical_quantity</span><span class="p">,</span> <span class="n">PHYSICAL_QUANTITIES</span><span class="p">))</span>
+        <span class="k">raise</span> <span class="n">MeasurementError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 </div>
 <div class="viewcode-block" id="select_best_ac_type"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.measurement.select_best_ac_type">[docs]</a><span class="k">def</span> <span class="nf">select_best_ac_type</span><span class="p">(</span><span class="n">available_ac_types</span><span class="p">,</span> <span class="n">mains_ac_types</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Selects the &#39;best&#39; alternating current measurement type from `available_ac_types`.</span>
+    <span class="sd">&quot;&quot;&quot;Selects the &#39;best&#39; alternating current measurement type from </span>
+<span class="sd">    `available_ac_types`.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>

@@ -9,8 +9,8 @@
     
     <link rel="stylesheet" href="_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="_static/bootstrap-3.1.0/css/bootstrap.min.css" type="text/css" />
-    <link rel="stylesheet" href="_static/bootstrap-3.1.0/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-3.2.0/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-3.2.0/css/bootstrap-theme.min.css" type="text/css" />
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     
     <script type="text/javascript">
@@ -28,7 +28,7 @@
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="_static/bootstrap-3.1.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-3.2.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
     <link rel="top" title="NILMTK 0.2 documentation" href="index.html" />
     <link rel="up" title="nilmtk package" href="nilmtk.html" />
@@ -58,7 +58,6 @@
 
         <div class="collapse navbar-collapse nav-collapse">
           <ul class="nav navbar-nav">
-            <li class="divider-vertical"></li>
             
                 <li><a href="https://github.com/nilmtk/nilmtk">github</a></li>
             
@@ -104,8 +103,9 @@
       aria-labelledby="dLabelLocalToc"><ul>
 <li><a class="reference internal" href="#">nilmtk.feature_detectors package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#nilmtk-feature-detectors-cluster-module">nilmtk.feature_detectors.cluster module</a></li>
-<li><a class="reference internal" href="#module-contents">Module contents</a></li>
+<li><a class="reference internal" href="#module-nilmtk.feature_detectors.cluster">nilmtk.feature_detectors.cluster module</a></li>
+<li><a class="reference internal" href="#module-nilmtk.feature_detectors.steady_states">nilmtk.feature_detectors.steady_states module</a></li>
+<li><a class="reference internal" href="#module-nilmtk.feature_detectors">Module contents</a></li>
 </ul>
 </li>
 </ul>
@@ -117,11 +117,11 @@
               
                 
   <li>
-    <a href="nilmtk.disaggregate.html" title="Previous Chapter: nilmtk.disaggregate package"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm">&laquo; nilmtk.disaggreg...</span>
+    <a href="nilmtk.disaggregate.html" title="Previous Chapter: nilmtk.disaggregate package"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; nilmtk.disaggreg...</span>
     </a>
   </li>
   <li>
-    <a href="nilmtk.preprocessing.html" title="Next Chapter: nilmtk.preprocessing package"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm">nilmtk.preproces... &raquo;</span>
+    <a href="nilmtk.preprocessing.html" title="Next Chapter: nilmtk.preprocessing package"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">nilmtk.preproces... &raquo;</span>
     </a>
   </li>
               
@@ -160,11 +160,98 @@
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="nilmtk-feature-detectors-cluster-module">
-<h2>nilmtk.feature_detectors.cluster module<a class="headerlink" href="#nilmtk-feature-detectors-cluster-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-nilmtk.feature_detectors.cluster">
+<span id="nilmtk-feature-detectors-cluster-module"></span><h2>nilmtk.feature_detectors.cluster module<a class="headerlink" href="#module-nilmtk.feature_detectors.cluster" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="nilmtk.feature_detectors.cluster.cluster">
+<tt class="descclassname">nilmtk.feature_detectors.cluster.</tt><tt class="descname">cluster</tt><big>(</big><em>X</em>, <em>max_num_clusters=3</em><big>)</big><a class="reference internal" href="_modules/nilmtk/feature_detectors/cluster.html#cluster"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.feature_detectors.cluster.cluster" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applies clustering on reduced data, 
+i.e. data where power is greater than threshold.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>X</strong> : pd.Series or single-column pd.DataFrame</p>
+<p><strong>max_num_clusters</strong> : int</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>centroids</strong> : ndarray of int32s</p>
+<blockquote class="last">
+<div><p>Power in different states of an appliance, sorted</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="nilmtk.feature_detectors.cluster.hart85_means_shift_cluster">
+<tt class="descclassname">nilmtk.feature_detectors.cluster.</tt><tt class="descname">hart85_means_shift_cluster</tt><big>(</big><em>pair_buffer_df</em>, <em>cols</em><big>)</big><a class="reference internal" href="_modules/nilmtk/feature_detectors/cluster.html#hart85_means_shift_cluster"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.feature_detectors.cluster.hart85_means_shift_cluster" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </div>
-<div class="section" id="module-contents">
-<h2>Module contents<a class="headerlink" href="#module-contents" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-nilmtk.feature_detectors.steady_states">
+<span id="nilmtk-feature-detectors-steady-states-module"></span><h2>nilmtk.feature_detectors.steady_states module<a class="headerlink" href="#module-nilmtk.feature_detectors.steady_states" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="nilmtk.feature_detectors.steady_states.cluster">
+<tt class="descclassname">nilmtk.feature_detectors.steady_states.</tt><tt class="descname">cluster</tt><big>(</big><em>X</em>, <em>max_num_clusters=3</em><big>)</big><a class="reference internal" href="_modules/nilmtk/feature_detectors/steady_states.html#cluster"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.feature_detectors.steady_states.cluster" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applies clustering on reduced data, 
+i.e. data where power is greater than threshold.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>X</strong> : pd.Series or single-column pd.DataFrame</p>
+<p><strong>max_num_clusters</strong> : int</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>centroids</strong> : ndarray of int32s</p>
+<blockquote class="last">
+<div><p>Power in different states of an appliance, sorted</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="nilmtk.feature_detectors.steady_states.find_steady_states">
+<tt class="descclassname">nilmtk.feature_detectors.steady_states.</tt><tt class="descname">find_steady_states</tt><big>(</big><em>dataframe</em>, <em>min_n_samples=2</em>, <em>stateThreshold=15</em>, <em>noise_level=70</em><big>)</big><a class="reference internal" href="_modules/nilmtk/feature_detectors/steady_states.html#find_steady_states"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.feature_detectors.steady_states.find_steady_states" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds steady states given a DataFrame of power</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>dataframe: pd.DataFrame with DateTimeIndex</strong></p>
+<p><strong>min_n_samples(int): number of samples to consider constituting a</strong></p>
+<blockquote>
+<div><p>steady state.</p>
+</div></blockquote>
+<p><strong>stateThreshold: maximum difference between highest and lowest</strong></p>
+<blockquote>
+<div><p>value in steady state.</p>
+</div></blockquote>
+<p><strong>noise_level: the level used to define significant</strong></p>
+<blockquote class="last">
+<div><p>appliances, transitions below this level will be ignored. 
+See Hart 1985. p27.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="nilmtk.feature_detectors.steady_states.find_steady_states_transients">
+<tt class="descclassname">nilmtk.feature_detectors.steady_states.</tt><tt class="descname">find_steady_states_transients</tt><big>(</big><em>metergroup</em>, <em>cols</em>, <em>noise_level</em>, <em>state_threshold</em>, <em>**load_kwargs</em><big>)</big><a class="reference internal" href="_modules/nilmtk/feature_detectors/steady_states.html#find_steady_states_transients"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.feature_detectors.steady_states.find_steady_states_transients" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-nilmtk.feature_detectors">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-nilmtk.feature_detectors" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 

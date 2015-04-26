@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>nilmtk.dataset_converters.combed.convert_combed &mdash; NILMTK 0.2 documentation</title>
+    
+    <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/bootstrap-3.2.0/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/bootstrap-3.2.0/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '0.2',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../../../../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../../../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../../../_static/bootstrap-3.2.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="NILMTK 0.2 documentation" href="../../../../index.html" />
+    <link rel="up" title="nilmtk" href="../../../nilmtk.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../../index.html">
+          NILMTK</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.2</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="https://github.com/nilmtk/nilmtk">github</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../intro_nilmtk_v0_2.html">Intro to NILMTK v0.2</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../convert_data_to_NILMTK_format.html">Convert data to NILMTK format and load into NILMTK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../elecmeter_and_metergroup.html">MeterGroup, ElecMeter, selection and basic statistics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../pipeline_preprocessing_more_stats.html">Processing pipeline, preprocessing and more stats</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../disaggregation_and_metrics.html">Disaggregation and Metrics</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../contribute.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../writing_a_dataset_converter.html">Writing a dataset converter</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../changelog.html">Change log</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../nilmtk.html">nilmtk package</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      
+  <h1>Source code for nilmtk.dataset_converters.combed.convert_combed</h1><div class="highlight"><pre>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">division</span>
+<span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">join</span><span class="p">,</span> <span class="n">isdir</span><span class="p">,</span> <span class="n">dirname</span><span class="p">,</span> <span class="n">abspath</span>
+<span class="kn">from</span> <span class="nn">os</span> <span class="kn">import</span> <span class="n">getcwd</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">sys</span> <span class="kn">import</span> <span class="n">getfilesystemencoding</span>
+<span class="kn">from</span> <span class="nn">inspect</span> <span class="kn">import</span> <span class="n">currentframe</span><span class="p">,</span> <span class="n">getfile</span><span class="p">,</span> <span class="n">getsourcefile</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
+
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">nilm_metadata</span> <span class="kn">import</span> <span class="n">convert_yaml_to_hdf5</span>
+
+<span class="kn">from</span> <span class="nn">nilmtk.datastore</span> <span class="kn">import</span> <span class="n">Key</span>
+<span class="kn">from</span> <span class="nn">nilmtk.measurement</span> <span class="kn">import</span> <span class="n">LEVEL_NAMES</span>
+<span class="kn">from</span> <span class="nn">nilmtk.utils</span> <span class="kn">import</span> <span class="n">check_directory_exists</span><span class="p">,</span> <span class="n">get_datastore</span>
+
+<span class="c">#{&quot;load_type&quot;: {&quot;floor/wing&quot;:meter_number_in_nilmtk}</span>
+<span class="n">acad_block_meter_mapping</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;Building Total Mains&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;0&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
+                            <span class="s">&#39;Lifts&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;0&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">},</span>
+                            <span class="s">&#39;Floor Total&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;1&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s">&#39;2&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s">&#39;3&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span> <span class="s">&#39;4&#39;</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span> <span class="s">&#39;5&#39;</span><span class="p">:</span> <span class="mi">7</span><span class="p">},</span>
+                            <span class="s">&#39;AHU&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;0&#39;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span> <span class="s">&#39;1&#39;</span><span class="p">:</span> <span class="mi">9</span><span class="p">,</span> <span class="s">&#39;2&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span> <span class="s">&#39;5&#39;</span><span class="p">:</span> <span class="mi">11</span><span class="p">},</span>
+                            <span class="s">&#39;Light&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;3&#39;</span><span class="p">:</span> <span class="mi">12</span><span class="p">},</span>
+                            <span class="s">&#39;Power Sockets&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;3&#39;</span><span class="p">:</span> <span class="mi">13</span><span class="p">},</span>
+                            <span class="s">&#39;UPS Sockets&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;3&#39;</span><span class="p">:</span> <span class="mi">14</span><span class="p">}}</span>
+
+<span class="n">lecture_block_meter_mapping</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;Building Total Mains&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;0&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
+                               <span class="s">&#39;Floor Total&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;0&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s">&#39;1&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s">&#39;2&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">},</span>
+                               <span class="s">&#39;AHU&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;1&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span> <span class="s">&#39;2&#39;</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span> <span class="s">&#39;3&#39;</span><span class="p">:</span> <span class="mi">7</span><span class="p">}}</span>
+
+<span class="n">overall_dataset_mapping</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">({</span><span class="s">&#39;Academic Block&#39;</span><span class="p">:</span> <span class="n">acad_block_meter_mapping</span><span class="p">,</span>
+                                       <span class="s">&#39;Lecture Block&#39;</span><span class="p">:</span> <span class="n">lecture_block_meter_mapping</span><span class="p">})</span>
+
+<span class="n">building_number_mapping</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;Academic Block&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s">&#39;Lecture Block&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">}</span>
+
+
+<span class="n">column_mapping</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">({</span>
+    <span class="s">&#39;Power&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;power&#39;</span><span class="p">,</span> <span class="s">&#39;active&#39;</span><span class="p">),</span>
+    <span class="s">&#39;Energy&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;energy&#39;</span><span class="p">,</span> <span class="s">&#39;active&#39;</span><span class="p">),</span>
+    <span class="s">&#39;Current&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;current&#39;</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">)})</span>
+
+
+<div class="viewcode-block" id="convert_combed"><a class="viewcode-back" href="../../../../nilmtk.dataset_converters.combed.html#nilmtk.dataset_converters.combed.convert_combed.convert_combed">[docs]</a><span class="k">def</span> <span class="nf">convert_combed</span><span class="p">(</span><span class="n">combed_path</span><span class="p">,</span> <span class="n">output_filename</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="s">&#39;HDF&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    combed_path : str</span>
+<span class="sd">        The root path of the combed dataset.</span>
+<span class="sd">    output_filename : str</span>
+<span class="sd">        The destination HDF5 filename (including path and suffix).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">check_directory_exists</span><span class="p">(</span><span class="n">combed_path</span><span class="p">)</span>
+
+    <span class="c"># Open store</span>
+    <span class="n">store</span> <span class="o">=</span> <span class="n">get_datastore</span><span class="p">(</span><span class="n">output_filename</span><span class="p">,</span> <span class="n">format</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s">&#39;w&#39;</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">building_name</span><span class="p">,</span> <span class="n">building_mapping</span> <span class="ow">in</span> <span class="n">overall_dataset_mapping</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">load_name</span><span class="p">,</span> <span class="n">load_mapping</span> <span class="ow">in</span> <span class="n">building_mapping</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">load_mapping_path</span><span class="p">,</span> <span class="n">meter_number</span> <span class="ow">in</span> <span class="n">load_mapping</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+                <span class="n">building_number</span> <span class="o">=</span> <span class="n">building_number_mapping</span><span class="p">[</span><span class="n">building_name</span><span class="p">]</span>
+                <span class="n">key</span> <span class="o">=</span> <span class="n">Key</span><span class="p">(</span><span class="n">building</span><span class="o">=</span><span class="n">building_number</span><span class="p">,</span> <span class="n">meter</span><span class="o">=</span><span class="n">meter_number</span><span class="p">)</span>
+                <span class="n">dfs</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">attribute</span> <span class="ow">in</span> <span class="n">column_mapping</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                    <span class="n">filename_attribute</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="n">combed_path</span><span class="p">,</span> <span class="n">building_name</span><span class="p">,</span> <span class="n">load_name</span><span class="p">,</span> <span class="n">load_mapping_path</span><span class="p">,</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s">.csv&quot;</span> <span class="o">%</span><span class="n">attribute</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">filename_attribute</span><span class="p">):</span>
+                        <span class="n">exists</span> <span class="o">=</span> <span class="bp">True</span>
+                        <span class="k">print</span><span class="p">(</span><span class="n">filename_attribute</span><span class="p">)</span>
+                        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">filename_attribute</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s">&quot;timestamp&quot;</span><span class="p">,</span> <span class="n">attribute</span><span class="p">])</span>
+                        <span class="n">df</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s">&quot;timestamp&quot;</span><span class="p">],</span> <span class="n">unit</span><span class="o">=</span><span class="s">&#39;ms&#39;</span><span class="p">)</span>
+                        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s">&quot;timestamp&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+                        <span class="n">dfs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">exists</span> <span class="o">=</span> <span class="bp">False</span>
+                <span class="k">if</span> <span class="n">exists</span><span class="p">:</span>
+                    <span class="n">total</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">dfs</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+                    <span class="n">total</span> <span class="o">=</span> <span class="n">total</span><span class="o">.</span><span class="n">tz_localize</span><span class="p">(</span><span class="s">&#39;UTC&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">tz_convert</span><span class="p">(</span><span class="s">&#39;Asia/Kolkata&#39;</span><span class="p">)</span>
+                    <span class="n">total</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">column_mapping</span><span class="p">[</span><span class="n">x</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+                    <span class="n">total</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">set_names</span><span class="p">(</span><span class="n">LEVEL_NAMES</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+                    <span class="k">assert</span> <span class="n">total</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">is_unique</span>
+                    <span class="n">store</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">key</span><span class="p">),</span> <span class="n">total</span><span class="p">)</span>
+    <span class="n">convert_yaml_to_hdf5</span><span class="p">(</span><span class="n">join</span><span class="p">(</span><span class="n">_get_module_directory</span><span class="p">(),</span> <span class="s">&#39;metadata&#39;</span><span class="p">),</span>
+                         <span class="n">output_filename</span><span class="p">)</span>
+
+    <span class="k">print</span><span class="p">(</span><span class="s">&quot;Done converting COMBED to HDF5!&quot;</span><span class="p">)</span>
+
+</div>
+<span class="k">def</span> <span class="nf">_get_module_directory</span><span class="p">():</span>
+    <span class="c"># Taken from http://stackoverflow.com/a/6098238/732596</span>
+    <span class="n">path_to_this_file</span> <span class="o">=</span> <span class="n">dirname</span><span class="p">(</span><span class="n">getfile</span><span class="p">(</span><span class="n">currentframe</span><span class="p">()))</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">isdir</span><span class="p">(</span><span class="n">path_to_this_file</span><span class="p">):</span>
+        <span class="n">encoding</span> <span class="o">=</span> <span class="n">getfilesystemencoding</span><span class="p">()</span>
+        <span class="n">path_to_this_file</span> <span class="o">=</span> <span class="n">dirname</span><span class="p">(</span><span class="nb">unicode</span><span class="p">(</span><span class="n">__file__</span><span class="p">,</span> <span class="n">encoding</span><span class="p">))</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">isdir</span><span class="p">(</span><span class="n">path_to_this_file</span><span class="p">):</span>
+        <span class="n">abspath</span><span class="p">(</span><span class="n">getsourcefile</span><span class="p">(</span><span class="k">lambda</span> <span class="n">_</span><span class="p">:</span> <span class="bp">None</span><span class="p">))</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">isdir</span><span class="p">(</span><span class="n">path_to_this_file</span><span class="p">):</span>
+        <span class="n">path_to_this_file</span> <span class="o">=</span> <span class="n">getcwd</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="n">isdir</span><span class="p">(</span><span class="n">path_to_this_file</span><span class="p">),</span> <span class="n">path_to_this_file</span> <span class="o">+</span> <span class="s">&#39; is not a directory&#39;</span>
+    <span class="k">return</span> <span class="n">path_to_this_file</span>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2014, NILMTK Authors.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.3.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

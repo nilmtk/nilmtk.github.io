@@ -17,6 +17,7 @@ New features
 * Finding entropy of an ElecMeter. Issue #250
 * ``ElecMeter.plot_lag()``.  Issue #255.  See `Nipun's blog post`_.
 * ``ElecMeter.plot_autocorrelation()``.  See `Nipun's blog post`_.
+* ``ElecMeter.plot_spectrum()``.  See `Nipun's blog post`_.
 
 .. _`Nipun's blog post`: http://nipunbatra.github.io/2014/12/nilmtk-new-plots/
 

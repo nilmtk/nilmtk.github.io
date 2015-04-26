@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>nilmtk.disaggregate.disaggregator &mdash; NILMTK 0.2 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/bootstrap-3.2.0/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/bootstrap-3.2.0/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.2',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../../../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../../_static/bootstrap-3.2.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../../_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="NILMTK 0.2 documentation" href="../../../index.html" />
+    <link rel="up" title="nilmtk" href="../../nilmtk.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../index.html">
+          NILMTK</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.2</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="https://github.com/nilmtk/nilmtk">github</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro_nilmtk_v0_2.html">Intro to NILMTK v0.2</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../convert_data_to_NILMTK_format.html">Convert data to NILMTK format and load into NILMTK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../elecmeter_and_metergroup.html">MeterGroup, ElecMeter, selection and basic statistics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pipeline_preprocessing_more_stats.html">Processing pipeline, preprocessing and more stats</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../disaggregation_and_metrics.html">Disaggregation and Metrics</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../writing_a_dataset_converter.html">Writing a dataset converter</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Change log</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../nilmtk.html">nilmtk package</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      
+  <h1>Source code for nilmtk.disaggregate.disaggregator</h1><div class="highlight"><pre>
+<span class="c"># do not edit! added by PythonBreakpoints</span>
+<span class="kn">from</span> <span class="nn">pdb</span> <span class="kn">import</span> <span class="n">set_trace</span> <span class="k">as</span> <span class="n">_breakpoint</span>
+
+<span class="k">class</span> <span class="nc">Disaggregator</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="Disaggregator"><a class="viewcode-back" href="../../../nilmtk.disaggregate.html#nilmtk.disaggregate.disaggregator.Disaggregator">[docs]</a>    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Provides a common interface to all disaggregation classes.</span>
+<span class="sd">    See https://github.com/nilmtk/nilmtk/issues/271 for discussion.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    Each subclass should internally store models learned from training.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metergroup</span><span class="p">):</span>
+<div class="viewcode-block" id="Disaggregator.train"><a class="viewcode-back" href="../../../nilmtk.disaggregate.html#nilmtk.disaggregate.disaggregator.Disaggregator.train">[docs]</a>        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Trains the model given a metergroup containing a appliance meters (supervised) or a site meter (unsupervised).</span>
+<span class="sd">        Will have a default implementation in super class.</span>
+<span class="sd">        Can be overridden for simpler in-memory training, or more complex out-of-core training.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        metergroup : a nilmtk.MeterGroup object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s">&quot;NotImplementedError&quot;</span><span class="p">)</span>
+        
+    <span class="k">def</span> <span class="nf">train_on_chunk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">chunk</span><span class="p">,</span> <span class="n">identifier</span><span class="p">):</span></div>
+<div class="viewcode-block" id="Disaggregator.train_on_chunk"><a class="viewcode-back" href="../../../nilmtk.disaggregate.html#nilmtk.disaggregate.disaggregator.Disaggregator.train_on_chunk">[docs]</a>        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Signature is fine for site meter dataframes (unsupervised learning). Would need to be called for each appliance meter along with appliance identifier for supervised learning.</span>
+<span class="sd">        Required to be overridden to provide out-of-core disaggregation.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        chunk : pd.DataFrame where each column represents a disaggregated appliance</span>
+<span class="sd">        identifier : tuple of (nilmtk.appliance, int) representing instance of that appliance for this chunk</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s">&quot;NotImplementedError&quot;</span><span class="p">)</span>
+        
+    <span class="k">def</span> <span class="nf">disaggregate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mains</span><span class="p">,</span> <span class="n">output_datastore</span><span class="p">):</span></div>
+<div class="viewcode-block" id="Disaggregator.disaggregate"><a class="viewcode-back" href="../../../nilmtk.disaggregate.html#nilmtk.disaggregate.disaggregator.Disaggregator.disaggregate">[docs]</a>        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Passes each chunk from mains generator to disaggregate_chunk() and passes the output to _write_disaggregated_chunk_to_datastore()</span>
+<span class="sd">        Will have a default implementation in super class.</span>
+<span class="sd">        Can be overridden for more simple in-memory disaggregation, or more complex out-of-core disaggregation.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        mains : nilmtk.ElecMeter (single-phase) or nilmtk.MeterGroup (multi-phase)</span>
+<span class="sd">        output_datastore : instance of nilmtk.DataStore or str of datastore location</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s">&quot;NotImplementedError&quot;</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">disaggregate_chunk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">chunk</span><span class="p">):</span></div>
+<div class="viewcode-block" id="Disaggregator.disaggregate_chunk"><a class="viewcode-back" href="../../../nilmtk.disaggregate.html#nilmtk.disaggregate.disaggregator.Disaggregator.disaggregate_chunk">[docs]</a>        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Loads all of a DataFrame from disk.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        chunk : pd.DataFrame (in NILMTK format)</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        chunk : pd.DataFrame where each column represents a disaggregated appliance</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s">&quot;NotImplementedError&quot;</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">_write_disaggregated_chunk_to_datastore</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">chunk</span><span class="p">,</span> <span class="n">datastore</span><span class="p">):</span></div>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Writes disaggregated chunk to NILMTK datastore.</span>
+<span class="sd">        Should not need to be overridden by sub-classes.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        chunk : pd.DataFrame representing a single appliance (chunk needs to include metadata)</span>
+<span class="sd">        datastore : nilmtk.DataStore</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s">&quot;NotImplementedError&quot;</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">import_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+<div class="viewcode-block" id="Disaggregator.import_model"><a class="viewcode-back" href="../../../nilmtk.disaggregate.html#nilmtk.disaggregate.disaggregator.Disaggregator.import_model">[docs]</a>        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Loads learned model from file.</span>
+<span class="sd">        Required to be overridden for learned models to persist.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        filename : str path to file to load model from</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s">&quot;NotImplementedError&quot;</span><span class="p">)</span>
+        
+    <span class="k">def</span> <span class="nf">export_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span></div>
+<div class="viewcode-block" id="Disaggregator.export_model"><a class="viewcode-back" href="../../../nilmtk.disaggregate.html#nilmtk.disaggregate.disaggregator.Disaggregator.export_model">[docs]</a>        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Saves learned model to file.</span>
+<span class="sd">        Required to be overridden for learned models to persist.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        filename : str path to file to save model to</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s">&quot;NotImplementedError&quot;</span><span class="p">)</span>
+</pre></div></div></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2014, NILMTK Authors.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.3.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

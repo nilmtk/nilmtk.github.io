@@ -9,8 +9,8 @@
     
     <link rel="stylesheet" href="../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../../../_static/bootstrap-3.1.0/css/bootstrap.min.css" type="text/css" />
-    <link rel="stylesheet" href="../../../_static/bootstrap-3.1.0/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/bootstrap-3.2.0/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/bootstrap-3.2.0/css/bootstrap-theme.min.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
     
     <script type="text/javascript">
@@ -28,10 +28,10 @@
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="../../../_static/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="../../../_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="../../../_static/bootstrap-3.1.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../../_static/bootstrap-3.2.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../_static/bootstrap-sphinx.js"></script>
     <link rel="top" title="NILMTK 0.2 documentation" href="../../../index.html" />
-    <link rel="up" title="Module code" href="../../index.html" />
+    <link rel="up" title="nilmtk" href="../../nilmtk.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -56,7 +56,6 @@
 
         <div class="collapse navbar-collapse nav-collapse">
           <ul class="nav navbar-nav">
-            <li class="divider-vertical"></li>
             
                 <li><a href="https://github.com/nilmtk/nilmtk">github</a></li>
             
@@ -137,6 +136,7 @@
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">division</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">diff</span><span class="p">,</span> <span class="n">concatenate</span>
+<span class="kn">import</span> <span class="nn">gc</span>
 <span class="kn">from</span> <span class="nn">.goodsectionsresults</span> <span class="kn">import</span> <span class="n">GoodSectionsResults</span>
 <span class="kn">from</span> <span class="nn">..timeframe</span> <span class="kn">import</span> <span class="n">TimeFrame</span>
 <span class="kn">from</span> <span class="nn">..utils</span> <span class="kn">import</span> <span class="n">timedelta64_to_secs</span>
@@ -154,6 +154,7 @@
 
     <span class="n">requirements</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;device&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;max_sample_period&#39;</span><span class="p">:</span> <span class="s">&#39;ANY VALUE&#39;</span><span class="p">}}</span>
     <span class="n">postconditions</span> <span class="o">=</span>  <span class="p">{</span><span class="s">&#39;statistics&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;good_sections&#39;</span><span class="p">:</span> <span class="p">[]}}</span>
+    <span class="n">results_class</span> <span class="o">=</span> <span class="n">GoodSectionsResults</span>
         
 <div class="viewcode-block" id="GoodSections.reset"><a class="viewcode-back" href="../../../nilmtk.stats.html#nilmtk.stats.goodsections.GoodSections.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">previous_chunk_ended_with_open_ended_good_section</span> <span class="o">=</span> <span class="bp">False</span>
@@ -206,8 +207,8 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">previous_chunk_ended_with_open_ended_good_section</span> <span class="o">=</span> <span class="p">(</span>
                 <span class="n">good_sections</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">end</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">)</span>
 
-        <span class="c"># Update self.results</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">timeframe</span><span class="p">,</span> <span class="p">{</span><span class="s">&#39;sections&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">good_sections</span><span class="p">]})</span>
+            <span class="c"># Update self.results</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">timeframe</span><span class="p">,</span> <span class="p">{</span><span class="s">&#39;sections&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">good_sections</span><span class="p">]})</span>
 
 </div>
 <div class="viewcode-block" id="get_good_sections"><a class="viewcode-back" href="../../../nilmtk.stats.html#nilmtk.stats.goodsections.get_good_sections">[docs]</a><span class="k">def</span> <span class="nf">get_good_sections</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">max_sample_period</span><span class="p">,</span> <span class="n">look_ahead</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
@@ -229,34 +230,53 @@
 <span class="sd">        then the first TimeFrame will have `start=None`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">index</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">sort_index</span><span class="p">()</span><span class="o">.</span><span class="n">index</span>
+    <span class="k">del</span> <span class="n">df</span>
+    
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">index</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[]</span>
+
     <span class="n">timedeltas_sec</span> <span class="o">=</span> <span class="n">timedelta64_to_secs</span><span class="p">(</span><span class="n">diff</span><span class="p">(</span><span class="n">index</span><span class="o">.</span><span class="n">values</span><span class="p">))</span>
     <span class="n">timedeltas_check</span> <span class="o">=</span> <span class="n">timedeltas_sec</span> <span class="o">&lt;=</span> <span class="n">max_sample_period</span>
+
+    <span class="c"># Memory management</span>
+    <span class="k">del</span> <span class="n">timedeltas_sec</span>
+    <span class="n">gc</span><span class="o">.</span><span class="n">collect</span><span class="p">()</span>
+
     <span class="n">timedeltas_check</span> <span class="o">=</span> <span class="n">concatenate</span><span class="p">(</span>
         <span class="p">[[</span><span class="n">previous_chunk_ended_with_open_ended_good_section</span><span class="p">],</span> 
          <span class="n">timedeltas_check</span><span class="p">])</span>
     <span class="n">transitions</span> <span class="o">=</span> <span class="n">diff</span><span class="p">(</span><span class="n">timedeltas_check</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">))</span>
-    <span class="n">good_sect_starts</span> <span class="o">=</span> <span class="n">index</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">transitions</span> <span class="o">==</span>  <span class="mi">1</span><span class="p">]</span>
-    <span class="n">good_sect_ends</span>   <span class="o">=</span> <span class="n">index</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">transitions</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-    <span class="n">good_sect_ends</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">good_sect_ends</span><span class="p">)</span>
-    <span class="n">good_sect_starts</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">good_sect_starts</span><span class="p">)</span>
+
+    <span class="c"># Memory management</span>
+    <span class="n">last_timedeltas_check</span> <span class="o">=</span> <span class="n">timedeltas_check</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">del</span> <span class="n">timedeltas_check</span>
+    <span class="n">gc</span><span class="o">.</span><span class="n">collect</span><span class="p">()</span>
+
+    <span class="n">good_sect_starts</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">index</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">transitions</span> <span class="o">==</span>  <span class="mi">1</span><span class="p">])</span>
+    <span class="n">good_sect_ends</span>   <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">index</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">transitions</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+    <span class="c"># Memory management</span>
+    <span class="n">last_index</span> <span class="o">=</span> <span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">del</span> <span class="n">index</span>
+    <span class="n">gc</span><span class="o">.</span><span class="n">collect</span><span class="p">()</span>
 
     <span class="c"># Use look_ahead to see if we need to append a </span>
     <span class="c"># good sect start or good sect end.</span>
-    <span class="n">look_ahead_valid</span> <span class="o">=</span> <span class="n">look_ahead</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">df</span><span class="o">.</span><span class="n">look_ahead</span><span class="o">.</span><span class="n">empty</span>
+    <span class="n">look_ahead_valid</span> <span class="o">=</span> <span class="n">look_ahead</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">look_ahead</span><span class="o">.</span><span class="n">empty</span>
     <span class="k">if</span> <span class="n">look_ahead_valid</span><span class="p">:</span>
-        <span class="n">look_ahead_timedelta</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">look_ahead</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">look_ahead_timedelta</span> <span class="o">=</span> <span class="n">look_ahead</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">last_index</span>
         <span class="n">look_ahead_gap</span> <span class="o">=</span> <span class="n">look_ahead_timedelta</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span>
-    <span class="k">if</span> <span class="n">timedeltas_check</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span> <span class="c"># current chunk ends with a good section</span>
+    <span class="k">if</span> <span class="n">last_timedeltas_check</span><span class="p">:</span> <span class="c"># current chunk ends with a good section</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">look_ahead_valid</span> <span class="ow">or</span> <span class="n">look_ahead_gap</span> <span class="o">&gt;</span> <span class="n">max_sample_period</span><span class="p">:</span>
             <span class="c"># current chunk ends with a good section which needs to </span>
             <span class="c"># be closed because next chunk either does not exist</span>
             <span class="c"># or starts with a sample which is more than max_sample_period</span>
             <span class="c"># away from df.index[-1]</span>
-            <span class="n">good_sect_ends</span> <span class="o">+=</span> <span class="p">[</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
+            <span class="n">good_sect_ends</span> <span class="o">+=</span> <span class="p">[</span><span class="n">last_index</span><span class="p">]</span>
     <span class="k">elif</span> <span class="n">look_ahead_valid</span> <span class="ow">and</span> <span class="n">look_ahead_gap</span> <span class="o">&lt;=</span> <span class="n">max_sample_period</span><span class="p">:</span>
         <span class="c"># Current chunk appears to end with a bad section</span>
         <span class="c"># but last sample is the start of a good section</span>
-        <span class="n">good_sect_starts</span> <span class="o">+=</span> <span class="p">[</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
+        <span class="n">good_sect_starts</span> <span class="o">+=</span> <span class="p">[</span><span class="n">last_index</span><span class="p">]</span>
 
     <span class="c"># Work out if this chunk ends with an open ended good section</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">good_sect_ends</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
@@ -283,6 +303,11 @@
 
     <span class="n">sections</span> <span class="o">=</span> <span class="p">[</span><span class="n">TimeFrame</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">)</span> 
                 <span class="k">for</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">good_sect_starts</span><span class="p">,</span> <span class="n">good_sect_ends</span><span class="p">)]</span>
+
+    <span class="c"># Memory management</span>
+    <span class="k">del</span> <span class="n">good_sect_starts</span>
+    <span class="k">del</span> <span class="n">good_sect_ends</span>
+    <span class="n">gc</span><span class="o">.</span><span class="n">collect</span><span class="p">()</span>
 
     <span class="k">return</span> <span class="n">sections</span></div>
 </pre></div>

@@ -9,8 +9,8 @@
     
     <link rel="stylesheet" href="../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../../../_static/bootstrap-3.1.0/css/bootstrap.min.css" type="text/css" />
-    <link rel="stylesheet" href="../../../_static/bootstrap-3.1.0/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/bootstrap-3.2.0/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/bootstrap-3.2.0/css/bootstrap-theme.min.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
     
     <script type="text/javascript">
@@ -28,10 +28,10 @@
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="../../../_static/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="../../../_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="../../../_static/bootstrap-3.1.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../../_static/bootstrap-3.2.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../_static/bootstrap-sphinx.js"></script>
     <link rel="top" title="NILMTK 0.2 documentation" href="../../../index.html" />
-    <link rel="up" title="Module code" href="../../index.html" />
+    <link rel="up" title="nilmtk" href="../../nilmtk.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -56,7 +56,6 @@
 
         <div class="collapse navbar-collapse nav-collapse">
           <ul class="nav navbar-nav">
-            <li class="divider-vertical"></li>
             
                 <li><a href="https://github.com/nilmtk/nilmtk">github</a></li>
             
@@ -136,6 +135,7 @@
   <h1>Source code for nilmtk.stats.totalenergy</h1><div class="highlight"><pre>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">division</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">gc</span>
 <span class="kn">from</span> <span class="nn">.totalenergyresults</span> <span class="kn">import</span> <span class="n">TotalEnergyResults</span>
 <span class="kn">from</span> <span class="nn">..node</span> <span class="kn">import</span> <span class="n">Node</span>
 <span class="kn">from</span> <span class="nn">..utils</span> <span class="kn">import</span> <span class="n">timedelta64_to_secs</span>
@@ -149,10 +149,8 @@
     <span class="n">requirements</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;device&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;max_sample_period&#39;</span><span class="p">:</span> <span class="s">&#39;ANY VALUE&#39;</span><span class="p">},</span>
                     <span class="s">&#39;preprocessing_applied&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;clip&#39;</span><span class="p">:</span> <span class="s">&#39;ANY VALUE&#39;</span><span class="p">}}</span>
     <span class="n">postconditions</span> <span class="o">=</span>  <span class="p">{</span><span class="s">&#39;statistics&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;energy&#39;</span><span class="p">:</span> <span class="p">{}}}</span>
+    <span class="n">results_class</span> <span class="o">=</span> <span class="n">TotalEnergyResults</span>
 
-<div class="viewcode-block" id="TotalEnergy.reset"><a class="viewcode-back" href="../../../nilmtk.stats.html#nilmtk.stats.totalenergy.TotalEnergy.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">results</span> <span class="o">=</span> <span class="n">TotalEnergyResults</span><span class="p">()</span>
-</div>
 <div class="viewcode-block" id="TotalEnergy.process"><a class="viewcode-back" href="../../../nilmtk.stats.html#nilmtk.stats.totalenergy.TotalEnergy.process">[docs]</a>    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Preference: Cumulative energy &gt; Energy &gt; Power</span>
@@ -161,7 +159,6 @@
         <span class="n">metadata</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">upstream</span><span class="o">.</span><span class="n">get_metadata</span><span class="p">()</span>
         <span class="n">max_sample_period</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="s">&#39;device&#39;</span><span class="p">][</span><span class="s">&#39;max_sample_period&#39;</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">upstream</span><span class="o">.</span><span class="n">process</span><span class="p">():</span>
-        
             <span class="n">energy</span> <span class="o">=</span> <span class="n">get_total_energy</span><span class="p">(</span><span class="n">chunk</span><span class="p">,</span> <span class="n">max_sample_period</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">chunk</span><span class="o">.</span><span class="n">timeframe</span><span class="p">,</span> <span class="n">energy</span><span class="p">)</span>
             <span class="k">yield</span> <span class="n">chunk</span>
@@ -190,24 +187,29 @@
 <span class="sd">        Values are energy in kWh (or equivalent for reactive and apparent power).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
+    <span class="c"># Select a column based on ordered preferences</span>
+    <span class="n">PHYSICAL_QUANTITY_PREFS</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;cumulative energy&quot;</span><span class="p">,</span> <span class="s">&quot;energy&quot;</span><span class="p">,</span> <span class="s">&quot;power&quot;</span><span class="p">]</span>
+    <span class="n">selected_columns</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">ac_type</span> <span class="ow">in</span> <span class="n">AC_TYPES</span><span class="p">:</span>
+        <span class="n">physical_quantities</span> <span class="o">=</span> <span class="p">[</span><span class="n">physical_quantity</span> 
+                               <span class="k">for</span> <span class="p">(</span><span class="n">physical_quantity</span><span class="p">,</span> <span class="n">col_ac_type</span><span class="p">)</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+                               <span class="k">if</span> <span class="n">col_ac_type</span> <span class="o">==</span> <span class="n">ac_type</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">pq</span> <span class="ow">in</span> <span class="n">PHYSICAL_QUANTITY_PREFS</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">pq</span> <span class="ow">in</span> <span class="n">physical_quantities</span><span class="p">:</span>
+                <span class="n">selected_columns</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">pq</span><span class="p">,</span> <span class="n">ac_type</span><span class="p">))</span>
+                <span class="k">break</span>
+
     <span class="n">energy</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="n">data_source_rank</span> <span class="o">=</span> <span class="p">{}</span> <span class="c"># overwrite Power with Energy with Energy(cumulative)</span>
-    <span class="k">for</span> <span class="p">(</span><span class="n">physical_quantity</span><span class="p">,</span> <span class="n">ac_type</span><span class="p">),</span> <span class="n">series</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">selected_columns</span><span class="p">:</span>
+        <span class="p">(</span><span class="n">physical_quantity</span><span class="p">,</span> <span class="n">ac_type</span><span class="p">)</span> <span class="o">=</span> <span class="n">col</span>
+        <span class="n">series</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">physical_quantity</span> <span class="o">==</span> <span class="s">&#39;power&#39;</span><span class="p">:</span>
-            <span class="c"># Preference is to calculate energy from </span>
-            <span class="c"># native Energy data rather than Power data</span>
-            <span class="c"># so don&#39;t overwrite with Power data.</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">energy</span><span class="o">.</span><span class="n">has_key</span><span class="p">(</span><span class="n">ac_type</span><span class="p">):</span>
-                <span class="n">energy</span><span class="p">[</span><span class="n">ac_type</span><span class="p">]</span> <span class="o">=</span> <span class="n">_energy_for_power_series</span><span class="p">(</span>
-                    <span class="n">series</span><span class="p">,</span> <span class="n">max_sample_period</span><span class="p">)</span>
-                <span class="n">data_source_rank</span><span class="p">[</span><span class="n">ac_type</span><span class="p">]</span> <span class="o">=</span> <span class="mi">3</span> <span class="c"># least favourite</span>
+            <span class="n">energy</span><span class="p">[</span><span class="n">ac_type</span><span class="p">]</span> <span class="o">=</span> <span class="n">_energy_for_power_series</span><span class="p">(</span><span class="n">series</span><span class="p">,</span> <span class="n">max_sample_period</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">physical_quantity</span> <span class="o">==</span> <span class="s">&#39;cumulative energy&#39;</span><span class="p">:</span>
             <span class="n">energy</span><span class="p">[</span><span class="n">ac_type</span><span class="p">]</span> <span class="o">=</span> <span class="n">series</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">series</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="n">data_source_rank</span><span class="p">[</span><span class="n">ac_type</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="c"># favourite</span>
-        <span class="k">elif</span> <span class="p">(</span><span class="n">physical_quantity</span> <span class="o">==</span> <span class="s">&#39;energy&#39;</span> <span class="ow">and</span> 
-              <span class="n">data_source_rank</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">ac_type</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">):</span>
+        <span class="k">elif</span> <span class="n">physical_quantity</span> <span class="o">==</span> <span class="s">&#39;energy&#39;</span><span class="p">:</span>
             <span class="n">energy</span><span class="p">[</span><span class="n">ac_type</span><span class="p">]</span> <span class="o">=</span> <span class="n">series</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
-            <span class="n">data_source_rank</span><span class="p">[</span><span class="n">ac_type</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
+
     <span class="k">return</span> <span class="n">energy</span>
 
 </div>
@@ -226,6 +228,8 @@
     <span class="n">series</span> <span class="o">=</span> <span class="n">series</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
     <span class="n">timedelta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">series</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
     <span class="n">timedelta_secs</span> <span class="o">=</span> <span class="n">timedelta64_to_secs</span><span class="p">(</span><span class="n">timedelta</span><span class="p">)</span>
+    <span class="k">del</span> <span class="n">timedelta</span>
+    <span class="n">gc</span><span class="o">.</span><span class="n">collect</span><span class="p">()</span>
     <span class="n">timedelta_secs</span> <span class="o">=</span> <span class="n">timedelta_secs</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="nb">max</span><span class="o">=</span><span class="n">max_sample_period</span><span class="p">)</span>
     <span class="n">joules</span> <span class="o">=</span> <span class="p">(</span><span class="n">timedelta_secs</span> <span class="o">*</span> <span class="n">series</span><span class="o">.</span><span class="n">values</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
     <span class="n">kwh</span> <span class="o">=</span> <span class="n">joules</span> <span class="o">/</span> <span class="n">JOULES_PER_KWH</span>

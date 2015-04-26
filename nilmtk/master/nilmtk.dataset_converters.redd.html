@@ -9,8 +9,8 @@
     
     <link rel="stylesheet" href="_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="_static/bootstrap-3.1.0/css/bootstrap.min.css" type="text/css" />
-    <link rel="stylesheet" href="_static/bootstrap-3.1.0/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-3.2.0/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-3.2.0/css/bootstrap-theme.min.css" type="text/css" />
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     
     <script type="text/javascript">
@@ -28,12 +28,12 @@
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="_static/bootstrap-3.1.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-3.2.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
     <link rel="top" title="NILMTK 0.2 documentation" href="index.html" />
     <link rel="up" title="nilmtk.dataset_converters package" href="nilmtk.dataset_converters.html" />
-    <link rel="next" title="nilmtk.disaggregate package" href="nilmtk.disaggregate.html" />
-    <link rel="prev" title="nilmtk.dataset_converters package" href="nilmtk.dataset_converters.html" />
+    <link rel="next" title="nilmtk.dataset_converters.ukdale package" href="nilmtk.dataset_converters.ukdale.html" />
+    <link rel="prev" title="nilmtk.dataset_converters.iawe package" href="nilmtk.dataset_converters.iawe.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -58,7 +58,6 @@
 
         <div class="collapse navbar-collapse nav-collapse">
           <ul class="nav navbar-nav">
-            <li class="divider-vertical"></li>
             
                 <li><a href="https://github.com/nilmtk/nilmtk">github</a></li>
             
@@ -104,8 +103,8 @@
       aria-labelledby="dLabelLocalToc"><ul>
 <li><a class="reference internal" href="#">nilmtk.dataset_converters.redd package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#nilmtk-dataset-converters-redd-convert-redd-module">nilmtk.dataset_converters.redd.convert_redd module</a></li>
-<li><a class="reference internal" href="#module-contents">Module contents</a></li>
+<li><a class="reference internal" href="#module-nilmtk.dataset_converters.redd.convert_redd">nilmtk.dataset_converters.redd.convert_redd module</a></li>
+<li><a class="reference internal" href="#module-nilmtk.dataset_converters.redd">Module contents</a></li>
 </ul>
 </li>
 </ul>
@@ -117,11 +116,11 @@
               
                 
   <li>
-    <a href="nilmtk.dataset_converters.html" title="Previous Chapter: nilmtk.dataset_converters package"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm">&laquo; nilmtk.dataset_c...</span>
+    <a href="nilmtk.dataset_converters.iawe.html" title="Previous Chapter: nilmtk.dataset_converters.iawe package"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; nilmtk.dataset_c...</span>
     </a>
   </li>
   <li>
-    <a href="nilmtk.disaggregate.html" title="Next Chapter: nilmtk.disaggregate package"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm">nilmtk.disaggreg... &raquo;</span>
+    <a href="nilmtk.dataset_converters.ukdale.html" title="Next Chapter: nilmtk.dataset_converters.ukdale package"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">nilmtk.dataset_c... &raquo;</span>
     </a>
   </li>
               
@@ -160,11 +159,36 @@
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="nilmtk-dataset-converters-redd-convert-redd-module">
-<h2>nilmtk.dataset_converters.redd.convert_redd module<a class="headerlink" href="#nilmtk-dataset-converters-redd-convert-redd-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-nilmtk.dataset_converters.redd.convert_redd">
+<span id="nilmtk-dataset-converters-redd-convert-redd-module"></span><h2>nilmtk.dataset_converters.redd.convert_redd module<a class="headerlink" href="#module-nilmtk.dataset_converters.redd.convert_redd" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="nilmtk.dataset_converters.redd.convert_redd.convert_redd">
+<tt class="descclassname">nilmtk.dataset_converters.redd.convert_redd.</tt><tt class="descname">convert_redd</tt><big>(</big><em>redd_path</em>, <em>output_filename</em>, <em>format='HDF'</em><big>)</big><a class="reference internal" href="_modules/nilmtk/dataset_converters/redd/convert_redd.html#convert_redd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.dataset_converters.redd.convert_redd.convert_redd" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>redd_path</strong> : str</p>
+<blockquote>
+<div><p>The root path of the REDD low_freq dataset.</p>
+</div></blockquote>
+<p><strong>output_filename</strong> : str</p>
+<blockquote>
+<div><p>The destination filename (including path and suffix).</p>
+</div></blockquote>
+<p><strong>format</strong> : str</p>
+<blockquote class="last">
+<div><p>format of output. Either &#8216;HDF&#8217; or &#8216;CSV&#8217;. Defaults to &#8216;HDF&#8217;</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </div>
-<div class="section" id="module-contents">
-<h2>Module contents<a class="headerlink" href="#module-contents" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-nilmtk.dataset_converters.redd">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-nilmtk.dataset_converters.redd" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 

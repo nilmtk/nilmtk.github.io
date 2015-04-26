@@ -9,8 +9,8 @@
     
     <link rel="stylesheet" href="_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="_static/bootstrap-3.1.0/css/bootstrap.min.css" type="text/css" />
-    <link rel="stylesheet" href="_static/bootstrap-3.1.0/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-3.2.0/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-3.2.0/css/bootstrap-theme.min.css" type="text/css" />
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     
     <script type="text/javascript">
@@ -28,12 +28,12 @@
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="_static/bootstrap-3.1.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-3.2.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
     <link rel="top" title="NILMTK 0.2 documentation" href="index.html" />
     <link rel="up" title="nilmtk package" href="nilmtk.html" />
     <link rel="next" title="nilmtk.feature_detectors package" href="nilmtk.feature_detectors.html" />
-    <link rel="prev" title="nilmtk.dataset_converters.redd package" href="nilmtk.dataset_converters.redd.html" />
+    <link rel="prev" title="nilmtk.datastore package" href="nilmtk.datastore.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -58,7 +58,6 @@
 
         <div class="collapse navbar-collapse nav-collapse">
           <ul class="nav navbar-nav">
-            <li class="divider-vertical"></li>
             
                 <li><a href="https://github.com/nilmtk/nilmtk">github</a></li>
             
@@ -104,8 +103,11 @@
       aria-labelledby="dLabelLocalToc"><ul>
 <li><a class="reference internal" href="#">nilmtk.disaggregate package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#nilmtk-disaggregate-combinatorial-optimisation-module">nilmtk.disaggregate.combinatorial_optimisation module</a></li>
-<li><a class="reference internal" href="#module-contents">Module contents</a></li>
+<li><a class="reference internal" href="#module-nilmtk.disaggregate.combinatorial_optimisation">nilmtk.disaggregate.combinatorial_optimisation module</a></li>
+<li><a class="reference internal" href="#module-nilmtk.disaggregate.disaggregator">nilmtk.disaggregate.disaggregator module</a></li>
+<li><a class="reference internal" href="#module-nilmtk.disaggregate.fhmm_exact">nilmtk.disaggregate.fhmm_exact module</a></li>
+<li><a class="reference internal" href="#module-nilmtk.disaggregate.hart_85">nilmtk.disaggregate.hart_85 module</a></li>
+<li><a class="reference internal" href="#module-nilmtk.disaggregate">Module contents</a></li>
 </ul>
 </li>
 </ul>
@@ -117,11 +119,11 @@
               
                 
   <li>
-    <a href="nilmtk.dataset_converters.redd.html" title="Previous Chapter: nilmtk.dataset_converters.redd package"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm">&laquo; nilmtk.dataset_c...</span>
+    <a href="nilmtk.datastore.html" title="Previous Chapter: nilmtk.datastore package"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; nilmtk.datastore...</span>
     </a>
   </li>
   <li>
-    <a href="nilmtk.feature_detectors.html" title="Next Chapter: nilmtk.feature_detectors package"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm">nilmtk.feature_d... &raquo;</span>
+    <a href="nilmtk.feature_detectors.html" title="Next Chapter: nilmtk.feature_detectors package"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">nilmtk.feature_d... &raquo;</span>
     </a>
   </li>
               
@@ -160,11 +162,525 @@
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="nilmtk-disaggregate-combinatorial-optimisation-module">
-<h2>nilmtk.disaggregate.combinatorial_optimisation module<a class="headerlink" href="#nilmtk-disaggregate-combinatorial-optimisation-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-nilmtk.disaggregate.combinatorial_optimisation">
+<span id="nilmtk-disaggregate-combinatorial-optimisation-module"></span><h2>nilmtk.disaggregate.combinatorial_optimisation module<a class="headerlink" href="#module-nilmtk.disaggregate.combinatorial_optimisation" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="nilmtk.disaggregate.combinatorial_optimisation.CombinatorialOptimisation">
+<em class="property">class </em><tt class="descclassname">nilmtk.disaggregate.combinatorial_optimisation.</tt><tt class="descname">CombinatorialOptimisation</tt><a class="reference internal" href="_modules/nilmtk/disaggregate/combinatorial_optimisation.html#CombinatorialOptimisation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.disaggregate.combinatorial_optimisation.CombinatorialOptimisation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>1 dimensional combinatorial optimisation NILM algorithm.</p>
+<p class="rubric">Attributes</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="2%" />
+<col width="98%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>model</td>
+<td>(list of dicts) Each dict has these keys: states : list of ints (the power (Watts) used in different states) training_metadata : ElecMeter or MeterGroup object used for training this set of states.  We need this information because we need the appliance type (and perhaps some other metadata) for each model.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="nilmtk.disaggregate.combinatorial_optimisation.CombinatorialOptimisation.disaggregate">
+<tt class="descname">disaggregate</tt><big>(</big><em>mains</em>, <em>output_datastore</em>, <em>**load_kwargs</em><big>)</big><a class="reference internal" href="_modules/nilmtk/disaggregate/combinatorial_optimisation.html#CombinatorialOptimisation.disaggregate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.disaggregate.combinatorial_optimisation.CombinatorialOptimisation.disaggregate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Disaggregate mains according to the model learnt previously.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>mains</strong> : nilmtk.ElecMeter or nilmtk.MeterGroup</p>
+<p><strong>output_datastore</strong> : instance of nilmtk.DataStore subclass</p>
+<blockquote>
+<div><p>For storing power predictions from disaggregation algorithm.</p>
+</div></blockquote>
+<p><strong>output_name</strong> : string, optional</p>
+<blockquote>
+<div><p>The <cite>name</cite> to use in the metadata for the <cite>output_datastore</cite>.
+e.g. some sort of name for this experiment.  Defaults to 
+&#8220;NILMTK_CO_&lt;date&gt;&#8221;</p>
+</div></blockquote>
+<p><strong>resample_seconds</strong> : number, optional</p>
+<blockquote>
+<div><p>The desired sample period in seconds.</p>
+</div></blockquote>
+<p><strong>**load_kwargs</strong> : key word arguments</p>
+<blockquote class="last">
+<div><p>Passed to <cite>mains.power_series(**kwargs)</cite></p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.disaggregate.combinatorial_optimisation.CombinatorialOptimisation.train">
+<tt class="descname">train</tt><big>(</big><em>metergroup</em><big>)</big><a class="reference internal" href="_modules/nilmtk/disaggregate/combinatorial_optimisation.html#CombinatorialOptimisation.train"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.disaggregate.combinatorial_optimisation.CombinatorialOptimisation.train" title="Permalink to this definition">¶</a></dt>
+<dd><p>Train using 1D CO. Places the learnt model in the <cite>model</cite> attribute.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>metergroup</strong> : a nilmtk.MeterGroup object</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li>only uses first chunk for each meter (TODO: handle all chunks).</li>
+</ul>
+</dd></dl>
+
+</dd></dl>
+
 </div>
-<div class="section" id="module-contents">
-<h2>Module contents<a class="headerlink" href="#module-contents" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-nilmtk.disaggregate.disaggregator">
+<span id="nilmtk-disaggregate-disaggregator-module"></span><h2>nilmtk.disaggregate.disaggregator module<a class="headerlink" href="#module-nilmtk.disaggregate.disaggregator" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="nilmtk.disaggregate.disaggregator.Disaggregator">
+<em class="property">class </em><tt class="descclassname">nilmtk.disaggregate.disaggregator.</tt><tt class="descname">Disaggregator</tt><a class="reference internal" href="_modules/nilmtk/disaggregate/disaggregator.html#Disaggregator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.disaggregate.disaggregator.Disaggregator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Provides a common interface to all disaggregation classes.
+See <a class="reference external" href="https://github.com/nilmtk/nilmtk/issues/271">https://github.com/nilmtk/nilmtk/issues/271</a> for discussion.</p>
+<p class="rubric">Attributes</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="87%" />
+<col width="13%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Each subclass should internally store models learned from training.</td>
+<td>&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="nilmtk.disaggregate.disaggregator.Disaggregator.disaggregate">
+<tt class="descname">disaggregate</tt><big>(</big><em>mains</em>, <em>output_datastore</em><big>)</big><a class="reference internal" href="_modules/nilmtk/disaggregate/disaggregator.html#Disaggregator.disaggregate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.disaggregate.disaggregator.Disaggregator.disaggregate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Passes each chunk from mains generator to disaggregate_chunk() and passes the output to _write_disaggregated_chunk_to_datastore()
+Will have a default implementation in super class.
+Can be overridden for more simple in-memory disaggregation, or more complex out-of-core disaggregation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>mains</strong> : nilmtk.ElecMeter (single-phase) or nilmtk.MeterGroup (multi-phase)</p>
+<p class="last"><strong>output_datastore</strong> : instance of nilmtk.DataStore or str of datastore location</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.disaggregate.disaggregator.Disaggregator.disaggregate_chunk">
+<tt class="descname">disaggregate_chunk</tt><big>(</big><em>chunk</em><big>)</big><a class="reference internal" href="_modules/nilmtk/disaggregate/disaggregator.html#Disaggregator.disaggregate_chunk"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.disaggregate.disaggregator.Disaggregator.disaggregate_chunk" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads all of a DataFrame from disk.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>chunk</strong> : pd.DataFrame (in NILMTK format)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>chunk</strong> : pd.DataFrame where each column represents a disaggregated appliance</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.disaggregate.disaggregator.Disaggregator.export_model">
+<tt class="descname">export_model</tt><big>(</big><em>filename</em><big>)</big><a class="reference internal" href="_modules/nilmtk/disaggregate/disaggregator.html#Disaggregator.export_model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.disaggregate.disaggregator.Disaggregator.export_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves learned model to file.
+Required to be overridden for learned models to persist.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filename</strong> : str path to file to save model to</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.disaggregate.disaggregator.Disaggregator.import_model">
+<tt class="descname">import_model</tt><big>(</big><em>filename</em><big>)</big><a class="reference internal" href="_modules/nilmtk/disaggregate/disaggregator.html#Disaggregator.import_model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.disaggregate.disaggregator.Disaggregator.import_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads learned model from file.
+Required to be overridden for learned models to persist.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filename</strong> : str path to file to load model from</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.disaggregate.disaggregator.Disaggregator.train">
+<tt class="descname">train</tt><big>(</big><em>metergroup</em><big>)</big><a class="reference internal" href="_modules/nilmtk/disaggregate/disaggregator.html#Disaggregator.train"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.disaggregate.disaggregator.Disaggregator.train" title="Permalink to this definition">¶</a></dt>
+<dd><p>Trains the model given a metergroup containing a appliance meters (supervised) or a site meter (unsupervised).
+Will have a default implementation in super class.
+Can be overridden for simpler in-memory training, or more complex out-of-core training.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>metergroup</strong> : a nilmtk.MeterGroup object</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.disaggregate.disaggregator.Disaggregator.train_on_chunk">
+<tt class="descname">train_on_chunk</tt><big>(</big><em>chunk</em>, <em>identifier</em><big>)</big><a class="reference internal" href="_modules/nilmtk/disaggregate/disaggregator.html#Disaggregator.train_on_chunk"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.disaggregate.disaggregator.Disaggregator.train_on_chunk" title="Permalink to this definition">¶</a></dt>
+<dd><p>Signature is fine for site meter dataframes (unsupervised learning). Would need to be called for each appliance meter along with appliance identifier for supervised learning.
+Required to be overridden to provide out-of-core disaggregation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>chunk</strong> : pd.DataFrame where each column represents a disaggregated appliance</p>
+<p class="last"><strong>identifier</strong> : tuple of (nilmtk.appliance, int) representing instance of that appliance for this chunk</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-nilmtk.disaggregate.fhmm_exact">
+<span id="nilmtk-disaggregate-fhmm-exact-module"></span><h2>nilmtk.disaggregate.fhmm_exact module<a class="headerlink" href="#module-nilmtk.disaggregate.fhmm_exact" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="nilmtk.disaggregate.fhmm_exact.FHMM">
+<em class="property">class </em><tt class="descclassname">nilmtk.disaggregate.fhmm_exact.</tt><tt class="descname">FHMM</tt><a class="reference internal" href="_modules/nilmtk/disaggregate/fhmm_exact.html#FHMM"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.disaggregate.fhmm_exact.FHMM" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<dl class="method">
+<dt id="nilmtk.disaggregate.fhmm_exact.FHMM.disaggregate">
+<tt class="descname">disaggregate</tt><big>(</big><em>mains</em>, <em>output_datastore</em>, <em>**load_kwargs</em><big>)</big><a class="reference internal" href="_modules/nilmtk/disaggregate/fhmm_exact.html#FHMM.disaggregate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.disaggregate.fhmm_exact.FHMM.disaggregate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Disaggregate mains according to the model learnt previously.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>mains</strong> : nilmtk.ElecMeter or nilmtk.MeterGroup</p>
+<p><strong>output_datastore</strong> : instance of nilmtk.DataStore subclass</p>
+<blockquote>
+<div><p>For storing power predictions from disaggregation algorithm.</p>
+</div></blockquote>
+<p><strong>output_name</strong> : string, optional</p>
+<blockquote>
+<div><p>The <cite>name</cite> to use in the metadata for the <cite>output_datastore</cite>.
+e.g. some sort of name for this experiment.  Defaults to 
+&#8220;NILMTK_FHMM_&lt;date&gt;&#8221;</p>
+</div></blockquote>
+<p><strong>resample_seconds</strong> : number, optional</p>
+<blockquote>
+<div><p>The desired sample period in seconds.</p>
+</div></blockquote>
+<p><strong>**load_kwargs</strong> : key word arguments</p>
+<blockquote class="last">
+<div><p>Passed to <cite>mains.power_series(**kwargs)</cite></p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.disaggregate.fhmm_exact.FHMM.disaggregate_chunk">
+<tt class="descname">disaggregate_chunk</tt><big>(</big><em>test_mains</em><big>)</big><a class="reference internal" href="_modules/nilmtk/disaggregate/fhmm_exact.html#FHMM.disaggregate_chunk"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.disaggregate.fhmm_exact.FHMM.disaggregate_chunk" title="Permalink to this definition">¶</a></dt>
+<dd><p>Disaggregate the test data according to the model learnt previously
+Performs 1D FHMM disaggregation</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.disaggregate.fhmm_exact.FHMM.train">
+<tt class="descname">train</tt><big>(</big><em>metergroup</em>, <em>**load_kwargs</em><big>)</big><a class="reference internal" href="_modules/nilmtk/disaggregate/fhmm_exact.html#FHMM.train"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.disaggregate.fhmm_exact.FHMM.train" title="Permalink to this definition">¶</a></dt>
+<dd><p>Train using 1d FHMM. Places the learnt model in <cite>model</cite> attribute
+The current version performs training ONLY on the first chunk.
+Online HMMs are welcome is someone can contribute :)</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="nilmtk.disaggregate.fhmm_exact.compute_A_fhmm">
+<tt class="descclassname">nilmtk.disaggregate.fhmm_exact.</tt><tt class="descname">compute_A_fhmm</tt><big>(</big><em>list_A</em><big>)</big><a class="reference internal" href="_modules/nilmtk/disaggregate/fhmm_exact.html#compute_A_fhmm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.disaggregate.fhmm_exact.compute_A_fhmm" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>list_pi</strong> : List of PI&#8217;s of individual learnt HMMs</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>result</strong> : Combined Pi for the FHMM</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="nilmtk.disaggregate.fhmm_exact.compute_means_fhmm">
+<tt class="descclassname">nilmtk.disaggregate.fhmm_exact.</tt><tt class="descname">compute_means_fhmm</tt><big>(</big><em>list_means</em><big>)</big><a class="reference internal" href="_modules/nilmtk/disaggregate/fhmm_exact.html#compute_means_fhmm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.disaggregate.fhmm_exact.compute_means_fhmm" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">[mu, cov]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="nilmtk.disaggregate.fhmm_exact.compute_pi_fhmm">
+<tt class="descclassname">nilmtk.disaggregate.fhmm_exact.</tt><tt class="descname">compute_pi_fhmm</tt><big>(</big><em>list_pi</em><big>)</big><a class="reference internal" href="_modules/nilmtk/disaggregate/fhmm_exact.html#compute_pi_fhmm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.disaggregate.fhmm_exact.compute_pi_fhmm" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>list_pi</strong> : List of PI&#8217;s of individual learnt HMMs</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>result</strong> : Combined Pi for the FHMM</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="nilmtk.disaggregate.fhmm_exact.create_combined_hmm">
+<tt class="descclassname">nilmtk.disaggregate.fhmm_exact.</tt><tt class="descname">create_combined_hmm</tt><big>(</big><em>model</em><big>)</big><a class="reference internal" href="_modules/nilmtk/disaggregate/fhmm_exact.html#create_combined_hmm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.disaggregate.fhmm_exact.create_combined_hmm" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="nilmtk.disaggregate.fhmm_exact.decode_hmm">
+<tt class="descclassname">nilmtk.disaggregate.fhmm_exact.</tt><tt class="descname">decode_hmm</tt><big>(</big><em>length_sequence</em>, <em>centroids</em>, <em>appliance_list</em>, <em>states</em><big>)</big><a class="reference internal" href="_modules/nilmtk/disaggregate/fhmm_exact.html#decode_hmm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.disaggregate.fhmm_exact.decode_hmm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decodes the HMM state sequence</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="nilmtk.disaggregate.fhmm_exact.return_sorting_mapping">
+<tt class="descclassname">nilmtk.disaggregate.fhmm_exact.</tt><tt class="descname">return_sorting_mapping</tt><big>(</big><em>means</em><big>)</big><a class="reference internal" href="_modules/nilmtk/disaggregate/fhmm_exact.html#return_sorting_mapping"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.disaggregate.fhmm_exact.return_sorting_mapping" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="nilmtk.disaggregate.fhmm_exact.sort_covars">
+<tt class="descclassname">nilmtk.disaggregate.fhmm_exact.</tt><tt class="descname">sort_covars</tt><big>(</big><em>mapping</em>, <em>covars</em><big>)</big><a class="reference internal" href="_modules/nilmtk/disaggregate/fhmm_exact.html#sort_covars"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.disaggregate.fhmm_exact.sort_covars" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="nilmtk.disaggregate.fhmm_exact.sort_learnt_parameters">
+<tt class="descclassname">nilmtk.disaggregate.fhmm_exact.</tt><tt class="descname">sort_learnt_parameters</tt><big>(</big><em>startprob</em>, <em>means</em>, <em>covars</em>, <em>transmat</em><big>)</big><a class="reference internal" href="_modules/nilmtk/disaggregate/fhmm_exact.html#sort_learnt_parameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.disaggregate.fhmm_exact.sort_learnt_parameters" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="nilmtk.disaggregate.fhmm_exact.sort_startprob">
+<tt class="descclassname">nilmtk.disaggregate.fhmm_exact.</tt><tt class="descname">sort_startprob</tt><big>(</big><em>mapping</em>, <em>startprob</em><big>)</big><a class="reference internal" href="_modules/nilmtk/disaggregate/fhmm_exact.html#sort_startprob"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.disaggregate.fhmm_exact.sort_startprob" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sort the startprob according to power means; as returned by mapping</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="nilmtk.disaggregate.fhmm_exact.sort_transition_matrix">
+<tt class="descclassname">nilmtk.disaggregate.fhmm_exact.</tt><tt class="descname">sort_transition_matrix</tt><big>(</big><em>mapping</em>, <em>A</em><big>)</big><a class="reference internal" href="_modules/nilmtk/disaggregate/fhmm_exact.html#sort_transition_matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.disaggregate.fhmm_exact.sort_transition_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sorts the transition matrix according to increasing order of 
+power means; as returned by mapping</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>mapping :</strong></p>
+<p><strong>A</strong> : numpy.array of shape (k, k)</p>
+<blockquote class="last">
+<div><p>transition matrix</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-nilmtk.disaggregate.hart_85">
+<span id="nilmtk-disaggregate-hart-85-module"></span><h2>nilmtk.disaggregate.hart_85 module<a class="headerlink" href="#module-nilmtk.disaggregate.hart_85" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="nilmtk.disaggregate.hart_85.Hart85">
+<em class="property">class </em><tt class="descclassname">nilmtk.disaggregate.hart_85.</tt><tt class="descname">Hart85</tt><a class="reference internal" href="_modules/nilmtk/disaggregate/hart_85.html#Hart85"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.disaggregate.hart_85.Hart85" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>1 or 2 dimensional Hart 1985 algorithm.</p>
+<p class="rubric">Attributes</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="3%" />
+<col width="97%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>model</td>
+<td>(dict) Each key is either the instance integer for an ElecMeter, or a tuple of instances for a MeterGroup. Each value is a sorted list of power in different states.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="nilmtk.disaggregate.hart_85.Hart85.assign_power_from_states">
+<tt class="descname">assign_power_from_states</tt><big>(</big><em>states_chunk</em>, <em>prev</em><big>)</big><a class="reference internal" href="_modules/nilmtk/disaggregate/hart_85.html#Hart85.assign_power_from_states"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.disaggregate.hart_85.Hart85.assign_power_from_states" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.disaggregate.hart_85.Hart85.disaggregate">
+<tt class="descname">disaggregate</tt><big>(</big><em>mains</em>, <em>output_datastore</em>, <em>**load_kwargs</em><big>)</big><a class="reference internal" href="_modules/nilmtk/disaggregate/hart_85.html#Hart85.disaggregate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.disaggregate.hart_85.Hart85.disaggregate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Disaggregate mains according to the model learnt previously.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>mains</strong> : nilmtk.ElecMeter or nilmtk.MeterGroup</p>
+<p><strong>output_datastore</strong> : instance of nilmtk.DataStore subclass</p>
+<blockquote>
+<div><p>For storing power predictions from disaggregation algorithm.</p>
+</div></blockquote>
+<p><strong>output_name</strong> : string, optional</p>
+<blockquote>
+<div><p>The <cite>name</cite> to use in the metadata for the <cite>output_datastore</cite>.
+e.g. some sort of name for this experiment.  Defaults to 
+&#8220;NILMTK_Hart85_&lt;date&gt;&#8221;</p>
+</div></blockquote>
+<p><strong>resample_seconds</strong> : number, optional</p>
+<blockquote>
+<div><p>The desired sample period in seconds.</p>
+</div></blockquote>
+<p><strong>**load_kwargs</strong> : key word arguments</p>
+<blockquote class="last">
+<div><p>Passed to <cite>mains.power_series(**kwargs)</cite></p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.disaggregate.hart_85.Hart85.hart85_disaggregate_single_chunk">
+<tt class="descname">hart85_disaggregate_single_chunk</tt><big>(</big><em>chunk</em>, <em>prev</em>, <em>transients</em><big>)</big><a class="reference internal" href="_modules/nilmtk/disaggregate/hart_85.html#Hart85.hart85_disaggregate_single_chunk"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.disaggregate.hart_85.Hart85.hart85_disaggregate_single_chunk" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.disaggregate.hart_85.Hart85.pair">
+<tt class="descname">pair</tt><big>(</big><em>buffer_size</em>, <em>min_tolerance</em>, <em>percent_tolerance</em>, <em>large_transition</em><big>)</big><a class="reference internal" href="_modules/nilmtk/disaggregate/hart_85.html#Hart85.pair"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.disaggregate.hart_85.Hart85.pair" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.disaggregate.hart_85.Hart85.train">
+<tt class="descname">train</tt><big>(</big><em>metergroup, cols=[('power', 'active')], buffer_size=20, noise_level=70, state_threshold=15, min_tolerance=100, percent_tolerance=0.035, large_transition=1000, **kwargs</em><big>)</big><a class="reference internal" href="_modules/nilmtk/disaggregate/hart_85.html#Hart85.train"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.disaggregate.hart_85.Hart85.train" title="Permalink to this definition">¶</a></dt>
+<dd><p>Train using Hart85. Places the learnt model in <cite>model</cite> attribute.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>metergroup</strong> : a nilmtk.MeterGroup object</p>
+<p><strong>cols: nilmtk.Measurement, should be one of the following</strong></p>
+<blockquote>
+<div><p>[(&#8216;power&#8217;,&#8217;active&#8217;)]
+[(&#8216;power&#8217;,&#8217;apparent&#8217;)]
+[(&#8216;power&#8217;,&#8217;reactive&#8217;)]
+[(&#8216;power&#8217;,&#8217;active&#8217;), (&#8216;power&#8217;, &#8216;reactive&#8217;)]</p>
+</div></blockquote>
+<p><strong>buffer_size: int, optional</strong></p>
+<blockquote>
+<div><p>size of the buffer to use for finding edges</p>
+</div></blockquote>
+<p><strong>min_tolerance: int, optional</strong></p>
+<blockquote>
+<div><p>variance in power draw allowed for pairing a match</p>
+</div></blockquote>
+<p><strong>percent_tolerance: float, optional</strong></p>
+<blockquote>
+<div><p>if transition is greater than large_transition, then use percent of large_transition</p>
+</div></blockquote>
+<p><strong>large_transition: float, optional</strong></p>
+<blockquote class="last">
+<div><p>power draw of a Large transition</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="nilmtk.disaggregate.hart_85.MyDeque">
+<em class="property">class </em><tt class="descclassname">nilmtk.disaggregate.hart_85.</tt><tt class="descname">MyDeque</tt><a class="reference internal" href="_modules/nilmtk/disaggregate/hart_85.html#MyDeque"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.disaggregate.hart_85.MyDeque" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">collections.deque</span></tt></p>
+<dl class="method">
+<dt id="nilmtk.disaggregate.hart_85.MyDeque.popmiddle">
+<tt class="descname">popmiddle</tt><big>(</big><em>pos</em><big>)</big><a class="reference internal" href="_modules/nilmtk/disaggregate/hart_85.html#MyDeque.popmiddle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.disaggregate.hart_85.MyDeque.popmiddle" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="nilmtk.disaggregate.hart_85.PairBuffer">
+<em class="property">class </em><tt class="descclassname">nilmtk.disaggregate.hart_85.</tt><tt class="descname">PairBuffer</tt><big>(</big><em>buffer_size</em>, <em>min_tolerance</em>, <em>percent_tolerance</em>, <em>large_transition</em>, <em>num_measurements</em><big>)</big><a class="reference internal" href="_modules/nilmtk/disaggregate/hart_85.html#PairBuffer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.disaggregate.hart_85.PairBuffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Attributes:
+* transitionList (list of tuples)
+* matchedPairs (dataframe containing matched pairs of transitions)</p>
+<dl class="method">
+<dt id="nilmtk.disaggregate.hart_85.PairBuffer.add_transition">
+<tt class="descname">add_transition</tt><big>(</big><em>transition</em><big>)</big><a class="reference internal" href="_modules/nilmtk/disaggregate/hart_85.html#PairBuffer.add_transition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.disaggregate.hart_85.PairBuffer.add_transition" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.disaggregate.hart_85.PairBuffer.clean_buffer">
+<tt class="descname">clean_buffer</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/disaggregate/hart_85.html#PairBuffer.clean_buffer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.disaggregate.hart_85.PairBuffer.clean_buffer" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.disaggregate.hart_85.PairBuffer.pair_transitions">
+<tt class="descname">pair_transitions</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/disaggregate/hart_85.html#PairBuffer.pair_transitions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.disaggregate.hart_85.PairBuffer.pair_transitions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hart 85, P 33.
+When searching the working buffer for pairs, the order in which 
+entries are examined is very important. If an Appliance has 
+on and off several times in succession, there can be many 
+pairings between entries in the buffer. The algorithm must not
+allow an 0N transition to match an OFF which occurred at the end 
+of a different cycle, so that only ON/OFF pairs which truly belong 
+together are paired up. Otherwise the energy consumption of the 
+appliance will be greatly overestimated. The most straightforward 
+search procedures can make errors of this nature when faced with 
+types of transition sequences.</p>
+<p>Hart 85, P 32.
+For the two-state load monitor, a pair is defined as two entries
+which meet the following four conditions:
+(1) They are on the same leg, or are both 240 V,
+(2) They are both unmarked, 
+(3) The earlier has a positive real power component, and 
+(4) When added together, they result in a vector in which the 
+absolute value of the real power component is less than 35 
+Watts (or 3.5% of the real power, if the transitions are 
+over 1000 W) and the absolute value of the reactive power 
+component is less than 35 VAR (or 3.5%).</p>
+<p>... the correct way to search the buffer is to start by checking 
+elements which are close together in the buffer, and gradually 
+increase the distance. First, adjacent  elements are checked for 
+pairs which meet all four requirements above; if any are found 
+they are processed and marked. Then elements two entries apart 
+are checked, then three, and so on, until the first and last 
+element are checked...</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-nilmtk.disaggregate">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-nilmtk.disaggregate" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 
