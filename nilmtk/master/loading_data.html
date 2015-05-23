@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Exploring single electricity meters &mdash; NILMTK 0.2 documentation</title>
+    <title>&lt;no title&gt; &mdash; NILMTK 0.2 documentation</title>
     
     <link rel="stylesheet" href="_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -104,8 +104,7 @@
      href="#">Page <b class="caret"></b></a>
   <ul class="dropdown-menu localtoc"
       role="menu"
-      aria-labelledby="dLabelLocalToc"><ul>
-<li><a class="reference internal" href="#">Exploring single electricity meters</a></li>
+      aria-labelledby="dLabelLocalToc"><ul class="simple">
 </ul>
 </ul>
 </li>
@@ -121,7 +120,7 @@
             
               <li class="hidden-sm">
 <div id="sourcelink">
-  <a href="_sources/exploring_single_electricity_meters.txt"
+  <a href="_sources/loading_data.txt"
      rel="nofollow">Source</a>
 </div></li>
             
@@ -145,14 +144,10 @@
   <div class="row">
     <div class="col-md-12">
       
-  <div class="section" id="exploring-single-electricity-meters">
-<h1>Exploring single electricity meters<a class="headerlink" href="#exploring-single-electricity-meters" title="Permalink to this headline">¶</a></h1>
-<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">nilmtk</span> <span class="kn">import</span> <span class="n">DataSet</span>
-
-<span class="n">redd</span> <span class="o">=</span> <span class="n">DataSet</span><span class="p">(</span><span class="s">&#39;/data/REDD/redd.h5&#39;</span><span class="p">)</span>
-<span class="n">elec</span> <span class="o">=</span> <span class="n">redd</span><span class="o">.</span><span class="n">buildings</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">elec</span>
+  <p>In this notebook, we&#8217;ll see the various ways in which we can read a
+nilmtk data set into a Pandas dataframe</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">ni</span>
 </pre></div>
-</div>
 </div>
 
 

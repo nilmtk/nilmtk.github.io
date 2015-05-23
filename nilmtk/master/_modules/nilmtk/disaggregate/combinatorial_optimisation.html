@@ -72,6 +72,7 @@
       aria-labelledby="dLabelGlobalToc"><ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../about.html">Non-Intrusive Load Monitoring (NILM)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../about.html#why-a-toolkit-for-nilm">Why a toolkit for NILM?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../about.html#what-nilmtk-provides">What nilmtk provides</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../install.html">Installing nilmtk</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Change log</a></li>
 </ul>
@@ -80,6 +81,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../elecmeter_and_metergroup.html">MeterGroup, ElecMeter, selection and basic statistics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../pipeline_preprocessing_more_stats.html">Processing pipeline, preprocessing and more stats</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../disaggregation_and_metrics.html">Disaggregation and Metrics</a></li>
+</ul>
+<ul class="simple">
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../contribute.html">Contributing</a></li>
@@ -171,7 +174,7 @@
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="p">[]</span>
 
-<div class="viewcode-block" id="CombinatorialOptimisation.train"><a class="viewcode-back" href="../../../nilmtk.disaggregate.html#nilmtk.disaggregate.combinatorial_optimisation.CombinatorialOptimisation.train">[docs]</a>    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metergroup</span><span class="p">):</span>
+<div class="viewcode-block" id="CombinatorialOptimisation.train"><a class="viewcode-back" href="../../../nilmtk.disaggregate.html#nilmtk.disaggregate.combinatorial_optimisation.CombinatorialOptimisation.train">[docs]</a>    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metergroup</span><span class="p">,</span> <span class="o">**</span><span class="n">load_kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Train using 1D CO. Places the learnt model in the `model` attribute.</span>
 
 <span class="sd">        Parameters</span>
@@ -195,7 +198,7 @@
 
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">meter</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">metergroup</span><span class="o">.</span><span class="n">submeters</span><span class="p">()</span><span class="o">.</span><span class="n">meters</span><span class="p">):</span>
             <span class="k">print</span><span class="p">(</span><span class="s">&quot;Training model for submeter &#39;{}&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">meter</span><span class="p">))</span>
-            <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">meter</span><span class="o">.</span><span class="n">power_series</span><span class="p">(</span><span class="n">preprocessing</span><span class="o">=</span><span class="p">[</span><span class="n">Clip</span><span class="p">()]):</span>
+            <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">meter</span><span class="o">.</span><span class="n">power_series</span><span class="p">(</span><span class="o">**</span><span class="n">load_kwargs</span><span class="p">):</span>
                 <span class="n">states</span> <span class="o">=</span> <span class="n">cluster</span><span class="p">(</span><span class="n">chunk</span><span class="p">,</span> <span class="n">max_num_clusters</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
                     <span class="s">&#39;states&#39;</span><span class="p">:</span> <span class="n">states</span><span class="p">,</span>
