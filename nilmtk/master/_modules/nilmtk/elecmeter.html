@@ -79,10 +79,8 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../convert_data_to_NILMTK_format.html">Convert data to NILMTK format and load into NILMTK</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../elecmeter_and_metergroup.html">MeterGroup, ElecMeter, selection and basic statistics</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../pipeline_preprocessing_more_stats.html">Processing pipeline, preprocessing and more stats</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../loading_data.html">Load API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../disaggregation_and_metrics.html">Disaggregation and Metrics</a></li>
-</ul>
-<ul class="simple">
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../contribute.html">Contributing</a></li>
@@ -718,6 +716,7 @@
                 <span class="s">&quot;Cannot get source node if meter.store is None!&quot;</span><span class="p">)</span>
 
         <span class="n">loader_kwargs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_convert_physical_quantity_and_ac_type_to_cols</span><span class="p">(</span><span class="o">**</span><span class="n">loader_kwargs</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">loader_kwargs</span><span class="p">)</span>
         <span class="n">generator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">key</span><span class="p">,</span> <span class="o">**</span><span class="n">loader_kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s">&#39;device&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span>
         <span class="k">return</span> <span class="n">Node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">generator</span><span class="o">=</span><span class="n">generator</span><span class="p">)</span>
