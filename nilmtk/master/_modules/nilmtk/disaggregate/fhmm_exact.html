@@ -69,6 +69,7 @@
   <ul class="dropdown-menu globaltoc"
       role="menu"
       aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">Installing nilmtk</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro_nilmtk_v0_2.html">Intro to NILMTK v0.2</a></li>
 </ul>
 <ul>
@@ -134,21 +135,12 @@
       
   <h1>Source code for nilmtk.disaggregate.fhmm_exact</h1><div class="highlight"><pre>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">division</span>
-<span class="kn">from</span> <span class="nn">..utils</span> <span class="kn">import</span> <span class="n">find_nearest</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">itertools</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">metrics</span>
 <span class="kn">from</span> <span class="nn">hmmlearn</span> <span class="kn">import</span> <span class="n">hmm</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
-<span class="kn">from</span> <span class="nn">..appliance</span> <span class="kn">import</span> <span class="n">ApplianceID</span>
-<span class="kn">from</span> <span class="nn">..utils</span> <span class="kn">import</span> <span class="n">find_nearest</span><span class="p">,</span> <span class="n">container_to_string</span>
-<span class="kn">from</span> <span class="nn">..feature_detectors</span> <span class="kn">import</span> <span class="n">cluster</span>
 <span class="kn">from</span> <span class="nn">..timeframe</span> <span class="kn">import</span> <span class="n">merge_timeframes</span><span class="p">,</span> <span class="n">list_of_timeframe_dicts</span><span class="p">,</span> <span class="n">TimeFrame</span>
-<span class="kn">from</span> <span class="nn">..preprocessing</span> <span class="kn">import</span> <span class="n">Apply</span><span class="p">,</span> <span class="n">Clip</span>
 
 <span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
@@ -170,7 +162,6 @@
 
 </div>
 <div class="viewcode-block" id="sort_covars"><a class="viewcode-back" href="../../../nilmtk.disaggregate.html#nilmtk.disaggregate.fhmm_exact.sort_covars">[docs]</a><span class="k">def</span> <span class="nf">sort_covars</span><span class="p">(</span><span class="n">mapping</span><span class="p">,</span> <span class="n">covars</span><span class="p">):</span>
-    <span class="n">num_elements</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">covars</span><span class="p">)</span>
     <span class="n">new_covars</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">covars</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">covars</span><span class="p">)):</span>
         <span class="n">new_covars</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">covars</span><span class="p">[</span><span class="n">mapping</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
@@ -178,12 +169,12 @@
 
 </div>
 <div class="viewcode-block" id="sort_transition_matrix"><a class="viewcode-back" href="../../../nilmtk.disaggregate.html#nilmtk.disaggregate.fhmm_exact.sort_transition_matrix">[docs]</a><span class="k">def</span> <span class="nf">sort_transition_matrix</span><span class="p">(</span><span class="n">mapping</span><span class="p">,</span> <span class="n">A</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Sorts the transition matrix according to increasing order of </span>
+    <span class="sd">&quot;&quot;&quot;Sorts the transition matrix according to increasing order of</span>
 <span class="sd">    power means; as returned by mapping</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    mapping : </span>
+<span class="sd">    mapping :</span>
 <span class="sd">    A : numpy.array of shape (k, k)</span>
 <span class="sd">        transition matrix</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -226,12 +217,10 @@
 </div>
 <div class="viewcode-block" id="compute_means_fhmm"><a class="viewcode-back" href="../../../nilmtk.disaggregate.html#nilmtk.disaggregate.fhmm_exact.compute_means_fhmm">[docs]</a><span class="k">def</span> <span class="nf">compute_means_fhmm</span><span class="p">(</span><span class="n">list_means</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Returns </span>
+<span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    [mu, cov]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="c">#list_of_appliances_centroids=[ [appliance[i][0] for i in range(len(appliance))] for appliance in list_B]</span>
     <span class="n">states_combination</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="o">*</span><span class="n">list_means</span><span class="p">))</span>
     <span class="n">num_combinations</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">states_combination</span><span class="p">)</span>
     <span class="n">means_stacked</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="nb">sum</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">states_combination</span><span class="p">])</span>
@@ -257,7 +246,6 @@
 
 </div>
 <div class="viewcode-block" id="create_combined_hmm"><a class="viewcode-back" href="../../../nilmtk.disaggregate.html#nilmtk.disaggregate.fhmm_exact.create_combined_hmm">[docs]</a><span class="k">def</span> <span class="nf">create_combined_hmm</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
-
     <span class="n">list_pi</span> <span class="o">=</span> <span class="p">[</span><span class="n">model</span><span class="p">[</span><span class="n">appliance</span><span class="p">]</span><span class="o">.</span><span class="n">startprob_</span> <span class="k">for</span> <span class="n">appliance</span> <span class="ow">in</span> <span class="n">model</span><span class="p">]</span>
     <span class="n">list_A</span> <span class="o">=</span> <span class="p">[</span><span class="n">model</span><span class="p">[</span><span class="n">appliance</span><span class="p">]</span><span class="o">.</span><span class="n">transmat_</span> <span class="k">for</span> <span class="n">appliance</span> <span class="ow">in</span> <span class="n">model</span><span class="p">]</span>
     <span class="n">list_means</span> <span class="o">=</span> <span class="p">[</span><span class="n">model</span><span class="p">[</span><span class="n">appliance</span><span class="p">]</span><span class="o">.</span><span class="n">means_</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
@@ -266,9 +254,10 @@
     <span class="n">pi_combined</span> <span class="o">=</span> <span class="n">compute_pi_fhmm</span><span class="p">(</span><span class="n">list_pi</span><span class="p">)</span>
     <span class="n">A_combined</span> <span class="o">=</span> <span class="n">compute_A_fhmm</span><span class="p">(</span><span class="n">list_A</span><span class="p">)</span>
     <span class="p">[</span><span class="n">mean_combined</span><span class="p">,</span> <span class="n">cov_combined</span><span class="p">]</span> <span class="o">=</span> <span class="n">compute_means_fhmm</span><span class="p">(</span><span class="n">list_means</span><span class="p">)</span>
-    <span class="c">#model_fhmm=create_combined_hmm(len(pi_combined),pi_combined, A_combined, mean_combined, cov_combined)</span>
-    <span class="n">combined_model</span> <span class="o">=</span> <span class="n">hmm</span><span class="o">.</span><span class="n">GaussianHMM</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span>
-        <span class="n">pi_combined</span><span class="p">),</span> <span class="n">covariance_type</span><span class="o">=</span><span class="s">&#39;full&#39;</span><span class="p">,</span> <span class="n">startprob</span><span class="o">=</span><span class="n">pi_combined</span><span class="p">,</span> <span class="n">transmat</span><span class="o">=</span><span class="n">A_combined</span><span class="p">)</span>
+
+    <span class="n">combined_model</span> <span class="o">=</span> <span class="n">hmm</span><span class="o">.</span><span class="n">GaussianHMM</span><span class="p">(</span>
+        <span class="n">n_components</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">pi_combined</span><span class="p">),</span> <span class="n">covariance_type</span><span class="o">=</span><span class="s">&#39;full&#39;</span><span class="p">,</span>
+        <span class="n">startprob</span><span class="o">=</span><span class="n">pi_combined</span><span class="p">,</span> <span class="n">transmat</span><span class="o">=</span><span class="n">A_combined</span><span class="p">)</span>
     <span class="n">combined_model</span><span class="o">.</span><span class="n">covars_</span> <span class="o">=</span> <span class="n">cov_combined</span>
     <span class="n">combined_model</span><span class="o">.</span><span class="n">means_</span> <span class="o">=</span> <span class="n">mean_combined</span>
     <span class="k">return</span> <span class="n">combined_model</span>
@@ -276,12 +265,11 @@
 </div>
 <div class="viewcode-block" id="return_sorting_mapping"><a class="viewcode-back" href="../../../nilmtk.disaggregate.html#nilmtk.disaggregate.fhmm_exact.return_sorting_mapping">[docs]</a><span class="k">def</span> <span class="nf">return_sorting_mapping</span><span class="p">(</span><span class="n">means</span><span class="p">):</span>
     <span class="n">means_copy</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">means</span><span class="p">)</span>
-    <span class="c"># Sorting</span>
     <span class="n">means_copy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">means_copy</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
     <span class="c"># Finding mapping</span>
     <span class="n">mapping</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">means_copy</span><span class="p">):</span>
-        <span class="c">#assert val == means[np.where(val == means)[0]]</span>
         <span class="n">mapping</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">val</span> <span class="o">==</span> <span class="n">means</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">mapping</span>
 
@@ -290,7 +278,6 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Decodes the HMM state sequence</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">power_states_dict</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="n">hmm_states</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="n">hmm_power</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="n">total_num_combinations</span> <span class="o">=</span> <span class="mi">1</span>
@@ -321,7 +308,6 @@
 <div class="viewcode-block" id="FHMM"><a class="viewcode-back" href="../../../nilmtk.disaggregate.html#nilmtk.disaggregate.fhmm_exact.FHMM">[docs]</a><span class="k">class</span> <span class="nc">FHMM</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">predictions</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
 
@@ -329,7 +315,8 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Train using 1d FHMM. Places the learnt model in `model` attribute</span>
 <span class="sd">        The current version performs training ONLY on the first chunk.</span>
-<span class="sd">        Online HMMs are welcome is someone can contribute :)</span>
+<span class="sd">        Online HMMs are welcome if someone can contribute :)</span>
+<span class="sd">        Assumes all pre-processing has been done.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">learnt_model</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">meter</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">metergroup</span><span class="o">.</span><span class="n">submeters</span><span class="p">()</span><span class="o">.</span><span class="n">meters</span><span class="p">):</span>
@@ -339,23 +326,6 @@
             <span class="c"># Data to fit</span>
             <span class="n">X</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="n">meter_data</span> <span class="o">=</span> <span class="n">meter</span><span class="o">.</span><span class="n">power_series</span><span class="p">(</span><span class="o">**</span><span class="n">load_kwargs</span><span class="p">)</span><span class="o">.</span><span class="n">next</span><span class="p">()</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
-            <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            This was the behaviour in v0.1. Now assuming all</span>
-<span class="sd">            preprocessing has been done</span>
-
-<span class="sd">            # Breaking data into contiguous blocks</span>
-<span class="sd">            for start, end in contiguous_blocks(meter_data.index):</span>
-<span class="sd">                #print(start, end)</span>
-<span class="sd">                length = appliance_data[start:end].values.size</span>
-<span class="sd">                # print(length)</span>
-<span class="sd">                # Ignore small sequences</span>
-<span class="sd">                if length &gt; 50:</span>
-<span class="sd">                    temp = meter_data[</span>
-<span class="sd">                        start:end].values.reshape(length, 1)</span>
-<span class="sd">                    X.append(temp)</span>
-<span class="sd">            # print(X)</span>
-<span class="sd">            # Fit</span>
-<span class="sd">            &quot;&quot;&quot;</span>
             <span class="n">length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">meter_data</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
             <span class="n">X</span> <span class="o">=</span> <span class="n">meter_data</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">X</span>
@@ -366,7 +336,8 @@
         <span class="n">new_learnt_models</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">meter</span> <span class="ow">in</span> <span class="n">learnt_model</span><span class="p">:</span>
             <span class="n">startprob</span><span class="p">,</span> <span class="n">means</span><span class="p">,</span> <span class="n">covars</span><span class="p">,</span> <span class="n">transmat</span> <span class="o">=</span> <span class="n">sort_learnt_parameters</span><span class="p">(</span>
-                <span class="n">learnt_model</span><span class="p">[</span><span class="n">meter</span><span class="p">]</span><span class="o">.</span><span class="n">startprob_</span><span class="p">,</span> <span class="n">learnt_model</span><span class="p">[</span><span class="n">meter</span><span class="p">]</span><span class="o">.</span><span class="n">means_</span><span class="p">,</span> <span class="n">learnt_model</span><span class="p">[</span><span class="n">meter</span><span class="p">]</span><span class="o">.</span><span class="n">covars_</span><span class="p">,</span> <span class="n">learnt_model</span><span class="p">[</span><span class="n">meter</span><span class="p">]</span><span class="o">.</span><span class="n">transmat_</span><span class="p">)</span>
+                <span class="n">learnt_model</span><span class="p">[</span><span class="n">meter</span><span class="p">]</span><span class="o">.</span><span class="n">startprob_</span><span class="p">,</span> <span class="n">learnt_model</span><span class="p">[</span><span class="n">meter</span><span class="p">]</span><span class="o">.</span><span class="n">means_</span><span class="p">,</span>
+                <span class="n">learnt_model</span><span class="p">[</span><span class="n">meter</span><span class="p">]</span><span class="o">.</span><span class="n">covars_</span><span class="p">,</span> <span class="n">learnt_model</span><span class="p">[</span><span class="n">meter</span><span class="p">]</span><span class="o">.</span><span class="n">transmat_</span><span class="p">)</span>
             <span class="n">new_learnt_models</span><span class="p">[</span><span class="n">meter</span><span class="p">]</span> <span class="o">=</span> <span class="n">hmm</span><span class="o">.</span><span class="n">GaussianHMM</span><span class="p">(</span>
                 <span class="n">startprob</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="s">&quot;full&quot;</span><span class="p">,</span> <span class="n">startprob</span><span class="p">,</span> <span class="n">transmat</span><span class="p">)</span>
             <span class="n">new_learnt_models</span><span class="p">[</span><span class="n">meter</span><span class="p">]</span><span class="o">.</span><span class="n">means_</span> <span class="o">=</span> <span class="n">means</span>
@@ -377,79 +348,43 @@
         <span class="n">learnt_model_combined</span> <span class="o">=</span> <span class="n">create_combined_hmm</span><span class="p">(</span><span class="n">new_learnt_models</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">individual</span> <span class="o">=</span> <span class="n">new_learnt_models</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">learnt_model_combined</span>
-
 </div>
 <div class="viewcode-block" id="FHMM.disaggregate_chunk"><a class="viewcode-back" href="../../../nilmtk.disaggregate.html#nilmtk.disaggregate.fhmm_exact.FHMM.disaggregate_chunk">[docs]</a>    <span class="k">def</span> <span class="nf">disaggregate_chunk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_mains</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Disaggregate the test data according to the model learnt previously</span>
-<span class="sd">        Performs 1D FHMM disaggregation        </span>
+<span class="sd">        Performs 1D FHMM disaggregation.</span>
+
+<span class="sd">        For now assuming there is no missing data at this stage.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        
+        <span class="c"># See v0.1 code</span>
+        <span class="c"># for ideas of how to handle missing data in this code if needs be.</span>
+
         <span class="c"># Array of learnt states</span>
         <span class="n">learnt_states_array</span> <span class="o">=</span> <span class="p">[]</span>
-
-        <span class="sd">&quot;&quot;&quot;For now assuming there is no missing data at this stage</span>
-<span class="sd">        # Break down test_data into chunks and disaggregate separately on them</span>
-<span class="sd">        for start, end in contiguous_blocks(test_mains.index):</span>
-<span class="sd">            length = test_mains[start:end].values.size</span>
-<span class="sd">            temp = test_mains[start:end].values.reshape(length, 1)</span>
-<span class="sd">            learnt_states_array.append(self.model.predict(temp))</span>
-<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">test_mains</span> <span class="o">=</span> <span class="n">test_mains</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
         <span class="n">length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">test_mains</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
         <span class="n">temp</span> <span class="o">=</span> <span class="n">test_mains</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
         <span class="n">learnt_states_array</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">temp</span><span class="p">))</span>
 
-
         <span class="c"># Model</span>
         <span class="n">means</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
-        <span class="k">for</span> <span class="n">appliance</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">individual</span><span class="p">:</span>
-            <span class="n">means</span><span class="p">[</span><span class="n">appliance</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">individual</span><span class="p">[</span><span class="n">appliance</span><span class="p">]</span><span class="o">.</span><span class="n">means_</span>
-        <span class="n">means_copy</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">means</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">appliance</span> <span class="ow">in</span> <span class="n">means</span><span class="p">:</span>
-            <span class="n">means_copy</span><span class="p">[</span><span class="n">appliance</span><span class="p">]</span> <span class="o">=</span> <span class="n">means</span><span class="p">[</span>
-                <span class="n">appliance</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-            <span class="n">means_copy</span><span class="p">[</span><span class="n">appliance</span><span class="p">]</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">elec_meter</span><span class="p">,</span> <span class="n">model</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">individual</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+            <span class="n">means</span><span class="p">[</span><span class="n">elec_meter</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">model</span><span class="o">.</span><span class="n">means_</span><span class="o">.</span><span class="n">round</span><span class="p">()</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+            <span class="n">means</span><span class="p">[</span><span class="n">elec_meter</span><span class="p">]</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
 
         <span class="n">decoded_power_array</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">decoded_states_array</span> <span class="o">=</span> <span class="p">[]</span>
+
         <span class="k">for</span> <span class="n">learnt_states</span> <span class="ow">in</span> <span class="n">learnt_states_array</span><span class="p">:</span>
             <span class="p">[</span><span class="n">decoded_states</span><span class="p">,</span> <span class="n">decoded_power</span><span class="p">]</span> <span class="o">=</span> <span class="n">decode_hmm</span><span class="p">(</span>
-                <span class="nb">len</span><span class="p">(</span><span class="n">learnt_states</span><span class="p">),</span> <span class="n">means_copy</span><span class="p">,</span> <span class="n">means_copy</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="n">learnt_states</span><span class="p">)</span>
+                <span class="nb">len</span><span class="p">(</span><span class="n">learnt_states</span><span class="p">),</span> <span class="n">means</span><span class="p">,</span> <span class="n">means</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="n">learnt_states</span><span class="p">)</span>
             <span class="n">decoded_states_array</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">decoded_states</span><span class="p">)</span>
             <span class="n">decoded_power_array</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">decoded_power</span><span class="p">)</span>
 
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        The following code is different from its 0.1 version which is</span>
-<span class="sd">        mentioned below this</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">dfs_list</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="c">#cont_blocks = contiguous_blocks(test_mains.index)</span>
-        
-        <span class="n">prediction</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">decoded_power_array</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">index</span><span class="o">=</span><span class="n">test_mains</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
-        <span class="c">#prediction.index = test.index</span>
+        <span class="n">prediction</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">decoded_power_array</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                                  <span class="n">index</span><span class="o">=</span><span class="n">test_mains</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">prediction</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        The following code was used in v0.1</span>
-<span class="sd">        For now, I am assuming that we have no missing data by the time</span>
-<span class="sd">        we reach the disaggregate stage. This will greatly simplify our design</span>
-<span class="sd">        </span>
-
-<span class="sd">        # Combining to make a DataFrame with correct index, based on the start,</span>
-<span class="sd">        # end time and the frequency of the data</span>
-<span class="sd">        dfs_list = []</span>
-<span class="sd">        count = 0</span>
-<span class="sd">        cont_blocks = contiguous_blocks(test_mains.index)</span>
-<span class="sd">        for i, (start, end) in enumerate(contiguous_blocks(test_mains.index)):</span>
-<span class="sd">            index = pd.DatetimeIndex(start=start, end=end,</span>
-<span class="sd">                                     freq=self.freq)</span>
-
-<span class="sd">            df = pd.DataFrame(decoded_power_array[i], index=index)</span>
-<span class="sd">            dfs_list.append(df)</span>
-
-<span class="sd">        self.predictions = pd.concat(dfs_list).sort_index()</span>
-<span class="sd">        &quot;&quot;&quot;</span>
 </div>
 <div class="viewcode-block" id="FHMM.disaggregate"><a class="viewcode-back" href="../../../nilmtk.disaggregate.html#nilmtk.disaggregate.fhmm_exact.FHMM.disaggregate">[docs]</a>    <span class="k">def</span> <span class="nf">disaggregate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mains</span><span class="p">,</span> <span class="n">output_datastore</span><span class="p">,</span> <span class="o">**</span><span class="n">load_kwargs</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Disaggregate mains according to the model learnt previously.</span>
@@ -461,7 +396,7 @@
 <span class="sd">            For storing power predictions from disaggregation algorithm.</span>
 <span class="sd">        output_name : string, optional</span>
 <span class="sd">            The `name` to use in the metadata for the `output_datastore`.</span>
-<span class="sd">            e.g. some sort of name for this experiment.  Defaults to </span>
+<span class="sd">            e.g. some sort of name for this experiment.  Defaults to</span>
 <span class="sd">            &quot;NILMTK_FHMM_&lt;date&gt;&quot;</span>
 <span class="sd">        resample_seconds : number, optional</span>
 <span class="sd">            The desired sample period in seconds.</span>
@@ -470,22 +405,18 @@
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="kn">import</span> <span class="nn">warnings</span>
         <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">Warning</span><span class="p">)</span>
-        <span class="n">MIN_CHUNK_LENGTH</span> <span class="o">=</span><span class="mi">100</span>
+        <span class="n">MIN_CHUNK_LENGTH</span> <span class="o">=</span> <span class="mi">100</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s">&quot;The model needs to be instantiated before&quot;</span>
-                               <span class="s">&quot; calling `disaggregate`.  For example, the&quot;</span>
-                               <span class="s">&quot; model can be instantiated by running `train`.&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                <span class="s">&quot;The model needs to be instantiated before&quot;</span>
+                <span class="s">&quot; calling `disaggregate`.  For example, the&quot;</span>
+                <span class="s">&quot; model can be instantiated by running `train`.&quot;</span><span class="p">)</span>
 
-        
-        
         <span class="c"># Extract optional parameters from load_kwargs</span>
         <span class="n">date_now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">output_name</span> <span class="o">=</span> <span class="n">load_kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s">&#39;output_name&#39;</span><span class="p">,</span> <span class="s">&#39;NILMTK_FHMM_&#39;</span> <span class="o">+</span> <span class="n">date_now</span><span class="p">)</span>
         <span class="n">resample_seconds</span> <span class="o">=</span> <span class="n">load_kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s">&#39;resample_seconds&#39;</span><span class="p">,</span> <span class="mi">60</span><span class="p">)</span>
 
-        
-        <span class="n">sections</span> <span class="o">=</span> <span class="n">load_kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s">&#39;sections&#39;</span><span class="p">,</span>
-                                                  <span class="n">mains</span><span class="o">.</span><span class="n">good_sections</span><span class="p">())</span>
         <span class="n">resample_rule</span> <span class="o">=</span> <span class="s">&#39;{:d}S&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resample_seconds</span><span class="p">)</span>
         <span class="n">timeframes</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">building_path</span> <span class="o">=</span> <span class="s">&#39;/building{}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mains</span><span class="o">.</span><span class="n">building</span><span class="p">())</span>
@@ -493,7 +424,6 @@
         <span class="n">data_is_available</span> <span class="o">=</span> <span class="bp">False</span>
 
         <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">mains</span><span class="o">.</span><span class="n">power_series</span><span class="p">(</span><span class="o">**</span><span class="n">load_kwargs</span><span class="p">):</span>
-
             <span class="c"># Check that chunk is sensible size before resampling</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">MIN_CHUNK_LENGTH</span><span class="p">:</span>
                 <span class="k">continue</span>
@@ -509,6 +439,7 @@
 
             <span class="c"># Start disaggregation</span>
             <span class="n">predictions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">disaggregate_chunk</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
+
             <span class="k">for</span> <span class="n">meter</span> <span class="ow">in</span> <span class="n">predictions</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
                 <span class="n">data_is_available</span> <span class="o">=</span> <span class="bp">True</span>
                 <span class="n">meter_instance</span> <span class="o">=</span> <span class="n">meter</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span>
@@ -590,9 +521,8 @@
             <span class="n">meter_instance</span> <span class="o">=</span> <span class="n">meter</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span>
 
             <span class="k">for</span> <span class="n">app</span> <span class="ow">in</span> <span class="n">meter</span><span class="o">.</span><span class="n">appliances</span><span class="p">:</span>
-                <span class="n">meters</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s">&#39;meters&#39;</span><span class="p">]</span>
                 <span class="n">appliance</span> <span class="o">=</span> <span class="p">{</span>
-                    <span class="s">&#39;meters&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">meter_instance</span><span class="p">],</span> 
+                    <span class="s">&#39;meters&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">meter_instance</span><span class="p">],</span>
                     <span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="n">app</span><span class="o">.</span><span class="n">identifier</span><span class="o">.</span><span class="n">type</span><span class="p">,</span>
                     <span class="s">&#39;instance&#39;</span><span class="p">:</span> <span class="n">app</span><span class="o">.</span><span class="n">identifier</span><span class="o">.</span><span class="n">instance</span>
                     <span class="c"># TODO this `instance` will only be correct when the</span>
@@ -615,8 +545,7 @@
                 <span class="p">}</span>
             <span class="p">})</span>
 
-            
-           <span class="c">#Setting the name if it exists</span>
+            <span class="c"># Setting the name if it exists</span>
             <span class="k">if</span> <span class="n">meter</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
                 <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">meter</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
                     <span class="n">elec_meters</span><span class="p">[</span><span class="n">meter_instance</span><span class="p">][</span><span class="s">&#39;name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">meter</span><span class="o">.</span><span class="n">name</span>
@@ -626,8 +555,8 @@
             <span class="s">&#39;appliances&#39;</span><span class="p">:</span> <span class="n">appliances</span>
         <span class="p">}</span>
 
-        <span class="n">output_datastore</span><span class="o">.</span><span class="n">save_metadata</span><span class="p">(</span><span class="n">building_path</span><span class="p">,</span> <span class="n">building_metadata</span><span class="p">)</span></div></div>
-</pre></div>
+        <span class="n">output_datastore</span><span class="o">.</span><span class="n">save_metadata</span><span class="p">(</span><span class="n">building_path</span><span class="p">,</span> <span class="n">building_metadata</span><span class="p">)</span>
+</pre></div></div></div>
 
     </div>
       

@@ -377,7 +377,7 @@ Required to be overridden to provide out-of-core disaggregation.</p>
 <p><strong>output_name</strong> : string, optional</p>
 <blockquote>
 <div><p>The <cite>name</cite> to use in the metadata for the <cite>output_datastore</cite>.
-e.g. some sort of name for this experiment.  Defaults to 
+e.g. some sort of name for this experiment.  Defaults to
 &#8220;NILMTK_FHMM_&lt;date&gt;&#8221;</p>
 </div></blockquote>
 <p><strong>resample_seconds</strong> : number, optional</p>
@@ -398,7 +398,8 @@ e.g. some sort of name for this experiment.  Defaults to
 <dt id="nilmtk.disaggregate.fhmm_exact.FHMM.disaggregate_chunk">
 <tt class="descname">disaggregate_chunk</tt><big>(</big><em>test_mains</em><big>)</big><a class="reference internal" href="_modules/nilmtk/disaggregate/fhmm_exact.html#FHMM.disaggregate_chunk"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.disaggregate.fhmm_exact.FHMM.disaggregate_chunk" title="Permalink to this definition">¶</a></dt>
 <dd><p>Disaggregate the test data according to the model learnt previously
-Performs 1D FHMM disaggregation</p>
+Performs 1D FHMM disaggregation.</p>
+<p>For now assuming there is no missing data at this stage.</p>
 </dd></dl>
 
 <dl class="method">
@@ -406,7 +407,8 @@ Performs 1D FHMM disaggregation</p>
 <tt class="descname">train</tt><big>(</big><em>metergroup</em>, <em>**load_kwargs</em><big>)</big><a class="reference internal" href="_modules/nilmtk/disaggregate/fhmm_exact.html#FHMM.train"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.disaggregate.fhmm_exact.FHMM.train" title="Permalink to this definition">¶</a></dt>
 <dd><p>Train using 1d FHMM. Places the learnt model in <cite>model</cite> attribute
 The current version performs training ONLY on the first chunk.
-Online HMMs are welcome is someone can contribute :)</p>
+Online HMMs are welcome if someone can contribute :)
+Assumes all pre-processing has been done.</p>
 </dd></dl>
 
 </dd></dl>
@@ -489,7 +491,7 @@ Online HMMs are welcome is someone can contribute :)</p>
 <dl class="function">
 <dt id="nilmtk.disaggregate.fhmm_exact.sort_transition_matrix">
 <tt class="descclassname">nilmtk.disaggregate.fhmm_exact.</tt><tt class="descname">sort_transition_matrix</tt><big>(</big><em>mapping</em>, <em>A</em><big>)</big><a class="reference internal" href="_modules/nilmtk/disaggregate/fhmm_exact.html#sort_transition_matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.disaggregate.fhmm_exact.sort_transition_matrix" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sorts the transition matrix according to increasing order of 
+<dd><p>Sorts the transition matrix according to increasing order of
 power means; as returned by mapping</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />

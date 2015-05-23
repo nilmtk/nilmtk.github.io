@@ -70,6 +70,7 @@
   <ul class="dropdown-menu globaltoc"
       role="menu"
       aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installing nilmtk</a></li>
 <li class="toctree-l1"><a class="reference internal" href="intro_nilmtk_v0_2.html">Intro to NILMTK v0.2</a></li>
 </ul>
 <ul>
@@ -196,7 +197,7 @@
 </li>
 <li class="toctree-l4"><a class="reference internal" href="nilmtk.dataset_converters.combed.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="nilmtk.dataset_converters.combed.html#module-nilmtk.dataset_converters.combed.convert_combed">nilmtk.dataset_converters.combed.convert_combed module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="nilmtk.dataset_converters.combed.html#nilmtk-dataset-converters-combed-download-module">nilmtk.dataset_converters.combed.download module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="nilmtk.dataset_converters.combed.html#module-nilmtk.dataset_converters.combed.download">nilmtk.dataset_converters.combed.download module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="nilmtk.dataset_converters.combed.html#module-nilmtk.dataset_converters.combed">Module contents</a></li>
 </ul>
 </li>
@@ -1087,7 +1088,7 @@ by key</p>
 <p>Common implementations of methods shared by ElecMeter and MeterGroup.</p>
 <dl class="method">
 <dt id="nilmtk.electric.Electric.activation_series">
-<tt class="descname">activation_series</tt><big>(</big><em>min_off_duration=0</em>, <em>min_on_duration=0</em>, <em>border=1</em>, <em>on_power_threshold=None</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/nilmtk/electric.html#Electric.activation_series"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.electric.Electric.activation_series" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">activation_series</tt><big>(</big><em>min_off_duration=None</em>, <em>min_on_duration=None</em>, <em>border=1</em>, <em>on_power_threshold=None</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/nilmtk/electric.html#Electric.activation_series"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.electric.Electric.activation_series" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns runs of an appliance.</p>
 <p>Most appliances spend a lot of their time off.  This function finds
 periods when the appliance is on.</p>
@@ -1098,14 +1099,16 @@ periods when the appliance is on.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>min_off_duration</strong> : int</p>
 <blockquote>
 <div><p>If min_off_duration &gt; 0 then ignore &#8216;off&#8217; periods less than
-min_off_duration seconds of sub-threshold power consumption 
+min_off_duration seconds of sub-threshold power consumption
 (e.g. a washing machine might draw no power for a short
-period while the clothes soak.)  Defaults to 0.</p>
+period while the clothes soak.)  Defaults value from metadata or,
+if metadata absent, defaults to 0.</p>
 </div></blockquote>
 <p><strong>min_on_duration</strong> : int</p>
 <blockquote>
-<div><p>Any activation lasting less seconds than min_on_duration will be 
-ignored.  Defaults to 0.</p>
+<div><p>Any activation lasting less seconds than min_on_duration will be
+ignored.  Defaults value from metadata or, if metadata absent,
+defaults to 0.</p>
 </div></blockquote>
 <p><strong>border</strong> : int</p>
 <blockquote>
@@ -1279,6 +1282,16 @@ if x is a one-dimensional scalar and we have four samples</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="nilmtk.electric.Electric.min_off_duration">
+<tt class="descname">min_off_duration</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/electric.html#Electric.min_off_duration"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.electric.Electric.min_off_duration" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.electric.Electric.min_on_duration">
+<tt class="descname">min_on_duration</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/electric.html#Electric.min_on_duration"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.electric.Electric.min_on_duration" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
 <dt id="nilmtk.electric.Electric.mutual_information">
 <tt class="descname">mutual_information</tt><big>(</big><em>other</em>, <em>k=3</em>, <em>base=2</em><big>)</big><a class="reference internal" href="_modules/nilmtk/electric.html#Electric.mutual_information"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.electric.Electric.mutual_information" title="Permalink to this definition">¶</a></dt>
 <dd><p>Mutual information of two ElecMeters
@@ -1297,8 +1310,8 @@ if x is a one-dimensional scalar and we have four samples</p>
 <dl class="method">
 <dt id="nilmtk.electric.Electric.on_power_threshold">
 <tt class="descname">on_power_threshold</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nilmtk/electric.html#Electric.on_power_threshold"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.electric.Electric.on_power_threshold" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the minimum <cite>on_power_threshold</cite> across all appliances 
-immediately downstream of this meter.  If any appliance 
+<dd><p>Returns the minimum <cite>on_power_threshold</cite> across all appliances
+immediately downstream of this meter.  If any appliance
 does not have an <cite>on_power_threshold</cite> then default to 10 watts.</p>
 </dd></dl>
 
@@ -1524,6 +1537,46 @@ values are booleans</p>
 </table>
 </dd></dl>
 
+</dd></dl>
+
+<dl class="function">
+<dt id="nilmtk.electric.activation_series_for_chunk">
+<tt class="descclassname">nilmtk.electric.</tt><tt class="descname">activation_series_for_chunk</tt><big>(</big><em>chunk</em>, <em>min_off_duration=0</em>, <em>min_on_duration=0</em>, <em>border=1</em>, <em>on_power_threshold=5</em><big>)</big><a class="reference internal" href="_modules/nilmtk/electric.html#activation_series_for_chunk"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.electric.activation_series_for_chunk" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns runs of an appliance.</p>
+<p>Most appliances spend a lot of their time off.  This function finds
+periods when the appliance is on.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>chunk</strong> : pd.Series</p>
+<p><strong>min_off_duration</strong> : int</p>
+<blockquote>
+<div><p>If min_off_duration &gt; 0 then ignore &#8216;off&#8217; periods less than
+min_off_duration seconds of sub-threshold power consumption
+(e.g. a washing machine might draw no power for a short
+period while the clothes soak.)  Defaults to 0.</p>
+</div></blockquote>
+<p><strong>min_on_duration</strong> : int</p>
+<blockquote>
+<div><p>Any activation lasting less seconds than min_on_duration will be
+ignored.  Defaults to 0.</p>
+</div></blockquote>
+<p><strong>border</strong> : int</p>
+<blockquote>
+<div><p>Number of rows to include before and after the detected activation</p>
+</div></blockquote>
+<p><strong>on_power_threshold</strong> : int or float</p>
+<blockquote>
+<div><p>Defaults to self.on_power_threshold()</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">list of pd.Series.  Each series contains one activation.</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
@@ -2911,7 +2964,7 @@ Call this before plotting a figure.</p>
 
 <dl class="function">
 <dt id="nilmtk.plots.plot_pairwise_heatmap">
-<tt class="descclassname">nilmtk.plots.</tt><tt class="descname">plot_pairwise_heatmap</tt><big>(</big><em>df</em>, <em>labels</em>, <em>edgecolors='w'</em>, <em>cmap=&lt;matplotlib.colors.LinearSegmentedColormap object at 0x10650ab10&gt;</em>, <em>log=False</em><big>)</big><a class="reference internal" href="_modules/nilmtk/plots.html#plot_pairwise_heatmap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.plots.plot_pairwise_heatmap" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">nilmtk.plots.</tt><tt class="descname">plot_pairwise_heatmap</tt><big>(</big><em>df</em>, <em>labels</em>, <em>edgecolors='w'</em>, <em>cmap=&lt;matplotlib.colors.LinearSegmentedColormap object at 0x10683d250&gt;</em>, <em>log=False</em><big>)</big><a class="reference internal" href="_modules/nilmtk/plots.html#plot_pairwise_heatmap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.plots.plot_pairwise_heatmap" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plots a heatmap of a &#8216;square&#8217; df
 Rows and columns are same and the values in this dataframe
 correspond to the computation b/w row,column.
@@ -3346,6 +3399,12 @@ longer in duration than duration_threshold.</p>
 <dt id="nilmtk.timeframegroup.TimeFrameGroup.plot">
 <tt class="descname">plot</tt><big>(</big><em>ax=None</em>, <em>y=0</em>, <em>height=1</em>, <em>gap=0.05</em>, <em>color='b'</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/nilmtk/timeframegroup.html#TimeFrameGroup.plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.timeframegroup.TimeFrameGroup.plot" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="method">
+<dt id="nilmtk.timeframegroup.TimeFrameGroup.remove_shorter_than">
+<tt class="descname">remove_shorter_than</tt><big>(</big><em>threshold</em><big>)</big><a class="reference internal" href="_modules/nilmtk/timeframegroup.html#TimeFrameGroup.remove_shorter_than"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.timeframegroup.TimeFrameGroup.remove_shorter_than" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes TimeFrames shorter than <cite>threshold</cite> seconds.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="nilmtk.timeframegroup.TimeFrameGroup.uptime">

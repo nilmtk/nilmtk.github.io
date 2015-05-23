@@ -69,6 +69,7 @@
   <ul class="dropdown-menu globaltoc"
       role="menu"
       aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../install.html">Installing nilmtk</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../intro_nilmtk_v0_2.html">Intro to NILMTK v0.2</a></li>
 </ul>
 <ul>
@@ -140,16 +141,15 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">timedelta</span>
-<span class="kn">from</span> <span class="nn">..</span> <span class="kn">import</span> <span class="n">TotalEnergy</span><span class="p">,</span> <span class="n">GoodSections</span>
-<span class="kn">from</span> <span class="nn">..goodsectionsresults</span> <span class="kn">import</span> <span class="n">GoodSectionsResults</span>
-<span class="kn">from</span> <span class="nn">..totalenergy</span> <span class="kn">import</span> <span class="n">_energy_for_power_series</span>
-<span class="kn">from</span> <span class="nn">...</span> <span class="kn">import</span> <span class="n">TimeFrame</span><span class="p">,</span> <span class="n">ElecMeter</span><span class="p">,</span> <span class="n">DataSet</span>
-<span class="kn">from</span> <span class="nn">...datastore</span> <span class="kn">import</span> <span class="n">HDFDataStore</span>
-<span class="kn">from</span> <span class="nn">...elecmeter</span> <span class="kn">import</span> <span class="n">ElecMeterID</span>
-<span class="kn">from</span> <span class="nn">...consts</span> <span class="kn">import</span> <span class="n">JOULES_PER_KWH</span>
-<span class="kn">from</span> <span class="nn">...tests.testingtools</span> <span class="kn">import</span> <span class="n">data_dir</span>
+<span class="kn">from</span> <span class="nn">nilmtk.stats</span> <span class="kn">import</span> <span class="n">GoodSections</span>
+<span class="kn">from</span> <span class="nn">nilmtk.stats.goodsectionsresults</span> <span class="kn">import</span> <span class="n">GoodSectionsResults</span>
+<span class="kn">from</span> <span class="nn">nilmtk</span> <span class="kn">import</span> <span class="n">TimeFrame</span><span class="p">,</span> <span class="n">ElecMeter</span><span class="p">,</span> <span class="n">DataSet</span>
+<span class="kn">from</span> <span class="nn">nilmtk.datastore</span> <span class="kn">import</span> <span class="n">HDFDataStore</span>
+<span class="kn">from</span> <span class="nn">nilmtk.elecmeter</span> <span class="kn">import</span> <span class="n">ElecMeterID</span>
+<span class="kn">from</span> <span class="nn">nilmtk.tests.testingtools</span> <span class="kn">import</span> <span class="n">data_dir</span>
 
 <span class="n">METER_ID</span> <span class="o">=</span> <span class="n">ElecMeterID</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">building</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dataset</span><span class="o">=</span><span class="s">&#39;REDD&#39;</span><span class="p">)</span>
+
 
 <div class="viewcode-block" id="TestLocateGoodSections"><a class="viewcode-back" href="../../../../nilmtk.stats.tests.html#nilmtk.stats.tests.test_locategoodsections.TestLocateGoodSections">[docs]</a><span class="k">class</span> <span class="nc">TestLocateGoodSections</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
 
@@ -159,15 +159,15 @@
         <span class="n">cls</span><span class="o">.</span><span class="n">datastore</span> <span class="o">=</span> <span class="n">HDFDataStore</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
         <span class="n">ElecMeter</span><span class="o">.</span><span class="n">load_meter_devices</span><span class="p">(</span><span class="n">cls</span><span class="o">.</span><span class="n">datastore</span><span class="p">)</span>
         <span class="n">cls</span><span class="o">.</span><span class="n">meter_meta</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">datastore</span><span class="o">.</span><span class="n">load_metadata</span><span class="p">(</span><span class="s">&#39;building1&#39;</span><span class="p">)[</span><span class="s">&#39;elec_meters&#39;</span><span class="p">][</span><span class="n">METER_ID</span><span class="o">.</span><span class="n">instance</span><span class="p">]</span>
-        </div>
+</div>
     <span class="nd">@classmethod</span>
 <div class="viewcode-block" id="TestLocateGoodSections.tearDownClass"><a class="viewcode-back" href="../../../../nilmtk.stats.tests.html#nilmtk.stats.tests.test_locategoodsections.TestLocateGoodSections.tearDownClass">[docs]</a>    <span class="k">def</span> <span class="nf">tearDownClass</span><span class="p">(</span><span class="n">cls</span><span class="p">):</span>
         <span class="n">cls</span><span class="o">.</span><span class="n">datastore</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 </div>
 <div class="viewcode-block" id="TestLocateGoodSections.test_pipeline"><a class="viewcode-back" href="../../../../nilmtk.stats.tests.html#nilmtk.stats.tests.test_locategoodsections.TestLocateGoodSections.test_pipeline">[docs]</a>    <span class="k">def</span> <span class="nf">test_pipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">meter1</span> <span class="o">=</span> <span class="n">ElecMeter</span><span class="p">(</span><span class="n">store</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">datastore</span><span class="p">,</span> <span class="n">metadata</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">meter_meta</span><span class="p">,</span> 
+        <span class="n">meter1</span> <span class="o">=</span> <span class="n">ElecMeter</span><span class="p">(</span><span class="n">store</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">datastore</span><span class="p">,</span> <span class="n">metadata</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">meter_meta</span><span class="p">,</span>
                            <span class="n">meter_id</span><span class="o">=</span><span class="n">METER_ID</span><span class="p">)</span>
-        
+
         <span class="c"># load co_test.h5</span>
         <span class="n">dataset</span> <span class="o">=</span> <span class="n">DataSet</span><span class="p">(</span><span class="n">join</span><span class="p">(</span><span class="n">data_dir</span><span class="p">(),</span> <span class="s">&#39;co_test.h5&#39;</span><span class="p">))</span>
         <span class="n">meter2</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">buildings</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">elec</span><span class="o">.</span><span class="n">mains</span><span class="p">()</span>
@@ -178,7 +178,7 @@
                     <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{}</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;chunksize&#39;</span><span class="p">:</span> <span class="n">chunksize</span><span class="p">}</span>
-                              
+
                 <span class="n">source_node</span> <span class="o">=</span> <span class="n">meter</span><span class="o">.</span><span class="n">get_source_node</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
                 <span class="n">good_sections</span> <span class="o">=</span> <span class="n">GoodSections</span><span class="p">(</span><span class="n">source_node</span><span class="p">)</span>
                 <span class="n">good_sections</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
@@ -194,14 +194,14 @@
         <span class="n">MAX_SAMPLE_PERIOD</span> <span class="o">=</span> <span class="mi">10</span>
         <span class="n">metadata</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;device&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;max_sample_period&#39;</span><span class="p">:</span> <span class="n">MAX_SAMPLE_PERIOD</span><span class="p">}}</span>
         <span class="c">#       0  1  2  3    4  5     6     7</span>
-        <span class="n">secs</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">30</span><span class="p">,</span>  <span class="mi">50</span><span class="p">,</span><span class="mi">60</span><span class="p">,</span>  <span class="mi">100</span><span class="p">,</span>  <span class="mi">200</span><span class="p">,</span> 
+        <span class="n">secs</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">30</span><span class="p">,</span>  <span class="mi">50</span><span class="p">,</span><span class="mi">60</span><span class="p">,</span>  <span class="mi">100</span><span class="p">,</span>  <span class="mi">200</span><span class="p">,</span>
 
         <span class="c">#         8   9  10  11  12  13    14  15  16</span>
                 <span class="mi">250</span><span class="p">,</span><span class="mi">260</span><span class="p">,</span><span class="mi">270</span><span class="p">,</span><span class="mi">280</span><span class="p">,</span><span class="mi">290</span><span class="p">,</span><span class="mi">300</span><span class="p">,</span>  <span class="mi">350</span><span class="p">,</span><span class="mi">360</span><span class="p">,</span><span class="mi">370</span><span class="p">]</span>
-        <span class="n">index</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DatetimeIndex</span><span class="p">([</span><span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="p">(</span><span class="s">&#39;2011-01-01 00:00:00&#39;</span><span class="p">)</span> <span class="o">+</span> 
+        <span class="n">index</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DatetimeIndex</span><span class="p">([</span><span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="p">(</span><span class="s">&#39;2011-01-01 00:00:00&#39;</span><span class="p">)</span> <span class="o">+</span>
                                   <span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">sec</span><span class="p">)</span> <span class="k">for</span> <span class="n">sec</span> <span class="ow">in</span> <span class="n">secs</span><span class="p">])</span>
-        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">index</span><span class="p">),</span> <span class="mi">3</span><span class="p">),</span> <span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">,</span> 
-                          <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;a&#39;</span><span class="p">,</span><span class="s">&#39;b&#39;</span><span class="p">,</span><span class="s">&#39;c&#39;</span><span class="p">])</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">index</span><span class="p">),</span> <span class="mi">3</span><span class="p">),</span> <span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">,</span>
+                          <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">])</span>
         <span class="n">df</span><span class="o">.</span><span class="n">timeframe</span> <span class="o">=</span> <span class="n">TimeFrame</span><span class="p">(</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
         <span class="n">df</span><span class="o">.</span><span class="n">look_ahead</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
 
@@ -216,20 +216,22 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">timedelta</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">(),</span> <span class="mi">20</span><span class="p">)</span>
 
         <span class="c"># Now try splitting data into multiple chunks</span>
-        <span class="n">timestamps</span> <span class="o">=</span> <span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="p">(</span><span class="s">&quot;2011-01-01 00:00:00&quot;</span><span class="p">),</span>
-                      <span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="p">(</span><span class="s">&quot;2011-01-01 00:00:40&quot;</span><span class="p">),</span>
-                      <span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="p">(</span><span class="s">&quot;2011-01-01 00:01:20&quot;</span><span class="p">),</span>
-                      <span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="p">(</span><span class="s">&quot;2011-01-01 00:04:20&quot;</span><span class="p">),</span>
-                      <span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="p">(</span><span class="s">&quot;2011-01-01 00:06:20&quot;</span><span class="p">)</span>
+        <span class="n">timestamps</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="p">(</span><span class="s">&quot;2011-01-01 00:00:00&quot;</span><span class="p">),</span>
+            <span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="p">(</span><span class="s">&quot;2011-01-01 00:00:40&quot;</span><span class="p">),</span>
+            <span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="p">(</span><span class="s">&quot;2011-01-01 00:01:20&quot;</span><span class="p">),</span>
+            <span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="p">(</span><span class="s">&quot;2011-01-01 00:04:20&quot;</span><span class="p">),</span>
+            <span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="p">(</span><span class="s">&quot;2011-01-01 00:06:20&quot;</span><span class="p">)</span>
         <span class="p">]</span>
-        <span class="k">for</span> <span class="n">split_point</span> <span class="ow">in</span> <span class="p">[[</span><span class="mi">4</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">9</span><span class="p">,</span><span class="mi">17</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">12</span><span class="p">,</span><span class="mi">17</span><span class="p">]]:</span>
+        <span class="k">for</span> <span class="n">split_point</span> <span class="ow">in</span> <span class="p">[[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">17</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">17</span><span class="p">]]:</span>
             <span class="n">locate</span> <span class="o">=</span> <span class="n">GoodSections</span><span class="p">()</span>
             <span class="n">locate</span><span class="o">.</span><span class="n">results</span> <span class="o">=</span> <span class="n">GoodSectionsResults</span><span class="p">(</span><span class="n">MAX_SAMPLE_PERIOD</span><span class="p">)</span>
             <span class="n">df</span><span class="o">.</span><span class="n">results</span> <span class="o">=</span> <span class="p">{}</span>
             <span class="n">prev_i</span> <span class="o">=</span> <span class="mi">0</span>
-            <span class="k">for</span> <span class="n">j</span><span class="p">,</span><span class="n">i</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">split_point</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">split_point</span><span class="p">):</span>
                 <span class="n">cropped_df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">prev_i</span><span class="p">:</span><span class="n">i</span><span class="p">]</span>
-                <span class="n">cropped_df</span><span class="o">.</span><span class="n">timeframe</span> <span class="o">=</span> <span class="n">TimeFrame</span><span class="p">(</span><span class="n">timestamps</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">timestamps</span><span class="p">[</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span>
+                <span class="n">cropped_df</span><span class="o">.</span><span class="n">timeframe</span> <span class="o">=</span> <span class="n">TimeFrame</span><span class="p">(</span><span class="n">timestamps</span><span class="p">[</span><span class="n">j</span><span class="p">],</span>
+                                                 <span class="n">timestamps</span><span class="p">[</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span>
                 <span class="k">try</span><span class="p">:</span>
                     <span class="n">cropped_df</span><span class="o">.</span><span class="n">look_ahead</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">:]</span>
                 <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
@@ -243,7 +245,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">timedelta</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">(),</span> <span class="mi">10</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">timedelta</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">(),</span> <span class="mi">50</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">timedelta</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">(),</span> <span class="mi">20</span><span class="p">)</span>
-        
+
 </div></div>
 <span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
     <span class="n">unittest</span><span class="o">.</span><span class="n">main</span><span class="p">()</span>

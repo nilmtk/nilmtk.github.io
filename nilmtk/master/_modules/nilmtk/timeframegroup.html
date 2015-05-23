@@ -69,6 +69,7 @@
   <ul class="dropdown-menu globaltoc"
       role="menu"
       aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">Installing nilmtk</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../intro_nilmtk_v0_2.html">Intro to NILMTK v0.2</a></li>
 </ul>
 <ul>
@@ -148,7 +149,7 @@
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeframes</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">timeframes</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">tseries</span><span class="o">.</span><span class="n">period</span><span class="o">.</span><span class="n">PeriodIndex</span><span class="p">):</span>
             <span class="n">periods</span> <span class="o">=</span> <span class="n">timeframes</span>
-            <span class="n">timeframes</span> <span class="o">=</span> <span class="p">[</span><span class="n">TimeFrame</span><span class="p">(</span><span class="n">period</span><span class="o">.</span><span class="n">start_time</span><span class="p">,</span> <span class="n">period</span><span class="o">.</span><span class="n">end_time</span><span class="p">)</span> 
+            <span class="n">timeframes</span> <span class="o">=</span> <span class="p">[</span><span class="n">TimeFrame</span><span class="p">(</span><span class="n">period</span><span class="o">.</span><span class="n">start_time</span><span class="p">,</span> <span class="n">period</span><span class="o">.</span><span class="n">end_time</span><span class="p">)</span>
                           <span class="k">for</span> <span class="n">period</span> <span class="ow">in</span> <span class="n">periods</span><span class="p">]</span>
         <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="n">timeframes</span><span class="p">]</span> <span class="k">if</span> <span class="n">timeframes</span> <span class="k">else</span> <span class="p">[]</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">TimeFrameGroup</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
@@ -161,7 +162,7 @@
         <span class="k">for</span> <span class="n">timeframe</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
             <span class="n">length</span> <span class="o">=</span> <span class="n">timeframe</span><span class="o">.</span><span class="n">timedelta</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span> <span class="o">/</span> <span class="n">SECS_PER_DAY</span>
             <span class="n">bottom_left_corner</span> <span class="o">=</span> <span class="p">(</span><span class="n">timeframe</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="n">gap</span><span class="p">)</span>
-            <span class="n">rect</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">Rectangle</span><span class="p">(</span><span class="n">bottom_left_corner</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> 
+            <span class="n">rect</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">Rectangle</span><span class="p">(</span><span class="n">bottom_left_corner</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span>
                                  <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
             <span class="n">ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">rect</span><span class="p">)</span>
 
@@ -192,7 +193,15 @@
         <span class="k">for</span> <span class="n">timeframe</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
             <span class="n">uptime</span> <span class="o">+=</span> <span class="n">timeframe</span><span class="o">.</span><span class="n">timedelta</span>
         <span class="k">return</span> <span class="n">uptime</span>
-    </div></div>
+</div>
+<div class="viewcode-block" id="TimeFrameGroup.remove_shorter_than"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.timeframegroup.TimeFrameGroup.remove_shorter_than">[docs]</a>    <span class="k">def</span> <span class="nf">remove_shorter_than</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">threshold</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Removes TimeFrames shorter than `threshold` seconds.&quot;&quot;&quot;</span>
+        <span class="n">new_tfg</span> <span class="o">=</span> <span class="n">TimeFrameGroup</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">timeframe</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">timeframe</span><span class="o">.</span><span class="n">timedelta</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="n">threshold</span><span class="p">:</span>
+                <span class="n">new_tfg</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">timeframe</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">new_tfg</span></div></div>
 </pre></div>
 
     </div>

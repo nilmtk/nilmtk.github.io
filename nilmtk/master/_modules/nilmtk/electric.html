@@ -69,6 +69,7 @@
   <ul class="dropdown-menu globaltoc"
       role="menu"
       aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">Installing nilmtk</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../intro_nilmtk_v0_2.html">Intro to NILMTK v0.2</a></li>
 </ul>
 <ul>
@@ -149,6 +150,7 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">timedelta</span>
 <span class="kn">import</span> <span class="nn">gc</span>
+<span class="kn">import</span> <span class="nn">pytz</span>
 
 <span class="kn">from</span> <span class="nn">.timeframe</span> <span class="kn">import</span> <span class="n">TimeFrame</span>
 <span class="kn">from</span> <span class="nn">.measurement</span> <span class="kn">import</span> <span class="n">select_best_ac_type</span>
@@ -164,7 +166,7 @@
 
 <div class="viewcode-block" id="Electric"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.electric.Electric">[docs]</a><span class="k">class</span> <span class="nc">Electric</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Common implementations of methods shared by ElecMeter and MeterGroup.</span>
-<span class="sd">    &quot;&quot;&quot;</span>   
+<span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="Electric.when_on"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.electric.Electric.when_on">[docs]</a>    <span class="k">def</span> <span class="nf">when_on</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">on_power_threshold</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">load_kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Are the connected appliances appliance is on (True) or off (False)?</span>
 
@@ -187,16 +189,39 @@
             <span class="n">on_power_threshold</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">on_power_threshold</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">power_series</span><span class="p">(</span><span class="o">**</span><span class="n">load_kwargs</span><span class="p">):</span>
             <span class="k">yield</span> <span class="n">chunk</span> <span class="o">&gt;=</span> <span class="n">on_power_threshold</span>
-            </div>
+</div>
 <div class="viewcode-block" id="Electric.on_power_threshold"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.electric.Electric.on_power_threshold">[docs]</a>    <span class="k">def</span> <span class="nf">on_power_threshold</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns the minimum `on_power_threshold` across all appliances </span>
-<span class="sd">        immediately downstream of this meter.  If any appliance </span>
+        <span class="sd">&quot;&quot;&quot;Returns the minimum `on_power_threshold` across all appliances</span>
+<span class="sd">        immediately downstream of this meter.  If any appliance</span>
 <span class="sd">        does not have an `on_power_threshold` then default to 10 watts.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">appliances</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">DEFAULT_ON_POWER_THRESHOLD</span>
         <span class="n">on_power_thresholds</span> <span class="o">=</span> <span class="p">[</span><span class="n">a</span><span class="o">.</span><span class="n">on_power_threshold</span><span class="p">()</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">appliances</span><span class="p">]</span>
         <span class="k">return</span> <span class="nb">min</span><span class="p">(</span><span class="n">on_power_thresholds</span><span class="p">)</span>
 </div>
+<div class="viewcode-block" id="Electric.min_on_duration"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.electric.Electric.min_on_duration">[docs]</a>    <span class="k">def</span> <span class="nf">min_on_duration</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_aggregate_metadata_attribute</span><span class="p">(</span><span class="s">&#39;min_on_duration&#39;</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Electric.min_off_duration"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.electric.Electric.min_off_duration">[docs]</a>    <span class="k">def</span> <span class="nf">min_off_duration</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_aggregate_metadata_attribute</span><span class="p">(</span><span class="s">&#39;min_off_duration&#39;</span><span class="p">)</span>
+</div>
+    <span class="k">def</span> <span class="nf">_aggregate_metadata_attribute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="n">agg_func</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">,</span>
+                                      <span class="n">default_value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                                      <span class="n">from_type_metadata</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+        <span class="n">attr_values</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">appliances</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">from_type_metadata</span><span class="p">:</span>
+                <span class="n">attr_value</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">attr</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">attr_value</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">attr</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">attr_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="n">attr_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">attr_value</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">attr_values</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">default_value</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">agg_func</span><span class="p">(</span><span class="n">attr_values</span><span class="p">)</span>
+
 <div class="viewcode-block" id="Electric.matches_appliances"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.electric.Electric.matches_appliances">[docs]</a>    <span class="k">def</span> <span class="nf">matches_appliances</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Parameters</span>
@@ -224,7 +249,7 @@
             <span class="n">all_data</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="k">return</span> <span class="n">all_data</span>
 </div>
-    <span class="k">def</span> <span class="nf">_prep_kwargs_for_sample_period_and_resample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sample_period</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> 
+    <span class="k">def</span> <span class="nf">_prep_kwargs_for_sample_period_and_resample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sample_period</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
                                                     <span class="n">resample</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
                                                     <span class="n">resample_kwargs</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
                                                     <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -242,9 +267,22 @@
         <span class="k">if</span> <span class="n">resample</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">resample_kwargs</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
                 <span class="n">resample_kwargs</span> <span class="o">=</span> <span class="p">{}</span>
-            <span class="n">resample_func</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">df</span><span class="p">:</span> <span class="n">df</span><span class="o">.</span><span class="n">resample</span><span class="p">(</span><span class="n">rule</span><span class="o">=</span><span class="s">&#39;{:d}S&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sample_period</span><span class="p">),</span>
-                                                   <span class="o">**</span><span class="n">resample_kwargs</span><span class="p">)</span>
-            <span class="n">kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s">&#39;preprocessing&#39;</span><span class="p">,</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Apply</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">resample_func</span><span class="p">))</span>
+
+            <span class="k">def</span> <span class="nf">resample_func</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+                <span class="n">resample_kwargs</span><span class="p">[</span><span class="s">&#39;rule&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;{:d}S&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sample_period</span><span class="p">)</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">resample</span><span class="p">(</span><span class="o">**</span><span class="n">resample_kwargs</span><span class="p">)</span>
+                <span class="k">except</span> <span class="n">pytz</span><span class="o">.</span><span class="n">AmbiguousTimeError</span><span class="p">:</span>
+                    <span class="c"># Work-around for</span>
+                    <span class="c"># https://github.com/pydata/pandas/issues/10117</span>
+                    <span class="n">tz</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tz</span><span class="o">.</span><span class="n">zone</span>
+                    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">tz_convert</span><span class="p">(</span><span class="s">&#39;UTC&#39;</span><span class="p">)</span>
+                    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">resample</span><span class="p">(</span><span class="o">**</span><span class="n">resample_kwargs</span><span class="p">)</span>
+                    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">tz_convert</span><span class="p">(</span><span class="n">tz</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">df</span>
+
+            <span class="n">kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s">&#39;preprocessing&#39;</span><span class="p">,</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">Apply</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">resample_func</span><span class="p">))</span>
 
         <span class="k">return</span> <span class="n">kwargs</span>
 
@@ -257,7 +295,7 @@
                 <span class="n">end</span> <span class="o">=</span> <span class="n">timeframe_for_meter</span><span class="o">.</span><span class="n">end</span>
         <span class="k">return</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span>
 
-<div class="viewcode-block" id="Electric.plot"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.electric.Electric.plot">[docs]</a>    <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">timeframe</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">plot_legend</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s">&#39;W&#39;</span><span class="p">,</span> 
+<div class="viewcode-block" id="Electric.plot"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.electric.Electric.plot">[docs]</a>    <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">timeframe</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">plot_legend</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s">&#39;W&#39;</span><span class="p">,</span>
              <span class="n">plot_kwargs</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Parameters</span>
@@ -712,7 +750,7 @@
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        generator of pd.Series.  If a single ac_type is found for the </span>
+<span class="sd">        generator of pd.Series.  If a single ac_type is found for the</span>
 <span class="sd">        physical_quantity then the series.name will be a normal tuple.</span>
 <span class="sd">        If more than 1 ac_type is found then the ac_type will be a string</span>
 <span class="sd">        of the ac_types with &#39;+&#39; in between.  e.g. &#39;active+apparent&#39;.</span>
@@ -822,8 +860,8 @@
         <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s">&#39;Count&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">ax</span>
 </div>
-<div class="viewcode-block" id="Electric.activation_series"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.electric.Electric.activation_series">[docs]</a>    <span class="k">def</span> <span class="nf">activation_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">min_off_duration</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">min_on_duration</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">border</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-                          <span class="n">on_power_threshold</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Electric.activation_series"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.electric.Electric.activation_series">[docs]</a>    <span class="k">def</span> <span class="nf">activation_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">min_off_duration</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">min_on_duration</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                          <span class="n">border</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">on_power_threshold</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Returns runs of an appliance.</span>
 
 <span class="sd">        Most appliances spend a lot of their time off.  This function finds</span>
@@ -833,12 +871,14 @@
 <span class="sd">        ----------</span>
 <span class="sd">        min_off_duration : int</span>
 <span class="sd">            If min_off_duration &gt; 0 then ignore &#39;off&#39; periods less than</span>
-<span class="sd">            min_off_duration seconds of sub-threshold power consumption </span>
+<span class="sd">            min_off_duration seconds of sub-threshold power consumption</span>
 <span class="sd">            (e.g. a washing machine might draw no power for a short</span>
-<span class="sd">            period while the clothes soak.)  Defaults to 0.</span>
+<span class="sd">            period while the clothes soak.)  Defaults value from metadata or,</span>
+<span class="sd">            if metadata absent, defaults to 0.</span>
 <span class="sd">        min_on_duration : int</span>
-<span class="sd">            Any activation lasting less seconds than min_on_duration will be </span>
-<span class="sd">            ignored.  Defaults to 0.</span>
+<span class="sd">            Any activation lasting less seconds than min_on_duration will be</span>
+<span class="sd">            ignored.  Defaults value from metadata or, if metadata absent,</span>
+<span class="sd">            defaults to 0.</span>
 <span class="sd">        border : int</span>
 <span class="sd">            Number of rows to include before and after the detected activation</span>
 <span class="sd">        on_power_threshold : int or float</span>
@@ -853,54 +893,18 @@
         <span class="k">if</span> <span class="n">on_power_threshold</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="n">on_power_threshold</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">on_power_threshold</span><span class="p">()</span>
 
+        <span class="k">if</span> <span class="n">min_off_duration</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">min_off_duration</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_off_duration</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">min_on_duration</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">min_on_duration</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_on_duration</span><span class="p">()</span>
+
         <span class="n">activations</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">power_series</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-            <span class="n">when_on</span> <span class="o">=</span> <span class="n">chunk</span> <span class="o">&gt;=</span> <span class="n">on_power_threshold</span>
-
-            <span class="c"># Find state changes</span>
-            <span class="n">state_changes</span> <span class="o">=</span> <span class="n">when_on</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int8</span><span class="p">)</span><span class="o">.</span><span class="n">diff</span><span class="p">()</span>
-            <span class="k">del</span> <span class="n">when_on</span>
-            <span class="n">switch_on_events</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">state_changes</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="n">switch_off_events</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">state_changes</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="k">del</span> <span class="n">state_changes</span>
-
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">switch_on_events</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">switch_off_events</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="k">continue</span>
-            
-            <span class="c"># Make sure events align</span>
-            <span class="k">if</span> <span class="n">switch_off_events</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">switch_on_events</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
-                <span class="n">switch_off_events</span> <span class="o">=</span> <span class="n">switch_off_events</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
-            <span class="k">if</span> <span class="n">switch_on_events</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">switch_off_events</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
-                <span class="n">switch_on_events</span> <span class="o">=</span> <span class="n">switch_on_events</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-            <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">switch_on_events</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">switch_off_events</span><span class="p">)</span>
-                
-            <span class="c"># Smooth over off-durations less than min_off_duration</span>
-            <span class="k">if</span> <span class="n">min_off_duration</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="n">off_durations</span> <span class="o">=</span> <span class="p">(</span><span class="n">chunk</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">switch_on_events</span><span class="p">[</span><span class="mi">1</span><span class="p">:]]</span><span class="o">.</span><span class="n">values</span> <span class="o">-</span> 
-                                 <span class="n">chunk</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">switch_off_events</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
-
-                <span class="n">off_durations</span> <span class="o">=</span> <span class="n">timedelta64_to_secs</span><span class="p">(</span><span class="n">off_durations</span><span class="p">)</span>
-
-                <span class="n">above_threshold_off_durations</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
-                    <span class="n">off_durations</span> <span class="o">&gt;=</span> <span class="n">min_off_duration</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-
-                <span class="c"># Now remove off_events and on_events</span>
-                <span class="n">switch_off_events</span> <span class="o">=</span> <span class="n">switch_off_events</span><span class="p">[</span>
-                    <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">above_threshold_off_durations</span><span class="p">,</span> 
-                                    <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">switch_off_events</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">]])]</span>
-                <span class="n">switch_on_events</span> <span class="o">=</span> <span class="n">switch_on_events</span><span class="p">[</span>
-                    <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([[</span><span class="mi">0</span><span class="p">],</span> <span class="n">above_threshold_off_durations</span><span class="o">+</span><span class="mi">1</span><span class="p">])]</span>
-            <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">switch_on_events</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">switch_off_events</span><span class="p">)</span>
-
-            <span class="k">for</span> <span class="n">on</span><span class="p">,</span> <span class="n">off</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">switch_on_events</span><span class="p">,</span> <span class="n">switch_off_events</span><span class="p">):</span>
-                <span class="n">duration</span> <span class="o">=</span> <span class="p">(</span><span class="n">chunk</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">off</span><span class="p">]</span> <span class="o">-</span> <span class="n">chunk</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">on</span><span class="p">])</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span>
-                <span class="k">if</span> <span class="n">duration</span> <span class="o">&lt;</span> <span class="n">min_on_duration</span><span class="p">:</span>
-                    <span class="k">continue</span>
-                <span class="n">on</span> <span class="o">-=</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">border</span>
-                <span class="k">if</span> <span class="n">on</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-                    <span class="n">on</span> <span class="o">=</span> <span class="mi">0</span>
-                <span class="n">off</span> <span class="o">+=</span> <span class="n">border</span>
-                <span class="n">activations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">chunk</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">on</span><span class="p">:</span><span class="n">off</span><span class="p">])</span>
+            <span class="n">activations_for_chunk</span> <span class="o">=</span> <span class="n">activation_series_for_chunk</span><span class="p">(</span>
+                <span class="n">chunk</span><span class="p">,</span> <span class="n">min_off_duration</span><span class="p">,</span> <span class="n">min_on_duration</span><span class="p">,</span>
+                <span class="n">border</span><span class="p">,</span> <span class="n">on_power_threshold</span><span class="p">)</span>
+            <span class="n">activations</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">activations_for_chunk</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">activations</span>
 
@@ -934,7 +938,89 @@
         <span class="n">master_chunk</span> <span class="o">=</span> <span class="n">master_chunk</span><span class="o">.</span><span class="n">resample</span><span class="p">(</span><span class="n">period_alias</span><span class="p">)</span>
 
         <span class="k">yield</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s">&#39;master&#39;</span><span class="p">:</span> <span class="n">master_chunk</span><span class="p">,</span> <span class="s">&#39;slave&#39;</span><span class="p">:</span> <span class="n">slave_chunk</span><span class="p">})</span>
-</pre></div></div>
+
+</div>
+<div class="viewcode-block" id="activation_series_for_chunk"><a class="viewcode-back" href="../../nilmtk.html#nilmtk.electric.activation_series_for_chunk">[docs]</a><span class="k">def</span> <span class="nf">activation_series_for_chunk</span><span class="p">(</span><span class="n">chunk</span><span class="p">,</span> <span class="n">min_off_duration</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">min_on_duration</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                                <span class="n">border</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">on_power_threshold</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns runs of an appliance.</span>
+
+<span class="sd">    Most appliances spend a lot of their time off.  This function finds</span>
+<span class="sd">    periods when the appliance is on.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    chunk : pd.Series</span>
+<span class="sd">    min_off_duration : int</span>
+<span class="sd">        If min_off_duration &gt; 0 then ignore &#39;off&#39; periods less than</span>
+<span class="sd">        min_off_duration seconds of sub-threshold power consumption</span>
+<span class="sd">        (e.g. a washing machine might draw no power for a short</span>
+<span class="sd">        period while the clothes soak.)  Defaults to 0.</span>
+<span class="sd">    min_on_duration : int</span>
+<span class="sd">        Any activation lasting less seconds than min_on_duration will be</span>
+<span class="sd">        ignored.  Defaults to 0.</span>
+<span class="sd">    border : int</span>
+<span class="sd">        Number of rows to include before and after the detected activation</span>
+<span class="sd">    on_power_threshold : int or float</span>
+<span class="sd">        Defaults to self.on_power_threshold()</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    list of pd.Series.  Each series contains one activation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">when_on</span> <span class="o">=</span> <span class="n">chunk</span> <span class="o">&gt;=</span> <span class="n">on_power_threshold</span>
+
+    <span class="c"># Find state changes</span>
+    <span class="n">state_changes</span> <span class="o">=</span> <span class="n">when_on</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int8</span><span class="p">)</span><span class="o">.</span><span class="n">diff</span><span class="p">()</span>
+    <span class="k">del</span> <span class="n">when_on</span>
+    <span class="n">switch_on_events</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">state_changes</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">switch_off_events</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">state_changes</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">del</span> <span class="n">state_changes</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">switch_on_events</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">switch_off_events</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[]</span>
+
+    <span class="c"># Make sure events align</span>
+    <span class="k">if</span> <span class="n">switch_off_events</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">switch_on_events</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+        <span class="n">switch_off_events</span> <span class="o">=</span> <span class="n">switch_off_events</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">switch_off_events</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="n">switch_on_events</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">switch_off_events</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+        <span class="n">switch_on_events</span> <span class="o">=</span> <span class="n">switch_on_events</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">switch_on_events</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[]</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">switch_on_events</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">switch_off_events</span><span class="p">)</span>
+
+    <span class="c"># Smooth over off-durations less than min_off_duration</span>
+    <span class="k">if</span> <span class="n">min_off_duration</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">off_durations</span> <span class="o">=</span> <span class="p">(</span><span class="n">chunk</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">switch_on_events</span><span class="p">[</span><span class="mi">1</span><span class="p">:]]</span><span class="o">.</span><span class="n">values</span> <span class="o">-</span>
+                         <span class="n">chunk</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">switch_off_events</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+
+        <span class="n">off_durations</span> <span class="o">=</span> <span class="n">timedelta64_to_secs</span><span class="p">(</span><span class="n">off_durations</span><span class="p">)</span>
+
+        <span class="n">above_threshold_off_durations</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
+            <span class="n">off_durations</span> <span class="o">&gt;=</span> <span class="n">min_off_duration</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="c"># Now remove off_events and on_events</span>
+        <span class="n">switch_off_events</span> <span class="o">=</span> <span class="n">switch_off_events</span><span class="p">[</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">above_threshold_off_durations</span><span class="p">,</span>
+                            <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">switch_off_events</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">]])]</span>
+        <span class="n">switch_on_events</span> <span class="o">=</span> <span class="n">switch_on_events</span><span class="p">[</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([[</span><span class="mi">0</span><span class="p">],</span> <span class="n">above_threshold_off_durations</span><span class="o">+</span><span class="mi">1</span><span class="p">])]</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">switch_on_events</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">switch_off_events</span><span class="p">)</span>
+
+    <span class="n">activations</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">on</span><span class="p">,</span> <span class="n">off</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">switch_on_events</span><span class="p">,</span> <span class="n">switch_off_events</span><span class="p">):</span>
+        <span class="n">duration</span> <span class="o">=</span> <span class="p">(</span><span class="n">chunk</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">off</span><span class="p">]</span> <span class="o">-</span> <span class="n">chunk</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">on</span><span class="p">])</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">duration</span> <span class="o">&lt;</span> <span class="n">min_on_duration</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">on</span> <span class="o">-=</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">border</span>
+        <span class="k">if</span> <span class="n">on</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">on</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">off</span> <span class="o">+=</span> <span class="n">border</span>
+        <span class="n">activations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">chunk</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">on</span><span class="p">:</span><span class="n">off</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">activations</span></div>
+</pre></div>
 
     </div>
       

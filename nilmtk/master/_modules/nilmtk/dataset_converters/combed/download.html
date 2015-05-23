@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>nilmtk.dataset_converters.combed.download &mdash; NILMTK 0.2 documentation</title>
+    
+    <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/bootstrap-3.2.0/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/bootstrap-3.2.0/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '0.2',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../../../../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../../../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../../../_static/bootstrap-3.2.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="NILMTK 0.2 documentation" href="../../../../index.html" />
+    <link rel="up" title="nilmtk" href="../../../nilmtk.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../../index.html">
+          NILMTK</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.2</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="https://github.com/nilmtk/nilmtk">github</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../install.html">Installing nilmtk</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../intro_nilmtk_v0_2.html">Intro to NILMTK v0.2</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../convert_data_to_NILMTK_format.html">Convert data to NILMTK format and load into NILMTK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../elecmeter_and_metergroup.html">MeterGroup, ElecMeter, selection and basic statistics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../pipeline_preprocessing_more_stats.html">Processing pipeline, preprocessing and more stats</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../disaggregation_and_metrics.html">Disaggregation and Metrics</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../contribute.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../writing_a_dataset_converter.html">Writing a dataset converter</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../changelog.html">Change log</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../nilmtk.html">nilmtk package</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      
+  <h1>Source code for nilmtk.dataset_converters.combed.download</h1><div class="highlight"><pre>
+<span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">join</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+
+<div class="viewcode-block" id="download"><a class="viewcode-back" href="../../../../nilmtk.dataset_converters.combed.html#nilmtk.dataset_converters.combed.download.download">[docs]</a><span class="k">def</span> <span class="nf">download</span><span class="p">():</span>
+    <span class="n">START_TIME_STR</span> <span class="o">=</span> <span class="s">&quot;01-06-2014 0:0:0&quot;</span>
+    <span class="n">END_TIME_STR</span> <span class="o">=</span> <span class="s">&quot;01-07-2014 0:0:0&quot;</span>
+
+
+    <span class="n">pattern</span> <span class="o">=</span> <span class="s">&#39;</span><span class="si">%d</span><span class="s">-%m-%Y %H:%M:%S&#39;</span>
+    <span class="n">START_TIME</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">mktime</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">START_TIME_STR</span><span class="p">,</span> <span class="n">pattern</span><span class="p">)))</span><span class="o">*</span><span class="mi">1000</span>
+    <span class="n">END_TIME</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">mktime</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">END_TIME_STR</span><span class="p">,</span> <span class="n">pattern</span><span class="p">)))</span><span class="o">*</span><span class="mi">1000</span>
+
+    <span class="n">SMAP_URL</span> <span class="o">=</span> <span class="nb">raw_input</span><span class="p">(</span><span class="s">&quot;Enter SMAP URL&quot;</span><span class="p">)</span>
+    <span class="n">UUID_URL</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="n">SMAP_URL</span><span class="p">,</span> <span class="s">&quot;backend/api/query&quot;</span><span class="p">)</span>
+
+    <span class="n">MEASUREMENTS</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;Power&quot;</span><span class="p">,</span> <span class="s">&quot;Energy&quot;</span><span class="p">,</span> <span class="s">&quot;Current&quot;</span><span class="p">]</span>
+    <span class="n">BASE_PATH</span> <span class="o">=</span> <span class="s">&quot;/Users/nipunbatra/Desktop/iiitd/&quot;</span>
+
+    <span class="n">academic_block</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;AHU&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span>
+                      <span class="s">&#39;Building Total Mains&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                      <span class="s">&#39;Floor Total&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span>
+                      <span class="s">&#39;Lifts&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                      <span class="s">&#39;Light&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">3</span><span class="p">],</span>
+                      <span class="s">&#39;Power&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">3</span><span class="p">],</span>
+                      <span class="s">&#39;UPS&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+    <span class="p">}</span>
+
+    <span class="n">lecture_block</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;AHU-1&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                     <span class="s">&#39;AHU-2&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                     <span class="s">&#39;AHU-3&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+                     <span class="s">&#39;Building Total Mains&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                     <span class="s">&#39;Floor Total&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+                     <span class="p">}</span>
+
+    <span class="n">load_renaming</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;AHU-1&#39;</span><span class="p">:</span> <span class="s">&#39;AHU&#39;</span><span class="p">,</span>
+                     <span class="s">&#39;AHU-2&#39;</span><span class="p">:</span> <span class="s">&#39;AHU&#39;</span><span class="p">,</span>
+                     <span class="s">&#39;AHU-3&#39;</span><span class="p">:</span> <span class="s">&#39;AHU&#39;</span><span class="p">,</span>
+                     <span class="s">&#39;Power&#39;</span><span class="p">:</span> <span class="s">&#39;Power Sockets&#39;</span><span class="p">,</span>
+                     <span class="s">&#39;UPS&#39;</span><span class="p">:</span> <span class="s">&#39;UPS Sockets&#39;</span><span class="p">}</span>
+
+    <span class="n">academic_building</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;Academic Block&#39;</span><span class="p">:</span> <span class="n">academic_block</span><span class="p">,</span> <span class="s">&#39;Lecture Block&#39;</span><span class="p">:</span> <span class="n">lecture_block</span><span class="p">}</span>
+
+    <span class="n">query</span> <span class="o">=</span> <span class="s">&quot;&quot;&quot;select *  where Metadata/Extra/Block = &#39;{}&#39; and (Metadata/SourceName = &#39;{}&#39;) and Metadata/Extra/Type = &#39;{}&#39; and Metadata/Location/Floor = &#39;{}&#39; and Metadata/Extra/PhysicalParameter = &#39;{}&#39;&quot;&quot;&quot;</span>
+
+
+    <span class="k">for</span> <span class="n">block_name</span><span class="p">,</span> <span class="n">block</span> <span class="ow">in</span> <span class="n">academic_building</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">load</span><span class="p">,</span> <span class="n">floors</span> <span class="ow">in</span> <span class="n">block</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">floor</span> <span class="ow">in</span> <span class="n">floors</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">measurement</span> <span class="ow">in</span> <span class="n">MEASUREMENTS</span><span class="p">:</span>
+                    <span class="n">query_instance</span> <span class="o">=</span> <span class="n">query</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">block_name</span><span class="p">,</span> <span class="s">&quot;Academic Building&quot;</span><span class="p">,</span> <span class="n">load</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">floor</span><span class="p">),</span> <span class="n">measurement</span><span class="p">)</span>
+                    <span class="n">DATA_URL</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="n">SMAP_URL</span><span class="p">,</span> <span class="s">&quot;backend/api/data/uuid/{}?starttime={}&amp;endtime={}&quot;</span><span class="p">)</span>
+                    <span class="n">uuid</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">UUID_URL</span><span class="p">,</span> <span class="n">query_instance</span><span class="p">)</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="s">&#39;uuid&#39;</span><span class="p">]</span>
+                    <span class="n">data</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">DATA_URL</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">uuid</span><span class="p">,</span> <span class="n">START_TIME</span><span class="p">,</span> <span class="n">END_TIME</span><span class="p">))</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="s">&quot;Readings&quot;</span><span class="p">]</span>
+                    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+                    <span class="c"># Some loads like AHU-1, etc. need to be changed to only AHU</span>
+                    <span class="k">if</span> <span class="n">load</span> <span class="ow">in</span> <span class="n">load_renaming</span><span class="p">:</span>
+                        <span class="n">load_renamed</span> <span class="o">=</span> <span class="n">load_renaming</span><span class="p">[</span><span class="n">load</span><span class="p">]</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">load_renamed</span> <span class="o">=</span> <span class="n">load</span>
+                    <span class="n">path_to_create</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="n">BASE_PATH</span><span class="p">,</span> <span class="n">block_name</span><span class="p">,</span> <span class="n">load_renamed</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">floor</span><span class="p">))</span>
+                    <span class="k">print</span> <span class="n">path_to_create</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path_to_create</span><span class="p">):</span>
+                        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">path_to_create</span><span class="p">)</span>
+                    <span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">path_to_create</span><span class="o">+</span><span class="s">&quot;/&quot;</span><span class="o">+</span><span class="n">measurement</span><span class="o">+</span><span class="s">&quot;.csv&quot;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span></div>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2014, NILMTK Authors.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2.3.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

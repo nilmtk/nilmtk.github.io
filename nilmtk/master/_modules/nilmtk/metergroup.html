@@ -69,6 +69,7 @@
   <ul class="dropdown-menu globaltoc"
       role="menu"
       aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">Installing nilmtk</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../intro_nilmtk_v0_2.html">Intro to NILMTK v0.2</a></li>
 </ul>
 <ul>
@@ -798,8 +799,12 @@
         <span class="k">for</span> <span class="n">section</span> <span class="ow">in</span> <span class="n">split_timeframes</span><span class="p">(</span><span class="n">sections</span><span class="p">,</span> <span class="n">duration_threshold</span><span class="p">):</span>
             <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;sections&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">section</span><span class="p">]</span>
             <span class="n">start</span> <span class="o">=</span> <span class="n">normalise_timestamp</span><span class="p">(</span><span class="n">section</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="n">freq</span><span class="p">)</span>
-            <span class="n">index</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">date_range</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">section</span><span class="o">.</span><span class="n">end</span><span class="p">,</span> <span class="n">closed</span><span class="o">=</span><span class="s">&#39;left&#39;</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="n">freq</span><span class="p">)</span>
-            <span class="n">chunk</span> <span class="o">=</span> <span class="n">combine_chunks_from_generators</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">columns</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">meters</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span>
+            <span class="n">tz</span> <span class="o">=</span> <span class="bp">None</span> <span class="k">if</span> <span class="n">start</span><span class="o">.</span><span class="n">tz</span> <span class="ow">is</span> <span class="bp">None</span> <span class="k">else</span> <span class="n">start</span><span class="o">.</span><span class="n">tz</span><span class="o">.</span><span class="n">zone</span>
+            <span class="n">index</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">date_range</span><span class="p">(</span>
+                <span class="n">start</span><span class="o">.</span><span class="n">tz_localize</span><span class="p">(</span><span class="bp">None</span><span class="p">),</span> <span class="n">section</span><span class="o">.</span><span class="n">end</span><span class="o">.</span><span class="n">tz_localize</span><span class="p">(</span><span class="bp">None</span><span class="p">),</span> <span class="n">tz</span><span class="o">=</span><span class="n">tz</span><span class="p">,</span>
+                <span class="n">closed</span><span class="o">=</span><span class="s">&#39;left&#39;</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="n">freq</span><span class="p">)</span>
+            <span class="n">chunk</span> <span class="o">=</span> <span class="n">combine_chunks_from_generators</span><span class="p">(</span>
+                <span class="n">index</span><span class="p">,</span> <span class="n">columns</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">meters</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span>
             <span class="k">yield</span> <span class="n">chunk</span>
 </div>
     <span class="k">def</span> <span class="nf">_convert_physical_quantity_and_ac_type_to_cols</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -1050,24 +1055,15 @@
         <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
             <span class="n">chunks</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="n">ids</span> <span class="o">=</span> <span class="p">[]</span>
-            <span class="n">index</span> <span class="o">=</span> <span class="bp">None</span>
-            <span class="n">timeframe</span> <span class="o">=</span> <span class="bp">None</span>
             <span class="k">for</span> <span class="n">meter_id</span><span class="p">,</span> <span class="n">generator</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">identifiers</span><span class="p">,</span> <span class="n">generators</span><span class="p">):</span>
                 <span class="k">try</span><span class="p">:</span>
                     <span class="n">chunk_from_next_meter</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">generator</span><span class="p">)</span>
                 <span class="k">except</span> <span class="ne">StopIteration</span><span class="p">:</span>
                     <span class="k">continue</span>
 
-                <span class="k">if</span> <span class="n">chunk_from_next_meter</span><span class="o">.</span><span class="n">empty</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">chunk_from_next_meter</span><span class="o">.</span><span class="n">timeframe</span><span class="p">:</span>
-                    <span class="k">continue</span>
-
-                <span class="k">if</span> <span class="n">timeframe</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-                    <span class="n">timeframe</span> <span class="o">=</span> <span class="n">chunk_from_next_meter</span><span class="o">.</span><span class="n">timeframe</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">timeframe</span> <span class="o">=</span> <span class="n">timeframe</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="n">chunk_from_next_meter</span><span class="o">.</span><span class="n">timeframe</span><span class="p">)</span>
-
-                <span class="n">ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">meter_id</span><span class="p">)</span>
-                <span class="n">chunks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">chunk_from_next_meter</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">chunk_from_next_meter</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+                    <span class="n">ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">meter_id</span><span class="p">)</span>
+                    <span class="n">chunks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">chunk_from_next_meter</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
 
             <span class="k">if</span> <span class="n">chunks</span><span class="p">:</span>
                 <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">chunks</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
