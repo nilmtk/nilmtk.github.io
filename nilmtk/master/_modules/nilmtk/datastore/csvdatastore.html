@@ -30,6 +30,7 @@
     <script type="text/javascript" src="../../../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../../../_static/bootstrap-3.2.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../_static/bootstrap-sphinx.js"></script>
+    <link rel="author" title="About these documents" href="../../../about.html" />
     <link rel="top" title="NILMTK 0.2 documentation" href="../../../index.html" />
     <link rel="up" title="nilmtk.datastore" href="../datastore.html" />
 <meta charset='utf-8'>
@@ -69,8 +70,10 @@
   <ul class="dropdown-menu globaltoc"
       role="menu"
       aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../about.html">Non-Intrusive Load Monitoring (NILM)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../about.html#why-a-toolkit-for-nilm">Why a toolkit for NILM?</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../install.html">Installing nilmtk</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../intro_nilmtk_v0_2.html">Intro to NILMTK v0.2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Change log</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../convert_data_to_NILMTK_format.html">Convert data to NILMTK format and load into NILMTK</a></li>
@@ -152,7 +155,7 @@
 <span class="kn">from</span> <span class="nn">nilmtk.node</span> <span class="kn">import</span> <span class="n">Node</span>
 <span class="kn">from</span> <span class="nn">nilmtk.datastore</span> <span class="kn">import</span> <span class="n">DataStore</span><span class="p">,</span> <span class="n">MAX_MEM_ALLOWANCE_IN_BYTES</span>
 <span class="kn">from</span> <span class="nn">nilmtk.datastore.key</span> <span class="kn">import</span> <span class="n">Key</span>
-<span class="kn">from</span> <span class="nn">nilmtk.datastore.datastore</span> <span class="kn">import</span> <span class="n">write_yaml_to_file</span>
+<span class="kn">from</span> <span class="nn">nilmtk.datastore.datastore</span> <span class="kn">import</span> <span class="n">write_yaml_to_file</span><span class="p">,</span> <span class="n">join_key</span>
 <span class="kn">from</span> <span class="nn">nilmtk.docinherit</span> <span class="kn">import</span> <span class="n">doc_inherit</span>
 
 <span class="c"># do not edit! added by PythonBreakpoints</span>
@@ -324,18 +327,18 @@
     <span class="nd">@doc_inherit</span>
 <div class="viewcode-block" id="CSVDataStore.elements_below_key"><a class="viewcode-back" href="../../../nilmtk.datastore.html#nilmtk.datastore.csvdatastore.CSVDataStore.elements_below_key">[docs]</a>    <span class="k">def</span> <span class="nf">elements_below_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s">&#39;/&#39;</span><span class="p">):</span>
         
-        <span class="n">elements</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+        <span class="n">elements</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s">&#39;/&#39;</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">directory</span> <span class="ow">in</span> <span class="n">listdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">):</span>
                 <span class="n">dir_path</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span> <span class="n">directory</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">isdir</span><span class="p">(</span><span class="n">dir_path</span><span class="p">)</span> <span class="ow">and</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="s">&#39;building[0-9]*&#39;</span><span class="p">,</span> <span class="n">directory</span><span class="p">):</span>
-                    <span class="n">elements</span><span class="p">[</span><span class="n">directory</span><span class="p">]</span> <span class="o">=</span> <span class="n">join_key</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">directory</span><span class="p">)</span>
+                    <span class="n">elements</span> <span class="o">+=</span> <span class="p">[</span><span class="n">directory</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">relative_path</span> <span class="o">=</span> <span class="n">key</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
             <span class="n">dir_path</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span> <span class="n">relative_path</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">isdir</span><span class="p">(</span><span class="n">dir_path</span><span class="p">):</span>
                 <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">listdir</span><span class="p">(</span><span class="n">dir_path</span><span class="p">):</span>
-                    <span class="n">elements</span><span class="p">[</span><span class="n">element</span><span class="p">]</span> <span class="o">=</span> <span class="n">join_key</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">element</span><span class="p">)</span>
+                    <span class="n">elements</span> <span class="o">+=</span> <span class="p">[</span><span class="n">directory</span><span class="p">]</span>
 
         <span class="k">return</span> <span class="n">elements</span>
 </div>

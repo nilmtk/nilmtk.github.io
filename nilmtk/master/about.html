@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Exploring single electricity meters &mdash; NILMTK 0.2 documentation</title>
+    <title>Non-Intrusive Load Monitoring (NILM) &mdash; NILMTK 0.2 documentation</title>
     
     <link rel="stylesheet" href="_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -30,8 +30,10 @@
     <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="_static/bootstrap-3.2.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
-    <link rel="author" title="About these documents" href="about.html" />
+    <link rel="author" title="About these documents" href="#" />
     <link rel="top" title="NILMTK 0.2 documentation" href="index.html" />
+    <link rel="next" title="Installing nilmtk" href="install.html" />
+    <link rel="prev" title="Welcome to NILMTK’s documentation!" href="index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -68,9 +70,9 @@
      href="index.html">Site <b class="caret"></b></a>
   <ul class="dropdown-menu globaltoc"
       role="menu"
-      aria-labelledby="dLabelGlobalToc"><ul>
-<li class="toctree-l1"><a class="reference internal" href="about.html">Non-Intrusive Load Monitoring (NILM)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="about.html#why-a-toolkit-for-nilm">Why a toolkit for NILM?</a></li>
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="">Non-Intrusive Load Monitoring (NILM)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#why-a-toolkit-for-nilm">Why a toolkit for NILM?</a></li>
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installing nilmtk</a></li>
 <li class="toctree-l1"><a class="reference internal" href="changelog.html">Change log</a></li>
 </ul>
@@ -102,7 +104,8 @@
   <ul class="dropdown-menu localtoc"
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
-<li><a class="reference internal" href="#">Exploring single electricity meters</a></li>
+<li><a class="reference internal" href="#">Non-Intrusive Load Monitoring (NILM)</a></li>
+<li><a class="reference internal" href="#why-a-toolkit-for-nilm">Why a toolkit for NILM?</a></li>
 </ul>
 </ul>
 </li>
@@ -111,6 +114,14 @@
             
               
                 
+  <li>
+    <a href="index.html" title="Previous Chapter: Welcome to NILMTK’s documentation!"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; Welcome to NILMT...</span>
+    </a>
+  </li>
+  <li>
+    <a href="install.html" title="Next Chapter: Installing nilmtk"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">Installing nilmt... &raquo;</span>
+    </a>
+  </li>
               
             
             
@@ -118,7 +129,7 @@
             
               <li class="hidden-sm">
 <div id="sourcelink">
-  <a href="_sources/exploring_single_electricity_meters.txt"
+  <a href="_sources/about.txt"
      rel="nofollow">Source</a>
 </div></li>
             
@@ -142,14 +153,38 @@
   <div class="row">
     <div class="col-md-12">
       
-  <div class="section" id="exploring-single-electricity-meters">
-<h1>Exploring single electricity meters<a class="headerlink" href="#exploring-single-electricity-meters" title="Permalink to this headline">¶</a></h1>
-<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">nilmtk</span> <span class="kn">import</span> <span class="n">DataSet</span>
-
-<span class="n">redd</span> <span class="o">=</span> <span class="n">DataSet</span><span class="p">(</span><span class="s">&#39;/data/REDD/redd.h5&#39;</span><span class="p">)</span>
-<span class="n">elec</span> <span class="o">=</span> <span class="n">redd</span><span class="o">.</span><span class="n">buildings</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">elec</span>
-</pre></div>
+  <div class="section" id="non-intrusive-load-monitoring-nilm">
+<h1>Non-Intrusive Load Monitoring (NILM)<a class="headerlink" href="#non-intrusive-load-monitoring-nilm" title="Permalink to this headline">¶</a></h1>
+<p>Non-Intrusive Load Monitoring (NILM) is the process of estimating the
+energy consumed by individual appliances given just a whole-house power
+meter reading. In other words, it produces an (estimated) itemised
+energy bill from just a single, whole-house power meter.</p>
+<p>NILM is sometimes called:</p>
+<ul class="simple">
+<li>&#8220;non-intrusive appliance load monitoring (NALM or NIALM)&#8221;</li>
+<li>&#8220;[electriciy | energy | smart meter] disaggregation&#8221;</li>
+</ul>
+<p>Below is an illustration (produced using nilmtk) of what NILM, in
+general, can do.</p>
 </div>
+<div class="section" id="why-a-toolkit-for-nilm">
+<h1>Why a toolkit for NILM?<a class="headerlink" href="#why-a-toolkit-for-nilm" title="Permalink to this headline">¶</a></h1>
+<p>We quote our <a class="reference external" href="http://arxiv.org/pdf/1404.3878v1.pdf">nilmtk paper</a>
+explaining the need for a NILM toolkit.</p>
+<blockquote>
+<div>Empirically comparing disaggregation algorithms is currently
+virtually impossible. This is due to the different data sets used,
+the lack of reference implementations of these algorithms and the
+variety of accuracy metrics employed. To address this challenge, we
+present the Non-intrusive Load Monitoring Toolkit (NILMTK); an open
+source toolkit designed specifically to enable the comparison of
+energy disaggregation algorithms in a reproducible manner. This work
+is the first research to compare multiple disaggregation ap-
+proaches across multiple publicly available data sets. Our toolkit
+includes parsers for a range of existing data sets, a collection of
+preprocessing algorithms, a set of statistics for describing data
+sets, two reference benchmark disaggregation algorithms and a suite
+of accuracy metrics.</div></blockquote>
 </div>
 
 
