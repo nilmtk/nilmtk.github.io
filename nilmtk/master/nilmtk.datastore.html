@@ -9,8 +9,8 @@
     
     <link rel="stylesheet" href="_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="_static/bootstrap-3.2.0/css/bootstrap.min.css" type="text/css" />
-    <link rel="stylesheet" href="_static/bootstrap-3.2.0/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-3.1.0/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-3.1.0/css/bootstrap-theme.min.css" type="text/css" />
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     
     <script type="text/javascript">
@@ -28,8 +28,9 @@
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="_static/bootstrap-3.2.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-3.1.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
+    <link rel="author" title="About these documents" href="about.html" />
     <link rel="top" title="NILMTK 0.2 documentation" href="index.html" />
     <link rel="up" title="nilmtk package" href="nilmtk.html" />
     <link rel="next" title="nilmtk.disaggregate package" href="nilmtk.disaggregate.html" />
@@ -58,6 +59,7 @@
 
         <div class="collapse navbar-collapse nav-collapse">
           <ul class="nav navbar-nav">
+            <li class="divider-vertical"></li>
             
                 <li><a href="https://github.com/nilmtk/nilmtk">github</a></li>
             
@@ -71,13 +73,16 @@
   <ul class="dropdown-menu globaltoc"
       role="menu"
       aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="about.html">Non-Intrusive Load Monitoring (NILM)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="about.html#why-a-toolkit-for-nilm">Why a toolkit for NILM?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="about.html#what-nilmtk-provides">What nilmtk provides</a></li>
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installing nilmtk</a></li>
 <li class="toctree-l1"><a class="reference internal" href="changelog.html">Change log</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="convert_data_to_NILMTK_format.html">Convert data to NILMTK format and load into NILMTK</a></li>
 <li class="toctree-l1"><a class="reference internal" href="elecmeter_and_metergroup.html">MeterGroup, ElecMeter, selection and basic statistics</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pipeline_preprocessing_more_stats.html">Processing pipeline, preprocessing and more stats</a></li>
+<li class="toctree-l1"><a class="reference internal" href="loading_data.html">Load API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="disaggregation_and_metrics.html">Disaggregation and Metrics</a></li>
 </ul>
 <ul>
@@ -106,7 +111,7 @@
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
 <li><a class="reference internal" href="#module-nilmtk.datastore.csvdatastore">nilmtk.datastore.csvdatastore module</a></li>
 <li><a class="reference internal" href="#module-nilmtk.datastore.datastore">nilmtk.datastore.datastore module</a></li>
-<li><a class="reference internal" href="#module-nilmtk.datastore.flycheck_hdfdatastore">nilmtk.datastore.flycheck_hdfdatastore module</a></li>
+<li><a class="reference internal" href="#nilmtk-datastore-flycheck-hdfdatastore-module">nilmtk.datastore.flycheck_hdfdatastore module</a></li>
 <li><a class="reference internal" href="#module-nilmtk.datastore.hdfdatastore">nilmtk.datastore.hdfdatastore module</a></li>
 <li><a class="reference internal" href="#module-nilmtk.datastore.key">nilmtk.datastore.key module</a></li>
 <li><a class="reference internal" href="#module-nilmtk.datastore">Module contents</a></li>
@@ -121,11 +126,11 @@
               
                 
   <li>
-    <a href="nilmtk.dataset_converters.ukdale.html" title="Previous Chapter: nilmtk.dataset_converters.ukdale package"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; nilmtk.dataset_c...</span>
+    <a href="nilmtk.dataset_converters.ukdale.html" title="Previous Chapter: nilmtk.dataset_converters.ukdale package"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm">&laquo; nilmtk.dataset_c...</span>
     </a>
   </li>
   <li>
-    <a href="nilmtk.disaggregate.html" title="Next Chapter: nilmtk.disaggregate package"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">nilmtk.disaggreg... &raquo;</span>
+    <a href="nilmtk.disaggregate.html" title="Next Chapter: nilmtk.disaggregate package"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm">nilmtk.disaggreg... &raquo;</span>
     </a>
   </li>
               
@@ -614,194 +619,8 @@ is empty).</p>
 <dd></dd></dl>
 
 </div>
-<div class="section" id="module-nilmtk.datastore.flycheck_hdfdatastore">
-<span id="nilmtk-datastore-flycheck-hdfdatastore-module"></span><h2>nilmtk.datastore.flycheck_hdfdatastore module<a class="headerlink" href="#module-nilmtk.datastore.flycheck_hdfdatastore" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="nilmtk.datastore.flycheck_hdfdatastore.HDFDataStore">
-<em class="property">class </em><tt class="descclassname">nilmtk.datastore.flycheck_hdfdatastore.</tt><tt class="descname">HDFDataStore</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#nilmtk.datastore.flycheck_hdfdatastore.HDFDataStore" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#nilmtk.datastore.datastore.DataStore" title="nilmtk.datastore.datastore.DataStore"><tt class="xref py py-class docutils literal"><span class="pre">nilmtk.datastore.datastore.DataStore</span></tt></a></p>
-<dl class="staticmethod">
-<dt id="nilmtk.datastore.flycheck_hdfdatastore.HDFDataStore.append">
-<em class="property">static </em><tt class="descname">append</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#nilmtk.datastore.flycheck_hdfdatastore.HDFDataStore.append" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>key</strong> : str</p>
-<p class="last"><strong>value</strong> : pd.DataFrame</p>
-</td>
-</tr>
-</tbody>
-</table>
-<p class="rubric">Notes</p>
-<p>To quote the Pandas documentation for pandas.io.pytables.HDFStore.append:
-Append does <em>not</em> check if data being appended overlaps with existing
-data in the table, so be careful.</p>
-</dd></dl>
-
-<dl class="staticmethod">
-<dt id="nilmtk.datastore.flycheck_hdfdatastore.HDFDataStore.close">
-<em class="property">static </em><tt class="descname">close</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#nilmtk.datastore.flycheck_hdfdatastore.HDFDataStore.close" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="staticmethod">
-<dt id="nilmtk.datastore.flycheck_hdfdatastore.HDFDataStore.elements_below_key">
-<em class="property">static </em><tt class="descname">elements_below_key</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#nilmtk.datastore.flycheck_hdfdatastore.HDFDataStore.elements_below_key" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">list of strings</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="staticmethod">
-<dt id="nilmtk.datastore.flycheck_hdfdatastore.HDFDataStore.get_timeframe">
-<em class="property">static </em><tt class="descname">get_timeframe</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#nilmtk.datastore.flycheck_hdfdatastore.HDFDataStore.get_timeframe" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">nilmtk.TimeFrame of entire table after intersecting with self.window.</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="staticmethod">
-<dt id="nilmtk.datastore.flycheck_hdfdatastore.HDFDataStore.load">
-<em class="property">static </em><tt class="descname">load</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#nilmtk.datastore.flycheck_hdfdatastore.HDFDataStore.load" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>key</strong> : string, the location of a table within the DataStore.</p>
-<p><strong>cols</strong> : list of Measurements, optional</p>
-<blockquote>
-<div><p>e.g. [(&#8216;power&#8217;, &#8216;active&#8217;), (&#8216;power&#8217;, &#8216;reactive&#8217;), (&#8216;voltage&#8217;)]
-if not provided then will return all columns from the table.</p>
-</div></blockquote>
-<p><strong>sections</strong> : TimeFrameGroup; or list of nilmtk.TimeFrame objects;</p>
-<blockquote>
-<div><p>or a pd.PeriodIndex, optional.
-Defines the time sections to load.  If <cite>self.window</cite> is enabled
-then each <cite>section</cite> will be intersected with <cite>self.window</cite>.</p>
-</div></blockquote>
-<p><strong>n_look_ahead_rows</strong> : int, optional, defaults to 0</p>
-<blockquote>
-<div><p>If &gt;0 then each returned DataFrame will have a <cite>look_ahead</cite>
-property which will be a DataFrame of length <cite>n_look_ahead_rows</cite>
-of the data immediately in front of the data in the main DataFrame.</p>
-</div></blockquote>
-<p><strong>chunksize</strong> : int, optional</p>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">generator of DataFrame objects</p>
-<blockquote>
-<div><dl class="docutils">
-<dt>Each DataFrame is has extra attributes:</dt>
-<dd><ul class="first last">
-<li><p class="first">timeframe : TimeFrame of section intersected with self.window</p>
-</li>
-<li><dl class="first docutils">
-<dt>look_ahead <span class="classifier-delimiter">:</span> <span class="classifier">pd.DataFrame:</span></dt>
-<dd><p class="first last">with <cite>n_look_ahead_rows</cite> rows.  The first row will be for
-<cite>section.end</cite>.  <cite>look_ahead</cite> stores data which appears on 
-disk immediately after <cite>section.end</cite>; i.e. it ignores
-the next <cite>section.start</cite>.</p>
-</dd>
-</dl>
-</li>
-</ul>
-</dd>
-</dl>
-<p>Returns an empty DataFrame if no data is available for the
-specified section (or if the section.intersection(self.window)
-is empty).</p>
-</div></blockquote>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><strong>KeyError if `key` is not in store.</strong></p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="staticmethod">
-<dt id="nilmtk.datastore.flycheck_hdfdatastore.HDFDataStore.load_metadata">
-<em class="property">static </em><tt class="descname">load_metadata</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#nilmtk.datastore.flycheck_hdfdatastore.HDFDataStore.load_metadata" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>key</strong> : string, optional</p>
-<blockquote>
-<div><p>if &#8216;/&#8217; then load metadata for the whole dataset.</p>
-</div></blockquote>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>metadata</strong> : dict</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="staticmethod">
-<dt id="nilmtk.datastore.flycheck_hdfdatastore.HDFDataStore.open">
-<em class="property">static </em><tt class="descname">open</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#nilmtk.datastore.flycheck_hdfdatastore.HDFDataStore.open" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="staticmethod">
-<dt id="nilmtk.datastore.flycheck_hdfdatastore.HDFDataStore.put">
-<em class="property">static </em><tt class="descname">put</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#nilmtk.datastore.flycheck_hdfdatastore.HDFDataStore.put" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>key</strong> : str</p>
-<p class="last"><strong>value</strong> : pd.DataFrame</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="staticmethod">
-<dt id="nilmtk.datastore.flycheck_hdfdatastore.HDFDataStore.remove">
-<em class="property">static </em><tt class="descname">remove</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#nilmtk.datastore.flycheck_hdfdatastore.HDFDataStore.remove" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>key</strong> : str</p>
-<p class="last"><strong>value</strong> : pd.DataFrame</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="staticmethod">
-<dt id="nilmtk.datastore.flycheck_hdfdatastore.HDFDataStore.save_metadata">
-<em class="property">static </em><tt class="descname">save_metadata</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#nilmtk.datastore.flycheck_hdfdatastore.HDFDataStore.save_metadata" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>key</strong> : string</p>
-<p class="last"><strong>metadata</strong> : dict</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-</dd></dl>
-
+<div class="section" id="nilmtk-datastore-flycheck-hdfdatastore-module">
+<h2>nilmtk.datastore.flycheck_hdfdatastore module<a class="headerlink" href="#nilmtk-datastore-flycheck-hdfdatastore-module" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="module-nilmtk.datastore.hdfdatastore">
 <span id="nilmtk-datastore-hdfdatastore-module"></span><h2>nilmtk.datastore.hdfdatastore module<a class="headerlink" href="#module-nilmtk.datastore.hdfdatastore" title="Permalink to this headline">¶</a></h2>

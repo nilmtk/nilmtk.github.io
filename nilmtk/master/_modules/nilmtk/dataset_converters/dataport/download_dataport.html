@@ -9,8 +9,8 @@
     
     <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../../../../_static/bootstrap-3.2.0/css/bootstrap.min.css" type="text/css" />
-    <link rel="stylesheet" href="../../../../_static/bootstrap-3.2.0/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/bootstrap-3.1.0/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/bootstrap-3.1.0/css/bootstrap-theme.min.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/bootstrap-sphinx.css" type="text/css" />
     
     <script type="text/javascript">
@@ -28,7 +28,7 @@
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="../../../../_static/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="../../../../_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="../../../../_static/bootstrap-3.2.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../../../_static/bootstrap-3.1.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
     <link rel="author" title="About these documents" href="../../../../about.html" />
     <link rel="top" title="NILMTK 0.2 documentation" href="../../../../index.html" />
@@ -57,6 +57,7 @@
 
         <div class="collapse navbar-collapse nav-collapse">
           <ul class="nav navbar-nav">
+            <li class="divider-vertical"></li>
             
                 <li><a href="https://github.com/nilmtk/nilmtk">github</a></li>
             
@@ -301,13 +302,17 @@
     <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">join</span><span class="p">(</span><span class="n">_get_module_directory</span><span class="p">(),</span> <span class="s">&#39;metadata&#39;</span><span class="p">)):</span>
         <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s">&#39;^building&#39;</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span>
             <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">join</span><span class="p">(</span><span class="n">_get_module_directory</span><span class="p">(),</span> <span class="s">&#39;metadata&#39;</span><span class="p">,</span> <span class="n">f</span><span class="p">))</span>
-
+    
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    TODO:</span>
+<span class="sd">    The section below can be altered or removed, since the restructured Dataport</span>
+<span class="sd">    now has only one electricity_egauge_minutes table.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="c"># get tables in database schema</span>
-    <span class="n">sql_query</span> <span class="o">=</span> <span class="p">(</span><span class="s">&quot;SELECT TABLE_NAME&quot;</span> <span class="o">+</span> 
-                 <span class="s">&quot; FROM INFORMATION_SCHEMA.TABLES&quot;</span> <span class="o">+</span> 
-                 <span class="s">&quot; WHERE TABLE_TYPE = &#39;BASE TABLE&#39;&quot;</span> <span class="o">+</span> 
-                 <span class="s">&quot; AND TABLE_SCHEMA=&#39;&quot;</span> <span class="o">+</span> <span class="n">database_schema</span> <span class="o">+</span> <span class="s">&quot;&#39;&quot;</span> <span class="o">+</span> 
-                 <span class="s">&quot; ORDER BY TABLE_NAME&quot;</span><span class="p">)</span>
+    <span class="n">sql_query</span> <span class="o">=</span> <span class="p">(</span><span class="s">&quot;SELECT table_name&quot;</span> <span class="o">+</span>
+                 <span class="s">&quot; FROM information_schema.views&quot;</span> <span class="o">+</span>
+                 <span class="s">&quot; WHERE table_schema =&#39;&quot;</span> <span class="o">+</span> <span class="n">database_schema</span> <span class="o">+</span> <span class="s">&quot;&#39;&quot;</span> <span class="o">+</span>
+                 <span class="s">&quot; ORDER BY table_name&quot;</span><span class="p">)</span>
     <span class="n">database_tables</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql</span><span class="p">(</span><span class="n">sql_query</span><span class="p">,</span> <span class="n">conn</span><span class="p">)[</span><span class="s">&#39;table_name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
     <span class="n">database_tables</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">database_tables</span> <span class="k">if</span> <span class="s">&#39;electricity_egauge_minutes&#39;</span> <span class="ow">in</span> <span class="n">t</span><span class="p">]</span>
 
@@ -339,17 +344,18 @@
             <span class="k">print</span><span class="p">(</span><span class="s">&quot;  Loading table {:s}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">database_table</span><span class="p">))</span>
             <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
 
-            <span class="c"># get buildings present in this table</span>
-            <span class="n">sql_query</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;SELECT DISTINCT dataid&#39;</span> <span class="o">+</span> 
-                         <span class="s">&#39; FROM &quot;&#39;</span> <span class="o">+</span> <span class="n">database_schema</span> <span class="o">+</span> <span class="s">&#39;&quot;.&#39;</span> <span class="o">+</span> <span class="n">database_table</span> <span class="o">+</span> 
+            <span class="c"># get buildings present in electricity_egauge_minutes table</span>
+            <span class="n">sql_query</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;SELECT DISTINCT dataid&#39;</span> <span class="o">+</span>
+                         <span class="s">&#39; FROM university.metadata&#39;</span> <span class="o">+</span>
+                         <span class="s">&#39; WHERE egauge_min_time IS NOT NULL&#39;</span> <span class="o">+</span>
                          <span class="s">&#39; ORDER BY dataid&#39;</span><span class="p">)</span>
             <span class="n">buildings_in_table</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql</span><span class="p">(</span><span class="n">sql_query</span><span class="p">,</span> <span class="n">conn</span><span class="p">)[</span><span class="s">&#39;dataid&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
 
             <span class="k">if</span> <span class="n">building_id</span> <span class="ow">in</span> <span class="n">buildings_in_table</span><span class="p">:</span>
-                <span class="c"># get first and last timestamps for this house in this table</span>
-                <span class="n">sql_query</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;SELECT MIN(localminute) AS minlocalminute,&#39;</span> <span class="o">+</span> 
-                             <span class="s">&#39; MAX(localminute) AS maxlocalminute&#39;</span> <span class="o">+</span> 
-                             <span class="s">&#39; FROM &quot;&#39;</span> <span class="o">+</span> <span class="n">database_schema</span> <span class="o">+</span> <span class="s">&#39;&quot;.&#39;</span> <span class="o">+</span> <span class="n">database_table</span> <span class="o">+</span> 
+                <span class="c"># get first and last timestamps for this house in electricity_egauge_minutes table</span>
+                <span class="n">sql_query</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;SELECT MIN(egauge_min_time) AS minlocalminute,&#39;</span> <span class="o">+</span>
+                             <span class="s">&#39; MAX(egauge_max_time) AS maxlocalminute&#39;</span> <span class="o">+</span>
+                             <span class="s">&#39; FROM university.metadata&#39;</span> <span class="o">+</span>
                              <span class="s">&#39; WHERE dataid=&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">building_id</span><span class="p">))</span>
                 <span class="nb">range</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql</span><span class="p">(</span><span class="n">sql_query</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
                 <span class="n">first_timestamp_in_table</span> <span class="o">=</span> <span class="nb">range</span><span class="p">[</span><span class="s">&#39;minlocalminute&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>

@@ -9,8 +9,8 @@
     
     <link rel="stylesheet" href="_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="_static/bootstrap-3.2.0/css/bootstrap.min.css" type="text/css" />
-    <link rel="stylesheet" href="_static/bootstrap-3.2.0/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-3.1.0/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-3.1.0/css/bootstrap-theme.min.css" type="text/css" />
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     
     <script type="text/javascript">
@@ -28,7 +28,7 @@
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="_static/bootstrap-3.2.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-3.1.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
     <link rel="author" title="About these documents" href="about.html" />
     <link rel="top" title="NILMTK 0.2 documentation" href="index.html" />
@@ -58,6 +58,7 @@
 
         <div class="collapse navbar-collapse nav-collapse">
           <ul class="nav navbar-nav">
+            <li class="divider-vertical"></li>
             
                 <li><a href="https://github.com/nilmtk/nilmtk">github</a></li>
             
@@ -143,11 +144,11 @@
               
                 
   <li>
-    <a href="changelog.html" title="Previous Chapter: Change log"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; Change log</span>
+    <a href="changelog.html" title="Previous Chapter: Change log"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm">&laquo; Change log</span>
     </a>
   </li>
   <li>
-    <a href="nilmtk.dataset_converters.html" title="Next Chapter: nilmtk.dataset_converters package"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">nilmtk.dataset_c... &raquo;</span>
+    <a href="nilmtk.dataset_converters.html" title="Next Chapter: nilmtk.dataset_converters package"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm">nilmtk.dataset_c... &raquo;</span>
     </a>
   </li>
               
@@ -253,7 +254,7 @@
 <li class="toctree-l2"><a class="reference internal" href="nilmtk.datastore.html#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="nilmtk.datastore.html#module-nilmtk.datastore.csvdatastore">nilmtk.datastore.csvdatastore module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="nilmtk.datastore.html#module-nilmtk.datastore.datastore">nilmtk.datastore.datastore module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="nilmtk.datastore.html#module-nilmtk.datastore.flycheck_hdfdatastore">nilmtk.datastore.flycheck_hdfdatastore module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nilmtk.datastore.html#nilmtk-datastore-flycheck-hdfdatastore-module">nilmtk.datastore.flycheck_hdfdatastore module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="nilmtk.datastore.html#module-nilmtk.datastore.hdfdatastore">nilmtk.datastore.hdfdatastore module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="nilmtk.datastore.html#module-nilmtk.datastore.key">nilmtk.datastore.key module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="nilmtk.datastore.html#module-nilmtk.datastore">Module contents</a></li>
@@ -2968,7 +2969,7 @@ Call this before plotting a figure.</p>
 
 <dl class="function">
 <dt id="nilmtk.plots.plot_pairwise_heatmap">
-<tt class="descclassname">nilmtk.plots.</tt><tt class="descname">plot_pairwise_heatmap</tt><big>(</big><em>df</em>, <em>labels</em>, <em>edgecolors='w'</em>, <em>cmap=&lt;matplotlib.colors.LinearSegmentedColormap object at 0x106788950&gt;</em>, <em>log=False</em><big>)</big><a class="reference internal" href="_modules/nilmtk/plots.html#plot_pairwise_heatmap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.plots.plot_pairwise_heatmap" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">nilmtk.plots.</tt><tt class="descname">plot_pairwise_heatmap</tt><big>(</big><em>df</em>, <em>labels</em>, <em>edgecolors='w'</em>, <em>cmap=&lt;matplotlib.colors.LinearSegmentedColormap object at 0x7f6da6f422d0&gt;</em>, <em>log=False</em><big>)</big><a class="reference internal" href="_modules/nilmtk/plots.html#plot_pairwise_heatmap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nilmtk.plots.plot_pairwise_heatmap" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plots a heatmap of a &#8216;square&#8217; df
 Rows and columns are same and the values in this dataframe
 correspond to the computation b/w row,column.
