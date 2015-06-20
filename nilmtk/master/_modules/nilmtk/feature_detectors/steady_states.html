@@ -30,7 +30,6 @@
     <script type="text/javascript" src="../../../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../../../_static/bootstrap-3.1.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../_static/bootstrap-sphinx.js"></script>
-    <link rel="author" title="About these documents" href="../../../about.html" />
     <link rel="top" title="NILMTK 0.2 documentation" href="../../../index.html" />
     <link rel="up" title="nilmtk" href="../../nilmtk.html" />
 <meta charset='utf-8'>
@@ -71,26 +70,6 @@
   <ul class="dropdown-menu globaltoc"
       role="menu"
       aria-labelledby="dLabelGlobalToc"><ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../about.html">Non-Intrusive Load Monitoring (NILM)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../about.html#why-a-toolkit-for-nilm">Why a toolkit for NILM?</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../about.html#what-nilmtk-provides">What nilmtk provides</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../install.html">Installing nilmtk</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Change log</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../convert_data_to_NILMTK_format.html">Convert data to NILMTK format and load into NILMTK</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../elecmeter_and_metergroup.html">MeterGroup, ElecMeter, selection and basic statistics</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../loading_data.html">Load API</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../disaggregation_and_metrics.html">Disaggregation and Metrics</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../contribute.html">Contributing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../writing_a_dataset_converter.html">Writing a dataset converter</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Change log</a></li>
-</ul>
-<ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../nilmtk.html">nilmtk package</a></li>
 </ul>
 </ul>
@@ -196,19 +175,19 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c"># Tells whether we have both real and reactive power or only real power</span>
     <span class="n">num_measurements</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">dataframe</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
-    <span class="n">estimatedSteadyPower</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">num_measurements</span><span class="p">)</span>
-    <span class="n">lastSteadyPower</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">num_measurements</span><span class="p">)</span>
-    <span class="n">previousMeasurement</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">num_measurements</span><span class="p">)</span>
+    <span class="n">estimated_steady_power</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">num_measurements</span><span class="p">)</span>
+    <span class="n">last_steady_power</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">num_measurements</span><span class="p">)</span>
+    <span class="n">previous_measurement</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">num_measurements</span><span class="p">)</span>
 
     <span class="c"># These flags store state of power</span>
 
-    <span class="n">instantaneousChange</span> <span class="o">=</span> <span class="bp">False</span>  <span class="c"># power changing this second</span>
-    <span class="n">ongoingChange</span> <span class="o">=</span> <span class="bp">False</span>  <span class="c"># power change in progress over multiple seconds</span>
+    <span class="n">instantaneous_change</span> <span class="o">=</span> <span class="bp">False</span>  <span class="c"># power changing this second</span>
+    <span class="n">ongoing_change</span> <span class="o">=</span> <span class="bp">False</span>  <span class="c"># power change in progress over multiple seconds</span>
 
     <span class="n">index_transitions</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c"># Indices to use in returned Dataframe</span>
-    <span class="n">index_steadystates</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">index_steady_states</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">transitions</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c"># holds information on transitions</span>
-    <span class="n">steadyStates</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c"># steadyStates to store in returned Dataframe</span>
+    <span class="n">steady_states</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c"># steadyStates to store in returned Dataframe</span>
     <span class="n">N</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c"># N stores the number of samples in state</span>
     <span class="n">time</span> <span class="o">=</span> <span class="n">dataframe</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">name</span>  <span class="c"># first state starts at beginning</span>
 
@@ -224,69 +203,87 @@
 
         <span class="c"># Step 2: this does the threshold test and then we sum the boolean</span>
         <span class="c"># array.</span>
-        <span class="n">thisMeasurement</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span>
+        <span class="n">this_measurement</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span>
         <span class="c"># logging.debug(&#39;The current measurement is: %s&#39; % (thisMeasurement,))</span>
         <span class="c"># logging.debug(&#39;The previous measurement is: %s&#39; %</span>
         <span class="c"># (previousMeasurement,))</span>
 
-        <span class="n">stateChange</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fabs</span><span class="p">(</span>
-            <span class="n">np</span><span class="o">.</span><span class="n">subtract</span><span class="p">(</span><span class="n">thisMeasurement</span><span class="p">,</span> <span class="n">previousMeasurement</span><span class="p">))</span>
+        <span class="n">state_change</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fabs</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">subtract</span><span class="p">(</span><span class="n">this_measurement</span><span class="p">,</span> <span class="n">previous_measurement</span><span class="p">))</span>
         <span class="c"># logging.debug(&#39;The State Change is: %s&#39; % (stateChange,))</span>
 
-        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">stateChange</span> <span class="o">&gt;</span> <span class="n">stateThreshold</span><span class="p">):</span>
-            <span class="n">instantaneousChange</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">state_change</span> <span class="o">&gt;</span> <span class="n">stateThreshold</span><span class="p">):</span>
+            <span class="n">instantaneous_change</span> <span class="o">=</span> <span class="bp">True</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">instantaneousChange</span> <span class="o">=</span> <span class="bp">False</span>
+            <span class="n">instantaneous_change</span> <span class="o">=</span> <span class="bp">False</span>
 
         <span class="c"># Step 3: Identify if transition is just starting, if so, process it</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">instantaneousChange</span> <span class="ow">and</span> <span class="p">(</span><span class="ow">not</span> <span class="n">ongoingChange</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="n">instantaneous_change</span> <span class="ow">and</span> <span class="p">(</span><span class="ow">not</span> <span class="n">ongoing_change</span><span class="p">):</span>
 
             <span class="c"># Calculate transition size</span>
-            <span class="n">lastTransition</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">subtract</span><span class="p">(</span><span class="n">estimatedSteadyPower</span><span class="p">,</span> <span class="n">lastSteadyPower</span><span class="p">)</span>
+            <span class="n">last_transition</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">subtract</span><span class="p">(</span><span class="n">estimated_steady_power</span><span class="p">,</span> <span class="n">last_steady_power</span><span class="p">)</span>
             <span class="c"># logging.debug(&#39;The steady state transition is: %s&#39; %</span>
             <span class="c"># (lastTransition,))</span>
 
             <span class="c"># Sum Boolean array to verify if transition is above noise level</span>
-            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fabs</span><span class="p">(</span><span class="n">lastTransition</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">noise_level</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fabs</span><span class="p">(</span><span class="n">last_transition</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">noise_level</span><span class="p">):</span>
                 <span class="c"># 3A, C: if so add the index of the transition start and the</span>
                 <span class="c"># power information</span>
 
                 <span class="c"># Avoid outputting first transition from zero</span>
                 <span class="n">index_transitions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">time</span><span class="p">)</span>
                 <span class="c"># logging.debug(&#39;The current row time is: %s&#39; % (time))</span>
-                <span class="n">transitions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lastTransition</span><span class="p">)</span>
+                <span class="n">transitions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">last_transition</span><span class="p">)</span>
 
                 <span class="c"># I think we want this, though not specifically in Hart&#39;s algo notes</span>
                 <span class="c"># We don&#39;t want to append a steady state if it&#39;s less than min samples in length.</span>
                 <span class="c"># if N &gt; min_n_samples:</span>
-                <span class="n">index_steadystates</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">time</span><span class="p">)</span>
+                <span class="n">index_steady_states</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">time</span><span class="p">)</span>
                 <span class="c"># logging.debug(&#39;The &#39;&#39;time&#39;&#39; stored is: %s&#39; % (time))</span>
                 <span class="c"># last states steady power</span>
-                <span class="n">steadyStates</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">estimatedSteadyPower</span><span class="p">)</span>
+                <span class="n">steady_states</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">estimated_steady_power</span><span class="p">)</span>
 
             <span class="c"># 3B</span>
-            <span class="n">lastSteadyPower</span> <span class="o">=</span> <span class="n">estimatedSteadyPower</span>
+            <span class="n">last_steady_power</span> <span class="o">=</span> <span class="n">estimated_steady_power</span>
             <span class="c"># 3C</span>
             <span class="n">time</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
         <span class="c"># Step 4: if a new steady state is starting, zero counter</span>
-        <span class="k">if</span> <span class="n">instantaneousChange</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">instantaneous_change</span><span class="p">:</span>
             <span class="n">N</span> <span class="o">=</span> <span class="mi">0</span>
 
         <span class="c"># Hart step 5: update our estimate for steady state&#39;s energy</span>
-        <span class="n">estimatedSteadyPower</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span>
-            <span class="n">np</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">estimatedSteadyPower</span><span class="p">),</span>
-                   <span class="n">thisMeasurement</span><span class="p">),</span> <span class="p">(</span><span class="n">N</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="n">estimated_steady_power</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">estimated_steady_power</span><span class="p">),</span>
+                   <span class="n">this_measurement</span><span class="p">),</span> <span class="p">(</span><span class="n">N</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
         <span class="c"># logging.debug(&#39;The steady power estimate is: %s&#39; %</span>
         <span class="c">#    (estimatedSteadyPower,))</span>
         <span class="c"># Step 6: increment counter</span>
-        <span class="n">N</span> <span class="o">=</span> <span class="n">N</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">N</span> <span class="o">+=</span> <span class="mi">1</span>
 
         <span class="c"># Step 7</span>
-        <span class="n">ongoingChange</span> <span class="o">=</span> <span class="n">instantaneousChange</span>
+        <span class="n">ongoing_change</span> <span class="o">=</span> <span class="n">instantaneous_change</span>
 
         <span class="c"># Step 8</span>
-        <span class="n">previousMeasurement</span> <span class="o">=</span> <span class="n">thisMeasurement</span>
+        <span class="n">previous_measurement</span> <span class="o">=</span> <span class="n">this_measurement</span>
+
+    <span class="c"># Appending last edge</span>
+    <span class="n">last_transition</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">subtract</span><span class="p">(</span><span class="n">estimated_steady_power</span><span class="p">,</span> <span class="n">last_steady_power</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fabs</span><span class="p">(</span><span class="n">last_transition</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">noise_level</span><span class="p">):</span>
+        <span class="n">index_transitions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">time</span><span class="p">)</span>
+        <span class="n">transitions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">last_transition</span><span class="p">)</span>
+        <span class="n">index_steady_states</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">time</span><span class="p">)</span>
+        <span class="n">steady_states</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">estimated_steady_power</span><span class="p">)</span>
+
+    <span class="c"># Removing first edge if the starting steady state power is more</span>
+    <span class="c"># than the noise threshold</span>
+    <span class="c">#  https://github.com/nilmtk/nilmtk/issues/400</span>
+
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">steady_states</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">noise_level</span><span class="p">)</span> <span class="ow">and</span> <span class="n">index_transitions</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">index_steady_states</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">dataframe</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
+        <span class="n">transitions</span> <span class="o">=</span> <span class="n">transitions</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+        <span class="n">index_transitions</span> <span class="o">=</span> <span class="n">index_transitions</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+        <span class="n">steady_states</span> <span class="o">=</span> <span class="n">steady_states</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+        <span class="n">index_steady_states</span> <span class="o">=</span> <span class="n">index_steady_states</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
 
     <span class="k">print</span><span class="p">(</span><span class="s">&quot;Edge detection complete.&quot;</span><span class="p">)</span>
 
@@ -300,7 +297,7 @@
                    <span class="mi">2</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;active average&#39;</span><span class="p">,</span> <span class="s">&#39;reactive average&#39;</span><span class="p">]}</span>
 
     
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">index_transitions</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">index_transitions</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="c"># No events</span>
         <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(),</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
     <span class="k">else</span><span class="p">:</span>
@@ -310,15 +307,15 @@
 
         <span class="k">print</span><span class="p">(</span><span class="s">&quot;Creating states frame ...&quot;</span><span class="p">)</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
-        <span class="n">steadyStates</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">steadyStates</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">index_steadystates</span><span class="p">,</span>
-                                    <span class="n">columns</span><span class="o">=</span><span class="n">cols_steady</span><span class="p">[</span><span class="n">num_measurements</span><span class="p">])</span>
+        <span class="n">steady_states</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">steady_states</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">index_steady_states</span><span class="p">,</span>
+                                     <span class="n">columns</span><span class="o">=</span><span class="n">cols_steady</span><span class="p">[</span><span class="n">num_measurements</span><span class="p">])</span>
         <span class="k">print</span><span class="p">(</span><span class="s">&quot;States frame created.&quot;</span><span class="p">)</span>
         <span class="k">print</span><span class="p">(</span><span class="s">&quot;Finished.&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">steadyStates</span><span class="p">,</span> <span class="n">transitions</span>
+        <span class="k">return</span> <span class="n">steady_states</span><span class="p">,</span> <span class="n">transitions</span>
 
 </div>
-<div class="viewcode-block" id="cluster"><a class="viewcode-back" href="../../../nilmtk.feature_detectors.html#nilmtk.feature_detectors.steady_states.cluster">[docs]</a><span class="k">def</span> <span class="nf">cluster</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">max_num_clusters</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;Applies clustering on reduced data, </span>
+<div class="viewcode-block" id="cluster"><a class="viewcode-back" href="../../../nilmtk.feature_detectors.html#nilmtk.feature_detectors.steady_states.cluster">[docs]</a><span class="k">def</span> <span class="nf">cluster</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">max_num_clusters</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Applies clustering on reduced data,</span>
 <span class="sd">    i.e. data where power is greater than threshold.</span>
 
 <span class="sd">    Parameters</span>
@@ -330,9 +327,9 @@
 <span class="sd">    -------</span>
 <span class="sd">    centroids : ndarray of int32s</span>
 <span class="sd">        Power in different states of an appliance, sorted</span>
-<span class="sd">    &#39;&#39;&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="c"># Find where power consumption is greater than 10</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="n">_transform_data</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">_transform_data</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 
     <span class="c"># Find clusters</span>
     <span class="n">centroids</span> <span class="o">=</span> <span class="n">_apply_clustering</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">max_num_clusters</span><span class="p">)</span>
@@ -344,7 +341,8 @@
 
 </div>
 <span class="k">def</span> <span class="nf">_transform_data</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;Subsamples if needed and converts to column vector (which is what</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Subsamples if needed and converts to column vector (which is what</span>
 <span class="sd">    scikit-learn requires).</span>
 
 <span class="sd">    Parameters</span>
@@ -355,7 +353,7 @@
 <span class="sd">    -------</span>
 <span class="sd">    data_above_thresh : ndarray</span>
 <span class="sd">        column vector</span>
-<span class="sd">    &#39;&#39;&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">MAX_NUMBER_OF_SAMPLES</span> <span class="o">=</span> <span class="mi">2000</span>
     <span class="n">MIN_NUMBER_OF_SAMPLES</span> <span class="o">=</span> <span class="mi">20</span>

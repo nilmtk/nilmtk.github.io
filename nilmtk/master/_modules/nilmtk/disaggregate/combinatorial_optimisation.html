@@ -30,7 +30,6 @@
     <script type="text/javascript" src="../../../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../../../_static/bootstrap-3.1.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../_static/bootstrap-sphinx.js"></script>
-    <link rel="author" title="About these documents" href="../../../about.html" />
     <link rel="top" title="NILMTK 0.2 documentation" href="../../../index.html" />
     <link rel="up" title="nilmtk" href="../../nilmtk.html" />
 <meta charset='utf-8'>
@@ -71,26 +70,6 @@
   <ul class="dropdown-menu globaltoc"
       role="menu"
       aria-labelledby="dLabelGlobalToc"><ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../about.html">Non-Intrusive Load Monitoring (NILM)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../about.html#why-a-toolkit-for-nilm">Why a toolkit for NILM?</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../about.html#what-nilmtk-provides">What nilmtk provides</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../install.html">Installing nilmtk</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Change log</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../convert_data_to_NILMTK_format.html">Convert data to NILMTK format and load into NILMTK</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../elecmeter_and_metergroup.html">MeterGroup, ElecMeter, selection and basic statistics</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../loading_data.html">Load API</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../disaggregation_and_metrics.html">Disaggregation and Metrics</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../contribute.html">Contributing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../writing_a_dataset_converter.html">Writing a dataset converter</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Change log</a></li>
-</ul>
-<ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../nilmtk.html">nilmtk package</a></li>
 </ul>
 </ul>
@@ -142,13 +121,10 @@
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">division</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
-<span class="kn">from</span> <span class="nn">..appliance</span> <span class="kn">import</span> <span class="n">ApplianceID</span>
-<span class="kn">from</span> <span class="nn">..utils</span> <span class="kn">import</span> <span class="n">find_nearest</span><span class="p">,</span> <span class="n">container_to_string</span>
+<span class="kn">from</span> <span class="nn">..utils</span> <span class="kn">import</span> <span class="n">find_nearest</span>
 <span class="kn">from</span> <span class="nn">..feature_detectors</span> <span class="kn">import</span> <span class="n">cluster</span>
 <span class="kn">from</span> <span class="nn">..timeframe</span> <span class="kn">import</span> <span class="n">merge_timeframes</span><span class="p">,</span> <span class="n">list_of_timeframe_dicts</span><span class="p">,</span> <span class="n">TimeFrame</span>
-<span class="kn">from</span> <span class="nn">..preprocessing</span> <span class="kn">import</span> <span class="n">Clip</span>
 
 <span class="c"># Fix the seed for repeatability of experiments</span>
 <span class="n">SEED</span> <span class="o">=</span> <span class="mi">42</span>
@@ -164,8 +140,8 @@
 <span class="sd">    model : list of dicts</span>
 <span class="sd">       Each dict has these keys:</span>
 <span class="sd">           states : list of ints (the power (Watts) used in different states)</span>
-<span class="sd">           training_metadata : ElecMeter or MeterGroup object used for training </span>
-<span class="sd">               this set of states.  We need this information because we </span>
+<span class="sd">           training_metadata : ElecMeter or MeterGroup object used for training</span>
+<span class="sd">               this set of states.  We need this information because we</span>
 <span class="sd">               need the appliance type (and perhaps some other metadata)</span>
 <span class="sd">               for each model.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -186,8 +162,9 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s">&quot;This implementation of Combinatorial Optimisation&quot;</span>
-                               <span class="s">&quot; does not support multiple calls to `train`.&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                <span class="s">&quot;This implementation of Combinatorial Optimisation&quot;</span>
+                <span class="s">&quot; does not support multiple calls to `train`.&quot;</span><span class="p">)</span>
 
         <span class="n">num_meters</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">metergroup</span><span class="o">.</span><span class="n">meters</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">num_meters</span> <span class="o">&gt;</span> <span class="mi">12</span><span class="p">:</span>
@@ -202,7 +179,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
                     <span class="s">&#39;states&#39;</span><span class="p">:</span> <span class="n">states</span><span class="p">,</span>
                     <span class="s">&#39;training_metadata&#39;</span><span class="p">:</span> <span class="n">meter</span><span class="p">})</span>
-                <span class="k">break</span>  <span class="c"># TODO handle multiple chunks per appliance </span>
+                <span class="k">break</span>  <span class="c"># TODO handle multiple chunks per appliance</span>
         <span class="k">print</span><span class="p">(</span><span class="s">&quot;Done training!&quot;</span><span class="p">)</span>
 </div>
 <div class="viewcode-block" id="CombinatorialOptimisation.disaggregate"><a class="viewcode-back" href="../../../nilmtk.disaggregate.html#nilmtk.disaggregate.combinatorial_optimisation.CombinatorialOptimisation.disaggregate">[docs]</a>    <span class="k">def</span> <span class="nf">disaggregate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mains</span><span class="p">,</span> <span class="n">output_datastore</span><span class="p">,</span> <span class="o">**</span><span class="n">load_kwargs</span><span class="p">):</span>
@@ -215,7 +192,7 @@
 <span class="sd">            For storing power predictions from disaggregation algorithm.</span>
 <span class="sd">        output_name : string, optional</span>
 <span class="sd">            The `name` to use in the metadata for the `output_datastore`.</span>
-<span class="sd">            e.g. some sort of name for this experiment.  Defaults to </span>
+<span class="sd">            e.g. some sort of name for this experiment.  Defaults to</span>
 <span class="sd">            &quot;NILMTK_CO_&lt;date&gt;&quot;</span>
 <span class="sd">        resample_seconds : number, optional</span>
 <span class="sd">            The desired sample period in seconds.</span>
@@ -225,9 +202,10 @@
         <span class="n">MIN_CHUNK_LENGTH</span> <span class="o">=</span> <span class="mi">100</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s">&quot;The model needs to be instantiated before&quot;</span>
-                               <span class="s">&quot; calling `disaggregate`.  For example, the&quot;</span>
-                               <span class="s">&quot; model can be instantiated by running `train`.&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                <span class="s">&quot;The model needs to be instantiated before&quot;</span>
+                <span class="s">&quot; calling `disaggregate`.  For example, the&quot;</span>
+                <span class="s">&quot; model can be instantiated by running `train`.&quot;</span><span class="p">)</span>
 
         <span class="c"># If we import sklearn at the top of the file then auto doc fails.</span>
         <span class="kn">from</span> <span class="nn">sklearn.utils.extmath</span> <span class="kn">import</span> <span class="n">cartesian</span>
@@ -254,7 +232,8 @@
         <span class="k">print</span><span class="p">(</span><span class="s">&quot;vampire_power = {} watts&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">vampire_power</span><span class="p">))</span>
         <span class="n">n_rows</span> <span class="o">=</span> <span class="n">state_combinations</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">vampire_power_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_rows</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span> <span class="o">+</span> <span class="n">vampire_power</span>
-        <span class="n">state_combinations</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">state_combinations</span><span class="p">,</span> <span class="n">vampire_power_array</span><span class="p">))</span>
+        <span class="n">state_combinations</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">state_combinations</span><span class="p">,</span> <span class="n">vampire_power_array</span><span class="p">))</span>
 
         <span class="n">summed_power_of_each_combination</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">state_combinations</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
         <span class="c"># summed_power_of_each_combination is now an array where each</span>
@@ -284,7 +263,8 @@
                 <span class="n">summed_power_of_each_combination</span><span class="p">,</span> <span class="n">chunk</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
 
             <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">model</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">):</span>
-                <span class="k">print</span><span class="p">(</span><span class="s">&quot;Estimating power demand for &#39;{}&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">model</span><span class="p">[</span><span class="s">&#39;training_metadata&#39;</span><span class="p">]))</span>
+                <span class="k">print</span><span class="p">(</span><span class="s">&quot;Estimating power demand for &#39;{}&#39;&quot;</span>
+                      <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">model</span><span class="p">[</span><span class="s">&#39;training_metadata&#39;</span><span class="p">]))</span>
                 <span class="n">data_is_available</span> <span class="o">=</span> <span class="bp">True</span>
                 <span class="n">predicted_power</span> <span class="o">=</span> <span class="n">state_combinations</span><span class="p">[</span>
                     <span class="n">indices_of_state_combinations</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
@@ -352,8 +332,7 @@
                 <span class="s">&#39;data_location&#39;</span><span class="p">:</span> <span class="n">mains_data_location</span><span class="p">,</span>
                 <span class="s">&#39;preprocessing_applied&#39;</span><span class="p">:</span> <span class="p">{},</span>  <span class="c"># TODO</span>
                 <span class="s">&#39;statistics&#39;</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="s">&#39;timeframe&#39;</span><span class="p">:</span> <span class="n">total_timeframe</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(),</span>
-                    <span class="s">&#39;good_sections&#39;</span><span class="p">:</span> <span class="n">list_of_timeframe_dicts</span><span class="p">(</span><span class="n">merged_timeframes</span><span class="p">)</span>
+                    <span class="s">&#39;timeframe&#39;</span><span class="p">:</span> <span class="n">total_timeframe</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
                 <span class="p">}</span>
             <span class="p">}</span>
         <span class="p">}</span>
@@ -366,9 +345,8 @@
             <span class="n">meter_instance</span> <span class="o">=</span> <span class="n">meter</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span>
 
             <span class="k">for</span> <span class="n">app</span> <span class="ow">in</span> <span class="n">meter</span><span class="o">.</span><span class="n">appliances</span><span class="p">:</span>
-                <span class="n">meters</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s">&#39;meters&#39;</span><span class="p">]</span>
                 <span class="n">appliance</span> <span class="o">=</span> <span class="p">{</span>
-                    <span class="s">&#39;meters&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">meter_instance</span><span class="p">],</span> 
+                    <span class="s">&#39;meters&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">meter_instance</span><span class="p">],</span>
                     <span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="n">app</span><span class="o">.</span><span class="n">identifier</span><span class="o">.</span><span class="n">type</span><span class="p">,</span>
                     <span class="s">&#39;instance&#39;</span><span class="p">:</span> <span class="n">app</span><span class="o">.</span><span class="n">identifier</span><span class="o">.</span><span class="n">instance</span>
                     <span class="c"># TODO this `instance` will only be correct when the</span>
@@ -385,15 +363,14 @@
                                       <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">building_path</span><span class="p">,</span> <span class="n">meter_instance</span><span class="p">)),</span>
                     <span class="s">&#39;preprocessing_applied&#39;</span><span class="p">:</span> <span class="p">{},</span>  <span class="c"># TODO</span>
                     <span class="s">&#39;statistics&#39;</span><span class="p">:</span> <span class="p">{</span>
-                        <span class="s">&#39;timeframe&#39;</span><span class="p">:</span> <span class="n">total_timeframe</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(),</span>
-                        <span class="s">&#39;good_sections&#39;</span><span class="p">:</span> <span class="n">list_of_timeframe_dicts</span><span class="p">(</span><span class="n">merged_timeframes</span><span class="p">)</span>
+                        <span class="s">&#39;timeframe&#39;</span><span class="p">:</span> <span class="n">total_timeframe</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
                     <span class="p">}</span>
                 <span class="p">}</span>
             <span class="p">})</span>
 
-            <span class="c">#Setting the name if it exists</span>
+            <span class="c"># Setting the name if it exists</span>
             <span class="k">if</span> <span class="n">meter</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
-                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">meter</span><span class="o">.</span><span class="n">name</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">meter</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
                     <span class="n">elec_meters</span><span class="p">[</span><span class="n">meter_instance</span><span class="p">][</span><span class="s">&#39;name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">meter</span><span class="o">.</span><span class="n">name</span>
 
         <span class="n">building_metadata</span> <span class="o">=</span> <span class="p">{</span>

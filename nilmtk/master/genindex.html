@@ -31,7 +31,6 @@
     <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="_static/bootstrap-3.1.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
-    <link rel="author" title="About these documents" href="about.html" />
     <link rel="top" title="NILMTK 0.2 documentation" href="index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -71,26 +70,6 @@
   <ul class="dropdown-menu globaltoc"
       role="menu"
       aria-labelledby="dLabelGlobalToc"><ul>
-<li class="toctree-l1"><a class="reference internal" href="about.html">Non-Intrusive Load Monitoring (NILM)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="about.html#why-a-toolkit-for-nilm">Why a toolkit for NILM?</a></li>
-<li class="toctree-l1"><a class="reference internal" href="about.html#what-nilmtk-provides">What nilmtk provides</a></li>
-<li class="toctree-l1"><a class="reference internal" href="install.html">Installing nilmtk</a></li>
-<li class="toctree-l1"><a class="reference internal" href="changelog.html">Change log</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="convert_data_to_NILMTK_format.html">Convert data to NILMTK format and load into NILMTK</a></li>
-<li class="toctree-l1"><a class="reference internal" href="elecmeter_and_metergroup.html">MeterGroup, ElecMeter, selection and basic statistics</a></li>
-<li class="toctree-l1"><a class="reference internal" href="loading_data.html">Load API</a></li>
-<li class="toctree-l1"><a class="reference internal" href="disaggregation_and_metrics.html">Disaggregation and Metrics</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="contribute.html">Contributing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="writing_a_dataset_converter.html">Writing a dataset converter</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="changelog.html">Change log</a></li>
-</ul>
-<ul>
 <li class="toctree-l1"><a class="reference internal" href="nilmtk.html">nilmtk package</a></li>
 </ul>
 </ul>
@@ -499,6 +478,10 @@
   </dt>
 
       
+  <dt><a href="nilmtk.dataset_converters.hes.html#nilmtk.dataset_converters.hes.convert_hes.convert_hes">convert_hes() (in module nilmtk.dataset_converters.hes.convert_hes)</a>
+  </dt>
+
+      
   <dt><a href="nilmtk.dataset_converters.iawe.html#nilmtk.dataset_converters.iawe.convert_iawe.convert_iawe">convert_iawe() (in module nilmtk.dataset_converters.iawe.convert_iawe)</a>
   </dt>
 
@@ -616,6 +599,10 @@
       </dl></dd>
       
   <dt><a href="nilmtk.datastore.html#nilmtk.datastore.datastore.DataStore">DataStore (class in nilmtk.datastore.datastore)</a>
+  </dt>
+
+      
+  <dt><a href="nilmtk.dataset_converters.hes.html#nilmtk.dataset_converters.hes.convert_hes.datetime_converter">datetime_converter() (in module nilmtk.dataset_converters.hes.convert_hes)</a>
   </dt>
 
       
@@ -1190,8 +1177,6 @@
   <dt><a href="nilmtk.html#nilmtk.timeframe.list_of_timeframes_from_list_of_dicts">list_of_timeframes_from_list_of_dicts() (in module nilmtk.timeframe)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="nilmtk.datastore.html#nilmtk.datastore.csvdatastore.CSVDataStore.load">load() (nilmtk.datastore.csvdatastore.CSVDataStore static method)</a>
   </dt>
@@ -1214,6 +1199,12 @@
   </dt>
 
       </dl></dd>
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="nilmtk.dataset_converters.hes.html#nilmtk.dataset_converters.hes.convert_hes.load_list_of_house_ids">load_list_of_house_ids() (in module nilmtk.dataset_converters.hes.convert_hes)</a>
+  </dt>
+
       
   <dt><a href="nilmtk.datastore.html#nilmtk.datastore.csvdatastore.CSVDataStore.load_metadata">load_metadata() (nilmtk.datastore.csvdatastore.CSVDataStore static method)</a>
   </dt>
@@ -1427,6 +1418,14 @@
   </dt>
 
       
+  <dt><a href="nilmtk.dataset_converters.hes.html#module-nilmtk.dataset_converters.hes">nilmtk.dataset_converters.hes (module)</a>
+  </dt>
+
+      
+  <dt><a href="nilmtk.dataset_converters.hes.html#module-nilmtk.dataset_converters.hes.convert_hes">nilmtk.dataset_converters.hes.convert_hes (module)</a>
+  </dt>
+
+      
   <dt><a href="nilmtk.dataset_converters.iawe.html#module-nilmtk.dataset_converters.iawe">nilmtk.dataset_converters.iawe (module)</a>
   </dt>
 
@@ -1514,12 +1513,12 @@
   <dt><a href="nilmtk.feature_detectors.html#module-nilmtk.feature_detectors.cluster">nilmtk.feature_detectors.cluster (module)</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="nilmtk.feature_detectors.html#module-nilmtk.feature_detectors.steady_states">nilmtk.feature_detectors.steady_states (module)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="nilmtk.html#module-nilmtk.hashable">nilmtk.hashable (module)</a>
   </dt>
@@ -1955,6 +1954,10 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
       
+  <dt><a href="nilmtk.dataset_converters.iawe.html#nilmtk.dataset_converters.iawe.convert_iawe.reindex_fill_na">reindex_fill_na() (in module nilmtk.dataset_converters.iawe.convert_iawe)</a>
+  </dt>
+
+      
   <dt><a href="nilmtk.datastore.html#nilmtk.datastore.csvdatastore.CSVDataStore.remove">remove() (nilmtk.datastore.csvdatastore.CSVDataStore static method)</a>
   </dt>
 
@@ -2008,6 +2011,8 @@
   </dt>
 
       </dl></dd>
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="nilmtk.html#nilmtk.node.Node.reset">reset() (nilmtk.node.Node method)</a>
   </dt>
@@ -2022,8 +2027,6 @@
   </dt>
 
       </dl></dd>
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="nilmtk.html#nilmtk.results.Results">Results (class in nilmtk.results)</a>
   </dt>

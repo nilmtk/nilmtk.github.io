@@ -30,9 +30,8 @@
     <script type="text/javascript" src="../../../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../../../_static/bootstrap-3.1.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../_static/bootstrap-sphinx.js"></script>
-    <link rel="author" title="About these documents" href="../../../about.html" />
     <link rel="top" title="NILMTK 0.2 documentation" href="../../../index.html" />
-    <link rel="up" title="nilmtk.datastore" href="../datastore.html" />
+    <link rel="up" title="nilmtk" href="../../nilmtk.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -71,26 +70,6 @@
   <ul class="dropdown-menu globaltoc"
       role="menu"
       aria-labelledby="dLabelGlobalToc"><ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../about.html">Non-Intrusive Load Monitoring (NILM)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../about.html#why-a-toolkit-for-nilm">Why a toolkit for NILM?</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../about.html#what-nilmtk-provides">What nilmtk provides</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../install.html">Installing nilmtk</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Change log</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../convert_data_to_NILMTK_format.html">Convert data to NILMTK format and load into NILMTK</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../elecmeter_and_metergroup.html">MeterGroup, ElecMeter, selection and basic statistics</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../loading_data.html">Load API</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../disaggregation_and_metrics.html">Disaggregation and Metrics</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../contribute.html">Contributing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../writing_a_dataset_converter.html">Writing a dataset converter</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Change log</a></li>
-</ul>
-<ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../nilmtk.html">nilmtk package</a></li>
 </ul>
 </ul>
@@ -178,8 +157,7 @@
     <span class="nd">@doc_inherit</span>
 <div class="viewcode-block" id="HDFDataStore.load"><a class="viewcode-back" href="../../../nilmtk.datastore.html#nilmtk.datastore.hdfdatastore.HDFDataStore.load">[docs]</a>    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">sections</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">n_look_ahead_rows</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
              <span class="n">chunksize</span><span class="o">=</span><span class="n">MAX_MEM_ALLOWANCE_IN_BYTES</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
-        
-        <span class="c"># TODO: calculate chunksize default based on physical </span>
+        <span class="c"># TODO: calculate chunksize default based on physical</span>
         <span class="c"># memory installed and number of columns</span>
 
         <span class="c"># Make sure key has a slash at the front but not at the end.</span>
@@ -195,8 +173,14 @@
         <span class="n">sections</span> <span class="o">=</span> <span class="p">[</span><span class="n">TimeFrame</span><span class="p">()]</span> <span class="k">if</span> <span class="n">sections</span> <span class="ow">is</span> <span class="bp">None</span> <span class="k">else</span> <span class="n">sections</span>
         <span class="n">sections</span> <span class="o">=</span> <span class="n">TimeFrameGroup</span><span class="p">(</span><span class="n">sections</span><span class="p">)</span>
 
+        <span class="c"># Make replace any Nones with &#39;&#39; in cols:</span>
+        <span class="n">cols</span> <span class="o">=</span> <span class="p">[(</span><span class="s">&#39;&#39;</span> <span class="k">if</span> <span class="n">pq</span> <span class="ow">is</span> <span class="bp">None</span> <span class="k">else</span> <span class="n">pq</span><span class="p">,</span> <span class="s">&#39;&#39;</span> <span class="k">if</span> <span class="n">ac</span> <span class="ow">is</span> <span class="bp">None</span> <span class="k">else</span> <span class="n">ac</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">pq</span><span class="p">,</span> <span class="n">ac</span> <span class="ow">in</span> <span class="n">cols</span><span class="p">]</span>
+
         <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
-            <span class="k">print</span><span class="p">(</span><span class="s">&quot;HDFDataStore.load. key=&#39;{}&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">&quot;HDFDataStore.load(key=&#39;{}&#39;, cols=&#39;{}&#39;, sections=&#39;{}&#39;,&quot;</span>
+                  <span class="s">&quot; n_look_ahead_rows=&#39;{}&#39;, chunksize=&#39;{}&#39;)&quot;</span>
+                  <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">cols</span><span class="p">,</span> <span class="n">sections</span><span class="p">,</span> <span class="n">n_look_ahead_rows</span><span class="p">,</span> <span class="n">chunksize</span><span class="p">))</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">all_sections_smaller_than_chunksize</span> <span class="o">=</span> <span class="bp">True</span>
 
@@ -253,7 +237,7 @@
                     <span class="n">chunk_end_i</span> <span class="o">=</span> <span class="n">section_end_i</span>
                 <span class="n">chunk_end_i</span> <span class="o">+=</span> <span class="mi">1</span>
 
-                <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">cols</span><span class="p">,</span> 
+                <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">cols</span><span class="p">,</span>
                                          <span class="n">start</span><span class="o">=</span><span class="n">chunk_start_i</span><span class="p">,</span> <span class="n">stop</span><span class="o">=</span><span class="n">chunk_end_i</span><span class="p">)</span>
 
                 <span class="c"># if len(data) &lt;= 2:</span>
